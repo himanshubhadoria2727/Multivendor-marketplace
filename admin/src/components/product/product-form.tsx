@@ -438,9 +438,9 @@ export default function CreateOrUpdateProductForm({
                 />
               )}
               <Input
-                label={`${t('form:input-label-unit')}*`}
-                {...register('unit')}
-                error={t(errors.unit?.message!)}
+                label={`${t('form:input-label-domain-name')}*`}
+                {...register('domain_name')}
+                error={t(errors.domain_name?.message!)}
                 variant="outline"
                 className="mb-5"
               />

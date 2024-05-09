@@ -729,7 +729,7 @@ export interface Product {
   width?: string;
   price: number;
   quantity?: number;
-  unit?: string;
+  domain_name?: string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -744,7 +744,7 @@ export interface CreateProduct {
   price: number;
   sale_price?: number;
   quantity?: number;
-  unit: string;
+  domain_name?: string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];

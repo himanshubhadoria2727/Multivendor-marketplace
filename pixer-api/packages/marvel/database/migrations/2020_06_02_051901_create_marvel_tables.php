@@ -99,7 +99,7 @@ class CreateMarvelTables extends Migration
             $table->foreign('shipping_class_id')->references('id')->on('shipping_classes');
             $table->enum('status', ProductStatus::getValues())->default(ProductStatus::DRAFT);
             $table->enum('product_type', ProductType::getValues())->default(ProductType::SIMPLE);
-            $table->string('unit');
+            $table->string('domain_name');
             $table->string('height')->nullable();
             $table->string('width')->nullable();
             $table->string('length')->nullable();

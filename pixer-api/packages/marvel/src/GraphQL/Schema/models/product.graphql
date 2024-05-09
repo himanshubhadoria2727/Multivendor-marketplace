@@ -211,7 +211,7 @@ type Product {
     width: String
     price: Float
     quantity: Int
-    unit: String!
+    domain_name: String!
     sold_quantity: Int
     in_flash_sale: Int
     created_at: DateTime
@@ -280,7 +280,7 @@ input CreateProductInput {
     sale_price: Float
     quantity: Int
     product_type: ProductType! @rules(apply: ["required"])
-    unit: String! @rules(apply: ["required"])
+    domain_name: String! @rules(apply: ["required"])
     description: String
         @rules(
             apply: ["max:10000"]
@@ -323,7 +323,7 @@ input UpdateProductInput {
     language: String
     quantity: Int
     product_type: ProductType! @rules(apply: ["required"])
-    unit: String! @rules(apply: ["required"])
+    domain_name: String! @rules(apply: ["required"])
     description: String
         @rules(
             apply: ["max:10000"]

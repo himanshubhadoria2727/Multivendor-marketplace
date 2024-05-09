@@ -20,7 +20,7 @@ export const productValidationSchema = yup.object().shape({
         .integer('form:error-quantity-must-integer')
         .required('form:error-quantity-required'),
   }),
-  unit: yup.string().required('form:error-unit-required'),
+  domain_name: yup.string().required('form:error-domain-name-required'),
   type: yup.object().nullable().required('form:error-type-required'),
   status: yup.string().nullable().required('form:error-status-required'),
   variation_options: yup.array().of(

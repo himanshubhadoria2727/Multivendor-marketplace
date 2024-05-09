@@ -70,7 +70,7 @@ class ProductRepository extends BaseRepository
         'manufacturer_id',
         'product_type',
         'quantity',
-        'unit',
+        'domain_name',
         'is_digital',
         'is_external',
         'external_product_url',
@@ -493,7 +493,7 @@ class ProductRepository extends BaseRepository
                     'sale_price' => $product->sale_price,
                     'max_price' => $product->max_price,
                     'min_price' => $product->min_price,
-                    'unit' => $product->unit,
+                    'domain_name' => $product->domain_name,
                     'quantity' => $product->quantity,
                 ]);
             }
