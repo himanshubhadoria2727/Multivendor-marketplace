@@ -8,6 +8,7 @@ import type { GetStaticProps } from 'next';
 import Layout from '@/layouts/_layout';
 import { useProducts } from '@/data/product';
 import Grid from '@/components/product/grid';
+import List from '@/components/product/list';
 import { useRouter } from 'next/router';
 import Seo from '@/layouts/_seo';
 import routes from '@/config/routes';
@@ -16,6 +17,7 @@ import { dehydrate, QueryClient } from 'react-query';
 import { API_ENDPOINTS } from '@/data/client/endpoints';
 import CategoryFilter from '@/components/product/category-filter';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Card from '@/components/product/card';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const queryClient = new QueryClient();
@@ -61,7 +63,7 @@ function Products() {
       sortedBy: 'DESC',
     });
   return (
-    <Grid
+    <List
       products={products}
       limit={30}
       onLoadMore={loadMore}

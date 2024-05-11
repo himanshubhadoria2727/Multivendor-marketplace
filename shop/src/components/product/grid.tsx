@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import cn from 'classnames';
 import Button from '@/components/ui/button';
 import Card from '@/components/product/card';
+import ProductCard from '@/components/product/productCard';
 import ProductCardLoader from '@/components/product/product-loader';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import ItemNotFound from '@/components/ui/item-not-found';
@@ -18,6 +19,7 @@ interface GridProps {
   isLoading?: boolean;
   limit?: number;
 }
+
 
 export default function Grid({
   products,
@@ -61,6 +63,7 @@ export default function Grid({
             ))}
       </motion.div>
 
+      
       {hasNextPage && (
         <div className="mt-8 grid place-content-center md:mt-10">
           <Button
@@ -73,5 +76,6 @@ export default function Grid({
         </div>
       )}
     </div>
+    
   );
 }
