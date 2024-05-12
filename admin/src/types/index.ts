@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import { Url } from 'url';
 
 export type NextPageWithLayout<P = {}> = NextPage<P> & {
   authorization?: boolean;

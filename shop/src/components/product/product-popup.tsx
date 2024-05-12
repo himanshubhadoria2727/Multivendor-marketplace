@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { useSanitizeContent } from '@/lib/sanitize-content';
 
 function getPreviews(gallery: any[], image: any) {
-  if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery;
+  if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery;3
   if (!isEmpty(image)) return [image];
   return [{}];
 }
@@ -48,6 +48,7 @@ export default function ProductPopupDetails() {
     orders_count,
     total_downloads,
     tags,
+    domain_name,
     preview_url,
     type,
     price,
@@ -132,6 +133,7 @@ export default function ProductPopupDetails() {
             )}
             <ProductInformation
               tags={tags}
+              domain_name={domain_name}
               created_at={created_at}
               updated_at={updated_at}
               layoutType={type.name}

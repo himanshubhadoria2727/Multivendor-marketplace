@@ -6,3 +6,9 @@ export const contactUsFormSchema = yup.object().shape({
   subject: yup.string().required('Subject is required.'),
   description: yup.string().required('Description is required.'),
 });
+export const ProductInputFieldSchema = yup.object().shape({
+  postUrl: yup.string().url().required('Post Url is required.'),
+  before_ancor_text: yup.string().required('This field is required.'),
+  ancorText: yup.string().required('Ancor Text is required.'),
+  after_ancor_text: yup.string().required('This field is required.'),
+});

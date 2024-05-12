@@ -1,5 +1,7 @@
 import type { NextPage } from 'next';
+import { Url } from 'next/dist/shared/lib/router/router';
 import type { ReactElement, ReactNode } from 'react';
+import { UrlWithParsedQuery } from 'url';
 
 export interface QueryOptions {
   page?: number;
@@ -286,6 +288,13 @@ export interface CreateContactUsInput {
   description: string;
 }
 
+export interface CreateProductInput{
+  postUrl: string;
+  ancorText:string;
+  before_ancor_text:string;
+  after_ancor_text:string;
+}
+
 export interface CreateAbuseReportInput {
   model_id: string;
   model_type: string;
@@ -422,6 +431,7 @@ export interface Product {
   id: string;
   name: string;
   slug: string;
+  domain_name:string;
   description: string;
   price: number;
   sale_price: number;

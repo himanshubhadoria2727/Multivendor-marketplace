@@ -17,7 +17,7 @@ import { useTranslation } from 'next-i18next';
 import { ExternalIcon } from '@/components/icons/external-icon';
 
 export default function Card({ product }: { product: Product }) {
-  const { name, slug, image, shop, is_external } = product ?? {};
+  const { name, slug, image, shop, is_external,domain_name } = product ?? {};
   const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
   const { price, basePrice } = usePrice({
@@ -49,7 +49,7 @@ export default function Card({ product }: { product: Product }) {
               33vw"
         />
         <div
-          onClick={() => openModal('PRODUCT_DETAILS', { slug })}
+          onClick={() => openModal('PRODUCT_INPUT_DISPLAY', { slug })}
           className="absolute top-0 left-0 z-10 flex h-full w-full cursor-pointer items-center justify-center gap-9 bg-dark/60 p-4 opacity-0 backdrop-blur-sm transition-all group-hover:gap-5 group-hover:opacity-100 dark:bg-dark/70"
         >
           <button

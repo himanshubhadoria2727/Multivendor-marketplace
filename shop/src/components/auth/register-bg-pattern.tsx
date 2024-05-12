@@ -293,3 +293,4 @@ export const RegisterBgPattern: React.FC<React.SVGAttributes<{}>> = (props) => {
     </svg>
   );
 };
+ 
