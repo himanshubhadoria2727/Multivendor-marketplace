@@ -47,7 +47,7 @@ export default function ProductCard({ product }: { product: Product }) {
               33vw"
           />
         </div> */}
-        <div className=" flex-col w-40%  items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
+        <div className=" flex-col   items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
           <div className='mb-2 flex flex-shrink-0  items-center gap-4 p-1'>
             <span className='flex  text-xs items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
              <CheckIconWithBg className=' w-4 h-4 mr-1'/>
@@ -71,7 +71,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {shop?.name}
           </AnchorLink>
           <div className='flex  flex-col mt-2 ml-0 flex flex-shrink-0   p-1'>
-            <span className='mt-2  bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
+            <span className='mt-2 w-2/5 bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
              News,Media & Updates
             </span>
            <span className='flex  mt-2 text-lg text-[#05AAFB] '>
@@ -80,11 +80,11 @@ export default function ProductCard({ product }: { product: Product }) {
             </span>
           </div>
         </div>
-        <div className=' w-40%  '>
+        <div className=' '>
           <h1>Test Goes here</h1>
         </div>
 
-        <div className="flex w-20% flex-shrink-0 flex-col items-center  pl-6">
+        <div className="flex  relative flex-shrink-0 flex-col items-center  pl-6">
           <span className="mt-2 rounded-l bg-light-200 px-8 py-3 text-13px font-semibold uppercase text-lg text-brand dark:bg-dark-300 dark:text-brand-dark">
             {isFreeItem ? t('text-free') : price}
           </span>
@@ -93,7 +93,7 @@ export default function ProductCard({ product }: { product: Product }) {
               {basePrice}
             </del>
           )}
-          <button className=" flex mt-24  rounded-l bg-light-500 px-8 py-3 text-lg font-semibold text-white text-brand bg-[#50C878] dark:text-white absolute ">
+          <button className=" flex mt-16  rounded-l bg-light-500 px-8 py-3 text-lg font-semibold text-white text-brand bg-[#50C878] dark:text-white  ">
             Buy
           </button>
         </div>
