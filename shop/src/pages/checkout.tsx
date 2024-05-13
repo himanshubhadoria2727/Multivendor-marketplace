@@ -112,13 +112,13 @@ const CheckoutPage: NextPageWithLayout = () => {
                     </strong>
                   </div>
                 </div>
-                {/* <Button
+                <Button
                   className="w-full md:h-[50px] md:text-sm"
                   onClick={verify}
                   isLoading={isLoading}
                 >
-                  {t('text-check-availability')}
-                </Button> */}
+                  {t('Proceed')}
+                </Button>
               </div>
             )}
             {!isEmpty && Boolean(verifiedResponse) && <CartCheckout />}
