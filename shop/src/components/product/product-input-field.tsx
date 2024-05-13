@@ -81,38 +81,8 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   const isFreeItem = isFree(sale_price ?? price);
   return (
     <div className="flex max-w-full flex-col bg-light text-left dark:bg-dark-250 xs:max-w-[430px] sm:max-w-[550px] md:max-w-[600px] lg:max-w-[960px] xl:max-w-[1200px] 2xl:max-w-[1266px] 3xl:max-w-[1460px]">
-      <div className="-mx-2.5 flex flex-wrap items-center bg-light-300 py-3 ltr:pl-4 ltr:pr-16 rtl:pr-4 rtl:pl-16 dark:bg-dark-100 md:py-4 ltr:md:pl-6 rtl:md:pr-6 lg:-mx-4 lg:py-5 ltr:xl:pl-8 rtl:xl:pr-8">
-        <h2
-          title={name}
-          className="truncate px-2.5 py-1 text-base font-medium text-dark dark:text-light md:text-lg ltr:lg:pl-4 ltr:lg:pr-5 rtl:lg:pr-4 rtl:lg:pl-5 3xl:text-xl"
-        >
-          <AnchorLink
-            href={routes.productUrl(slug)}
-            className="transition-colors hover:text-brand"
-          >
-            {name}
-          </AnchorLink>
-        </h2>
-        <div className="flex flex-shrink-0 items-center px-2.5 py-1">
-          <div className="relative flex h-5 w-5 flex-shrink-0 md:h-6 md:w-6">
-          </div>
-          <h3
-            title={name}
-            className="text-13px font-medium text-dark-600 ltr:pl-2 rtl:pr-2 dark:text-light-800 ltr:md:pl-2.5 rtl:md:pr-2.5"
-          >
-            <AnchorLink
-              href={routes.shopUrl(shop?.slug)}
-              className="hover:text-accent transition-colors"
-            >
-              {shop?.name}
-            </AnchorLink>
-          </h3>
-
-          <FavoriteButton productId={product?.id} />
-        </div>
-      </div>
       <div className="flex flex-col p-4 rtl:space-x-reverse md:p-6 lg:flex-row lg:space-x-7 xl:space-x-8 xl:p-8 3xl:space-x-10">
-        <div className="flex shrink-0 flex-col justify-between text-13px lg:w-[400px] xl:w-[520px] 3xl:w-[555px]">
+        <div className="flex shrink-0 flex-col justify-between text-13px lg:w-[400px] xl:w-[290px] 3xl:w-[555px]">
           <div className="pb-7 xs:pb-8 lg:pb-10">
             <Form<CreateProductInput>
               onSubmit={handleFormSubmit}

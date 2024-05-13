@@ -49,7 +49,7 @@ export default function Card({ product }: { product: Product }) {
               33vw"
         />
         <div
-          onClick={() => openModal('PRODUCT_INPUT_DISPLAY', { slug })}
+          // onClick={() => openModal('PRODUCT_INPUT_DISPLAY', { slug })}
           className="absolute top-0 left-0 z-10 flex h-full w-full cursor-pointer items-center justify-center gap-9 bg-dark/60 p-4 opacity-0 backdrop-blur-sm transition-all group-hover:gap-5 group-hover:opacity-100 dark:bg-dark/70"
         >
           <button
@@ -65,13 +65,14 @@ export default function Card({ product }: { product: Product }) {
               )}
             >
               <PreviewIcon
+              onClick={() => openModal('PRODUCT_INPUT_DISPLAY', { slug })}
                 className={cn(isGridCompact ? 'h-4 w-4' : 'h-5 w-5')}
               />
             </div>
             {t('text-preview')}
           </button>
           <button
-            onClick={goToDetailsPage}
+            // onClick={()=>openModal('PRODUCT_DETAILS', { slug })}
             className={cn(
               'relative z-[11] text-center font-medium text-light',
               isGridCompact ? 'text-xs' : 'text-13px'
@@ -84,6 +85,7 @@ export default function Card({ product }: { product: Product }) {
               )}
             >
               <DetailsIcon
+              onClick={() => openModal('PRODUCT_DETAILS', { slug })}
                 className={cn(isGridCompact ? 'h-4 w-4' : 'h-5 w-5')}
               />
             </div>

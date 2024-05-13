@@ -19,6 +19,7 @@ import FavoriteButton from '@/components/favorite/favorite-button';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useSanitizeContent } from '@/lib/sanitize-content';
+import ProductInputDisplay from './product-input-main';
 
 function getPreviews(gallery: any[], image: any) {
   if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery;3
@@ -117,7 +118,7 @@ export default function ProductPopupDetails() {
             ) : (
               ''
             )}
-            {!is_external && (
+            {/* {!is_external && (
               <div className="flex space-x-6 border-t border-light-500 py-3 rtl:space-x-reverse dark:border-dark-500 md:py-4 3xl:py-5">
                 {!isFreeItem && (
                   <div className="flex items-center tracking-[.1px] text-dark dark:text-light">
@@ -130,7 +131,8 @@ export default function ProductPopupDetails() {
                   {pluralize(t('text-download'), total_downloads, true)}
                 </div>
               </div>
-            )}
+            )} */}
+            <ProductInputDisplay/>
             <ProductInformation
               tags={tags}
               domain_name={domain_name}
