@@ -129,27 +129,30 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                       placeholder='Enter your post url'
                       {...register('postUrl')}
                       error={errors.postUrl?.message}
-                    /><br/>
+                    />
                     <Input
                       label={t('Content before ancor text')}
                       type="text"
                       placeholder='Enter your text here'
                       {...register('before_ancor_text')}
                       error={errors.before_ancor_text?.message}
-                    /><br/>
+                      className='mt-2.5'
+                    />
                     <Input
                       label={t('ancorText-input-field')}
                       type="text"
                       placeholder='Enter your ancor text'
                       {...register('ancorText')}
                       error={errors.ancorText?.message}
-                    /><br/>
+                      className='mt-2.5'
+                    />
                     <Input 
                       label={t('Content after ancor text')}
                       type="text"
                       placeholder='Enter your text here'
                       {...register('after_ancor_text')}
                       error={errors.after_ancor_text?.message}
+                      className='mt-2.5'
                     />
                     {/* <Input
               label={t('contact-us-subject-field')}
