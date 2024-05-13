@@ -1,4 +1,4 @@
-const CheckIconWithBg: React.FC<React.SVGAttributes<{}>> = ({
+export const CheckIconWithBg: React.FC<React.SVGAttributes<{}>> = ({
   width = 20,
   height = 20,
   ...props
@@ -19,4 +19,3 @@ const CheckIconWithBg: React.FC<React.SVGAttributes<{}>> = ({
   );
 };
 
-export default CheckIconWithBg;

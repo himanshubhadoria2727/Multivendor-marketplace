@@ -9,6 +9,8 @@ import routes from '@/config/routes';
 import usePrice from '@/lib/hooks/use-price';
 import { PreviewIcon } from '@/components/icons/preview-icon';
 import { DetailsIcon } from '@/components/icons/details-icon';
+import { CheckIconWithBg } from '@/components/icons/check-icon-with-bg';
+import { InformationIcon } from '../icons/information-icon';
 import placeholder from '@/assets/images/placeholders/product.svg';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import { fadeInBottomWithScaleX } from '@/lib/framer-motion/fade-in-bottom';
@@ -31,10 +33,9 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t } = useTranslation('common');
   const isFreeItem = isFree(product?.sale_price ?? product?.price);
   return (
-    <motion.div variants={fadeInBottomWithScaleX()} title={name}>
-     
-      <div className="flex items-start justify-between pt-3.5 dark:bg-dark-300 dark:text-brand-dark p-5 border rounded-3xl border-transparent bg-offwhite dark:bg-dark-300 shadow-md hover:shadow-xl transition-shadow duration-300">
-        <div className="relative flex h-16 w-16 flex-shrink-0 overflow-hidden 4xl:h-9 4xl:w-9">
+    
+      <div className="flex h-56   items-start justify-between pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-white  dark:bg-dark-200 shadow-md hover:shadow-xl transition-shadow duration-300">
+        {/* <div className="relative flex h-36 w-36 flex-shrink-0 overflow-hidden 4xl:h-9 4xl:w-9">
           <Image
             alt={shop?.name}
             quality={100}
@@ -45,36 +46,58 @@ export default function ProductCard({ product }: { product: Product }) {
               (max-width: 1200px) 50vw,
               33vw"
           />
-        </div>
-        <div className="-mt-[-2]  flex flex-col justify-center  truncate ltr:mr-auto ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
+        </div> */}
+        <div className=" flex-col w-40%  items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
+          <div className='mb-2 flex flex-shrink-0  items-center gap-4 p-1'>
+            <span className='flex  text-xs items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
+             <CheckIconWithBg className=' w-4 h-4 mr-1'/>
+              Guest Post
+            </span>
+            <span className='flex items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize  text-xs text-brand dark:bg-dark-300 dark:text-brand-dark '>
+            <CheckIconWithBg className='w-4 h-4 mr-1'/>
+            Grey Niche
+            </span>
+          </div>
           <h3
             title={name}
-            className="mb-0.5 truncate font-medium text-dark-100 dark:text-light"
+            className="mb-0.5 text-lg truncate font-medium text-dark-100 dark:text-light"
           >
             <AnchorLink href={routes.productUrl(slug)}>{name}</AnchorLink>
           </h3>
           <AnchorLink
             href={routes.shopUrl(shop?.slug)}
-            className="font-medium text-light-base hover:text-brand dark:text-dark-800 dark:hover:text-brand"
+            className="font-medium text-base hover:text-brand dark:text-dark-800 dark:hover:text-brand"
           >
             {shop?.name}
           </AnchorLink>
+          <div className='flex  flex-col mt-2 ml-0 flex flex-shrink-0   p-1'>
+            <span className='mt-2  bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
+             News,Media & Updates
+            </span>
+           <span className='flex  mt-2 text-lg text-[#05AAFB] '>
+           <InformationIcon className=' w-4 h-4 mr-1 mt-1.5'/>
+            View site Info
+            </span>
+          </div>
+        </div>
+        <div className=' w-40%  '>
+          <h1>Test Goes here</h1>
         </div>
 
-        <div className="flex flex-shrink-0 flex-col items-end pl-2.5">
-          <span className="rounded-2xl bg-light-500 px-1.5 py-0.5 text-13px font-semibold uppercase text-brand dark:bg-dark-300 dark:text-brand-dark">
+        <div className="flex w-20% flex-shrink-0 flex-col items-center  pl-6">
+          <span className="mt-2 rounded-l bg-light-200 px-8 py-3 text-13px font-semibold uppercase text-lg text-brand dark:bg-dark-300 dark:text-brand-dark">
             {isFreeItem ? t('text-free') : price}
           </span>
           {!isFreeItem && basePrice && (
-            <del className="px-1 text-13px font-medium text-dark-900 dark:text-dark-700">
+            <del className="px-1 text-20px font-medium text-dark-900 dark:text-dark-700">
               {basePrice}
             </del>
           )}
+          <button className=" flex mt-24  rounded-l bg-light-500 px-8 py-3 text-lg font-semibold text-white text-brand bg-[#50C878] dark:text-white absolute ">
+            Buy
+          </button>
         </div>
       </div>
-      
-    </motion.div>
+   
   );
 }
-
-
