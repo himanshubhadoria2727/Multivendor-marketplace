@@ -9,6 +9,11 @@ export const productValidationSchema = yup.object().shape({
     .typeError('form:error-price-must-number')
     .min(0)
     .required('form:error-price-required'),
+  authoriy: yup
+    .number()
+    .typeError('Domian authority must be a number')
+    .min(0)
+    .required('Domain authority is required'),
   quantity: yup.number().when('boundary', {
     is: (value: boolean) => value,
     then: (schema) => schema.notRequired(),
@@ -21,6 +26,11 @@ export const productValidationSchema = yup.object().shape({
         .required('form:error-quantity-required'),
   }),
   domain_name: yup.string().required('form:error-domain-name-required'),
+  domain_rating: yup.string().required('Domain rating is a required'),
+  organic_traffic: yup.string().required('Organic traffic is a required'),
+  spam_score: yup.string().required('Spam score is a required'),
+  language: yup.string().required(''),
+  countries: yup.string().required('requred'),
   type: yup.object().nullable().required('form:error-type-required'),
   status: yup.string().nullable().required('form:error-status-required'),
   variation_options: yup.array().of(
@@ -36,6 +46,29 @@ export const productValidationSchema = yup.object().shape({
         .lessThan(yup.ref('price'), 'Sale Price should be less than ${less}')
         .positive('form:error-sale-price-must-positive')
         .nullable(),
+      authority:yup
+        .number()
+        .typeError('Authority must be a number')
+        .positive('form:error-price-must-positive')
+        .required('form:error-price-required'),
+      domain_rating: yup
+        .number()
+        .typeError('Domain rating must be a number')
+        .positive('form:error-price-must-positive')
+        .required('form:error-price-required'),
+      organic_traffic: yup
+        .number()
+        .typeError('Organic Traffic must be a number')
+        .positive('form:error-price-must-positive')
+        .required('form:error-price-required'),
+      spam_score:yup
+      .number()
+        .typeError('Spam score must be a number')
+        .positive('form:error-price-must-positive')
+        .required('form:error-price-required'),
+      countries:yup
+      .string()
+        .required("this is require"),
       quantity: yup
         .number()
         .typeError('form:error-quantity-must-number')

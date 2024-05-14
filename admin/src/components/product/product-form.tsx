@@ -26,7 +26,7 @@ import { useShopQuery } from '@/data/shop';
 import ProductTagInput from './product-tag-input';
 import { Config } from '@/config';
 import Alert from '@/components/ui/alert';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ProductAuthorInput from '@/components/product/product-author-input';
 import ProductManufacturerInput from '@/components/product/product-manufacturer-input';
 import { EditIcon } from '@/components/icons/edit';
@@ -55,6 +55,10 @@ import { UpdateIcon } from '../icons/update';
 import { ProductDescriptionSuggestion } from '@/components/product/product-ai-prompt';
 import RichTextEditor from '@/components/ui/wysiwyg-editor/editor';
 import TooltipLabel from '@/components/ui/tooltip-label';
+import Select from "react-select";
+import SelectInput from '../ui/select-input';
+import { ValidationError } from 'yup';
+
 
 type ProductFormProps = {
   initialValues?: Product | null;
@@ -71,6 +75,22 @@ export default function CreateOrUpdateProductForm({
   } = useSettingsQuery({
     language: locale!,
   });
+
+  const [countries, setCountries] = useState([]);
+const [selectedCountry, setSelectedCountry] = useState({});
+
+useEffect(() => {
+  fetch(
+    "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      setCountries(data.countries);
+      setSelectedCountry(data.userSelectValue);
+    });
+}, []);
+
+
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
@@ -392,11 +412,10 @@ export default function CreateOrUpdateProductForm({
           <div className="my-5 flex flex-wrap sm:my-8">
             <Description
               title={t('form:item-description')}
-              details={`${
-                initialValues
+              details={`${initialValues
                   ? t('form:item-description-edit')
                   : t('form:item-description-add')
-              } ${t('form:product-description-help-text')}`}
+                } ${t('form:product-description-help-text')}`}
               className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
             />
 
@@ -444,6 +463,55 @@ export default function CreateOrUpdateProductForm({
                 variant="outline"
                 className="mb-5"
               />
+              {/* <Input
+                label={"Domain Authority"}
+                type="number"
+                {...register('domain_authority')}
+                error={t(errors.domain_authority?.message!)}
+                variant="outline"
+                className="mb-5"
+              />
+              <Input
+                label={"Domain rating"}
+                type='number'
+                {...register('domain_rating')}
+                error={t(errors.domain_rating?.message!)}
+                variant="outline"
+                className="mb-5"
+              />
+              <Input
+                label={"Organic traffic"}
+                type='number'
+                {...register('organic_traffic')}
+                error={t(errors.organic_traffic?.message!)}
+                variant="outline"
+                className="mb-5"
+              />
+              <Input
+                label={"Spam score"}
+                type='number'
+                {...register('spam_score')}
+                error={t(errors.spam_score?.message!)}
+                variant="outline"
+                className="mb-5"
+              /> */}
+              {/* <Input
+                label={"Language"}
+                {...register('language')}
+                error={t(errors.language?.message!)}
+                variant="outline"
+                className="mb-5"
+              /> */}
+              {/* <div className="mb-5">
+                <Label>{t('Select Country')}</Label>
+                <SelectInput
+                  name="countries"
+                  control={control}
+                  options={countries}
+                  value={selectedCountry}
+                  onChange={(selectedOption:any) => setSelectedCountry(selectedOption)}
+                />
+              </div> */}
               <div className="relative mb-5">
                 {options?.useAi && (
                   <OpenAIButton
@@ -463,21 +531,21 @@ export default function CreateOrUpdateProductForm({
                 <Label>{t('form:input-label-status')}</Label>
                 {!isEmpty(statusList)
                   ? statusList?.map((status: any, index: number) => (
-                      <Radio
-                        key={index}
-                        {...register('status')}
-                        label={t(status?.label)}
-                        id={status?.id}
-                        value={status?.value}
-                        className="mb-2"
-                        disabled={
-                          permission &&
+                    <Radio
+                      key={index}
+                      {...register('status')}
+                      label={t(status?.label)}
+                      id={status?.id}
+                      value={status?.value}
+                      className="mb-2"
+                      disabled={
+                        permission &&
                           initialValues?.status === ProductStatus?.Draft
-                            ? true
-                            : false
-                        }
-                      />
-                    ))
+                          ? true
+                          : false
+                      }
+                    />
+                  ))
                   : ''}
                 {errors.status?.message && (
                   <p className="my-2 text-xs text-red-500">
