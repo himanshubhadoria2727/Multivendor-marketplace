@@ -63,6 +63,7 @@ class ProductCreateRequest extends FormRequest
             'variation_options'            => ['array'],
             'quantity'                     => ['nullable', 'integer'],
             'domain_name'                  => ['required', 'string'],
+            'domain_authority'             => ['nullable', 'numeric'],
             'description'                  => ['nullable', 'string', 'max:10000'],
             'sku'                          => ['string', 'unique:variation_options,sku'],
             'image'                        => ['array'],

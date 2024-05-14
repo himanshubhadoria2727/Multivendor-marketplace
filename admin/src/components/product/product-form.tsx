@@ -142,14 +142,15 @@ useEffect(() => {
 
   const upload_max_filesize = options?.server_info?.upload_max_filesize / 1024;
 
-  const { mutate: createProduct, isLoading: creating } =
-    useCreateProductMutation();
+  const { mutate: createProduct, isLoading: creating } = useCreateProductMutation();
   const { mutate: updateProduct, isLoading: updating } =
     useUpdateProductMutation();
 
   const onSubmit = async (values: ProductFormValues) => {
+    console.log("HI nandu");
     const inputValues = {
       language: router.locale,
+      
       ...getProductInputValues(values, initialValues, isNewTranslation),
     };
 
@@ -463,7 +464,7 @@ useEffect(() => {
                 variant="outline"
                 className="mb-5"
               />
-              {/* <Input
+              <Input
                 label={"Domain Authority"}
                 type="number"
                 {...register('domain_authority')}
@@ -471,7 +472,7 @@ useEffect(() => {
                 variant="outline"
                 className="mb-5"
               />
-              <Input
+              {/* <Input
                 label={"Domain rating"}
                 type='number'
                 {...register('domain_rating')}

@@ -19,6 +19,7 @@ class CreateNewMarvelTables extends Migration
             $table->string('title');
             $table->string('price');
             $table->string('sale_price')->nullable();
+            $table->integer('domain_authority');
             $table->unsignedBigInteger('quantity');
             $table->boolean('is_disable')->default(false);
             $table->string('sku')->nullable();
@@ -51,6 +52,8 @@ class CreateNewMarvelTables extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->float('min_price')->after('sale_price')->nullable();
             $table->float('max_price')->after('min_price')->nullable();
+            $table->float('max_price')->after('min_price')->nullable();
+            $table->double('domain_authority')->after('domain_name');
             $table->json('video')->after('image')->nullable();
         });
 
