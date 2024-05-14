@@ -40,7 +40,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t } = useTranslation('common');
   const isFreeItem = isFree(product?.sale_price ?? product?.price);
   return (
-    <div className="flex h-56   items-start pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9]  dark:bg-dark-200 shadow-md hover:shadow-xl transition-shadow duration-300">
+    <div className="flex h-56 items-start pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300  dark:hover:shadow-[#787676]">
       {/* <div className="relative flex h-36 w-36 flex-shrink-0 overflow-hidden 4xl:h-9 4xl:w-9">
           <Image
             alt={shop?.name}
@@ -153,7 +153,7 @@ export default function ProductCard({ product }: { product: Product }) {
               {basePrice}
             </del>
           )} */}
-        <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#24B47E] dark:bg-dark-600 dark:text-brand-dark  ">
+        <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#24B47E] dark:bg-[#24B47E]-600 dark:text-white  ">
           Buy
         </button>
       </div>
