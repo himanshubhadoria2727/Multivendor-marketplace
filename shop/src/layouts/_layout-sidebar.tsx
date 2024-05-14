@@ -94,7 +94,7 @@ export function Sidebar({
             />
             <NavLink
               title={t('Dashboard')}
-              href={routes.explore}
+              href={routes.dashboard}
               isCollapse={isCollapse}
               icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
             />
@@ -171,7 +171,7 @@ export function Sidebar({
             {t('text-help-page-title')}
           </ActiveLink>
         </nav>
-        <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-700" />
+        {/* <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-700" /> */}
       </footer>
     </aside>
   );

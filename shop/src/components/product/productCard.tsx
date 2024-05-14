@@ -26,7 +26,8 @@ import { useTranslation } from 'next-i18next';
 import { ExternalIcon } from '@/components/icons/external-icon';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { name, slug, image, shop, is_external ,domain_name,quantity} = product ?? {};
+  const { name, slug, image, shop, is_external, domain_name, quantity } =
+    product ?? {};
   const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
   const { price, basePrice } = usePrice({
@@ -40,11 +41,10 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t } = useTranslation('common');
   const isFreeItem = isFree(product?.sale_price ?? product?.price);
 
-  console.log(`The product info`,product);
-  
+  console.log(`The product info`, product);
+
   return (
     <div className="maincard flex flex-col sm:flex-row  items-center justify-center pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
-     
       <div className="nameDetails flex-col flex-wrap w-full sm:w-1/5 items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
         <div className="mb-2 flex flex-wrap  items-center gap-4 p-1">
           <span className="flex  text-xs items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
@@ -130,7 +130,7 @@ export default function ProductCard({ product }: { product: Product }) {
             <GlobalIcon className=" w-4 h-4 mr-1 " />
             Countries
           </span>
-          <span className='text-xs ml-8  items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
+          <span className="text-xs ml-8  items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
             India , Pakistan
           </span>
         </div>
@@ -141,10 +141,10 @@ export default function ProductCard({ product }: { product: Product }) {
           {isFreeItem ? t('text-free') : price}
         </span>
         {!isFreeItem && basePrice && (
-            <del className="px-1 text-20px font-medium text-dark-900 dark:text-dark-700">
-              {basePrice}
-            </del>
-          )}
+          <del className="px-1 text-20px font-medium text-dark-900 dark:text-dark-700">
+            {basePrice}
+          </del>
+        )}
         <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#24B47E] dark:bg-[#24B47E]-600 dark:text-white  ">
           Buy
         </button>

@@ -52,9 +52,9 @@ export default function List({
     )}
   >
     {isLoading && !products.length
-      ? 
+      ? rangeMap(limit, (i) => (
           <Spinner/>
-        
+        ))
       : products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
