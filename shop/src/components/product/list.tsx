@@ -9,6 +9,7 @@ import ItemNotFound from '@/components/ui/item-not-found';
 import rangeMap from '@/lib/range-map';
 import { staggerTransition } from '@/lib/framer-motion/stagger-transition';
 import { useTranslation } from 'next-i18next';
+import Spinner from '../ui/loader/spinner/spinner';
 
 interface ListProps {
   products: Product[];
@@ -51,9 +52,9 @@ export default function List({
     )}
   >
     {isLoading && !products.length
-      ? rangeMap(limit, (i) => (
-          <ProductCardLoader key={i} uniqueKey={`product-${i}`} />
-        ))
+      ? 
+          <Spinner/>
+        
       : products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

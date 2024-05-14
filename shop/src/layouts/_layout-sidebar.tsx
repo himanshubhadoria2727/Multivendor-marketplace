@@ -87,13 +87,13 @@ export function Sidebar({
         <div className="flex h-full w-full flex-col">
           <nav className="flex flex-col">
             <NavLink
-              title={t('text-home')}
+              title={t('Explore')}
               href={routes.home}
               isCollapse={isCollapse}
               icon={<HomeIcon className="h-[18px] w-[18px] text-current" />}
             />
             <NavLink
-              title={t('text-explore')}
+              title={t('Dashboard')}
               href={routes.explore}
               isCollapse={isCollapse}
               icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
