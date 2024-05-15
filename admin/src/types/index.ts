@@ -732,6 +732,11 @@ export interface Product {
   quantity?: number;
   domain_name?: string;
   domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -749,6 +754,11 @@ export interface CreateProduct {
   site_name:string;
   domain_name?: string;
   domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];

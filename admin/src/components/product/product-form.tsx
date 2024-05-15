@@ -86,10 +86,9 @@ useEffect(() => {
     .then((response) => response.json())
     .then((data) => {
       setCountries(data.countries);
-      setSelectedCountry(data.userSelectValue);
+      setSelectedCountry(data.userSelectValue.label);
     });
 }, []);
-
 
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -148,6 +147,7 @@ useEffect(() => {
 
   const onSubmit = async (values: ProductFormValues) => {
     console.log("HI nandu");
+    console.log(selectedCountry);
     const inputValues = {
       language: router.locale,
       
@@ -472,7 +472,7 @@ useEffect(() => {
                 variant="outline"
                 className="mb-5"
               />
-              {/* <Input
+              <Input
                 label={"Domain rating"}
                 type='number'
                 {...register('domain_rating')}
@@ -495,24 +495,24 @@ useEffect(() => {
                 error={t(errors.spam_score?.message!)}
                 variant="outline"
                 className="mb-5"
-              /> */}
-              {/* <Input
+              />
+              <Input
                 label={"Language"}
-                {...register('language')}
-                error={t(errors.language?.message!)}
+                {...register('languages')}
+                error={t(errors.languages?.message!)}
                 variant="outline"
                 className="mb-5"
-              /> */}
-              {/* <div className="mb-5">
+              />
+              <div className="mb-5">
                 <Label>{t('Select Country')}</Label>
                 <SelectInput
                   name="countries"
                   control={control}
                   options={countries}
-                  value={selectedCountry}
-                  onChange={(selectedOption:any) => setSelectedCountry(selectedOption)}
+                  value={selectedCountry.label}
+                  error={t(errors.countries?.message!)}
                 />
-              </div> */}
+              </div>
               <div className="relative mb-5">
                 {options?.useAi && (
                   <OpenAIButton

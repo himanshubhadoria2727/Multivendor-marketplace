@@ -65,7 +65,7 @@ class GetSingleProductResource extends Resource
             'domain_authority'             => $this->domain_authority,
             'domain_rating'                => $this->domain_rating,
             'organic_traffic'              => $this->organic_traffic,
-            'organic_spam_score'           => $this->spam_score,
+            'spam_score'           => $this->spam_score,
             'in_flash_sale'                => $this->in_flash_sale,
             'total_downloads'              => $this->total_downloads,
             'sold_quantity'                => $this->sold_quantity,
