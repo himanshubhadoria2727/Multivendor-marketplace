@@ -145,7 +145,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {basePrice}
           </del>
         )}
-        <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#24B47E] dark:bg-[#24B47E]-600 dark:text-white  ">
+        <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#3FB47E] dark:bg-white-600 dark:text-white  ">
           Buy
         </button>
       </div>
