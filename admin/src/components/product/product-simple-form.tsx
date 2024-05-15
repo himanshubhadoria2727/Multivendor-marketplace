@@ -40,14 +40,14 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
         className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
       />
 
-      <Card className="w-full sm:w-8/12 md:w-2/3">
+      <Card className="w-full sm:w-8/12 flex flex-wrap justify-between md:w-full">
         <Input
           label={`${t('form:input-label-price')}*`}
           {...register('price')}
           type="number"
           error={t(errors.price?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 w-64"
         />
         <Input
           label={t('form:input-label-sale-price')}
@@ -55,7 +55,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           {...register('sale_price')}
           error={t(errors.sale_price?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 w-64"
         />
 
         {!is_external && (
@@ -65,7 +65,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             {...register('quantity')}
             error={t(errors.quantity?.message!)}
             variant="outline"
-            className="mb-5"
+            className="mb-5 w-64"
             // Need discussion
             disabled={isTranslateProduct}
           />
@@ -81,7 +81,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           }
           error={t(errors.sku?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 w-64"
           disabled={isTranslateProduct}
         />
 
@@ -90,7 +90,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           {...register('preview_url')}
           error={t(errors.preview_url?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 w-64"
         />
 
         <Checkbox
@@ -98,7 +98,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           id="is_external"
           label={t('form:input-label-is-external')}
           disabled={Boolean(is_digital)}
-          className="mb-5"
+          className="mb-5 w-64"
         />
 
         {is_digital ? (
@@ -139,7 +139,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
               {...register('external_product_url')}
               error={t(errors.external_product_url?.message!)}
               variant="outline"
-              className="mb-5"
+              className="mb-5 w-64"
               required
             />
             <Input
@@ -147,7 +147,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
               {...register('external_product_button_text')}
               error={t(errors.external_product_button_text?.message!)}
               variant="outline"
-              className="mb-5"
+              className="mb-5 w-64"
               required
             />
           </div>

@@ -307,6 +307,175 @@ useEffect(() => {
       ) : null}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
+          <Description
+              title={t('form:item-description')}
+              details={`${initialValues
+                  ? t('form:item-description-edit')
+                  : t('form:item-description-add')
+                } ${t('form:product-description-help-text')}`}
+              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
+            />
+          
+          <div className="my-5 flex flex-wrap sm:my-8 justify-center">
+          <Card className="w-full flex justify-around flex-wrap  sm:w-8/12 md:w-full">
+
+            <Input
+                label={`Site name*`}
+                {...register('name')}
+                placeholder='eg-google.com'
+                error={t(errors.name?.message!)}
+                variant="outline"
+                className="mb-5 w-64 max-md:w-80"
+              />
+
+              {isSlugEditable ? (
+                <div className="relative mb-5">
+                  <Input
+                    label={`Site slug*`}
+                    {...register('slug')}
+                    error={t(errors.slug?.message!)}
+                    variant="outline"
+                    disabled={isSlugDisable}
+                  />
+                  <button
+                    className="absolute top-[27px] right-px z-10 flex h-[46px] w-11 items-center justify-center rounded-tr rounded-br border-l border-solid border-border-base bg-white px-2 text-body transition duration-200 hover:text-heading focus:outline-none"
+                    type="button"
+                    title={t('common:text-edit')}
+                    onClick={() => setIsSlugDisable(false)}
+                  >
+                    <EditIcon width={14} />
+                  </button>
+                </div>
+              ) : (
+                <Input
+                  label={`Site slug*`}
+                  {...register('slug')}
+                  value={slugAutoSuggest}
+                  variant="outline"
+                  className="mb-5 w-64 max-md:w-80"
+                  disabled
+                />
+              )}
+              <Input
+                label={`${t('form:input-label-domain-name')}*`}
+                {...register('domain_name')}
+                error={t(errors.domain_name?.message!)}
+                variant="outline"
+                className="mb-5 mr-3 w-64 max-md:w-80"
+              />
+              <Input
+                label={"Domain Authority"}
+                type="number"
+                {...register('domain_authority')}
+                error={t(errors.domain_authority?.message!)}
+                variant="outline"
+                className="mb-5 w-64 max-md:w-80"
+              />
+              <Input
+                label={"Domain rating"}
+                type='number'
+                {...register('domain_rating')}
+                error={t(errors.domain_rating?.message!)}
+                variant="outline"
+                className="mb-5 w-64 max-md:w-80"
+              />
+              <Input
+                label={"Organic traffic"}
+                type='number'
+                {...register('organic_traffic')}
+                error={t(errors.organic_traffic?.message!)}
+                variant="outline"
+                className="mb-5 w-64 max-md:w-80"
+              />
+              <Input
+                label={"Spam score"}
+                type='number'
+                {...register('spam_score')}
+                error={t(errors.spam_score?.message!)}
+                variant="outline"
+                className="mb-5 w-64 max-md:w-80"
+              />
+              <Input
+                label={"Language"}
+                {...register('languages')}
+                error={t(errors.languages?.message!)}
+                variant="outline"
+                className="mb-5 w-64 max-md:w-80"
+              />
+              <div className="mb-5 w-64">
+                <Label>{t('Select Country')}</Label>
+                <SelectInput
+                  name="countries"
+                  control={control}
+                  options={countries}
+                  value={selectedCountry.label}
+                  error={t(errors.countries?.message!)}
+
+                />
+              </div>
+              <div className="relative mb-5">
+                {options?.useAi && (
+                  <OpenAIButton
+                    title="Generate Description With AI"
+                    onClick={handleGenerateDescription}
+                  />
+                )}
+                <RichTextEditor
+                  title={t('form:input-label-description')}
+                  control={control}
+                  name="description"
+                  error={t(errors?.description?.message)}
+                />
+              </div>
+
+              <div>
+                <Label>{t('form:input-label-status')}</Label>
+                {!isEmpty(statusList)
+                  ? statusList?.map((status: any, index: number) => (
+                    <Radio
+                      key={index}
+                      {...register('status')}
+                      label={t(status?.label)}
+                      id={status?.id}
+                      value={status?.value}
+                      className="mb-2"
+                      disabled={
+                        permission &&
+                          initialValues?.status === ProductStatus?.Draft
+                          ? true
+                          : false
+                      }
+                    />
+                  ))
+                  : ''}
+                {errors.status?.message && (
+                  <p className="my-2 text-xs text-red-500">
+                    {t(errors?.status?.message!)}
+                  </p>
+                )}
+              </div>
+              </Card>
+          </div>
+          <ProductSimpleForm initialValues={initialValues} />
+
+          <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-0 sm:my-8">
+            <Description
+              title={t('form:type-and-category')}
+              details={t('form:type-and-category-help-text')}
+              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
+            />
+
+            <Card className="w-full sm:w-8/12 md:w-2/3">
+              <ProductGroupInput
+                control={control}
+                error={t((errors?.type as any)?.message)}
+              />
+              <ProductCategoryInput control={control} setValue={setValue} />
+              {/* <ProductAuthorInput control={control} /> */}
+              {/* <ProductManufacturerInput control={control} setValue={setValue} /> */}
+              <ProductTagInput control={control} setValue={setValue} />
+            </Card>
+          </div>
           <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
             <Description
               title={t('form:featured-image-title')}
@@ -390,173 +559,6 @@ useEffect(() => {
               </Button>
             </Card>
           </div>
-
-          <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
-            <Description
-              title={t('form:type-and-category')}
-              details={t('form:type-and-category-help-text')}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-            />
-
-            <Card className="w-full sm:w-8/12 md:w-2/3">
-              <ProductGroupInput
-                control={control}
-                error={t((errors?.type as any)?.message)}
-              />
-              <ProductCategoryInput control={control} setValue={setValue} />
-              {/* <ProductAuthorInput control={control} /> */}
-              {/* <ProductManufacturerInput control={control} setValue={setValue} /> */}
-              <ProductTagInput control={control} setValue={setValue} />
-            </Card>
-          </div>
-
-          <div className="my-5 flex flex-wrap sm:my-8">
-            <Description
-              title={t('form:item-description')}
-              details={`${initialValues
-                  ? t('form:item-description-edit')
-                  : t('form:item-description-add')
-                } ${t('form:product-description-help-text')}`}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-            />
-
-            <Card className="w-full sm:w-8/12 md:w-2/3">
-              <Input
-                label={`${t('form:input-label-name')}*`}
-                {...register('name')}
-                error={t(errors.name?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-
-              {isSlugEditable ? (
-                <div className="relative mb-5">
-                  <Input
-                    label={`${t('Slug')}`}
-                    {...register('slug')}
-                    error={t(errors.slug?.message!)}
-                    variant="outline"
-                    disabled={isSlugDisable}
-                  />
-                  <button
-                    className="absolute top-[27px] right-px z-10 flex h-[46px] w-11 items-center justify-center rounded-tr rounded-br border-l border-solid border-border-base bg-white px-2 text-body transition duration-200 hover:text-heading focus:outline-none"
-                    type="button"
-                    title={t('common:text-edit')}
-                    onClick={() => setIsSlugDisable(false)}
-                  >
-                    <EditIcon width={14} />
-                  </button>
-                </div>
-              ) : (
-                <Input
-                  label={`${t('Slug')}`}
-                  {...register('slug')}
-                  value={slugAutoSuggest}
-                  variant="outline"
-                  className="mb-5"
-                  disabled
-                />
-              )}
-              <Input
-                label={`${t('form:input-label-domain-name')}*`}
-                {...register('domain_name')}
-                error={t(errors.domain_name?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-              <Input
-                label={"Domain Authority"}
-                type="number"
-                {...register('domain_authority')}
-                error={t(errors.domain_authority?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-              <Input
-                label={"Domain rating"}
-                type='number'
-                {...register('domain_rating')}
-                error={t(errors.domain_rating?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-              <Input
-                label={"Organic traffic"}
-                type='number'
-                {...register('organic_traffic')}
-                error={t(errors.organic_traffic?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-              <Input
-                label={"Spam score"}
-                type='number'
-                {...register('spam_score')}
-                error={t(errors.spam_score?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-              <Input
-                label={"Language"}
-                {...register('languages')}
-                error={t(errors.languages?.message!)}
-                variant="outline"
-                className="mb-5"
-              />
-              <div className="mb-5">
-                <Label>{t('Select Country')}</Label>
-                <SelectInput
-                  name="countries"
-                  control={control}
-                  options={countries}
-                  value={selectedCountry.label}
-                  error={t(errors.countries?.message!)}
-                />
-              </div>
-              <div className="relative mb-5">
-                {options?.useAi && (
-                  <OpenAIButton
-                    title="Generate Description With AI"
-                    onClick={handleGenerateDescription}
-                  />
-                )}
-                <RichTextEditor
-                  title={t('form:input-label-description')}
-                  control={control}
-                  name="description"
-                  error={t(errors?.description?.message)}
-                />
-              </div>
-
-              <div>
-                <Label>{t('form:input-label-status')}</Label>
-                {!isEmpty(statusList)
-                  ? statusList?.map((status: any, index: number) => (
-                    <Radio
-                      key={index}
-                      {...register('status')}
-                      label={t(status?.label)}
-                      id={status?.id}
-                      value={status?.value}
-                      className="mb-2"
-                      disabled={
-                        permission &&
-                          initialValues?.status === ProductStatus?.Draft
-                          ? true
-                          : false
-                      }
-                    />
-                  ))
-                  : ''}
-                {errors.status?.message && (
-                  <p className="my-2 text-xs text-red-500">
-                    {t(errors?.status?.message!)}
-                  </p>
-                )}
-              </div>
-            </Card>
-          </div>
-
           {/* <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
             <Description
               title={t('form:form-title-product-type')}
@@ -566,9 +568,6 @@ useEffect(() => {
 
 						<ProductTypeInput />
 					</div> */}
-
-          <ProductSimpleForm initialValues={initialValues} />
-
           {/* Simple Type */}
           {/* {product_type?.value === ProductType.Simple && (
           )} */}
