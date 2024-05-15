@@ -26,7 +26,8 @@ import { useTranslation } from 'next-i18next';
 import { ExternalIcon } from '@/components/icons/external-icon';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { name, slug, image, shop, is_external } = product ?? {};
+  const { name, slug, image, shop, is_external, domain_name, quantity } =
+    product ?? {};
   const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
   const { price, basePrice } = usePrice({
@@ -39,22 +40,13 @@ export default function ProductCard({ product }: { product: Product }) {
   };
   const { t } = useTranslation('common');
   const isFreeItem = isFree(product?.sale_price ?? product?.price);
+
+  console.log(`The product info`, product);
+
   return (
-    <div className="flex h-56 items-start pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300  dark:hover:shadow-[#787676]">
-      {/* <div className="relative flex h-36 w-36 flex-shrink-0 overflow-hidden 4xl:h-9 4xl:w-9">
-          <Image
-            alt={shop?.name}
-            quality={100}
-            fill
-            src={shop?.logo?.thumbnail ?? placeholder}
-            className="rounded-full bg-light-500 object-cover dark:bg-dark-400"
-            sizes="(max-width: 768px) 100vw,
-              (max-width: 1200px) 50vw,
-              33vw"
-          />
-        </div> */}
-      <div className=" flex-col flex-wrap  w-2/5 items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
-        <div className="mb-2 flex flex-shrink-0  items-center gap-4 p-1">
+    <div className="maincard flex flex-col sm:flex-row  items-center justify-center pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
+      <div className="nameDetails flex-col flex-wrap w-full sm:w-1/5 items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
+        <div className="mb-2 flex flex-wrap  items-center gap-4 p-1">
           <span className="flex  text-xs items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
             <CheckIconWithBg className=" w-4 h-4 mr-1" />
             Guest Post
@@ -86,23 +78,23 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
       </div>
-      <div className=" flex w-3/5 flex-wrap  border-r border-dark border-dotted">
+      <div className="Domain_Details flex w-full sm:w-3/5 flex-wrap justify-center items-center   dark:border-[#A9A7A7] ">
         <div className=" flex-wrap">
-          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-brand-dark">
+          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <UserIconAlt className=" w-4 h-4 mr-1 " />
             Domain Authority
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              27
+              {product?.quantity}
             </p>
           </span>
-          <span className="flex m-8 capitalize  text-sm text-[#919494] dark:text-brand-dark">
+          <span className="flex m-8 capitalize  text-sm text-[#919494] dark:text-[#E4DFDF]">
             <StarIcon className=" w-4 h-4 mr-1 " />
             Domain Rating
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
               27
             </p>
           </span>
-          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-brand-dark">
+          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <PeopleIcon className=" w-4 h-4 mr-1 " />
             Organic Traffic
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
@@ -111,21 +103,21 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
         <div className="flex-wrap">
-          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-brand-dark">
+          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <HelpIcon className=" w-4 h-4 mr-1 " />
             Spam Score
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
               27
             </p>
           </span>
-          <span className="flex m-8 capitalize  text-sm text-[#919494] dark:text-brand-dark">
+          <span className="flex m-8 capitalize  text-sm text-[#919494] dark:text-[#E4DFDF]">
             <LangIcon className=" w-4 h-4 mr-1 " />
             Language
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
               English,French
             </p>
           </span>
-          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-brand-dark">
+          <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <LinkIcon className=" w-4 h-4 mr-1 " />
             Links
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
@@ -134,25 +126,25 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
         </div>
         <div className="flex-wrap">
-          <span className="flex m-8 mb-1 capitalize  text-sm text-[#919494]  dark:text-brand-dark">
+          <span className="flex m-8 mb-1 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <GlobalIcon className=" w-4 h-4 mr-1 " />
             Countries
           </span>
-          <span className='text-xs ml-8  items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark'>
+          <span className="text-xs ml-8  items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
             India , Pakistan
           </span>
         </div>
       </div>
 
-      <div className="flex  w-1/5  flex-col items-center  pl-6">
-        <span className="mt-2 rounded-l bg-light-00 px-8 py-3 !important-text-lg font-bold uppercase text-4xl text-brand dark:bg-dark-300 dark:text-brand-dark">
+      <div className="Price_Buy flex w-full sm:w-1/5 flex-col  justify-center items-center pl-6">
+        <span className="mt-2 rounded-l bg-light-00 px-8 py-3 !important-text-lg font-bold uppercase text-4xl text-brand  dark:text-brand-dark">
           {isFreeItem ? t('text-free') : price}
         </span>
-        {/* {!isFreeItem && basePrice && (
-            <del className="px-1 text-20px font-medium text-dark-900 dark:text-dark-700">
-              {basePrice}
-            </del>
-          )} */}
+        {!isFreeItem && basePrice && (
+          <del className="px-1 text-20px font-medium text-dark-900 dark:text-dark-700">
+            {basePrice}
+          </del>
+        )}
         <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#24B47E] dark:bg-[#24B47E]-600 dark:text-white  ">
           Buy
         </button>

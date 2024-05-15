@@ -440,6 +440,8 @@ export interface Product {
   image: Attachment;
   gallery: Attachment[];
   shop: Shop;
+  domain_name:string;
+  quantity:number;
   created_at: string;
   updated_at: string;
   preview_url: string;

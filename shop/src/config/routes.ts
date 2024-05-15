@@ -1,7 +1,10 @@
+import dashboard from "@/pages/dashboard";
+
 const routes = {
   home: '/',
   authors: '/authors',
   explore: '/explore',
+  dashboard: '/dashboard',
   popularProducts: '/popular-products',
   about: '/about-us',
   contact: '/contact-us',
