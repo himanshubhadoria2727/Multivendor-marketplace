@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import { Url } from 'url';
 
 export type NextPageWithLayout<P = {}> = NextPage<P> & {
   authorization?: boolean;
@@ -730,6 +731,12 @@ export interface Product {
   price: number;
   quantity?: number;
   domain_name?: string;
+  domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -744,7 +751,14 @@ export interface CreateProduct {
   price: number;
   sale_price?: number;
   quantity?: number;
+  site_name:string;
   domain_name?: string;
+  domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];

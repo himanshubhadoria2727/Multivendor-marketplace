@@ -16,7 +16,8 @@ export type MODAL_VIEWS =
   | 'GATEWAY_MODAL'
   | 'NEWSLETTER_MODAL'
   | 'PROMO_POPUP_MODAL'
-  | 'REVIEW_POPUP_MODAL';
+  | 'REVIEW_POPUP_MODAL'
+  | 'PRODUCT_INPUT_DISPLAY';
 
 interface State {
   view: MODAL_VIEWS | undefined;

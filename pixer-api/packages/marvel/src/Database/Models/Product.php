@@ -83,6 +83,7 @@ class Product extends Model
     {
         $_blockedDates = $this->fetchBlockedDatesForAProduct();
         $_flatBlockedDates = [];
+        
         foreach ($_blockedDates as $date) {
             $from = Carbon::parse($date->from);
             $to = Carbon::parse($date->to);

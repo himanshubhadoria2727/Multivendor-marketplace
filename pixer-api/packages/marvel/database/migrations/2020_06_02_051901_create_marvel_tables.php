@@ -100,6 +100,7 @@ class CreateMarvelTables extends Migration
             $table->enum('status', ProductStatus::getValues())->default(ProductStatus::DRAFT);
             $table->enum('product_type', ProductType::getValues())->default(ProductType::SIMPLE);
             $table->string('domain_name');
+            $table->double('domain_authority');
             $table->string('height')->nullable();
             $table->string('width')->nullable();
             $table->string('length')->nullable();

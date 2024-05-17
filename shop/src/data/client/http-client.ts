@@ -19,6 +19,7 @@ Axios.interceptors.request.use(
     config.headers = {
       ...config.headers,
       Authorization: `Bearer ${token ? token : ''}`,
+      'ngrok-skip-browser-warning': '69420'
     };
     return config;
   },

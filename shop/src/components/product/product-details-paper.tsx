@@ -79,7 +79,7 @@ export default function ProductDetailsPaper({ product, className }: Props) {
                   <ShoppingCartIcon className="h-[18px] w-[18px] text-dark-900 ltr:mr-2.5 rtl:ml-2.5 dark:text-light-900" />
                   {pluralize(t('text-sale'), orders_count, true)}
                 </div>
-              )}
+              )}  
               <div className="flex items-center tracking-[.1px] text-dark dark:text-light">
                 <DownloadIcon className="h-[18px] w-[18px] text-dark-900 ltr:mr-2.5 rtl:ml-2.5 dark:text-light-900" />
                 {pluralize(t('text-download'), total_downloads, true)}

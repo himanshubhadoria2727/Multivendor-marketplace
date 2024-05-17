@@ -18,7 +18,8 @@ export const useCreateProductMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { t } = useTranslation();
-  return useMutation(productClient.create, {
+  return useMutation(
+    productClient.create, {
     onSuccess: async () => {
       const generateRedirectUrl = router.query.shop
         ? `/${router.query.shop}${Routes.product.list}`
@@ -43,6 +44,8 @@ export const useCreateProductMutation = () => {
     },
   });
 };
+
+
 
 export const useUpdateProductMutation = () => {
   const { t } = useTranslation();
@@ -202,3 +205,4 @@ export const useProductsByFlashSaleQuery = (options: any) => {
     loading: isLoading,
   };
 };
+

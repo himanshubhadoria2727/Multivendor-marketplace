@@ -71,6 +71,12 @@ class ProductRepository extends BaseRepository
         'product_type',
         'quantity',
         'domain_name',
+        'domain_authority',
+        'domain_rating',
+        'organic_traffic',
+        'spam_score',
+        'languages',
+        'countries',
         'is_digital',
         'is_external',
         'external_product_url',
@@ -494,6 +500,7 @@ class ProductRepository extends BaseRepository
                     'max_price' => $product->max_price,
                     'min_price' => $product->min_price,
                     'domain_name' => $product->domain_name,
+                    'domain_authority' => $product->domain_authority,
                     'quantity' => $product->quantity,
                 ]);
             }

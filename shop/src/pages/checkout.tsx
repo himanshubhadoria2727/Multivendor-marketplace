@@ -117,7 +117,7 @@ const CheckoutPage: NextPageWithLayout = () => {
                   onClick={verify}
                   isLoading={isLoading}
                 >
-                  {t('text-check-availability')}
+                  {t('Proceed')}
                 </Button>
               </div>
             )}

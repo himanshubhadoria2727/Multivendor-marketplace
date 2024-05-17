@@ -9,14 +9,15 @@ export default function Copyright({ className }: { className?: string }) {
   return (
     <span className={cn('tracking-[0.2px]', className)}>
       ©{currentYear}{' '}
-      <Link
+      {/* <Link
         className="text-heading font-medium hover:text-brand-dark"
         href={settings?.siteLink ?? routes?.home}
         target="_blank"
       >
         {settings?.siteTitle}
-      </Link>
-      . {settings?.copyrightText}{' '}
+      </Link> */}
+      .Copyright © GuestLink. All rights reserved worldwide.
+      {/* . {settings?.copyrightText}{' '}
       {settings?.externalText ? (
         <Link
           className="text-heading font-medium hover:text-brand-dark"
@@ -27,7 +28,7 @@ export default function Copyright({ className }: { className?: string }) {
         </Link>
       ) : (
         ''
-      )}
+      )} */}
     </span>
   );
 }

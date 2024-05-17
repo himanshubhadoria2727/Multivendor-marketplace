@@ -10,7 +10,7 @@ import type {
 import type { Schema } from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useEffect } from 'react';
+import { useEffect } from 'react'; 
 
 type ServerErrors<T> = {
   [Property in keyof T]: string;
