@@ -58,6 +58,7 @@ import TooltipLabel from '@/components/ui/tooltip-label';
 import Select from "react-select";
 import SelectInput from '../ui/select-input';
 import { ValidationError } from 'yup';
+import SelectCountry from './selectCountries';
 
 
 type ProductFormProps = {
@@ -76,19 +77,20 @@ export default function CreateOrUpdateProductForm({
     language: locale!,
   });
 
-  const [countries, setCountries] = useState([]);
-const [selectedCountry, setSelectedCountry] = useState({});
+// const [countries, setCountries] = useState([]);
+// const [selectedCountry, setSelectedCountry] = useState({});
 
-useEffect(() => {
-  fetch(
-    "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      setCountries(data.countries);
-      setSelectedCountry(data.userSelectValue.label);
-    });
-}, []);
+// useEffect(() => {
+//   fetch(
+//     "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
+//   )
+//     .then((response) => response.json())
+//     .then((data) => {
+//       console.log("api response   "+ JSON.stringify(data))
+//       setCountries(data.countries);
+//       setSelectedCountry(data.userSelectValue.label.toString());
+//     });
+// }, []);
 
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -142,12 +144,12 @@ useEffect(() => {
   const upload_max_filesize = options?.server_info?.upload_max_filesize / 1024;
 
   const { mutate: createProduct, isLoading: creating } = useCreateProductMutation();
-  const { mutate: updateProduct, isLoading: updating } =
-    useUpdateProductMutation();
+  const { mutate: updateProduct, isLoading: updating } = useUpdateProductMutation();
 
   const onSubmit = async (values: ProductFormValues) => {
     console.log("HI nandu");
-    console.log(selectedCountry);
+    console.log(values);
+    values.countries=values.countries?.label;
     const inputValues = {
       language: router.locale,
       
@@ -404,14 +406,7 @@ useEffect(() => {
               />
               <div className="mb-5 w-64">
                 <Label>{t('Select Country')}</Label>
-                <SelectInput
-                  name="countries"
-                  control={control}
-                  options={countries}
-                  value={selectedCountry.label}
-                  error={t(errors.countries?.message!)}
-
-                />
+                <SelectCountry/>
               </div>
               <div className="relative mb-5">
                 {options?.useAi && (

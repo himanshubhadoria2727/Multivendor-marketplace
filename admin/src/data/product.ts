@@ -45,6 +45,8 @@ export const useCreateProductMutation = () => {
   });
 };
 
+
+
 export const useUpdateProductMutation = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -203,3 +205,4 @@ export const useProductsByFlashSaleQuery = (options: any) => {
     loading: isLoading,
   };
 };
+

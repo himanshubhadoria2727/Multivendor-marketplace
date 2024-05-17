@@ -54,26 +54,27 @@ export const productValidationSchema = yup.object().shape({
       domain_authority:yup
         .number()
         .typeError('Authority must be a number')
-        .positive('form:error-price-must-positive')
+        .positive('must be positive')
+        .required('Domain authority is required'),
+      domain_rating: yup
+        .number()
+        .typeError('Domain rating must be a number')
+        .positive('must be positive')
+        .max(100)
+        .required('Domain rating is required'),
+      organic_traffic: yup
+        .number()
+        .typeError('Organic Traffic must be a number')
+        .positive('must be positive')
         .required('form:error-price-required'),
-      // domain_rating: yup
-      //   .number()
-      //   .typeError('Domain rating must be a number')
-      //   .positive('form:error-price-must-positive')
-      //   .required('form:error-price-required'),
-      // organic_traffic: yup
-      //   .number()
-      //   .typeError('Organic Traffic must be a number')
-      //   .positive('form:error-price-must-positive')
-      //   .required('form:error-price-required'),
-      // spam_score:yup
-      // .number()
-      //   .typeError('Spam score must be a number')
-      //   .positive('form:error-price-must-positive')
-      //   .required('form:error-price-required'),
-      // countries:yup
-      // .string()
-      //   .required("this is require"),
+      spam_score:yup
+      .number()
+        .typeError('Spam score must be a number')
+        .positive('must be positive')
+        .required('Spam score is required'),
+      countries:yup
+      .string()
+        .required("this is require"),
       quantity: yup
         .number()
         .typeError('form:error-quantity-must-number')
