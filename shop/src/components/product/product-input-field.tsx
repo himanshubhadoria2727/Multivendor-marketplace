@@ -81,8 +81,8 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   const isFreeItem = isFree(sale_price ?? price);
   return (
     <div className="flex max-w-full flex-col bg-light text-left dark:bg-dark-250 xs:max-w-[430px] sm:max-w-[550px] md:max-w-[600px] lg:max-w-[960px] xl:max-w-[1200px] 2xl:max-w-[1266px] 3xl:max-w-[1460px]">
-      <div className="flex flex-col p-4 rtl:space-x-reverse md:p-6 lg:flex-row lg:space-x-7 xl:space-x-8 xl:p-8 3xl:space-x-10">
-        <div className="flex shrink-0 flex-col justify-between text-13px lg:w-[400px] xl:w-[290px] 3xl:w-[555px]">
+      {/* <div className="flex flex-col p-4 rtl:space-x-reverse md:p-6 lg:flex-row lg:space-x-7 xl:space-x-8 xl:p-8 3xl:space-x-10"> */}
+        {/* <div className="flex shrink-0 flex-col justify-between text-13px lg:w-[400px] xl:w-[290px] 3xl:w-[555px]"> */}
           <div className="pb-7 xs:pb-8 lg:pb-10">
             <Form<CreateProductInput>
               onSubmit={handleFormSubmit}
@@ -184,8 +184,8 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
             </Form>
           </div>
         </div>
-      </div>
-    </div>
+      // </div>
+    // </div>
   );
 };
 

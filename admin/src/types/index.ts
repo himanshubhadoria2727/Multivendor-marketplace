@@ -731,8 +731,8 @@ export interface Product {
   price: number;
   quantity?: number;
   domain_name?: string;
-  domain_authority:number;
-  domain_rating:number;
+  domain_authority?:number;
+  domain_rating?:number;
   organic_traffic:number;
   spam_score:number;
   languages:string;

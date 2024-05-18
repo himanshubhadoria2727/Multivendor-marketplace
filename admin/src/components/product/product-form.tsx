@@ -58,7 +58,7 @@ import TooltipLabel from '@/components/ui/tooltip-label';
 import Select from "react-select";
 import SelectInput from '../ui/select-input';
 import { ValidationError } from 'yup';
-import SelectCountry from './selectCountries';
+import { useCountriesQuery } from '@/data/countries';
 
 
 type ProductFormProps = {
@@ -77,20 +77,20 @@ export default function CreateOrUpdateProductForm({
     language: locale!,
   });
 
-// const [countries, setCountries] = useState([]);
-// const [selectedCountry, setSelectedCountry] = useState({});
+  // const [countries, setCountries] = useState([]);
+  // const [selectedCountry, setSelectedCountry] = useState({});
 
-// useEffect(() => {
-//   fetch(
-//     "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
-//   )
-//     .then((response) => response.json())
-//     .then((data) => {
-//       console.log("api response   "+ JSON.stringify(data))
-//       setCountries(data.countries);
-//       setSelectedCountry(data.userSelectValue.label.toString());
-//     });
-// }, []);
+  // useEffect(() => {
+  //   fetch(
+  //     "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
+  //   )
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("api response   "+ JSON.stringify(data))
+  //       setCountries(data.countries);
+  //       setSelectedCountry(data.userSelectValue.label.toString());
+  //     });
+  // }, []);
 
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -149,10 +149,10 @@ export default function CreateOrUpdateProductForm({
   const onSubmit = async (values: ProductFormValues) => {
     console.log("HI nandu");
     console.log(values);
-    values.countries=values.countries?.label;
+    values.countries=values.countries.label;
     const inputValues = {
       language: router.locale,
-      
+
       ...getProductInputValues(values, initialValues, isNewTranslation),
     };
 
@@ -208,6 +208,9 @@ export default function CreateOrUpdateProductForm({
     });
   }, [productName]);
 
+
+  const { data: allCountries, error, isLoading } = useCountriesQuery();
+  console.log(allCountries)
   const slugAutoSuggest = formatSlug(watch('name'));
   if (Boolean(options?.isProductReview)) {
     if (permission) {
@@ -310,18 +313,18 @@ export default function CreateOrUpdateProductForm({
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Description
-              title={t('form:item-description')}
-              details={`${initialValues
-                  ? t('form:item-description-edit')
-                  : t('form:item-description-add')
-                } ${t('form:product-description-help-text')}`}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-            />
-          
-          <div className="my-5 flex flex-wrap sm:my-8 justify-center">
-          <Card className="w-full flex justify-around flex-wrap  sm:w-8/12 md:w-full">
+            title={t('form:item-description')}
+            details={`${initialValues
+              ? t('form:item-description-edit')
+              : t('form:item-description-add')
+              } ${t('form:product-description-help-text')}`}
+            className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
+          />
 
-            <Input
+          <div className="my-5 flex flex-wrap sm:my-8 justify-center">
+            <Card className="w-full flex justify-around flex-wrap  sm:w-8/12 md:w-full">
+
+              <Input
                 label={`Site name*`}
                 {...register('name')}
                 placeholder='eg-google.com'
@@ -406,7 +409,14 @@ export default function CreateOrUpdateProductForm({
               />
               <div className="mb-5 w-64">
                 <Label>{t('Select Country')}</Label>
-                <SelectCountry/>
+                <SelectInput
+                   name="countries"
+                   control={control}
+                   options={allCountries?.map((country) => ({
+                     label: country.name.common,
+                     value: country.cca3,
+                   }))}
+                />
               </div>
               <div className="relative mb-5">
                 {options?.useAi && (
@@ -449,7 +459,7 @@ export default function CreateOrUpdateProductForm({
                   </p>
                 )}
               </div>
-              </Card>
+            </Card>
           </div>
           <ProductSimpleForm initialValues={initialValues} />
 

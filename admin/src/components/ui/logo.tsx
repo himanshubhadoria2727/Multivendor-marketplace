@@ -36,7 +36,8 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
             height: siteSettings.collapseLogo.height,
           }}
         >
-          <Image
+          GuestLink
+          {/* <Image
             src={
               settings?.options?.collapseLogo?.original ??
               siteSettings.collapseLogo.url
@@ -46,24 +47,25 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
             sizes="(max-width: 768px) 100vw"
             className="object-contain"
             loading="eager"
-          />
+          /> */}
         </span>
       ) : (
         <span
-          className="relative overflow-hidden "
+          className="relative w-full font-serif text-3xl font-semibold"
           style={{
             width: siteSettings.logo.width,
             height: siteSettings.logo.height,
           }}
         >
-          <Image
+          GuestLink
+          {/* <Image
             src={settings?.options?.logo?.original ?? siteSettings.logo.url}
             alt={settings?.options?.siteTitle ?? siteSettings.logo.alt}
             fill
             sizes="(max-width: 768px) 100vw"
             className="object-contain"
             loading="eager"
-          />
+          /> */}
         </span>
       )}
     </Link>

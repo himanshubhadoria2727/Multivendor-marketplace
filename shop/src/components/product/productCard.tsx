@@ -26,7 +26,7 @@ import { useTranslation } from 'next-i18next';
 import { ExternalIcon } from '@/components/icons/external-icon';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { name, slug, image, shop, is_external, domain_name, quantity } =
+  const { name, slug, image, shop, is_external,  } =
     product ?? {};
   const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: { product: Product }) {
           title={name}
           className="mb-0.5 text-lg truncate pl-2 font-medium text-dark-100 dark:text-light"
         >
-          <AnchorLink href={routes.productUrl(slug)}>{name}</AnchorLink>
+        <AnchorLink href={`https://${name}`} target='_blank'>{name}</AnchorLink>
         </h3>
         <AnchorLink
           href={routes.shopUrl(shop?.slug)}
@@ -82,23 +82,23 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className=" flex-wrap">
           <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <UserIconAlt className=" w-4 h-4 mr-1 " />
-            Domain Authority
+            Domain authority
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              {product?.quantity}
+              {product?.domain_authority}
             </p>
           </span>
           <span className="flex m-8 capitalize  text-sm text-[#919494] dark:text-[#E4DFDF]">
             <StarIcon className=" w-4 h-4 mr-1 " />
             Domain Rating
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              27
+            {product?.domain_rating}
             </p>
           </span>
           <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <PeopleIcon className=" w-4 h-4 mr-1 " />
             Organic Traffic
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              1527
+            {product?.organic_traffic}
             </p>
           </span>
         </div>
@@ -107,21 +107,21 @@ export default function ProductCard({ product }: { product: Product }) {
             <HelpIcon className=" w-4 h-4 mr-1 " />
             Spam Score
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              27
+            {product?.spam_score}
             </p>
           </span>
           <span className="flex m-8 capitalize  text-sm text-[#919494] dark:text-[#E4DFDF]">
             <LangIcon className=" w-4 h-4 mr-1 " />
             Language
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              English,French
+            {product?.languages}
             </p>
           </span>
           <span className="flex m-8 capitalize  text-sm text-[#919494]  dark:text-[#E4DFDF]">
             <LinkIcon className=" w-4 h-4 mr-1 " />
             Links
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              27
+              Follow
             </p>
           </span>
         </div>
@@ -131,7 +131,7 @@ export default function ProductCard({ product }: { product: Product }) {
             Countries
           </span>
           <span className="text-xs ml-8  items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-            India , Pakistan
+          {product?.countries}
           </span>
         </div>
       </div>
@@ -145,7 +145,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {basePrice}
           </del>
         )}
-        <button className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#3FB47E] dark:bg-white-600 dark:text-white  ">
+        <button onClick={()=>openModal('PRODUCT_DETAILS', { slug })}className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#38A271] dark:bg-white-600 dark:text-white  ">
           Buy
         </button>
       </div>

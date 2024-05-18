@@ -39,7 +39,7 @@ export type ProductFormValues = Omit<
   in_flash_sale: boolean;
   variations?: AttributeValue[];
   variation_options?: Variation[];
-  // image: AttachmentInput;
+  image: AttachmentInput;
 };
 
 export type ProductTypeOption = {

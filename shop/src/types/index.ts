@@ -431,7 +431,6 @@ export interface Product {
   id: string;
   name: string;
   slug: string;
-  domain_name:string;
   description: string;
   price: number;
   sale_price: number;
@@ -441,6 +440,12 @@ export interface Product {
   gallery: Attachment[];
   shop: Shop;
   domain_name:string;
+  domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
   quantity:number;
   created_at: string;
   updated_at: string;

@@ -22,7 +22,7 @@ import { useSanitizeContent } from '@/lib/sanitize-content';
 import ProductInputDisplay from './product-input-main';
 
 function getPreviews(gallery: any[], image: any) {
-  if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery;3
+  if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery; 3
   if (!isEmpty(image)) return [image];
   return [{}];
 }
@@ -68,7 +68,7 @@ export default function ProductPopupDetails() {
           className="truncate px-2.5 py-1 text-base font-medium text-dark dark:text-light md:text-lg ltr:lg:pl-4 ltr:lg:pr-5 rtl:lg:pr-4 rtl:lg:pl-5 3xl:text-xl"
         >
           <AnchorLink
-            href={routes.productUrl(slug)}
+            href={`https://${name}`}
             className="transition-colors hover:text-brand"
           >
             {name}
@@ -132,7 +132,7 @@ export default function ProductPopupDetails() {
                 </div>
               </div>
             )} */}
-            <ProductInputDisplay/>
+            <ProductInputDisplay />
             <ProductInformation
               tags={tags}
               domain_name={domain_name}
@@ -141,13 +141,13 @@ export default function ProductPopupDetails() {
               layoutType={type.name}
               //@ts-ignore
               icon={type?.icon}
-              className="border-t border-light-500 py-5 dark:border-dark-500 lg:py-6 3xl:py-10"
+              className="border-t border-light-500 py-5 dark:border-dark-500 lg:py-6 3xl:py-10 text-base"
             />
-            <div className="border-t border-light-500 pt-5 dark:border-dark-500">
+            {/* <div className="border-t border-light-500 pt-5 dark:border-dark-500">
               <ProductSocialShare productSlug={slug} />
-            </div>
+            </div> */}
           </div>
-          <div className="flex flex-col-reverse items-center xs:flex-row xs:gap-2.5 xs:pb-4 md:flex-nowrap md:gap-3.5 lg:gap-4 3xl:pb-14">
+          {/* <div className="flex flex-col-reverse items-center xs:flex-row xs:gap-2.5 xs:pb-4 md:flex-nowrap md:gap-3.5 lg:gap-4 3xl:pb-14">
             {is_external ? (
               <Link
                 href={external_product_url}
@@ -181,7 +181,7 @@ export default function ProductPopupDetails() {
                 {t('text-live-preview')}
               </a>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

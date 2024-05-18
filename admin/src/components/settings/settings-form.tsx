@@ -189,7 +189,7 @@ type FormValues = {
   // useOtp: boolean;
   // freeShipping: boolean;
   // freeShippingAmount: number;
-  // useCashOnDelivery: boolean;
+  useCashOnDelivery: boolean;
 };
 
 type paymentGatewayOption = {
@@ -673,7 +673,7 @@ export default function SettingsForm({ settings, taxClasses }: IProps) {
           className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
         />
         <Card className="w-full sm:w-8/12 md:w-2/3">
-          {/* <div className="mb-5">
+          <div className="mb-5">
             <div className="flex items-center gap-x-4">
               <SwitchInput
                 name="useCashOnDelivery"
@@ -682,7 +682,7 @@ export default function SettingsForm({ settings, taxClasses }: IProps) {
               />
               <Label className="mb-0">{t('Enable Cash On Delivery')}</Label>
             </div>
-          </div> */}
+          </div>
           <div className="mb-5">
             <Label>{t('form:input-label-currency')}</Label>
             <SelectInput
