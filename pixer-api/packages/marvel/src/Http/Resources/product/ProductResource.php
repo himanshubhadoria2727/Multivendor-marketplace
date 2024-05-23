@@ -35,6 +35,7 @@ class ProductResource extends Resource
             'domain_rating'          => $this->domain_rating,
             'organic_traffic'          => $this->organic_traffic,
             'spam_score'          => $this->spam_score,
+            'link_type'          => $this->link_type,
             'languages'          => $this->languages,
             'countries'          => $this->countries,
             'sku'                  => $this->sku,

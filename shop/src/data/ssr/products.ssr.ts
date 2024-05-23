@@ -10,6 +10,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 // This function gets called at build time
 type ParsedQueryParams = {
+  productId:string;
   productSlug: string;
 };
 
@@ -20,7 +21,7 @@ export const getStaticPaths: GetStaticPaths<ParsedQueryParams> = async ({
   const { data } = await client.products.all({ limit: 100 });
   const paths = data?.flatMap((product) =>
     locales?.map((locale) => ({
-      params: { productSlug: product.slug },
+      params: { productSlug: product.slug, productId:product.id },
       locale,
     }))
   );
@@ -38,9 +39,10 @@ export const getStaticProps: GetStaticProps<
   PageProps,
   ParsedQueryParams
 > = async ({ params, locale }) => {
-  const { productSlug } = params!; //* we know it's required because of getStaticPaths
+  const { productSlug, productId } = params!; //* we know it's required because of getStaticPaths
   try {
     const product = await client.products.get({
+      name:productId,
       slug: productSlug,
       language: locale,
     });

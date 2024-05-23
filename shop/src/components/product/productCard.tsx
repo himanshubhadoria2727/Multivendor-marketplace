@@ -26,7 +26,7 @@ import { useTranslation } from 'next-i18next';
 import { ExternalIcon } from '@/components/icons/external-icon';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { name, slug, image, shop, is_external,  } =
+  const {id, name, slug, image, shop, is_external,  } =
     product ?? {};
   const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
@@ -46,19 +46,19 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <div className="maincard flex flex-col sm:flex-row  items-center justify-center pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
       <div className="nameDetails flex-col flex-wrap w-full sm:w-1/5 items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
-        <div className="mb-2 flex flex-wrap  items-center gap-4 p-1">
-          <span className="flex  text-xs items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-            <CheckIconWithBg className=" w-4 h-4 mr-1" />
+        <div className="mb-2 flex w-64 flex-nowrap items-center gap-4 p-1">
+          <span className="flex text-xs items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+            <CheckIconWithBg className="w-4 h-4 mr-1" />
             Guest Post
           </span>
-          <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize  text-xs text-brand dark:bg-dark-300 dark:text-brand-dark ">
+          <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-xs text-brand dark:bg-dark-300 dark:text-brand-dark">
             <CheckIconWithBg className="w-4 h-4 mr-1" />
             Grey Niche
           </span>
         </div>
         <h3
           title={name}
-          className="mb-0.5 text-lg truncate pl-2 font-medium text-dark-100 dark:text-light"
+          className="mb-0.5 text-lg truncate pl-2 font-medium text-blue-500 dark:text-blue-500  hover:underline"
         >
         <AnchorLink href={`https://${name}`} target='_blank'>{name}</AnchorLink>
         </h3>
@@ -74,7 +74,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
           <span className="flex  mt-2 text-lg text-[#05AAFB] ">
             <InformationIcon className=" w-4 h-4 mr-1 mt-1.5" />
-            View site Info
+            <a href={`/products/${id}`}>View site Info</a>
           </span>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function ProductCard({ product }: { product: Product }) {
             <LinkIcon className=" w-4 h-4 mr-1 " />
             Links
             <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
-              Follow
+                {product?.link_type}
             </p>
           </span>
         </div>
@@ -145,7 +145,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {basePrice}
           </del>
         )}
-        <button onClick={()=>openModal('PRODUCT_DETAILS', { slug })}className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#38A271] dark:bg-white-600 dark:text-white  ">
+        <button onClick={()=>openModal('PRODUCT_DETAILS', { slug })}className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#38A272] dark:bg-white-600 dark:text-white  ">
           Buy
         </button>
       </div>

@@ -85,7 +85,7 @@ export default function Card({ product }: { product: Product }) {
               )}
             >
               <DetailsIcon
-              onClick={() => openModal('PRODUCT_DETAILS', { slug })}
+              onClick={goToDetailsPage}
                 className={cn(isGridCompact ? 'h-4 w-4' : 'h-5 w-5')}
               />
             </div>

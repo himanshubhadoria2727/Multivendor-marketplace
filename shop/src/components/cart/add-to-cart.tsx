@@ -4,12 +4,13 @@ import toast from 'react-hot-toast';
 import Button from '@/components/ui/button';
 import { useCart } from '@/components/cart/lib/cart.context';
 import usePrice from '@/lib/hooks/use-price';
-import type { Product } from '@/types';
+import type { CreateProductInput, Product } from '@/types';
 import { generateCartItem } from './lib/generate-cart-item';
 import { useTranslation } from 'next-i18next';
 
 interface Props {
   item: Product;
+  form:CreateProductInput;
   className?: string;
   toastClassName?: string;
   withPrice?: boolean;
@@ -18,6 +19,7 @@ interface Props {
 
 export default function AddToCart({
   item,
+  form,
   className,
   toastClassName,
   withPrice = true,
@@ -45,12 +47,13 @@ export default function AddToCart({
     }
     setCartingSuccess(true);
     addItemToCart(generateCartItem(item), 1);
+    console.log(addItemToCart);
     toast.success(<b>{t('text-add-to-cart-message')}</b>, {
       className: toastClassName,
     });
     setTimeout(() => {
       setCartingSuccess(false);
-    }, 800);
+    }, 800);  
   }
   return (
     <Button

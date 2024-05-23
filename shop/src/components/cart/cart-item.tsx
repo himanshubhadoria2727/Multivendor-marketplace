@@ -42,10 +42,10 @@ export default function CartItem({
         </h3>
         <p className="mt-1 mb-2.5">
           <AnchorLink
-            href={routes.shopUrl(shop.slug)}
+            href={routes.shopUrl(shop?.slug)}
             className="text-light-base transition-colors hover:text-brand-dark dark:text-dark-base"
           >
-            {shop.name}
+            {shop?.name}
           </AnchorLink>
         </p>
         <p className="flex items-center gap-1">

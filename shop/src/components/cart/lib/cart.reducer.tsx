@@ -33,6 +33,7 @@ type Action =
   | { type: 'UPDATE_CART_LANGUAGE'; language: string };
 
 export interface State {
+  
   items: Item[];
   isEmpty: boolean;
   totalItems: number;

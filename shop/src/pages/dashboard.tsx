@@ -1,4 +1,4 @@
-import { User } from '@/types';
+  import { User } from '@/types';
 import { NextPageWithLayout } from '@/types';
 import Layout from '@/layouts/_layout';
 import Seo from '@/layouts/_seo';
@@ -28,20 +28,21 @@ const Dashboard: React.FC<DashboardProps> = ({ users }) => {
 
   return (
     <div className="parent flex flex-col  p-4">
-      <div className="Username flex flex-col md:flex-row items-center justify-center h-auto m-2 md:m-4 p-5 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:shadow-lg dark:shadow-[#8D9797] w-full md:w-auto sm:w-auto">
+      <div className="Username flex flex-col md:flex-row items-center justify-center h-auto m-2 md:m-4 p-5 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:shadow dark:shadow-[#8D9797] w-full md:w-auto sm:w-auto">
         <h1 className="text-3xl w-100 text-[#474E4E] font-bold dark:text-white p-4">
           Hello Customer !
         </h1>
       </div>
-      <div className="OrderDetails-parent  m-4 flex flex-wrap justify-around  ">
+      
+      <div className="OrderDetails-parent bg-white m-4 flex flex-wrap justify-around p-4 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:bg-dark-200">
         <div
-          className="OrderDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
-        border-l-4 border-brand dark:border-white"
+          className="OrderDetails lg:w-1/5 relative w-full md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          border border-grey-700 dark:border-grey-700 border-b-4 border-b-blue-400 dark:border-b-blue-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-lg font-bold dark:text-white">
+            <span className="flex-col text-base font-bold dark:text-white">
               Active Orders
-              <p className="text-brand">0</p>
+              <p className="text-brand absolute bottom-3 left-5">6</p>
             </span>
             <span className="flex items-center justify-center">
               <PurchaseIconDB color="#3FD424" className="h-10 w-10" />
@@ -49,13 +50,13 @@ const Dashboard: React.FC<DashboardProps> = ({ users }) => {
           </div>
         </div>
         <div
-          className="OrderDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
-          border-l-4 border-brand dark:border-white"
+          className="OrderDetails lg:w-1/5 relative w-full md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          border border-grey-700 dark:border-grey-700 border-b-4 border-b-green-400 dark:border-b-green-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-lg font-bold dark:text-white">
+            <span className="flex-col text-base font-bold dark:text-white">
               Completed Orders
-              <p className="text-[#F5EA04]">0</p>
+              <p className="text-brand absolute bottom-3 left-5">10</p>
             </span>
             <span className="flex items-center justify-center">
               <PurchaseIconDB color="#F5EA04" className="h-10 w-10" />
@@ -63,13 +64,13 @@ const Dashboard: React.FC<DashboardProps> = ({ users }) => {
           </div>
         </div>
         <div
-          className="OrderDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
-          border-l-4 border-brand dark:border-white"
+          className="OrderDetails lg:w-1/5 w-full relative md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          border border-grey-700 dark:border-grey-700 border-b-4 border-b-purple-400 dark:border-b-purple-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-lg font-bold dark:text-white">
+            <span className="flex-col text-base font-bold dark:text-white">
               Wallet Balance
-              <p className="text-brand">0</p>
+              <p className="absolute bottom-3 left-5 text-brand">$310</p>
             </span>
             <span className="flex items-center justify-center">
               <BalanceIcon color="#3FD424" className="h-10 w-10" />
@@ -77,105 +78,105 @@ const Dashboard: React.FC<DashboardProps> = ({ users }) => {
           </div>
         </div>
         <div
-          className="OrderDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
-          border-l-4 border-brand dark:border-white"
+          className="OrderDetails lg:w-1/5 w-full relative md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          border border-grey-700 dark:border-grey-700 border-b-4 border-b-yellow-400 dark:border-b-yellow-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-lg font-bold dark:text-white">
+            <span className="flex-col text-base font-bold dark:text-white">
               Lifetime Spending
-              <p className="text-brand">0</p>
+              <p className="absolute bottom-3 left-5 text-brand">$700</p>
             </span>
             <span className="flex items-center justify-center">
-              <BalanceIcon color="#3FD424" className="h-10 w-10" />
+              <BalanceIcon color="#3FD424" className="h-10 mb-4 w-10" />
             </span>
           </div>
         </div>
       </div>
-      <div className="OtherDetails-parent m-4 flex flex-wrap justify-around  ">
+      <div className="OtherDetails-parent bg-white m-4 flex flex-wrap justify-around dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 ">
         <div
-          className="lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
            "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <UserIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               My Profile
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
            "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <HeartIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               My Wishlist
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <PeopleIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               My Publishers
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <ProductIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               My Order
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <InformationIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               My Questions
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <ReportIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               My Reports
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <UserFollowingIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               Place Order
             </p>
           </span>
         </div>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <CreditCardIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#C9C4C4] mt-4 dark:text-white">
+            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
               Place Order
             </p>
           </span>

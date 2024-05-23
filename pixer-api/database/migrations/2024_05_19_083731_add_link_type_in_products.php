@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('languages')->after('organic_traffic');
-            $table->string('countries')->after('languages');
             //
+            $table->string('link_type')->after('price');
         });
     }
 

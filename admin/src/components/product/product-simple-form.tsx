@@ -40,10 +40,11 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
         className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
       />
 
-      <Card className="w-full sm:w-8/12 flex flex-wrap justify-between md:w-full">
+      <Card className="w-full sm:w-8/12 flex flex-wrap justify-start gap-3 md:w-full">
         <Input
           label={`${t('form:input-label-price')}*`}
           {...register('price')}
+          placeholder='Enter price'
           type="number"
           error={t(errors.price?.message!)}
           variant="outline"
@@ -53,9 +54,10 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           label={t('form:input-label-sale-price')}
           type="number"
           {...register('sale_price')}
+          placeholder='Enter sale price'
           error={t(errors.sale_price?.message!)}
           variant="outline"
-          className="mb-5 max-md:w-80 w-64"
+          className="mb-5 max-md:w-80 w-80"
         />
 
         {!is_external && (
@@ -63,6 +65,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             label={`${t('form:input-label-quantity')}*`}
             type="number"
             {...register('quantity')}
+            placeholder='Enter Quani'
             error={t(errors.quantity?.message!)}
             variant="outline"
             className="mb-5 max-md:w-80 w-64"
@@ -88,9 +91,10 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
         <Input
           label={`${t('form:input-label-preview-url')}`}
           {...register('preview_url')}
+          placeholder='Enter example url'
           error={t(errors.preview_url?.message!)}
           variant="outline"
-          className="mb-5 max-md:w-80 w-64"
+          className="mb-5 max-md:w-80 w-80"
         />
 
         {/* <Checkbox

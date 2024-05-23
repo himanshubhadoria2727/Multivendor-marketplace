@@ -10,6 +10,7 @@ export interface QueryOptions {
 }
 
 export interface GetParams {
+  name:string;
   slug: string;
   language?: string;
 }
@@ -290,9 +291,10 @@ export interface CreateContactUsInput {
 
 export interface CreateProductInput{
   postUrl: string;
-  ancorText:string;
-  before_ancor_text:string;
-  after_ancor_text:string;
+  ancor:string;
+  before_ancor:string;
+  after_ancor:string;
+  description: string;
 }
 
 export interface CreateAbuseReportInput {
@@ -332,6 +334,10 @@ export interface ReviewResponse {
 }
 
 interface ConnectProductOrderPivot {
+  // ancor:string;
+  // before_ancor:string;
+  // after_ancor:string;
+  // postUrl:Url;
   product_id: string | number;
   order_quantity: number;
   unit_price: number;
@@ -415,6 +421,10 @@ export interface CheckoutVerificationInput {
 }
 
 export interface VerifiedCheckoutResponse {
+  postUrl:string;
+  ancor:string;
+  before_ancor:string;
+  after_ancor:string;
   total_tax: number;
   shipping_charge: number;
   unavailable_products: string[];
@@ -432,6 +442,10 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
+  postUrl: string;
+  ancor:string;
+  before_ancor:string;
+  after_ancor:string;
   price: number;
   sale_price: number;
   orders_count: number;
@@ -446,6 +460,7 @@ export interface Product {
   spam_score:number;
   languages:string;
   countries:string;
+  link_type:string;
   quantity:number;
   created_at: string;
   updated_at: string;

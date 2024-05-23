@@ -60,6 +60,7 @@ class GetSingleProductResource extends Resource
             'price'                        => $this->price,
             'quantity'                     => $this->quantity,
             'domain_name'                  => $this->domain_name,
+            'link_type'                  => $this->link_type,
             'languages'                  => $this->languages,
             'countries'                  => $this->countries,
             'domain_authority'             => $this->domain_authority,

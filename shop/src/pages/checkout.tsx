@@ -22,6 +22,7 @@ import { toast } from 'react-hot-toast';
 const CheckoutPage: NextPageWithLayout = () => {
   const router = useRouter();
   const { me } = useMe();
+  // console.log(me);
   const { t } = useTranslation('common');
   const {
     items,
@@ -53,6 +54,10 @@ const CheckoutPage: NextPageWithLayout = () => {
         order_quantity: item.quantity,
         unit_price: item.price,
         subtotal: item.price * item.quantity,
+        // postUrl:item.postUrl,
+        // ancor:item.ancor,
+        // before_ancor:item.before_ancor,
+        // after_ancor:item.after_ancor,
       })),
     });
   }
@@ -78,7 +83,7 @@ const CheckoutPage: NextPageWithLayout = () => {
         <div className="bg-light shadow-card dark:bg-dark-250 dark:shadow-none">
           <h2 className="flex items-center justify-between border-b border-light-400 px-5 py-4 text-sm font-medium text-dark dark:border-dark-400 dark:text-light sm:py-5 sm:px-7 md:text-base">
             {t('text-checkout-title-two')}
-            <span className="font-normal text-dark-700">({totalItems})</span>
+              <span className="font-normal text-dark-700">({totalItems})</span>
           </h2>
           <div className="px-5 pt-9 sm:px-7 sm:pt-11">
             {!isEmpty ? (

@@ -31,11 +31,6 @@ export const productValidationSchema = yup.object().shape({
   domain_rating: yup.string().required('Domain rating is a required'),
   organic_traffic: yup.string().required('Organic traffic is a required'),
   spam_score: yup.string().required('Spam score is a required'),
-  languages: yup.string().required('Languauge is required'),
-  // countries: yup.object().shape({
-  //   value: yup.string().required('Country value is required'),
-  //   label: yup.string().required('Country label is required'),
-  // }).required('Country is required'),
   type: yup.object().nullable().required('form:error-type-required'),
   status: yup.string().nullable().required('form:error-status-required'),
   variation_options: yup.array().of(
@@ -72,9 +67,18 @@ export const productValidationSchema = yup.object().shape({
         .typeError('Spam score must be a number')
         .positive('must be positive')
         .required('Spam score is required'),
-      countries:yup
-      .string()
-        .required("this is require"),
+        countries: yup.object().shape({
+          value: yup.string().required('Country value is required'),
+          label: yup.string().required('Country label is required'),
+        }).required('Country is required'),
+        languages: yup.object().shape({
+          value: yup.string().required('Language value is required'),
+          label: yup.string().required('Language label is required'),
+        }).required('Language is required'),
+        link_type: yup.object().shape({
+          value: yup.string().required('Language value is required'),
+          label: yup.string().required('Language label is required'),
+        }).required('Language is required'),
       quantity: yup
         .number()
         .typeError('form:error-quantity-must-number')

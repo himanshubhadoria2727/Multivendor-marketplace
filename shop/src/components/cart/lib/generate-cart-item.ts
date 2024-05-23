@@ -4,12 +4,16 @@ export function generateCartItem(item: any) {
     name: item.name,
     slug: item.slug,
     unit: item.unit,
+    postUrl:item.postUrl,
+    ancor:item.ancor,
+    before_ancor:item.before_ancor,
+    after_ancor:item.after_ancor,
     image: item.image?.thumbnail,
     stock: item.quantity,
     price: Number(item.sale_price ? item.sale_price : item.price),
     shop: {
-      slug: item.shop.slug,
-      name: item.shop.name,
+      slug: item.shop?.slug,
+      name: item.shop?.name,
     },
     language: item.language,
   };

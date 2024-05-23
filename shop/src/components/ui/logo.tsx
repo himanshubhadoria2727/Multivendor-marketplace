@@ -25,13 +25,14 @@ export default function Logo({
       {...props}
     >
       <span
-        className="relative overflow-hidden"
+        className="relative left-1 top-1.5 text-xl dark:text-white text-gray-800 font-serif font-semibold tracking-wider"
         style={{
           width: siteSettings?.width,
           height: siteSettings?.height,
         }}
       >
-        {isMounted && isDarkMode && (
+        GuestLink
+        {/* {isMounted && isDarkMode && (
           <Image
             src={settings?.dark_logo?.original ?? darkLogo}
             fill
@@ -52,7 +53,7 @@ export default function Logo({
             alt={settings?.siteTitle ?? 'Light Logo'}
             className="object-contain"
           />
-        )}
+        )} */}
       </span>
     </AnchorLink>
   );

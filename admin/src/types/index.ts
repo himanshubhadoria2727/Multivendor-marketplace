@@ -737,6 +737,7 @@ export interface Product {
   spam_score:number;
   languages:string;
   countries:string;
+  link_type:string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -759,6 +760,7 @@ export interface CreateProduct {
   spam_score:number;
   languages:string;
   countries:string;
+  link_type:string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];

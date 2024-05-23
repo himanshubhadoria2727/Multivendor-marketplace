@@ -148,8 +148,10 @@ export default function CreateOrUpdateProductForm({
 
   const onSubmit = async (values: ProductFormValues) => {
     console.log("HI nandu");
-    console.log(values);
-    values.countries=values.countries.label;
+    console.log(values.languages);
+    values.languages=values.languages.label;
+    values.countries = values.countries.label;
+    values.link_type= values.link_type.label;
     const inputValues = {
       language: router.locale,
 
@@ -210,7 +212,6 @@ export default function CreateOrUpdateProductForm({
 
 
   const { data: allCountries, error, isLoading } = useCountriesQuery();
-  console.log(allCountries)
   const slugAutoSuggest = formatSlug(watch('name'));
   if (Boolean(options?.isProductReview)) {
     if (permission) {
@@ -322,21 +323,21 @@ export default function CreateOrUpdateProductForm({
           />
 
           <div className="my-5 flex flex-wrap sm:my-8 justify-center">
-            <Card className="w-full flex justify-around flex-wrap  sm:w-8/12 md:w-full">
+            <Card className="w-full flex justify-start gap-2 flex-wrap sm:justtify-center sm:w-8/12 md:w-full">
 
               <Input
-                label={`Site name*`}
+                label={`Site domain`}
                 {...register('name')}
                 placeholder='eg-google.com'
                 error={t(errors.name?.message!)}
                 variant="outline"
-                className="mb-5 w-64 max-md:w-80"
+                className="mb-5 w-64 max-md:w-full"
               />
 
               {isSlugEditable ? (
                 <div className="relative mb-5">
                   <Input
-                    label={`Site slug*`}
+                    label={`Site slug`}
                     {...register('slug')}
                     error={t(errors.slug?.message!)}
                     variant="outline"
@@ -353,69 +354,107 @@ export default function CreateOrUpdateProductForm({
                 </div>
               ) : (
                 <Input
-                  label={`Site slug*`}
+                  label={`Site slug`}
                   {...register('slug')}
                   value={slugAutoSuggest}
                   variant="outline"
-                  className="mb-5 w-64 max-md:w-80"
+                  className="mb-5 w-64 max-md:w-full"
                   disabled
                 />
               )}
               <Input
-                label={`${t('form:input-label-domain-name')}*`}
+                label={`Site name`}
                 {...register('domain_name')}
                 error={t(errors.domain_name?.message!)}
+                placeholder='eg-google'
                 variant="outline"
-                className="mb-5 mr-3 w-64 max-md:w-80"
+                className="mb-5 w-64 max-md:w-full"
               />
               <Input
                 label={"Domain Authority"}
                 type="number"
                 {...register('domain_authority')}
+                placeholder='From 1 to 100'
                 error={t(errors.domain_authority?.message!)}
                 variant="outline"
-                className="mb-5 w-64 max-md:w-80"
+                className="mb-5 w-64 max-md:w-full"
               />
               <Input
                 label={"Domain rating"}
                 type='number'
                 {...register('domain_rating')}
+                placeholder='From 1 to 100'
                 error={t(errors.domain_rating?.message!)}
                 variant="outline"
-                className="mb-5 w-64 max-md:w-80"
+                className="mb-5 w-64 max-md:w-full"
               />
               <Input
                 label={"Organic traffic"}
                 type='number'
                 {...register('organic_traffic')}
+                placeholder='Enter organic traffic'
                 error={t(errors.organic_traffic?.message!)}
                 variant="outline"
-                className="mb-5 w-64 max-md:w-80"
+                className="mb-5 w-64 max-md:w-full"
               />
               <Input
                 label={"Spam score"}
                 type='number'
                 {...register('spam_score')}
+                placeholder='Enter spam score'
                 error={t(errors.spam_score?.message!)}
                 variant="outline"
-                className="mb-5 w-64 max-md:w-80"
+                className="mb-5 w-64 max-md:w-full"
               />
-              <Input
-                label={"Language"}
-                {...register('languages')}
-                error={t(errors.languages?.message!)}
-                variant="outline"
-                className="mb-5 w-64 max-md:w-80"
-              />
-              <div className="mb-5 w-64">
+
+              <div className="mb-5 w-64 max-md:w-full">
+              <Label>{t('Language')}</Label>
+                <SelectInput
+                  name="languages"
+                  placeholder='Select Language'
+                  control={control}
+                  options={[
+                    { value: 'en', label: 'English' },
+                    { value: 'hi', label: 'Hindi' },
+                    { value: 'es', label: 'Spanish' },
+                    { value: 'fr', label: 'French' },
+                    { value: 'de', label: 'German' },
+                    { value: 'it', label: 'Italian' },
+                    { value: 'ja', label: 'Japanese' },
+                    { value: 'ru', label: 'Russian' },
+                    { value: 'zh', label: 'Chinese' },
+                    { value: 'ar', label: 'Arabic' },
+                    { value: 'pt', label: 'Portuguese' }
+                  ]}
+                  error={t(errors.languages?.message!)}
+                />
+              </div>
+
+              <div className="mb-5 w-64 max-md:w-full">
+                <Label>{t('Link type')}</Label>
+                <SelectInput
+                  name="link_type"
+                  placeholder='Select link type'
+                  control={control}
+                  options={[
+                    { value: 'nofollow', label: 'Nofollow' },
+                    { value: 'dofollow', label: 'Dofollow' },
+                  ]
+                  }
+                  error={t(errors.link_type?.message!)}
+                />
+              </div>
+              <div className="mb-5 w-64 max-md:w-full">
                 <Label>{t('Select Country')}</Label>
                 <SelectInput
-                   name="countries"
-                   control={control}
-                   options={allCountries?.map((country) => ({
-                     label: country.name.common,
-                     value: country.cca3,
-                   }))}
+                  name="countries"
+                  placeholder='Select country'
+                  control={control}
+                  options={allCountries?.map((country:any) => ({
+                    label: country.name.common,
+                    value: country.cca3,
+                  }))}
+                  error={t(errors.countries?.message!)}
                 />
               </div>
               <div className="relative mb-5">
@@ -432,7 +471,6 @@ export default function CreateOrUpdateProductForm({
                   error={t(errors?.description?.message)}
                 />
               </div>
-
               <div>
                 <Label>{t('form:input-label-status')}</Label>
                 {!isEmpty(statusList)

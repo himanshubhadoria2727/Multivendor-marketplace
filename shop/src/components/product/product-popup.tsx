@@ -68,7 +68,7 @@ export default function ProductPopupDetails() {
           className="truncate px-2.5 py-1 text-base font-medium text-dark dark:text-light md:text-lg ltr:lg:pl-4 ltr:lg:pr-5 rtl:lg:pr-4 rtl:lg:pl-5 3xl:text-xl"
         >
           <AnchorLink
-            href={`https://${name}`}
+            href={`https://${name}` } target='_blank'
             className="transition-colors hover:text-brand"
           >
             {name}
@@ -99,13 +99,13 @@ export default function ProductPopupDetails() {
           <FavoriteButton productId={product?.id} />
         </div>
       </div>
-      <div className="flex flex-col p-4 rtl:space-x-reverse md:p-6 lg:flex-row lg:space-x-7 xl:space-x-8 xl:p-8 3xl:space-x-10">
-        <div className="mb-4 w-full shrink-0 items-center justify-center overflow-hidden md:mb-6 lg:mb-auto lg:max-w-[480px] xl:flex xl:max-w-[570px] 2xl:max-w-[650px] 3xl:max-w-[795px]">
+      <div className="flex flex-col w-full p-4 rtl:space-x-reverse md:p-6 lg:flex-row lg:space-x-7 xl:space-x-8 xl:p-8 3xl:space-x-10">
+        {/* <div className="mb-4 w-full shrink-0 items-center justify-center overflow-hidden md:mb-6 lg:mb-auto lg:max-w-[480px] xl:flex xl:max-w-[570px] 2xl:max-w-[650px] 3xl:max-w-[795px]">
           <ProductThumbnailGallery gallery={previews} />
-        </div>
+        </div> */}
         <div className="flex shrink-0 flex-col justify-between text-13px lg:w-[400px] xl:w-[520px] 3xl:w-[555px]">
           <div className="pb-7 xs:pb-8 lg:pb-10">
-            {content ? (
+            {/* {content ? (
               <div
                 className="react-editor-description pb-5 leading-[1.9em] rtl:text-right dark:text-light-600 xl:pb-6 3xl:pb-8"
                 dangerouslySetInnerHTML={{
@@ -117,7 +117,7 @@ export default function ProductPopupDetails() {
               />
             ) : (
               ''
-            )}
+            )} */}
             {/* {!is_external && (
               <div className="flex space-x-6 border-t border-light-500 py-3 rtl:space-x-reverse dark:border-dark-500 md:py-4 3xl:py-5">
                 {!isFreeItem && (

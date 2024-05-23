@@ -65,6 +65,7 @@ class ProductCreateRequest extends FormRequest
             'domain_name'                  => ['required', 'string'],
             'languages'                  => ['required', 'string'],
             'countries'                  => ['nullable', 'string'],
+            'link_type'                  => ['nullable', 'string'],
             'domain_authority'             => ['required', 'numeric'],
             'domain_rating'                => ['required', 'numeric'],
             'organic_traffic'              => ['required', 'numeric'],
