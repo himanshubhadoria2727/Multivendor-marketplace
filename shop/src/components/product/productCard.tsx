@@ -24,6 +24,7 @@ import { fadeInBottomWithScaleX } from '@/lib/framer-motion/fade-in-bottom';
 import { isFree } from '@/lib/is-free';
 import { useTranslation } from 'next-i18next';
 import { ExternalIcon } from '@/components/icons/external-icon';
+import router from 'next/router';
 
 export default function ProductCard({ product }: { product: Product }) {
   const {id, name, slug, image, shop, is_external,  } =
@@ -41,6 +42,10 @@ export default function ProductCard({ product }: { product: Product }) {
   const { t } = useTranslation('common');
   const isFreeItem = isFree(product?.sale_price ?? product?.price);
 
+    const handleNavigation = () => {
+      router.push(`/products/product_page/${product?.slug}`); // Replace '/target-page' with your target route
+    };
+  
 
 
   return (
@@ -74,7 +79,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </span>
           <span className="flex  mt-2 text-lg text-[#05AAFB] ">
             <InformationIcon className=" w-4 h-4 mr-1 mt-1.5" />
-            <a href={`/products/${id}`}>View site Info</a>
+           <AnchorLink href={routes.productUrl(product?.slug)}>View site Info</AnchorLink>
           </span>
         </div>
       </div>
@@ -145,10 +150,11 @@ export default function ProductCard({ product }: { product: Product }) {
             {basePrice}
           </del>
         )}
-        <button onClick={()=>openModal('PRODUCT_DETAILS', { slug })}className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#38A272] dark:bg-white-600 dark:text-white  ">
+        <button onClick={handleNavigation}className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#38A271] dark:bg-white-600 dark:text-white  ">
           Buy
         </button>
       </div>
     </div>
+
   );
 }

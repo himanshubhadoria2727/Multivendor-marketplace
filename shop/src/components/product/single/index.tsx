@@ -24,7 +24,7 @@ import { useSanitizeContent } from '@/lib/sanitize-content';
 type SingleProps = {
   product: Product;
 };
-
+  
 export function getPreviews(gallery: any[], image: any) {
   if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery;
   if (!isEmpty(image)) return [image, {}];

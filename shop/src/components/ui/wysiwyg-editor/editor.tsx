@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import Loader from '@/components/ui/loader/loader';
+import Loader from '@/components/ui/loaderAdmin/loader';
 import { useMemo } from 'react';
 import { RichTextEditorProps } from '@/components/ui/wysiwyg-editor';
 
@@ -44,3 +44,4 @@ const Editor: React.FC<RichTextEditorProps> = ({
 };
 
 export default Editor;
+ 

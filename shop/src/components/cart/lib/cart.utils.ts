@@ -15,10 +15,10 @@ export interface Item {
     name: string;
   };
   language: string;
-  postUrl:Url;
-  ancor:string;
-  before_ancor:string;
-  after_ancor:string;
+  // postUrl:Url;
+  // ancor:string;
+  // before_ancor:string;
+  // after_ancor:string;
 }
 export interface VerifiedResponse {
   total_tax: number;
@@ -26,10 +26,7 @@ export interface VerifiedResponse {
   unavailable_products: string[];
   wallet_currency: number;
   wallet_amount: number;
-  postUrl:Url;
-  ancor:string;
-  before_ancor:string;
-  after_ancor:string;
+
 }
 export interface UpdateItemInput extends Partial<Omit<Item, 'id'>> {}
 

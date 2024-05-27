@@ -9,6 +9,7 @@ import Layout from '@/layouts/_layout';
 import { useProducts } from '@/data/product';
 import Grid from '@/components/product/grid';
 import List from '@/components/product/list';
+import productTable from '@/components/product/table';
 import { useRouter } from 'next/router';
 import Seo from '@/layouts/_seo';
 import routes from '@/config/routes';
@@ -18,6 +19,8 @@ import { API_ENDPOINTS } from '@/data/client/endpoints';
 import CategoryFilter from '@/components/product/category-filter';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Card from '@/components/product/card';
+import { useGridSwitcher } from '@/components/product/grid-switcher';
+import MyTable from '@/components/product/table';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const queryClient = new QueryClient();
@@ -56,6 +59,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 function Products() {
   const { query } = useRouter();
+  const { isGridCompact } = useGridSwitcher();
   const { products, loadMore, hasNextPage, isLoadingMore, isLoading } =
     useProducts({
       ...(query.category && { categories: query.category }),
@@ -63,6 +67,19 @@ function Products() {
       sortedBy: 'DESC',
     });
   return (
+    <>
+    {!isGridCompact?
+    (
+    <MyTable
+    nodes={products}
+    limit={30}
+    onLoadMore={loadMore}
+    hasNextPage={hasNextPage}
+    isLoadingMore={isLoadingMore}
+    isLoading={isLoading}
+    />)
+    :
+    (
     <List
       products={products}
       limit={30}
@@ -71,6 +88,8 @@ function Products() {
       isLoadingMore={isLoadingMore}
       isLoading={isLoading}
     />
+    )}
+    </>
   );
 }
 

@@ -139,10 +139,6 @@ export default function CartCheckout() {
       total: totalPrice,
       paid_total: totalPrice,
       products: available_items.map((item) => ({
-        ancor:item.ancor,
-        before_ancor:item.before_ancor,
-        after_ancor:item.after_ancor,
-        postUrl:item.postUrl,
         product_id: item.id,
         order_quantity: item.quantity,
         unit_price: item.price,

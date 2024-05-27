@@ -1,5 +1,4 @@
 import Single from '@/components/product/single';
-import SingleProductNew from '@/components/product/single/productPage';
 import { getStaticPaths, getStaticProps } from '@/data/ssr/products.ssr';
 import Layout from '@/layouts/_layout';
 import type { NextPageWithLayout } from '@/types';
@@ -9,7 +8,7 @@ export { getStaticPaths, getStaticProps };
 const ProductPage: NextPageWithLayout<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ product }) => {
-  return <SingleProductNew product={product} />;
+  return <Single product={product} />;
 };
 
 ProductPage.getLayout = function getLayout(page) {

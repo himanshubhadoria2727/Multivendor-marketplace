@@ -54,10 +54,6 @@ const CheckoutPage: NextPageWithLayout = () => {
         order_quantity: item.quantity,
         unit_price: item.price,
         subtotal: item.price * item.quantity,
-        // postUrl:item.postUrl,
-        // ancor:item.ancor,
-        // before_ancor:item.before_ancor,
-        // after_ancor:item.after_ancor,
       })),
     });
   }
