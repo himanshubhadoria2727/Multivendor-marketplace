@@ -17,8 +17,7 @@ import { Product } from '@/types';
 import AnchorLink from '../ui/links/anchor-link';
 import Button from '../ui/button';
 import router from 'next/router';
-
-
+import { getTheme } from '@table-library/react-table-library/baseline';
 
 interface TableProps {
   nodes: Product[];
@@ -38,71 +37,69 @@ export default function ProductTable({
   limit = 5,
 }: TableProps) {
   const THEME = {
-    Table: ``,
-    Header: ``,
+    Table: `
+      width: 100%;
+      border-collapse: collapse;
+    `,
+    Header: `
+      font-weight: bold;
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+    `,
     Body: ``,
     BaseRow: `
-        background-color: var(--theme-ui-colors-background);
-    
-        &.row-select-selected, &.row-select-single-selected {
-          background-color: var(--theme-ui-colors-background-secondary);
-          color: var(--theme-ui-colors-text);
-        }
-      `,
+      transition: background-color 0.3s ease;
+      background-color: white;
+      &:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      &:hover {
+        background-color: #f0f0f0;
+      }
+      text-align: center;
+    `,
     HeaderRow: `
-        border: 2px solid red;
-        font-size: 15px;
-        color: var(--theme-ui-colors-text-light);
-    
-        .th {
-          border-bottom: 1px solid var(--theme-ui-colors-border);
-        }
-      `,
+      border-bottom: 2px solid red;
+    `,
     Row: `
-        font-size: 15px;
-        color: var(--theme-ui-colors-text);
-    
-        &:not(:last-of-type) .td {
-          border-bottom: 1px solid var(--theme-ui-colors-border);
-        }
-    
-        &:hover {
-          color: var(--theme-ui-colors-text-light);
-        }
-      `,
+      font-size: 15px;
+      color: var(--theme-ui-colors-text);
+      margin-bottom: 10px;
+      text-align: center;
+    `,
     BaseCell: `
-        border-bottom: 1px solid transparent;
-        border-right: 1px solid transparent;
-    
-        padding: 8px;
-        height: 52px;
-    
-        svg {
-          fill: var(--theme-ui-colors-text);
-        }
-      `,
-    HeaderCell: ``,
-    Cell: ``,
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    `,
+    HeaderCell: `
+      padding: 12px;
+      text-align: center;
+    `,
+    Cell: `
+      padding: 8px;
+      text-align: center;
+    `,
   };
-
+  
   const data = { nodes };
 
-  
   const handleNavigation = () => {
-    router.push(`/products/product_page/${data?.slug}`); // Replace '/target-page' with your target route
+    router.push(`/products/product_page/${data?.slug}`);
   };
   console.log(data)
-  const theme = useTheme(THEME);
 
   const sort = useSort(
     data,
     {},
     {
       sortFns: {
-        DOMAIN_NAME: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        DOMAIN: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
         DA: (array) => array.sort((a, b) => (a.nodes || []).length - (b.nodes || []).length),
         DR: (array) => array.sort((a, b) => (a.nodes || []).length - (b.nodes || []).length),
         TRAFFIC: (array) => array.sort((a, b) => (a.nodes || []).length - (b.nodes || []).length),
+        LINKS: (array) => array.sort((a, b) => (a.nodes || []).length - (b.nodes || []).length),
         SC: (array) =>
           array.sort((a, b) => (a.nodes || []).length - (b.nodes || []).length),
       },
@@ -110,43 +107,56 @@ export default function ProductTable({
   );
 
   return (
-    <div className='p-5 w-full h-full'>
-      <Table data={data} theme={theme} layout={{ fixedHeader: true }} sort={sort}>
-        {(tableList: any[]) => (
-          <>
-            <Header>
-              <HeaderRow>
-                <HeaderCellSort sortKey="DOMAIN_NAME">DOMAIN NAME</HeaderCellSort>
-                <HeaderCellSort sortKey="DA">DA</HeaderCellSort>
-                <HeaderCellSort sortKey="DR">DR</HeaderCellSort>
-                <HeaderCellSort sortKey="TRAFFIC">TRAFFIC</HeaderCellSort>
-                <HeaderCellSort sortKey="SC">SC</HeaderCellSort>
-                <HeaderCellSort sortKey="SC">ACTION</HeaderCellSort>
-              </HeaderRow>
-            </Header>
+    <div className="p-5 w-full h-full overflow-x-auto" style={{ overflowY: 'hidden' }}>
+      <div style={{ minWidth: '800px', backgroundColor:"black"} }>
+        <Table data={data} theme={THEME} layout={{ fixedHeader: true }} sort={sort}>
+          {(tableList: any[]) => (
+            <>
+              <Header>
+                <HeaderRow>
+                  <HeaderCellSort sortKey="DOMAIN">DOMAIN</HeaderCellSort>
+                  <HeaderCellSort sortKey="DA">DA</HeaderCellSort>
+                  <HeaderCellSort sortKey="DR">DR</HeaderCellSort>
+                  <HeaderCellSort sortKey="TRAFFIC">TRAFFIC</HeaderCellSort>
+                  <HeaderCellSort sortKey="SC">SC</HeaderCellSort>
+                  <HeaderCellSort sortKey="LINKS">LINKS</HeaderCellSort>
+                  <HeaderCell>ACTION</HeaderCell>
+                </HeaderRow>
+              </Header>
 
-            <Body>
-              {tableList.map((item) => (
-                <Row key={item.id} item={item}>
-                  <Cell className='text-base text-blue-500 hover:underline'><AnchorLink href={`https://${item.name}`} target='_blank'>{item.name}</AnchorLink></Cell>
-
-                  <Cell><p className='p-2 flex w-fit text-white bg-green-400 rounded-lg'>{item.domain_authority}</p></Cell>
-                  <Cell><p className='p-2 flex w-fit text-white bg-green-400 rounded-lg'>{item.domain_rating}</p></Cell>
-                  <Cell><p className='p-2 flex w-fit text-white bg-green-400 rounded-lg'>{item.organic_traffic}</p></Cell>
-                  <Cell><p className='p-2 flex w-fit text-white bg-green-400 rounded-lg'>{item.spam_score}</p>
-                  </Cell>
-                  <Cell>
-                    <button className=" flex w-10 justify-center  rounded-lg bg-light-500 px-16 py-3 text-base font-semibold text-white text-brand bg-blue-900 dark:bg-white-600 dark:text-white  ">
-                      Buy
-                    </button>
-                  </Cell>
-                </Row>
-              ))}
-            </Body>
-          </>
-        )}
-      </Table>
+              <Body>
+                {tableList.map((item) => (
+                  <Row key={item.id} item={item}>
+                    <Cell className="text-base text-blue-500 hover:underline">
+                      <AnchorLink href={`https://${item.name}`} target="_blank">{item.name}</AnchorLink>
+                    </Cell>
+                    <Cell className="bg-black">
+                      <p className="px-3 py-[3px] flex w-fit p text-white text-sm bg-green-400 rounded-lg">{item.domain_authority}</p>
+                    </Cell>
+                    <Cell className="bg-black">
+                      <p className="px-3 py-[3px] flex w-fit p text-white text-sm bg-green-400 rounded-lg">{item.domain_rating}</p>
+                    </Cell>
+                    <Cell className="bg-black">
+                      <p className="px-3 py-[3px] flex w-fit p text-white text-sm bg-green-400 rounded-lg">{item.organic_traffic}</p>
+                    </Cell>
+                    <Cell className="bg-black">
+                      <p className="px-3 py-[3px] flex w-fit p text-white text-sm bg-green-400 rounded-lg">{item.spam_score}</p>
+                    </Cell>
+                    <Cell className="bg-black">
+                      <p className="px-3 py-[3px] flex w-fit p text-white text-sm bg-green-400 rounded-lg">{item.link_type}</p>
+                    </Cell>
+                    <Cell className="bg-black">
+                      <button className="flex w-10 justify-center text-align rounded-lg bg-[#24b47e] px-8 py-3 mt-3 mb-3 text-xs font-semibold text-white text-brand dark:bg-white-600 dark:text-white">
+                        Buy {item.price}
+                      </button>
+                    </Cell>
+                  </Row>
+                ))}
+              </Body>
+            </>
+          )}
+        </Table>
+      </div>
     </div>
   );
 };
-

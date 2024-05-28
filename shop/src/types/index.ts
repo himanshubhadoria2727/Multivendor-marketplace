@@ -87,6 +87,32 @@ export type NextPageWithLayout<P = {}> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
+export interface MappedPaginatorInfo {
+  currentPage: number;
+  firstPageUrl: string;
+  from: number;
+  lastPage: number;
+  lastPageUrl: string;
+  links: any[];
+  nextPageUrl: string | null;
+  path: string;
+  perPage: number;
+  prevPageUrl: string | null;
+  to: number;
+  total: number;
+  hasMorePages: boolean;
+}
+
+export enum ProductType {
+  Simple = 'simple',
+  Variable = 'variable',
+}
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
 interface PaginatorInfo<T> {
   current_page: number;
   data: T[];
