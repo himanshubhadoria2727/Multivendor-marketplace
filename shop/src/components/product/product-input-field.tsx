@@ -1,4 +1,4 @@
-import { CreateOrderInput, CreateProductInput } from '@/types';
+import { CreateOrderInput, CreateProductInput, Product } from '@/types';
 import Input from '@/components/ui/forms/input';
 import Textarea from '@/components/ui/forms/textarea';
 import { useProduct } from '@/data/product';
@@ -8,17 +8,21 @@ import { Form } from '@/components/ui/forms/form';
 import { useTranslation } from 'next-i18next';
 import type { SubmitHandler } from 'react-hook-form';
 import Spinner from '../ui/loader/spinner/spinner';
-import { useState } from 'react';
-
-import RichTextEditor from '../ui/wysiwyg-editor';
+import { useEffect, useState } from 'react';
+import ProductNicheOptions from './product-niche-options';
+import React from 'react';
+import RichTextEditor from '@/components/ui/wysiwyg-editor/editor';
+import Label from '../ui/forms/label';
 
 type ProductInputFormProps = {
+  product: Product;
   onSubmit: SubmitHandler<CreateProductInput>;
   reset: CreateProductInput | null;
   isLoading: boolean;
 };
 
 const ProductInputField: React.FC<ProductInputFormProps> = ({
+  product,
   onSubmit,
   reset,
   isLoading,
@@ -29,6 +33,10 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   // const content = useSanitizeContent({
   //   description: product?.description as string,
   // });
+  const [selectedNiche, setSelectedNiche] = useState('none');
+  const handleNicheChange = (value: string) => {
+    setSelectedNiche(value);
+  };
 
   const [formValid, setFormValid] = useState(false); // State to track form validity
   const [selectedForm, setSelectedForm] = useState('link_insertion'); // State to track selected form
@@ -36,23 +44,28 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   const handleDivClick = (formName: string) => {
     setSelectedForm(formName);
   };
-   const formName=selectedForm;
   const handleFormSubmit = (data: CreateProductInput) => {
     const formData = {
-      ...data, 
-      formName
+      ...data,
+      selectedForm,
+      selectedNiche
     };
     onSubmit(formData);
     console.log(formData);
     setFormValid(true); // Reset form validity after submission
   };
-  
+  console.log(product)
 
   const handleFormValidityChange = (isValid: boolean) => {
     setFormValid(isValid);
   };
 
-  if ( isLoading) return <Spinner />;
+  const {
+    is_niche,
+    is_gamble,
+    is_cbd,
+    is_crypto,
+  } = product ?? {};
 
   return (
     <div className="flex max-w-full p-6 rounded-md flex-col bg-light text-left dark:bg-dark-250 xs:max-w-[430px] sm:max-w-[550px] md:max-w-[600px] lg:max-w-[960px] xl:max-w-[1200px] 2xl:max-w-[1266px] 3xl:max-w-[1460px]">
@@ -78,11 +91,11 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
             onSubmit={handleFormSubmit}
             validationSchema={ProductInputFieldSchema}
           >
-            {({ register,control, formState:{errors} }) => (
+            {({ register, control, formState: { errors } }) => (
               <>
                 <fieldset className="mb-6 list gap-5 sm:grid-cols-2">
                   <Input
-                    label={t('postUrl-input-field')}
+                    label={t('Post Url:')}
                     type="url"
                     placeholder="Enter your post url"
                     {...register('postUrl')}
@@ -105,22 +118,29 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                     error={errors.link_url?.message}
                     className="mt-10 mb-10"
                   />
-                  <Input
+                  {/* <Input
                     label={t('Special instructions')}
                     type="text"
                     placeholder="Enter your text here"
                     {...register('instructions')}
                     error={errors.instructions?.message}
                     className="mt-10 mb-10"
-                  />
-                  {/* <div className="relative mb-5">
-                <RichTextEditor
-                  title={t('form:input-label-description')}
+                  /> */}
+                  <div className="relative mb-5">
+                  <Label className='text-lg text-brand font-semibold mb-3'>{"Special Instructions:"}</Label>
+                  <RichTextEditor
+                  editorClassName='pb-40 mb-10'
                   control={control}
+                  placeholder='Description'
+                  className='mb'
                   name="description"
                   error={t(errors?.description?.message)}
                 />
-              </div> */}
+              </div>
+              {is_niche &&(
+                  <ProductNicheOptions product={product} onChange={handleNicheChange} />
+              )}
+                  
                 </fieldset>
 
                 <Button
@@ -174,6 +194,9 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                     error={errors.more_after_ancor?.message}
                     className="mt-10 mb-10"
                   />
+                  {is_niche &&(
+                  <ProductNicheOptions product={product} onChange={handleNicheChange} />
+              )}
                 </fieldset>
                 <Button
                   type="submit"

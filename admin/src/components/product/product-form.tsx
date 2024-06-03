@@ -59,6 +59,7 @@ import Select from "react-select";
 import SelectInput from '../ui/select-input';
 import { ValidationError } from 'yup';
 import { useCountriesQuery } from '@/data/countries';
+import ProductNicheOptions from './product-niche-option';
 
 
 type ProductFormProps = {
@@ -500,6 +501,7 @@ export default function CreateOrUpdateProductForm({
             </Card>
           </div>
           <ProductSimpleForm initialValues={initialValues} />
+          <ProductNicheOptions initialValues={initialValues}/>
 
           <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-0 sm:my-8">
             <Description

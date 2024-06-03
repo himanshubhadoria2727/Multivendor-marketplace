@@ -21,6 +21,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Card from '@/components/product/card';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import MyTable from '@/components/product/table';
+import Example from '@/components/product/table';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const queryClient = new QueryClient();
@@ -70,14 +71,10 @@ function Products() {
     <>
     {!isGridCompact?
     (
-    <MyTable
-    nodes={products}
-    limit={30}
-    onLoadMore={loadMore}
-    hasNextPage={hasNextPage}
-    isLoadingMore={isLoadingMore}
-    isLoading={isLoading}
-    />)
+    <Example
+    products={products}
+    />
+    )
     :
     (
     <List
@@ -102,7 +99,7 @@ const Home: NextPageWithLayout = () => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes.home}
       />
-      {/* <CategoryFilter /> */}
+      <CategoryFilter />
       <Products />
     </>
   );

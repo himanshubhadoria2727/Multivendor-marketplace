@@ -88,13 +88,13 @@ export default function CategoryFilter({
             isActive={defaultActivePath === router.asPath}
             onClick={() => handleClick(defaultActivePath)}
           />
-          <CategoryItem
+          {/* <CategoryItem
             categoryName={t('text-free')}
             isActive={Boolean(router.query.price)}
             onClick={handleFree}
-          />
+          /> */}
           {categories
-            .filter((category) => category.slug.toLowerCase() !== 'free')
+            .filter((category) => category.slug.toLowerCase() !== 'all')
             .map((category) => (
               <CategoryItem
                 key={category.id}

@@ -150,7 +150,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {basePrice}
           </del>
         )}
-        <button onClick={handleNavigation}className=" flex mt-8  rounded-lg bg-light-500 px-16 py-3 text-xl font-semibold text-white text-brand bg-[#38A271] dark:bg-white-600 dark:text-white  ">
+        <button onClick={handleNavigation}className=" flex mt-8  rounded-lg px-16 py-3 text-xl font-semibold text-white text-brand bg-brand dark:bg-brand dark:text-white  ">
           Buy
         </button>
       </div>

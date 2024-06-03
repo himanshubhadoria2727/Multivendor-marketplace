@@ -35,12 +35,11 @@ const ProductInputDisplay: NextPageWithLayout<SingleProps> = ({product}) => {
     console.log("form data:",data)
     router.push('/checkout')
   };
-  
-
 
   return (
     <>
             <ProductInputField
+              product={product}
               onSubmit={onSubmit}
               reset={reset}
               isLoading={isLoading}

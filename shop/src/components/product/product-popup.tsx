@@ -132,7 +132,7 @@ export default function ProductPopupDetails() {
                 </div>
               </div>
             )} */}
-            <ProductInputDisplay />
+            {/* <ProductInputDisplay /> */}
             <ProductInformation
               tags={tags}
               domain_name={domain_name}
