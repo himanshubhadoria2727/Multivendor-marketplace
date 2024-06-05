@@ -69,11 +69,10 @@ const SingleProductNew: React.FC<SingleProps> = ({ product }) => {
         <motion.div
           variants={staggerTransition()}
           className=" gap-4 sm:grid-cols-2 lg:gap-6"
-        >
-            {/* form field code here */}
+        >            {/* form field code here */}
 
-            <ProductInputDisplay product={product}/>
-    
+          <ProductInputDisplay product={product} />
+
         </motion.div>
         <motion.div
           variants={fadeInBottom()}

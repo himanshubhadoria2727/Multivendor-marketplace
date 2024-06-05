@@ -23,16 +23,15 @@ const ProductInputDisplay: NextPageWithLayout<SingleProps> = ({product}) => {
   const { mutate, isLoading, isSuccess } = useContactUs();
   const { addItemToCart } = useCart();
   const router = useRouter();
-  const onSubmit: SubmitHandler<CreateProductInput> = (data) => {
+  const onSubmit: SubmitHandler<CreateProductInput> = (formData) => {
 
     const productData = {
       ...product,
-       data // Assuming 'data' contains form fields
+       formData // Assuming 'data' contains form fields
     };
-
     addItemToCart(generateCartItem(productData), 1);
     console.log("final data:",productData)
-    console.log("form data:",data)
+    console.log("form data:",formData)
     router.push('/checkout')
   };
 

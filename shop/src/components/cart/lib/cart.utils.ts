@@ -10,6 +10,8 @@ export interface Item {
   price: number;
   quantity: number;
   stock: number;
+  selectedForm:string;
+  selectedNiche:string;
   shop: {
     slug: string;
     name: string;

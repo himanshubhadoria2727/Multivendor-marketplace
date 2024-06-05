@@ -20,7 +20,7 @@ const Example = ({ products }: TableProps) => {
         accessorKey: 'name',
         header: 'Domain',
         enableSorting: false,
-        size: 200,
+        size: 250,
         Cell: ({ renderedCellValue }) => (
           <a className="text-blue-600 font-sans tracking-wider hover:underline font-bold text-[1rem]" href={`https://${renderedCellValue}`} target="_blank">
             {renderedCellValue}
@@ -34,7 +34,7 @@ const Example = ({ products }: TableProps) => {
         filterVariant: 'text',
         size: 50,
         Cell: ({ renderedCellValue }) => (
-          <p className="px-4 py-1 w-fit text-sm rounded-lg text-green-700 bg-green-200">{renderedCellValue}</p>
+          <p className="px-8 py-1 w-fit text-sm rounded-lg text-green-700 bg-green-200">{renderedCellValue}</p>
         ),
       },
       {
@@ -50,7 +50,7 @@ const Example = ({ products }: TableProps) => {
           step: 1,
         },
         Cell: ({ renderedCellValue }) => (
-          <p className="px-4 py-1 w-fit text-sm rounded-lg text-green-700 bg-green-200">{renderedCellValue}</p>
+          <p className="px-8 py-1 w-fit text-sm rounded-lg text-green-700 bg-green-200">{renderedCellValue}</p>
         ),
       },
       {
@@ -66,7 +66,7 @@ const Example = ({ products }: TableProps) => {
           step: 1000,
         },
         Cell: ({ renderedCellValue }) => (
-          <p className="px-4 py-1 w-fit text-sm rounded-lg text-blue-700 bg-blue-200">{renderedCellValue}</p>
+          <p className="px-8 py-1 w-fit text-sm rounded-lg text-blue-700 bg-blue-200">{renderedCellValue}</p>
         ),
       },
       {
@@ -83,7 +83,7 @@ const Example = ({ products }: TableProps) => {
         //   step: 1,
         // },
         Cell: ({ renderedCellValue }) => (
-          <p className="px-4 py-1 w-fit text-sm rounded-lg text-purple-700 bg-purple-200">{renderedCellValue}</p>
+          <p className="px-6 py-1 w-fit text-sm rounded-lg text-purple-700 bg-purple-200">{renderedCellValue}</p>
         ),
       },
       {
@@ -129,11 +129,11 @@ const Example = ({ products }: TableProps) => {
             <button
               className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500	 hover:bg-brand hover:text-white px-1 py-2 text-sm font-semibold text-brand broder dark:text-white"
               onClick={() => router.push(`/products/product_page/${row.original.slug}`)}>
-              View
+              Buy now
             </button>
           ) : (
             <button
-              className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500	 hover:bg-brand hover:text-white px-1 py-2 text-sm font-semibold text-brand broder dark:text-white"
+              className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500 px-1 py-2 text-sm font-semibold text-brand broder dark:text-white"
               >
               Not available
             </button>
@@ -191,8 +191,7 @@ const table = useMaterialReactTable({
   columns,
   data: products, // use the products prop here
   // enableDensityToggle: false,
-  enableRowSelection: true,
-  muiPaginationProps: {
+    muiPaginationProps: {
     color: 'primary',
     shape: 'rounded',
     showRowsPerPage: false,

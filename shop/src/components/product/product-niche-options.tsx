@@ -38,15 +38,16 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
     };
 
     const handleNoneOptionClick = () => {
-        setSelectedValue('');
+        setSelectedValue('none');
         setNoneOptionVisible(false);
+        onChange?.('none');
     };
 
     return (
         <div className='flex flex-wrap border-brand/80 border-2 p-4 rounded-lg'>
             <div className='w-full md:w-2/3'>
                 <FormControl>
-                    <FormLabel id="product-niche-options-label" style={{fontSize:"1.2rem",fontWeight:"600",fontFamily:"inherit",color:"#24b47e"}}>Product Niche Options</FormLabel>
+                    <FormLabel id="product-niche-options-label" style={{ fontSize: "1.2rem", fontWeight: "600", fontFamily: "inherit", color: "#24b47e" }}>Product Niche Options</FormLabel>
                     <p className='mt-2 py-3 text-sm text-brand'>Grey niche consists of CBD, Casino, Betting, Gambling, Adult, Dating, Crypto etc. categories.</p>
                     {is_niche ? (
                         <RadioGroup
@@ -58,17 +59,21 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
                             {options
                                 .filter(option => option.show) // Filter options based on their show property
                                 .map((option) => (
-                                    <FormControlLabel
-                                        key={option.value}
-                                        value={option.value}
-                                        control={<Radio />}
-                                        label={option.label}
-                                        style={{fontFamily:"inherit", color:"#24b47e", fontWeight:"800"}}
-                                    />
+                                    <div className=''>
+                                        <FormControlLabel
+                                            key={option.value}
+                                            value={option.value}
+                                            control={<Radio />}
+                                            label={option.label}
+                                            style={{ fontFamily: "inherit", color: "#24b47e", fontWeight: "800" }}
+                                        />
+                                        <span className='px-2 py-1 rounded-lg bg-blue-500 text-sm text-white'>$25</span>
+                                    </div>
                                 ))}
                             {noneOptionVisible && (
                                 <FormControlLabel
-                                    value="" 
+                                    key='none'
+                                    value="none"
                                     control={<Radio />}
                                     label="None"
                                     onClick={handleNoneOptionClick}

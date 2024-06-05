@@ -18,6 +18,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps } from 'next';
 import { toast } from 'react-hot-toast';
+import Layout from '@/layouts/_layout';
 
 const CheckoutPage: NextPageWithLayout = () => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const CheckoutPage: NextPageWithLayout = () => {
     setVerifiedResponse,
     verifiedResponse,
   } = useCart();
+  console.log("items: " + JSON.stringify(items, null, 2))  
   const { price: totalPrice } = usePrice({
     amount: total,
   });
@@ -64,7 +66,7 @@ const CheckoutPage: NextPageWithLayout = () => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes?.checkout}
       />
-      <div className="mx-auto flex h-full w-full max-w-screen-sm flex-col p-4 pt-6 sm:p-5 sm:pt-8 md:pt-10 3xl:pt-12">
+      <div className="mx-auto flex h-full w-full max-w-screen-xl flex-col p-4 pt-6 sm:p-5 sm:pt-8 md:pt-10 3xl:pt-12">
         {!isEmpty && Boolean(verifiedResponse) ? (
           <div className="mb-4 bg-light shadow-card dark:bg-dark-250 dark:shadow-none md:mb-5 3xl:mb-6">
             <h2 className="flex items-center justify-between border-b border-light-400 px-5 py-4 text-sm font-medium text-dark dark:border-dark-400 dark:text-light sm:py-5 sm:px-7 md:text-base">
@@ -81,16 +83,16 @@ const CheckoutPage: NextPageWithLayout = () => {
             {t('text-checkout-title-two')}
               <span className="font-normal text-dark-700">({totalItems})</span>
           </h2>
-          <div className="px-5 pt-9 sm:px-7 sm:pt-11">
+          <div className="px-5flex flew-row justify-center pt-9 sm:px-7 sm:pt-11">
             {!isEmpty ? (
               <CartItemList className="pl-3" />
             ) : (
               <>
                 <CartEmpty />
-                <div className="sticky bottom-11 z-[5] mt-10 border-t border-light-400 bg-light pt-6 pb-7 dark:border-dark-400 dark:bg-dark-250 sm:bottom-0 sm:mt-12 sm:pt-8 sm:pb-9">
+                <div className="sticky flex justify-center bottom-11 z-[5] mt-10 border-t border-light-400 bg-light pt-6 pb-7 dark:border-dark-400 dark:bg-dark-250 sm:bottom-0 sm:mt-12 sm:pt-8 sm:pb-9">
                   <Button
                     onClick={() => router.push(routes.home)}
-                    className="w-full md:h-[50px] md:text-sm"
+                    className="w-64 md:h-[50px] md:text-sm"
                   >
                     <LongArrowIcon className="h-4 w-4" />
                     {t('404-back-home')}
@@ -132,7 +134,7 @@ const CheckoutPage: NextPageWithLayout = () => {
 
 CheckoutPage.authorization = true;
 CheckoutPage.getLayout = function getLayout(page) {
-  return <GeneralLayout>{page}</GeneralLayout>;
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {

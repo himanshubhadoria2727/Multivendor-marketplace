@@ -6,7 +6,9 @@ export function generateCartItem(item: any) {
     unit: item.unit,
     image: item.image?.thumbnail,
     stock: item.quantity,
-    price: Number(item.sale_price ? item.sale_price : item.price),
+    selectedForm: item.formData.selectedForm,
+    selectedNiche:item.formData.selectedNiche,
+    price: Number(item.sale_price ? item.sale_price : item.formData.totalPrice),
     shop: {
       slug: item.shop?.slug,
       name: item.shop?.name,

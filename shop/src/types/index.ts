@@ -315,11 +315,12 @@ export interface CreateContactUsInput {
 }
 
 export interface CreateProductInput{
+  title:string;
   postUrl: string;
   ancor:string;
   link_url:string;
   instructions:string;
-  description:string;
+  content:string;
 }
 
 export interface CreateAbuseReportInput {
@@ -472,6 +473,7 @@ export interface Product {
   orders_count: number;
   total_downloads: number;
   image: Attachment;
+  service:string;
   gallery: Attachment[];
   shop: Shop;
   domain_name:string;
