@@ -48,6 +48,9 @@ use Marvel\Http\Controllers\RefundPolicyController;
 use Marvel\Http\Controllers\RefundReasonController;
 use Marvel\Http\Controllers\StoreNoticeController;
 use Marvel\Http\Controllers\TermsAndConditionsController;
+use App\Http\Controllers\PaymentController;
+
+
 
 // use Illuminate\Support\Facades\Auth;
 
@@ -56,8 +59,9 @@ use Marvel\Http\Controllers\TermsAndConditionsController;
  * Available Public Routes
  * ******************************************
  */
-
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
+Route::post('razorpay-payment',[PaymentController::class,'store']);
 
 Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
 

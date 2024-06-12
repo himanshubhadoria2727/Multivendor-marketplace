@@ -16,6 +16,8 @@ use Marvel\Payments\Base;
 use Razorpay\Api\Errors\SignatureVerificationError;
 use KingFlamez\Rave\Facades\Rave as FlutterwaveFacade;
 use Marvel\Database\Models\PaymentIntent;
+use Illuminate\Support\Facades\Log; 
+
 
 class Flutterwave extends Base implements PaymentInterface
 {
@@ -154,6 +156,8 @@ class Flutterwave extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+        Log::info("Flutter");
+
         return [];
     }
 

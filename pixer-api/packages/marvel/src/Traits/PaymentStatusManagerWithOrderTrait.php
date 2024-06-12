@@ -9,6 +9,8 @@ use Marvel\Database\Models\Settings;
 use Marvel\Enums\OrderStatus;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Facades\Payment;
+use Illuminate\Support\Facades\Log; 
+
 
 trait PaymentStatusManagerWithOrderTrait
 {
@@ -118,6 +120,7 @@ trait PaymentStatusManagerWithOrderTrait
      */
     public function razorpay(Order $order, Request $request, Settings $settings): void
     {
+        Log::info("Inside payment status manager");
         try {
             $chosen_intent = '';
 

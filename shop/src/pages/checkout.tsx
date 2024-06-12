@@ -66,7 +66,7 @@ const CheckoutPage: NextPageWithLayout = () => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes?.checkout}
       />
-      <div className="mx-auto flex h-full w-full max-w-screen-xl flex-col p-4 pt-6 sm:p-5 sm:pt-8 md:pt-10 3xl:pt-12">
+      <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col p-4 pt-6 sm:p-5 sm:pt-8 md:pt-10 3xl:pt-12">
         {!isEmpty && Boolean(verifiedResponse) ? (
           <div className="mb-4 bg-light shadow-card dark:bg-dark-250 dark:shadow-none md:mb-5 3xl:mb-6">
             <h2 className="flex items-center justify-between border-b border-light-400 px-5 py-4 text-sm font-medium text-dark dark:border-dark-400 dark:text-light sm:py-5 sm:px-7 md:text-base">
@@ -83,7 +83,7 @@ const CheckoutPage: NextPageWithLayout = () => {
             {t('text-checkout-title-two')}
               <span className="font-normal text-dark-700">({totalItems})</span>
           </h2>
-          <div className="px-5flex flew-row justify-center pt-9 sm:px-7 sm:pt-11">
+          <div className="px-5flex max-md:p-4 max-md:pt-10 flew-row justify-center pt-9 sm:px-7 sm:pt-11">
             {!isEmpty ? (
               <CartItemList className="pl-3" />
             ) : (

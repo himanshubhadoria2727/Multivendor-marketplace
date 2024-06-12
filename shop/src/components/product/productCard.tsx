@@ -27,7 +27,7 @@ import { ExternalIcon } from '@/components/icons/external-icon';
 import router from 'next/router';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const {id, name, slug, image, shop, is_external,  } =
+  const {id, name, slug, image, shop, is_external,is_niche,isLinkInsertion  } =
     product ?? {};
   const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
@@ -52,14 +52,21 @@ export default function ProductCard({ product }: { product: Product }) {
     <div className="maincard flex flex-col sm:flex-row  items-center justify-center pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
       <div className="nameDetails flex-col flex-wrap w-full sm:w-1/5 items-center justify-center ltr:pl-2.5 rtl:ml-auto rtl:pr-2.5 rtl:text-right">
         <div className="mb-2 flex w-64 flex-nowrap items-center gap-4 p-1">
-          <span className="flex text-xs items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+        <span className="flex text-xs items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
             <CheckIconWithBg className="w-4 h-4 mr-1" />
             Guest Post
           </span>
-          <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-xs text-brand dark:bg-dark-300 dark:text-brand-dark">
+
+          {
+          isLinkInsertion?(
+            <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-xs text-brand dark:bg-dark-300 dark:text-brand-dark">
             <CheckIconWithBg className="w-4 h-4 mr-1" />
-            Grey Niche
+            Link Insertion
           </span>
+          ):
+          null
+         }
+         
         </div>
         <h3
           title={name}
@@ -67,19 +74,31 @@ export default function ProductCard({ product }: { product: Product }) {
         >
         <AnchorLink href={`https://${name}`} target='_blank'>{name}</AnchorLink>
         </h3>
-        <AnchorLink
+        {/* <AnchorLink
           href={routes.shopUrl(shop?.slug)}
           className="font-medium text-base pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand"
         >
           {shop?.name}
-        </AnchorLink>
+        </AnchorLink> */}
+        <h3
+          className="font-medium text-base pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand"
+        >
+          {shop?.name}
+        </h3>
         <div className="flex  flex-col mt-2 ml-0 flex flex-shrink-0   p-1">
           <span className="mt-2 w-fit bg-light-300 rounded-2xl px-3 py-1  font-semibold capitalize text-sm text-brand dark:bg-dark-300 dark:text-brand-dark">
             News,Media & Updates
           </span>
           <span className="flex  mt-2 text-lg text-[#05AAFB] ">
-            <InformationIcon className=" w-4 h-4 mr-1 mt-1.5" />
-           <AnchorLink href={routes.productUrl(product?.slug)}>View site Info</AnchorLink>
+          {
+          is_niche?(
+            <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-13px font-semibold capitalize text-xs text-brand dark:bg-dark-300 dark:text-brand-dark">
+            <CheckIconWithBg className="w-4 h-4 mr-1" />
+            Grey Niche
+          </span>
+          ):
+          null
+         }
           </span>
         </div>
       </div>

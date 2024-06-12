@@ -12,6 +12,8 @@ use Marvel\Enums\PaymentStatus;
 use Razorpay\Api\Errors\SignatureVerificationError;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Throwable;
 
 class Razorpay extends Base implements PaymentInterface
@@ -27,6 +29,57 @@ class Razorpay extends Base implements PaymentInterface
     }
 
     /**
+     * Create an order
+     *
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function createOrder(object $request): array
+    {
+        try {
+            // Validate and extract required data from the input array
+            if (!isset($request['tracking_number'], $request['amount'])) {
+                throw new HttpException(400, 'Invalid input data');
+            }
+            Log::info("inside createOrder funtion in razorpay");
+            $orderTrackingNumber = $request['tracking_number'];
+            $amount = (int)round($request['amount'], 2) * 100; // Convert to the smallest currency unit
+            Log::info("inside createOrder funtion in razorpay ".$amount);
+            Log::info("create order tracking number".$orderTrackingNumber);
+            Debugbar::addMessage('tracking number',$orderTrackingNumber);
+            // Create the order in Razorpay
+            $order = $this->api->order->create([
+                'receipt'  => $orderTrackingNumber,
+                'amount'   => $amount,
+                'currency' => "INR",
+            ]);
+
+         
+            // Debugbar::info("create order info",$order['amount']);
+            // Debugbar::error('Error!');
+            // Debugbar::warning('Watch out…');
+            // Debugbar::addMessage('Another message', 'mylabel');
+
+            Log::info("create order tracking number second".$orderTrackingNumber);
+
+            // Return the necessary order details
+            return [
+                'order_id'              => $order->id,
+                'receipt'               => $order->receipt,
+                'currency'              => $order->currency,
+                'amount'                => $order->amount,
+            ];
+        } catch (Exception $e) {
+            // Log the error for debugging purposes
+            Log::error('Error creating Razorpay order: ' . $e->getMessage());
+            throw new HttpException(400, 'Something went wrong with creating the order');
+        }
+    }
+
+    // The rest of your existing methods...
+
+    /**
      * Get payment intent for payment
      *
      * @param $data
@@ -39,7 +92,7 @@ class Razorpay extends Base implements PaymentInterface
             extract($data);
             $order = $this->api->order->create([
                 'receipt'  => $order_tracking_number,
-                'amount'   => round($amount, 2) * 100,
+                'amount'   => (int)round($amount, 2) * 100,
                 'currency' => $this->currency,
             ]);
 
@@ -51,6 +104,7 @@ class Razorpay extends Base implements PaymentInterface
                 'is_redirect'           => false,
             ];
         } catch (Exception $e) {
+            Log::error('Error creating Razorpay order: ' . $e->getMessage());
             throw new HttpException(400, SOMETHING_WENT_WRONG_WITH_PAYMENT);
         }
     }

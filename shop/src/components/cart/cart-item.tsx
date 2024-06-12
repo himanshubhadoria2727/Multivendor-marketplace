@@ -61,7 +61,7 @@ export default function CartItem({
         </p>
       </div>
       <div className='flex w-full pt-2 border-t-2 flex-col'>
-        <div className='flex'>
+        <div className='flex pb-2'>
           {selectedForm == 'guest_post' ? (
             <h3 className='w-full flex justify-between text-base font-semibold max-sm:text-sm '>
               Service type: <p className='text-brand max-sm:text-sm ml-4'>Guest Post</p>

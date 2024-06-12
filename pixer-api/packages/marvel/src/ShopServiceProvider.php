@@ -1,6 +1,7 @@
 <?php
 
 namespace Marvel;
+use Illuminate\Support\Facades\Log; 
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
@@ -241,21 +242,33 @@ class ShopServiceProvider extends ServiceProvider
         $this->app->singleton('payment', function ($app) {
             $active_payment_gateway = '';
             $settings = Settings::first();
-
+            
+            Log::info('Request data:', request()->all()); // Log the request data to see if payment_gateway is present
+        
             if (!empty(request()) && request()->has('payment_gateway') && !in_array(request()['payment_gateway'], [PaymentGatewayType::CASH_ON_DELIVERY, PaymentGatewayType::CASH])) {
                 $active_payment_gateway = ucfirst(strtolower(request()['payment_gateway']));
             } else {
                 $active_payment_gateway = $settings->options['defaultPaymentGateway'];
             }
-
+        
+            Log::info('Active payment gateway:', ['gateway' => $active_payment_gateway]); // Log the chosen gateway
+        
             try {
                 $gateway = 'Marvel\\Payments\\' . ucfirst($active_payment_gateway);
+                Log::info('Inside try gateway'.$gateway );
                 return new Payment($app->make($gateway));
             } catch (\Throwable $th) {
+                // Log the error message or stack trace
+                Log::error('Error while creating payment object: ' . $th->getMessage());
+                Log::error('Stack trace: ' . $th->getTraceAsString());
+            
+                // Fallback to default payment gateway
                 $gateway = 'Marvel\\Payments\\' . ucfirst($settings->options['defaultPaymentGateway']);
                 return new Payment($app->make($gateway));
             }
+            
         });
+        
 
         $this->app->singleton('ai', function ($app) {
             $active_ai = '';

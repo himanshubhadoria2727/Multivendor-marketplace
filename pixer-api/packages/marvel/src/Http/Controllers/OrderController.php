@@ -19,6 +19,7 @@ use Marvel\Database\Models\Order;
 use Marvel\Database\Models\Settings;
 use Marvel\Database\Repositories\OrderRepository;
 use Marvel\Enums\PaymentGatewayType;
+use Illuminate\Support\Facades\Log; 
 use Marvel\Enums\Permission;
 use Marvel\Exceptions\MarvelException;
 use Marvel\Exports\OrderExport;
@@ -58,6 +59,7 @@ class OrderController extends CoreController
      */
     public function index(Request $request)
     {
+        Log::info("index");
         $limit = $request->limit ? $request->limit : 10;
         return $this->fetchOrders($request)->paginate($limit)->withQueryString();
     }
@@ -130,6 +132,7 @@ class OrderController extends CoreController
     public function store(OrderCreateRequest $request)
     {
         try {
+            Log::info("nandu");
             // decision need
             if(!($this->settings->options['useCashOnDelivery'] && $this->settings->options['useEnableGateway'])){
                 throw new HttpException(400, PLEASE_ENABLE_PAYMENT_OPTION_FROM_THE_SETTINGS);

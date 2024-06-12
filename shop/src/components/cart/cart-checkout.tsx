@@ -25,6 +25,8 @@ import { PaymentGateway } from '@/types';
 import { useSettings } from '@/data/settings';
 import { REVIEW_POPUP_MODAL_KEY } from '@/lib/constants';
 import Cookies from 'js-cookie';
+import StripePayment from './payment/stripe';
+import RazorpayPayment from './payment/paymentButton';
 
 export default function CartCheckout() {
   const { settings } = useSettings();
@@ -54,6 +56,7 @@ export default function CartCheckout() {
     },
 
     onError: (err: any) => {
+      console.error('Error creating order:', err);
       toast.error(<b>{t('text-profile-page-error-toast')}</b>);
     },
   });
@@ -100,7 +103,6 @@ export default function CartCheckout() {
       amount: totalPrice,
     },
   );
-
   // phone number field
   const { phoneNumber } = usePhoneInput();
   function createOrder() {
@@ -182,7 +184,6 @@ export default function CartCheckout() {
       {/* {use_wallet_points && !Boolean(payableAmount) ? null : <StripePayment />} */}
 
       {use_wallet_points && !Boolean(payableAmount) ? null : <PaymentGrid />}
-
       <Button
         disabled={isLoading}
         isLoading={isLoading}
@@ -191,6 +192,8 @@ export default function CartCheckout() {
       >
         {t('text-submit-order')}
       </Button>
+      {/* <RazorpayPayment amount={totalPrice}   /> */}
+      
     </div>
   );
 }

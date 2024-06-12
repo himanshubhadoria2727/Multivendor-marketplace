@@ -84,6 +84,7 @@ class ProductCreateRequest extends FormRequest
             'in_stock'                     => ['boolean'],
             'is_taxable'                   => ['boolean'],
             'is_digital'                   => ['boolean'],
+            'isLinkInsertion'                   => ['boolean'],
             'is_niche'                   => ['boolean'],
             'is_gamble'                   => ['boolean'],
             'is_cbd'                   => ['boolean'],

@@ -22,6 +22,8 @@ use Marvel\Database\Models\PaymentIntent;
 use Marvel\Enums\OrderStatus;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Traits\PaymentTrait;
+use Illuminate\Support\Facades\Log; 
+
 use Throwable;
 
 class Iyzico extends Base implements PaymentInterface
@@ -157,6 +159,8 @@ class Iyzico extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+        Log::info("iyzico");
+
         return [];
     }
 

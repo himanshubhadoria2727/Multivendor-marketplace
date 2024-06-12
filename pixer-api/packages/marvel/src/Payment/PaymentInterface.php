@@ -12,6 +12,8 @@ interface PaymentInterface
 
   public function createCustomer(object $request): array;
 
+  public function createOrder(object $request): array;
+
   public function attachPaymentMethodToCustomer(string $retrieved_payment_method, object $request): object;
 
   public function detachPaymentMethodToCustomer(string $retrieved_payment_method): object;

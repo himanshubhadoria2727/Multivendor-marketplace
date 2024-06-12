@@ -9,6 +9,7 @@ export const productValidationSchema = yup.object().shape({
     .number()
     .typeError('form:error-price-must-number')
     .min(0)
+    .max(9999)
     .required('form:error-price-required'),
   domain_authority: yup
     .number()

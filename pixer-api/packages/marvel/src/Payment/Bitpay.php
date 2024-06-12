@@ -16,6 +16,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Support\Str;
 use Marvel\Database\Models\PaymentIntent;
 use Throwable;
+use Illuminate\Support\Facades\Log; 
+
 
 class Bitpay extends Base implements PaymentInterface
 {
@@ -208,6 +210,7 @@ class Bitpay extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+        Log::info("Bitpay");
         return [];
     }
 

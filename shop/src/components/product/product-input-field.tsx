@@ -112,8 +112,8 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                     label={t('Title of your article:')}
                     type="url"
                     placeholder="Enter your post url"
-                    {...register('postUrl')}
-                    error={errors.postUrl?.message}
+                    {...register('title')}
+                    error={errors.title?.message}
                   />
                   <Input
                     label={t('Ancor text/Keyword:')}

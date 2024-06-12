@@ -27,6 +27,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
 
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
+  const isLinkInseriton = watch('isLinkInseriton');
 
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
@@ -50,6 +51,13 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           variant="outline"
           className="mb-5 w-80 max-md:w-80"
         />
+        <Checkbox
+          {...register('isLinkInseriton')}
+          id="isLinkInseriton"
+          label={t('Allowing Link insertion')}
+          disabled={Boolean(isLinkInseriton)&&!isLinkInseriton}
+          className="mb-5 max-md:w-80 w-64"
+        />
         <Input
           label={t('form:input-label-sale-price')}
           type="number"
@@ -65,7 +73,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             label={`${t('form:input-label-quantity')}*`}
             type="number"
             {...register('quantity')}
-            placeholder='Enter Quani'
+            placeholder='Enter Quaniity'
             error={t(errors.quantity?.message!)}
             variant="outline"
             className="mb-5 max-md:w-80 w-64"

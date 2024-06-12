@@ -15,6 +15,8 @@ import { useCreateOrderMutation } from '@/data/order';
 import { PaymentGateway } from '@/types';
 import { useTranslation } from 'react-i18next';
 
+
+
 export const PlaceOrderAction: React.FC<{
   children?: React.ReactNode;
 }> = (props) => {
@@ -106,14 +108,7 @@ export const PlaceOrderAction: React.FC<{
     available_items,
   ].every((item) => !isEmpty(item));
   return <>
-    <Button
-        loading={loading}
-        className="mt-5 w-full"
-        onClick={handlePlaceOrder}
-        disabled={!isAllRequiredFieldSelected || loading}
-        {...props}>
-          <></>
-        </Button>
+    <PaymentButton/>
     {errorMessage && (
       <div className="mt-3">
         <ValidationError message={errorMessage} />
@@ -121,3 +116,4 @@ export const PlaceOrderAction: React.FC<{
     )}
   </>;
 };
+

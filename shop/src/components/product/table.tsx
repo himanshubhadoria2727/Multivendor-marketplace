@@ -113,7 +113,7 @@ const Example = ({ products }: TableProps) => {
           <button 
           className="flex justify-center w-[7rem] rounded-lg px-1 py-2 text-sm font-semibold text-white bg-brand/90 dark:bg-white-600 dark:text-white"
           onClick={() => router.push(`/products/product_page/${row.original.slug}`)}>
-            Buy &#8377; { row.original.price }
+            Buy $ { row.original.price }
           </button>
 
         ),
@@ -127,13 +127,13 @@ const Example = ({ products }: TableProps) => {
         Cell: ({ row }) => (
           row.original.is_niche === "1" ? (
             <button
-              className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500	 hover:bg-brand hover:text-white px-1 py-2 text-sm font-semibold text-brand broder dark:text-white"
+              className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500	 hover:bg-brand hover:text-white px-1 py-2 text-sm font-semibold text-brand broder"
               onClick={() => router.push(`/products/product_page/${row.original.slug}`)}>
               Buy now
             </button>
           ) : (
             <button
-              className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500 px-1 py-2 text-sm font-semibold text-brand broder dark:text-white"
+              className="flex justify-center w-[7rem] rounded-lg border-brand border transition duration-500 px-1 py-2 text-sm font-semibold text-brand broder "
               >
               Not available
             </button>
@@ -248,7 +248,6 @@ const tableTheme = useMemo(
 );
 return (
   <ThemeProvider theme={tableTheme}>
-      <MRT_GlobalFilterTextField table={table} />
     <MaterialReactTable
       table={table}
     />

@@ -717,6 +717,7 @@ export interface Product {
   is_digital?: boolean;
   is_external?: boolean;
   is_taxable?: boolean;
+  isLinkInsertion:boolean;
   is_niche:boolean;
   is_gamble:boolean;
   is_cbd:boolean;
@@ -775,6 +776,7 @@ export interface CreateProduct {
   external_product_button_text?: string;
   external_product_url?: string;
   is_external?: boolean;
+  isLinkInsertion:boolean;
   is_niche:boolean;
   is_gamble:boolean;
   is_cbd:boolean;

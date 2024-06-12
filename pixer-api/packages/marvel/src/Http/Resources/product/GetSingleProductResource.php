@@ -38,6 +38,7 @@ class GetSingleProductResource extends Resource
             'in_stock'                     => $this->in_stock,
             'is_taxable'                   => $this->is_taxable,
             'is_digital'                   => $this->is_digital,
+            'isLinkInsertion'                   => $this->isLinkInsertion,
             'is_niche'                   => $this->is_niche,
             'is_gamble'                   => $this->is_gamble,
             'is_cbd'                   => $this->is_cbd,

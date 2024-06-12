@@ -13,6 +13,7 @@ use Marvel\Enums\OrderStatus;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Traits\PaymentTrait;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log; 
 
 class Stripe extends Base implements PaymentInterface
 {
@@ -41,11 +42,14 @@ class Stripe extends Base implements PaymentInterface
    */
   public function createCustomer($request): array
   {
+    Log::info('stripe');
+
     $customer = $this->stripe->customers->create([
       'email' => $request->user()->email,
       'name'  => $request->user()->name
     ]);
 
+    
     return [
       'customer_id' => $customer->id,
       'customer_email' => $customer->email,

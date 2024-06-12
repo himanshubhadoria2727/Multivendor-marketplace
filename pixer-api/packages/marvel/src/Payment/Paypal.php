@@ -8,6 +8,8 @@ use Marvel\Enums\OrderStatus;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Traits\PaymentTrait;
 use Razorpay\Api\Errors\SignatureVerificationError;
+use Illuminate\Support\Facades\Log; 
+
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Support\Str;
@@ -40,6 +42,8 @@ class Paypal extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+        Log::info("paypal");
+
         return [];
     }
 
@@ -106,6 +110,8 @@ class Paypal extends Base implements PaymentInterface
             ]);
             return ['redirect_url' => $order['links'][1]['href'], 'payment_id' => $order["id"], 'is_redirect' => true];
         } catch (Exception $e) {
+            Log::info("payemt "+ $e->getMessage());
+
             throw new HttpException(400, SOMETHING_WENT_WRONG_WITH_PAYMENT);
         }
     }

@@ -469,6 +469,7 @@ export interface Product {
   is_gamble:boolean;
   is_cbd:boolean;
   is_crypto:boolean;
+  isLinkInsertion:boolean;
   sale_price: number;
   orders_count: number;
   total_downloads: number;

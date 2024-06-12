@@ -29,6 +29,7 @@ use Marvel\Enums\ProductType;
 use Marvel\Enums\PaymentGatewayType;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Events\OrderCreated;
+use Illuminate\Support\Facades\Log; 
 use Marvel\Events\OrderProcessed;
 use Marvel\Events\OrderReceived;
 use Marvel\Exceptions\MarvelBadRequestException;
@@ -111,6 +112,8 @@ class OrderRepository extends BaseRepository
      */
     public function storeOrder($request, $settings): mixed
     {
+        Log::info("store_order_repo");
+
         $request['tracking_number'] = $this->generateTrackingNumber();
         $settings = Settings::getData($request?->language);
         $fullWalletOrCODPayment = $request->isFullWalletPayment ? PaymentGatewayType::FULL_WALLET_PAYMENT : $settings['defaultPaymentGateway'];
@@ -153,15 +156,20 @@ class OrderRepository extends BaseRepository
         $useWalletPoints = isset($request->use_wallet_points) ? $request->use_wallet_points : false;
         if ($request->user() && $request->user()->hasPermissionTo(Permission::SUPER_ADMIN) && isset($request['customer_id'])) {
             $request['customer_id'] =  $request['customer_id'];
+            LOG::info("customer inside if". $request['customer_id']);
         } else {
             $request['customer_id'] = $request->user()->id ?? null;
+            LOG::info("customer inside else". $request['customer_id']);
         }
         try {
             $user = User::findOrFail($request['customer_id']);
             if ($user) {
                 $request['customer_name'] = $user->name;
+
             }
         } catch (Exception $e) {
+            Log::info("catch error "+ $e->getMessage());
+
             $user = null;
         }
 
@@ -211,6 +219,9 @@ class OrderRepository extends BaseRepository
 
         $order = $this->createOrder($request);
 
+        LOG::info("order info". $order);
+
+
         if (($useWalletPoints || $request->isFullWalletPayment) && $user) {
             $this->storeOrderWalletPoint(round($request['paid_total'], 2) - $amount, $order->id);
             $this->manageWalletAmount(round($request['paid_total'], 2), $user->id);
@@ -225,6 +236,7 @@ class OrderRepository extends BaseRepository
         if (!in_array($order->payment_gateway, [
             PaymentGatewayType::CASH, PaymentGatewayType::CASH_ON_DELIVERY, PaymentGatewayType::FULL_WALLET_PAYMENT
         ])) {
+
             $order['payment_intent'] = $this->processPaymentIntent($request, $settings);
         }
 
@@ -235,6 +247,7 @@ class OrderRepository extends BaseRepository
         }
 
         event(new OrderProcessed($order));
+
 
         return $order;
     }
@@ -308,6 +321,8 @@ class OrderRepository extends BaseRepository
      */
     protected function createOrder($request)
     {
+        LOG::info("create order");
+
         try {
             $orderInput = $request->only($this->dataArray);
             $order = $this->create($orderInput);
@@ -320,6 +335,8 @@ class OrderRepository extends BaseRepository
             event(new OrderCreated($order, $invoiceData, $customer));
             return $order;
         } catch (Exception $e) {
+            Log::info("create order exception "+ $e->getMessage());
+
             throw $e;
         }
     }
@@ -381,6 +398,8 @@ class OrderRepository extends BaseRepository
      */
     protected function processProducts($products, $customer_id, $order)
     {
+        LOG::info("Process products");
+
         foreach ($products as $key => $product) {
             if (!isset($product['variation_option_id'])) {
                 $product['variation_option_id'] = null;

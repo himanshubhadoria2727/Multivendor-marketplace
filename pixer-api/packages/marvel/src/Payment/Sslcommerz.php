@@ -11,6 +11,8 @@ use Marvel\Traits\PaymentTrait;
 use Razorpay\Api\Errors\SignatureVerificationError;
 use DGvai\SSLCommerz\SSLCommerz as SslCommerzClient;
 use Throwable;
+use Illuminate\Support\Facades\Log; 
+
 
 class Sslcommerz extends Base implements PaymentInterface
 {
@@ -217,6 +219,8 @@ class Sslcommerz extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+        Log::info("sslcommerzz");
+
         return [];
     }
 

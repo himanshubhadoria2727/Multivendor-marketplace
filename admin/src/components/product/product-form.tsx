@@ -500,6 +500,16 @@ export default function CreateOrUpdateProductForm({
               </div>
             </Card>
           </div>
+          {/* <div className="my-5 w-full flex flex-col border-b border-dashed border-border-base pb-8 sm:my-8">
+            <Description
+              title={t('form:form-title-product-type')}
+              details={t('form:form-description-product-type')}
+              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pr-4 md:w-1/3 md:pr-5"
+            />
+
+						<ProductTypeInput />
+					</div> */}
+
           <ProductSimpleForm initialValues={initialValues} />
           <ProductNicheOptions initialValues={initialValues}/>
 
@@ -604,15 +614,7 @@ export default function CreateOrUpdateProductForm({
               </Button>
             </Card>
           </div>
-          {/* <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
-            <Description
-              title={t('form:form-title-product-type')}
-              details={t('form:form-description-product-type')}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pr-4 md:w-1/3 md:pr-5"
-            />
 
-						<ProductTypeInput />
-					</div> */}
           {/* Simple Type */}
           {/* {product_type?.value === ProductType.Simple && (
           )} */}
