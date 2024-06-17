@@ -335,7 +335,7 @@ class OrderRepository extends BaseRepository
             event(new OrderCreated($order, $invoiceData, $customer));
             return $order;
         } catch (Exception $e) {
-            Log::info("create order exception "+ $e->getMessage());
+            Log::info("create order exception ". $e->getMessage());
 
             throw $e;
         }
@@ -409,6 +409,7 @@ class OrderRepository extends BaseRepository
                 if ($order->parent_id === null) {
                     $productData = Product::with('digital_file')->findOrFail($product['product_id']);
 
+                    Log::info("product data with digital file: " . $productData->toJson());
                     // if rental product
                     $isRentalProduct = $productData->is_rental;
                     if ($isRentalProduct) {

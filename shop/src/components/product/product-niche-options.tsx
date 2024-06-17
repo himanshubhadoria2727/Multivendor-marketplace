@@ -42,14 +42,15 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
         setNoneOptionVisible(false);
         onChange?.('none');
     };
+    console.log("is_niche before render", is_niche);
+    return (<>
+        {is_niche==='1'? (
+            <div className='flex flex-wrap border-brand/80 border-2 p-4 rounded-lg'>
+                <div className='w-full md:w-2/3'>
+                    <FormControl>
+                        <FormLabel id="product-niche-options-label" style={{ fontSize: "1.2rem", fontWeight: "600", fontFamily: "inherit", color: "#24b47e" }}>Product Niche Options</FormLabel>
+                        <p className='mt-2 py-3 text-sm text-brand'>Grey niche consists of CBD, Casino, Betting, Gambling, Adult, Dating, Crypto etc. categories.</p>
 
-    return (
-        <div className='flex flex-wrap border-brand/80 border-2 p-4 rounded-lg'>
-            <div className='w-full md:w-2/3'>
-                <FormControl>
-                    <FormLabel id="product-niche-options-label" style={{ fontSize: "1.2rem", fontWeight: "600", fontFamily: "inherit", color: "#24b47e" }}>Product Niche Options</FormLabel>
-                    <p className='mt-2 py-3 text-sm text-brand'>Grey niche consists of CBD, Casino, Betting, Gambling, Adult, Dating, Crypto etc. categories.</p>
-                    {is_niche ? (
                         <RadioGroup
                             aria-labelledby="product-niche-options-label"
                             name="product-niche-options-group"
@@ -81,18 +82,19 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
                                 />
                             )}
                         </RadioGroup>
-                    ) : (
-                        <div>No niche options available.</div>
-                    )}
-                </FormControl>
+
+                    </FormControl>
+                </div>
+                <div className='w-full md:w-1/3 mt-6'>
+                    <div className='p-3 bg-brand/20 rounded-lg'>
+                        <span className='text-lg text-brand font-bold'>Hello Advertiser.</span>
+                        <p className='font-medium text-brand/80'>Please mention whether the Link of your Landing Page falls under any of the Grey Niches mentioned. Please note that the price of a Grey Niche Link can be higher as publishers charge extra for them. If your link is found to belong to a Grey Niche, but you have failed to mention the same, your order can get cancelled. Please proceed with the order placement accordingly.</p></div>
+                </div>
             </div>
-            <div className='w-full md:w-1/3 mt-6'>
-                <div className='p-3 bg-brand/20 rounded-lg'>
-                    <span className='text-lg text-brand font-bold'>Hello Advertiser.</span>
-                    <p className='font-medium text-brand/80'>Please mention whether the Link of your Landing Page falls under any of the Grey Niches mentioned. Please note that the price of a Grey Niche Link can be higher as publishers charge extra for them. If your link is found to belong to a Grey Niche, but you have failed to mention the same, your order can get cancelled. Please proceed with the order placement accordingly.</p></div>
-            </div>
-        </div>
-    );
+        ) : (
+            <div className='text-brand font-semibold text-lg'>No niche options available.</div>
+        )}
+    </>);
 }
 
 export default ProductNicheOptions;

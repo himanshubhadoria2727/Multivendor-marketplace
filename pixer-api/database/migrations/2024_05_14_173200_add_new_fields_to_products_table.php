@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-        $table->double('domain_authority')->after('price');
         $table->double('domain_rating')->after('domain_authority');
         $table->double('organic_traffic')->after('domain_rating');
         $table->double('spam_score')->after('organic_traffic');

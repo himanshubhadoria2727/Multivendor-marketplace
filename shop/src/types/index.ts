@@ -465,7 +465,7 @@ export interface Product {
   before_ancor:string;
   after_ancor:string;
   price: number;
-  is_niche:boolean;
+  is_niche:string;
   is_gamble:boolean;
   is_cbd:boolean;
   is_crypto:boolean;

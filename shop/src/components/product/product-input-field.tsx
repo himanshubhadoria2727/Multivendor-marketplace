@@ -69,11 +69,11 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   const handleFormValidityChange = (isValid: boolean) => {
     setFormValid(isValid);
   };
-
   const {
     name,
     is_niche,
     price,
+    isLinkInsertion,
     is_gamble,
     is_cbd,
     is_crypto,
@@ -154,9 +154,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                       error={t(errors?.instructions?.message)}
                     />
                   </div>
-                  {is_niche && (
                     <ProductNicheOptions product={product} onChange={handleNicheChange} />
-                  )}
                 </fieldset>
                 <div className="flex w-full justify-center space-y-4">
                   <div className='w-80 space-y-4'>
@@ -239,42 +237,33 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                       error={t(errors?.instructions?.message)}
                     />
                   </div>
-                  {is_niche && (
                     <ProductNicheOptions product={product} onChange={handleNicheChange} />
-                  )}
-
                 </fieldset>
-                <div className='w-80 space-y-4'>
-                  <div className="flex flex-col justify-between w-full">
-                    <div className="flex-1 p-3 bg-gray-100 rounded mb-3">
-                      {selectedForm === 'link_insertion' ? (
-                        <span className="font-semibold text-base">Type Chosen: Link insertion</span>
-                      ) :
-                        null}
+                <div className="flex w-full justify-center space-y-4">
+                  <div className='w-80 space-y-4'>
+                    <div className="flex flex-col justify-between w-full">
+                      <div className="flex-1 p-3 dark:bg-dark bg-gray-100 rounded mb-3">
+                        {selectedForm === 'link_insertion' ? (
+                          <span className="font-semibold dark:bg-dark text-base">Service Type: Guest Posting</span>
+                        ) :
+                          null}
+                      </div>
+                      <div className="flex-1 p-3 dark:bg-dark bg-gray-100 rounded">
+                        <span className="font-semibold dark:bg-dark text-base">Total Amount: ${totalPrice}</span>
+                      </div>
                     </div>
-                    <div className="flex-1 p-3 bg-gray-100 rounded">
-                      <span className="font-semibold text-base">Total Amount: ${totalPrice}</span>
+                    <div className="flex w-full">
+                      <Button
+                        type="submit"
+                        className="mb text-base w-full"
+                        isLoading={false}
+                        disabled={false}
+                      >
+                        Save and next
+                      </Button>
                     </div>
-                  </div>
-                  <div className="flex w-full">
-                    <Button
-                      type="submit"
-                      className="mb w-full"
-                      isLoading={false}
-                      disabled={false}
-                    >
-                      Save and next
-                    </Button>
                   </div>
                 </div>
-                <Button
-                  type="submit"
-                  className="mb-1 w-full flex-1 sm:flex-none md:w-auto"
-                  isLoading={false}
-                  disabled={false}
-                >
-                  {t('Add to cart')}
-                </Button>
               </>
             )}
           </Form>

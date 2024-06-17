@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import Alert from '@/components/ui/alert';
 
 type IProps = {
-  initialValues: any;
+  initialValues: any
 };
 
 export default function ProductSimpleForm({ initialValues }: IProps) {
@@ -27,7 +27,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
 
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
-  const isLinkInseriton = watch('isLinkInseriton');
+  const isLinkInsertion = watch('isLinkInsertion');
 
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
@@ -43,7 +43,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
 
       <Card className="w-full sm:w-8/12 flex flex-wrap justify-start gap-3 md:w-full">
         <Input
-          label={`${t('form:input-label-price')}*`}
+          label={`${t("Guest Link Price")}*`}
           {...register('price')}
           placeholder='Enter price'
           type="number"
@@ -52,13 +52,13 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           className="mb-5 w-80 max-md:w-80"
         />
         <Checkbox
-          {...register('isLinkInseriton')}
-          id="isLinkInseriton"
+          {...register('isLinkInsertion')}
+          id="isLinkInsertion"
           label={t('Allowing Link insertion')}
-          disabled={Boolean(isLinkInseriton)&&!isLinkInseriton}
+          disabled={Boolean(isLinkInsertion)&&!isLinkInsertion}
           className="mb-5 max-md:w-80 w-64"
         />
-        <Input
+        {/* <Input
           label={t('form:input-label-sale-price')}
           type="number"
           {...register('sale_price')}
@@ -66,7 +66,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           error={t(errors.sale_price?.message!)}
           variant="outline"
           className="mb-5 max-md:w-80 w-80"
-        />
+        /> */}
 
         {!is_external && (
           <Input
@@ -113,7 +113,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           className="mb-5 max-md:w-80 w-64"
         /> */}
 
-        {is_digital ? (
+        {true ? (
           <>
             <Label>{t('form:input-label-digital-file')}</Label>
             <FileInput
