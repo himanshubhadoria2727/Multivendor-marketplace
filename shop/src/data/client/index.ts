@@ -96,6 +96,29 @@ class Client {
         withCount: 'orders',
         ...params,
       }),
+      paginated: ({
+        type,
+        name,
+        categories,
+        shop_id,
+        product_type,
+        ...params
+      }: Partial<ProductQueryOptions>) => {
+        return HttpClient.get<ProductPaginator>(API_ENDPOINTS.PRODUCTS, {
+          searchJoin: 'and',
+          with: 'shop;type;categories',
+          shop_id,
+          ...params,
+          search: HttpClient.formatSearchParams({
+            type,
+            name,
+            categories,
+            shop_id,
+            product_type,
+            status,
+          }),
+        });
+      },
     get: ({ slug, language }: GetParams) =>
       HttpClient.get<Product>(`${API_ENDPOINTS.PRODUCTS}/${slug}`, {
         language,

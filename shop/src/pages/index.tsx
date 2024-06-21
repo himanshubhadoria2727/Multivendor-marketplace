@@ -22,6 +22,9 @@ import Card from '@/components/product/card';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import MyTable from '@/components/product/table';
 import Example from '@/components/product/table';
+import ProductFilter from '@/components/filters/product-filter';
+import ProductTable from '@/components/product/productTable';
+import ProductTable2 from '@/components/product/productTable2';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const queryClient = new QueryClient();
@@ -71,21 +74,20 @@ function Products() {
     <>
     {!isGridCompact?
     (
-    <Example
-    products={products}
-    />
-    )
-    :
-    (
-    <List
-      products={products}
-      limit={30}
-      onLoadMore={loadMore}
-      hasNextPage={hasNextPage}
-      isLoadingMore={isLoadingMore}
-      isLoading={isLoading}
-    />
-    )}
+      <List
+        products={products}
+        limit={30}
+        onLoadMore={loadMore}
+        hasNextPage={hasNextPage}
+        isLoadingMore={isLoadingMore}
+        isLoading={isLoading}
+      />
+      ):(
+        <>
+        <ProductTable2/>
+            </>
+        )
+        }
     </>
   );
 }

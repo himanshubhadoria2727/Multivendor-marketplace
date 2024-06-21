@@ -30,6 +30,8 @@ export interface ProductQueryOptions extends QueryOptions {
   categories: string | string[];
   tags: string | string[];
   language?: string;
+  product_type:string;
+  type:string;
 }
 
 export interface PopularProductsQueryOptions {
@@ -106,6 +108,12 @@ export interface MappedPaginatorInfo {
 export enum ProductType {
   Simple = 'simple',
   Variable = 'variable',
+  DoFollow = "DoFollow",
+}
+
+export enum LinkType {
+  DoFollow = 'dofollow',
+  NoFollow = 'nofollow'
 }
 
 export enum SortOrder {
@@ -113,7 +121,7 @@ export enum SortOrder {
   Desc = 'desc',
 }
 
-interface PaginatorInfo<T> {
+export interface PaginatorInfo<T> {
   current_page: number;
   data: T[];
   first_page_url: string;
