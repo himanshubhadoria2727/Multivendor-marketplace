@@ -33,7 +33,7 @@ class EnsureEmailIsVerified
         }
         if (!$useMustVerifyLicense || !$useLocalLicense) {
             //return status code 417
-            return response()->json(['message' => INVALID_LICENSE_KEY], 417);
+          //  return response()->json(['message' => INVALID_LICENSE_KEY], 417);
         }
 
         return $next($request);

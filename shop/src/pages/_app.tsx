@@ -15,6 +15,7 @@ import DrawersContainer from '@/components/drawer-views/container';
 import SearchView from '@/components/search/search-view';
 import DefaultSeo from '@/layouts/_default-seo';
 import { SearchProvider } from '@/components/search/search.context';
+import { CampaignProvider } from '@/components/campaign/CampaignContext'; // Adjust the import path if necessary
 
 // base css file
 import '@/assets/css/scrollbar.css';
@@ -45,39 +46,34 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     document.documentElement.dir = dir;
   }, [dir]);
+
   const authenticationRequired = Component.authorization ?? false;
+
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <SearchProvider>
             <CartProvider>
               <ModalProvider>
-                <AnimatePresence
-                  initial={false}
-                  onExitComplete={() => window.scrollTo(0, 0)}
-                >
-                  <>
-                    <DefaultSeo />
-                    <Maintenance>
-                      {authenticationRequired ? (
-                        <PrivateRoute>
-                          {getLayout(<Component {...pageProps} />)}
-                        </PrivateRoute>
-                      ) : (
-                        getLayout(<Component {...pageProps} />)
-                      )}
-                    </Maintenance>
-                    <SearchView />
-                    <ModalsContainer />
-                    <DrawersContainer />
-                    <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
-                  </>
-                </AnimatePresence>
+                <CampaignProvider> 
+                  <AnimatePresence initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+                    <>
+                      <DefaultSeo />
+                      <Maintenance>
+                        {authenticationRequired ? (
+                          <PrivateRoute>{getLayout(<Component {...pageProps} />)}</PrivateRoute>
+                        ) : (
+                          getLayout(<Component {...pageProps} />)
+                        )}
+                      </Maintenance>
+                      <SearchView />
+                      <ModalsContainer />
+                      <DrawersContainer />
+                      <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
+                    </>
+                  </AnimatePresence>
+                </CampaignProvider>
               </ModalProvider>
             </CartProvider>
           </SearchProvider>

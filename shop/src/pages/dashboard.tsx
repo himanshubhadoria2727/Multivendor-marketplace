@@ -21,7 +21,7 @@ interface DashboardProps {
   users: User[];
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ users }) => {
+const Dashboard = () => {
 
     
 
@@ -188,7 +188,7 @@ const Dashboard: React.FC<DashboardProps> = ({ users }) => {
   );
 };
 
-const DashboardPage: NextPageWithLayout<DashboardProps> = ({ users }) => {
+const DashboardPage: NextPageWithLayout = () => {
 
   return (
     <>
@@ -197,7 +197,7 @@ const DashboardPage: NextPageWithLayout<DashboardProps> = ({ users }) => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes.authors}
       />
-      <Dashboard users={users} />
+      <Dashboard />
     </>
   );
 };
@@ -206,15 +206,14 @@ DashboardPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export const getStaticProps: GetStaticProps<DashboardProps> = async ({
+export const getStaticProps: GetStaticProps = async ({
   locale,
 }) => {
   // Mock users data for demonstration
-  const users: User[] = [];
 
   return {
     props: {
-      users,
+      
       ...(await serverSideTranslations(locale!, ['common'])),
     },
     revalidate: 60, // In seconds
