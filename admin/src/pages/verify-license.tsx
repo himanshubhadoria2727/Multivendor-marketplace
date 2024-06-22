@@ -27,7 +27,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 export default function VerifyLicenseKeyActions() {
   const { t } = useTranslation('common');
   useMeQuery();
-
+0
 
   const { mutate: verifyLicenseKey, isLoading } =
     useLicenseKeyMutation();
