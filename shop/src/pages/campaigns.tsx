@@ -6,6 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
 import { useEffect, useState } from 'react';;
 import { useCampaigns } from '@/components/campaign/CampaignContext';
+import { useWishlist } from '@/data/wishlist';
 
 
 type Campaign = {
@@ -52,11 +53,11 @@ const CampaignManager: React.FC = () => {
   };
 
   const handleDeleteCampaign = (id: number) => {
-    // Implement delete campaign logic here
+    
   };
 
   const handleDeleteAllCampaigns = () => {
-    // Implement delete all campaigns logic here
+    
   };
 
   const selectedCampaign = campaigns.find(campaign => campaign.id === selectedCampaignId);
@@ -153,11 +154,12 @@ const CampaignManager: React.FC = () => {
                 <thead>
                   <tr className="bg-gray-200 dark:bg-dark-400">
                     <th className="border px-4 py-2">Actions</th>
-                    <th className="border px-4 py-2">Campaign Name</th>
-                    <th className="border px-4 py-2">Total Order</th>
-                    <th className="border px-4 py-2">Free to Use</th>
-                    <th className="border px-4 py-2">Total Spending</th>
+                    <th className="border px-4 py-2">Site</th>
+                    <th className="border px-4 py-2">Price</th>
+                    <th className="border px-4 py-2">Status</th>
                     <th className="border px-4 py-2">Created At</th>
+                    <th className="border px-4 py-2">Action</th>
+                    <th className="border px-4 py-2">Remove</th>
                   </tr>
                 </thead>
                 <tbody>
