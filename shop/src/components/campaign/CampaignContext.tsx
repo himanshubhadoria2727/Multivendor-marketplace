@@ -20,17 +20,18 @@ type CampaignContextType = {
 
 const CampaignContext = createContext<CampaignContextType | undefined>(undefined);
 
-export const CampaignProvider: React.FC<Props> = ({ children }) => {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedCampaigns = localStorage.getItem('campaigns');
-      if (storedCampaigns) {
-        setCampaigns(JSON.parse(storedCampaigns));
-      }
+const getInitialCampaigns = (): Campaign[] => {
+  if (typeof window !== 'undefined') {
+    const storedCampaigns = localStorage.getItem('campaigns');
+    if (storedCampaigns) {
+      return JSON.parse(storedCampaigns);
     }
-  }, []);
+  }
+  return [];
+};
+
+export const CampaignProvider: React.FC<Props> = ({ children }) => {
+  const [campaigns, setCampaigns] = useState<Campaign[]>(getInitialCampaigns);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -47,7 +48,7 @@ export const CampaignProvider: React.FC<Props> = ({ children }) => {
       totalSpending: '00',
       createdAt: new Date().toISOString().split('T')[0],
     };
-    setCampaigns([...campaigns, newCampaign]);
+    setCampaigns(prevCampaigns => [...prevCampaigns, newCampaign]);
   };
 
   return (
