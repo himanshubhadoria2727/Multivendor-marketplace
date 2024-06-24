@@ -30,6 +30,15 @@ export interface ProductQueryOptions extends QueryOptions {
   categories: string | string[];
   tags: string | string[];
   language?: string;
+  countries:string;
+  product_type:string;
+  domain_authority:string | string[];
+  domain_rating:string | string[];
+  isLinkInsertion:string | boolean;
+  organic_traffic:string | string[];
+  link_type:string;
+  type:string;
+  status:string;
 }
 
 export interface PopularProductsQueryOptions {
@@ -108,12 +117,21 @@ export enum ProductType {
   Variable = 'variable',
 }
 
+export enum LinkType {
+  DoFollow = 'dofollow',
+  NoFollow = 'nofollow'
+}
+export enum SiteType {
+  MultiCategory = 'multiCategory',
+  Niche = 'niche'
+}
+
 export enum SortOrder {
   Asc = 'asc',
   Desc = 'desc',
 }
 
-interface PaginatorInfo<T> {
+export interface PaginatorInfo<T> {
   current_page: number;
   data: T[];
   first_page_url: string;
@@ -469,7 +487,7 @@ export interface Product {
   is_gamble:boolean;
   is_cbd:boolean;
   is_crypto:boolean;
-  isLinkInsertion:boolean;
+  isLinkInsertion:string;
   sale_price: number;
   orders_count: number;
   total_downloads: number;

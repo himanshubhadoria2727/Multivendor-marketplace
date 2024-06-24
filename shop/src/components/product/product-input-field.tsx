@@ -94,11 +94,14 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
             Guest Post
           </div>
           <div
-            className={`cursor-pointer flex w-80 text-white rounded-md transition duration-300 hover:bg-brand justify-center bg-brand dark:text-white  text-lg font-semibold p-2 ml-2  ${selectedForm === 'link_insertion' ? 'bg-brand/100' : 'bg-brand/50 && dark:bg-brand/30'}`}
-            onClick={() => handleDivClick('link_insertion')}
+            className={`cursor-pointer flex w-80 text-white rounded-md transition duration-300 justify-center bg-brand text-lg font-semibold p-2 ml-2 
+    ${selectedForm === 'link_insertion' ? 'bg-brand/100' : 'cursor-not-allowed bg-brand/50 dark:bg-brand/30'} 
+    ${isLinkInsertion !== '1' && 'cursor-not-allowed opacity-100'}`}
+            onClick={isLinkInsertion === '1' ? () => handleDivClick('link_insertion') : undefined}
           >
             Link Insertion
           </div>
+
         </div>
 
         {selectedForm === 'guest_post' && (
@@ -143,18 +146,18 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                       error={t(errors?.content?.message)}
                     />
                   </div>
-                  <div className="relative mb-5">
+                  <div className="relative mb-5 ">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Special Instructions:"}</Label>
                     <RichTextEditor
                       editorClassName='h-60 pb-10 mb-10'
                       control={control}
                       placeholder='Describe your requirement'
-                      className='mb'
+                      className=''
                       name="instructions"
                       error={t(errors?.instructions?.message)}
                     />
                   </div>
-                    <ProductNicheOptions product={product} onChange={handleNicheChange} />
+                  <ProductNicheOptions product={product} onChange={handleNicheChange} />
                 </fieldset>
                 <div className="flex w-full justify-center space-y-4">
                   <div className='w-80 space-y-4'>
@@ -237,7 +240,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                       error={t(errors?.instructions?.message)}
                     />
                   </div>
-                    <ProductNicheOptions product={product} onChange={handleNicheChange} />
+                  <ProductNicheOptions product={product} onChange={handleNicheChange} />
                 </fieldset>
                 <div className="flex w-full justify-center space-y-4">
                   <div className='w-80 space-y-4'>

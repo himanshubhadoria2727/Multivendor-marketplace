@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
 import { ChevronLeft } from '@/components/icons/chevron-left';
@@ -33,11 +34,17 @@ function CategoryItem({
   );
 }
 
-export default function CategoryFilter({
-  defaultActivePath = '/',
-}: {
+type Props = {
+  onAllProductFilter?: (newValue: string) => void;
+  onCategoryFilter?: (newValue: string) => void;
   defaultActivePath?: string;
-}) {
+};
+
+export default function CategoryFilter({
+  onAllProductFilter,
+  onCategoryFilter,
+  defaultActivePath = '/',
+}: Props) {
   const router = useRouter();
   const { categories } = useCategories({
     limit: 100,
@@ -49,16 +56,28 @@ export default function CategoryFilter({
     scrollToTheRight,
     scrollToTheLeft,
   } = useScrollableSlider(defaultActivePath);
-  function handleClick(categorySlug: string) {
-    router.push({
-      pathname: router.pathname,
-      ...(categorySlug !== defaultActivePath && {
-        query: {
-          category: categorySlug,
-        },
-      }),
-    });
+
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  useEffect(() => {
+    // Update active category based on router query when the component mounts
+    setActiveCategory('all');
+  }, []);
+
+  function handleClickOnAll() {
+    setActiveCategory('all');
+    if (onAllProductFilter) {
+      onAllProductFilter('publish');
+    }
   }
+
+  function handleClick(categorySlug: string) {
+    setActiveCategory(categorySlug);
+    if (onCategoryFilter) {
+      onCategoryFilter(categorySlug);
+    }
+  }
+
   function handleFree() {
     router.push({
       pathname: router.pathname,
@@ -67,7 +86,9 @@ export default function CategoryFilter({
       },
     });
   }
+
   const { t } = useTranslation('common');
+
   return (
     <div className="app-category-filter-bar sticky top-16 z-20 flex min-h-[64px] w-full overflow-hidden border-b border-light-400 bg-light-100 px-4 py-4 dark:border-dark-300 dark:bg-dark-100 sm:top-[70px] sm:min-h-[70px] sm:px-5 sm:py-5 md:px-6 lg:px-7 3xl:px-8">
       <button
@@ -85,8 +106,8 @@ export default function CategoryFilter({
         >
           <CategoryItem
             categoryName={t('text-category-all')}
-            isActive={defaultActivePath === router.asPath}
-            onClick={() => handleClick(defaultActivePath)}
+            isActive={activeCategory === 'all'}
+            onClick={() => handleClickOnAll()}
           />
           {/* <CategoryItem
             categoryName={t('text-free')}
@@ -99,7 +120,7 @@ export default function CategoryFilter({
               <CategoryItem
                 key={category.id}
                 categoryName={category.name}
-                isActive={category.slug === router.query.category}
+                isActive={category.slug === activeCategory}
                 onClick={() => handleClick(category.slug)}
               />
             ))}
