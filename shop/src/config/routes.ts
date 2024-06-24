@@ -1,18 +1,21 @@
-import dashboard from "@/pages/dashboard";
+
 
 const routes = {
   home: '/',
   authors: '/authors',
   explore: '/explore',
   dashboard: '/dashboard',
+  campaign :'/campaigns',
   popularProducts: '/popular-products',
   about: '/about-us',
   contact: '/contact-us',
   purchases: '/purchases',
+  purchasesh: '/purchasesh',
   wishlists: '/wishlists',
   reports: '/reports',
   questions: '/questions',
   profile: '/profile',
+  profileh:'/profileh',
   checkout: '/checkout',
   help: '/help',
   licensing: '/licensing',

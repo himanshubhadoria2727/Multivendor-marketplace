@@ -13,6 +13,8 @@ import Logo from '@/components/ui/logo';
 import Scrollbar from '@/components/ui/scrollbar';
 import routes from '@/config/routes';
 import Copyright from '@/layouts/_copyright';
+import { UserIconAlt } from '@/components/icons/user-icon-alt';
+import { PurchaseIcon } from '@/components/icons/purchase-icon';
 import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { useWindowSize } from 'react-use';
@@ -98,12 +100,24 @@ export function Sidebar({
               isCollapse={isCollapse}
               icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
             />
-            {/* <NavLink
-              title={t('text-popular-products')}
-              href={routes.popularProducts}
+            <NavLink
+              title={t('Campaingns')}
+              href={routes.campaign}
               isCollapse={isCollapse}
               icon={<ProductIcon className="h-4 w-4 text-current" />}
-            /> */}
+            />
+            <NavLink
+              title={t('Profile')}
+              href={routes.profileh}
+              isCollapse={isCollapse}
+              icon={<UserIconAlt className="h-4 w-4 text-current" />}
+            />
+            <NavLink
+              title={t('Purchases')}
+              href={routes.purchasesh}
+              isCollapse={isCollapse}
+              icon={<PurchaseIcon className="h-4 w-4 text-current" />}
+            />
             {/* <NavLink
               title={t('text-top-authors')}
               href={routes.authors}

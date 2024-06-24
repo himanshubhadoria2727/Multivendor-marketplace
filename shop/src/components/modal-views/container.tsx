@@ -74,8 +74,8 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <ForgotUserPassword />;
     case 'PRODUCT_DETAILS':
       return <ProductPopupDetails />;
-    case 'PRODUCT_INPUT_DISPLAY':
-      return <ProductInputDisplay />;
+    // case 'PRODUCT_INPUT_DISPLAY':
+    //   return <ProductInputDisplay />;
     case 'REVIEW_IMAGE_POPOVER':
       return <ReviewImageModal />;
     case 'REVIEW_RATING':

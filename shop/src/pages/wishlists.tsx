@@ -83,8 +83,15 @@ function WishlistItem({ product }: { product: Product }) {
               item={product}
               withPrice={false}
               toastClassName="-mt-10 xs:mt-0"
-              className="w-full flex-1 shrink-0 rounded border border-light-200 bg-brand text-brand hover:bg-transparent hover:text-light-200 dark:border-dark-600 dark:bg-dark-250 dark:text-brand dark:hover:text-brand-dark"
-            />
+              className="w-full flex-1 shrink-0 rounded border border-light-200 bg-brand text-brand hover:bg-transparent hover:text-light-200 dark:border-dark-600 dark:bg-dark-250 dark:text-brand dark:hover:text-brand-dark" 
+              form={{
+                title: 'Product Title',
+                postUrl: 'https://example.com/post',
+                ancor: 'anchor',
+                link_url: 'https://example.com/link',
+                instructions: 'Product instructions',
+                content: 'Product content',
+              }} />
           ) : (
             <FreeDownloadButton
               productId={id}
