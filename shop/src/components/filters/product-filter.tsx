@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Label from '@/components/ui/label';
 import Select from '@/components/ui/select/select';
 // import { useAuthorsQuery } from '@/data/author';
@@ -9,194 +10,236 @@ import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { ActionMeta } from 'react-select';
+import useCountries from './useCountry';
+import { domain_authority, isLinkInsertion, linkType, organic_traffic, price } from './options';
 
 type Props = {
-//   onCategoryFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
-//   onTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
-//   onAuthorFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
-  onProductTypeFilter?: (
-    newValue: any,
-    actionMeta: ActionMeta<unknown>,
-  ) => void;
-//   onManufactureFilter?: (
-//     newValue: any,
-//     actionMeta: ActionMeta<unknown>,
-//   ) => void;
+  onProductTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onCountryFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onLinkTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onTrafficFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onPriceFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onDAFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onDRFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onNicheFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onLIFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   className?: string;
-//   type?: string;
-//   enableType?: boolean;
-//   enableCategory?: boolean;
-//   enableAuthor?: boolean;
+  enableLinkType?: boolean;
+  enableTrafficFilter?: boolean;
+  enableDA?: boolean;
+  enableDR?: boolean;
+  enableLI?: boolean;
+  enableNiche?: boolean;
   enableProductType?: boolean;
-//   enableManufacturer?: boolean;
+  enableCountry?: boolean;
+  enablePrice?: boolean;
 };
 
-export default function ProductFilter(
-    {
-//   onTypeFilter,
-//   onCategoryFilter,
-//   onAuthorFilter,
+export default function ProductFilter({
   onProductTypeFilter,
+  onCountryFilter,
+  onDAFilter,
+  onDRFilter,
+  onTrafficFilter,
+  onPriceFilter,
+  onNicheFilter,
+  onLIFilter,
+  onLinkTypeFilter,
   className,
-//   type,
-//   enableType,
-//   enableCategory,
-//   enableAuthor,
+  enableCountry,
+  enableLinkType,
+  enableDA,
+  enableLI,
+  enableTrafficFilter,
+  enablePrice,
+  enableNiche,
+  enableDR,
   enableProductType,
-//   enableManufacturer,
-//   onManufactureFilter,
-}: Props
-) 
-{
+}: Props) {
   const { locale } = useRouter();
   const { t } = useTranslation();
 
-//   const { types, loading } = useTypesQuery({ language: locale });
-//   const { categories, loading: categoryLoading } = useCategoriesQuery({
-//     limit: 999,
-//     language: locale,
-//     type,
-//   });
-
-//   const { authors, loading: authorLoading } = useAuthorsQuery({
-//     limit: 999,
-//     language: locale,
-//   });
-
-//   const { manufacturers, loading: manufactureLoading } = useManufacturersQuery({
-//     limit: 999,
-//     language: locale,
-//   });
+  const { countries, loading: manufactureLoading } = useCountries();
 
   const productType = [
-    { name: 'DoFollow', slug: LinkType.DoFollow },
-    { name: 'NoFollow', slug: LinkType.NoFollow },
+    { name: 'simple', slug: ProductType.Simple },
+    { name: 'variable', slug: ProductType.Variable },
   ];
 
-  return (
-    <div
-      className={cn(
-        'flex w-full md:flex-wrap justify-start flex-col space-y-5 rtl:space-x-reverse md:flex-row md:items-end md:space-x-5 md:space-y-4',
-        className,
-      )}
-    >
-      {/* {enableType ? ( */}
-        <div className="w-full md:w-64">
-          <Label>{t('Price')}</Label>
-          <Select
-            // options={types}
-            // isLoading={loading}
-            getOptionLabel={(option: any) => option.name}
-            getOptionValue={(option: any) => option.slug}
-            placeholder={t('Filter by price')}
-            // onChange={onTypeFilter}
-            isClearable={true}
-          />
-        </div>
-      {/* ) : (
-        ''
-      )} */}
-      {/* {enableType ? ( */}
-        <div className="w-full md:w-64">
-          <Label>{t('Price')}</Label>
-          <Select
-            // options={types}
-            // isLoading={loading}
-            getOptionLabel={(option: any) => option.name}
-            getOptionValue={(option: any) => option.slug}
-            placeholder={t('Filter by price')}
-            // onChange={onTypeFilter}
-            isClearable={true}
-          />
-        </div>
-      {/* ) : (
-        ''
-      )} */}
-      {/* {enableType ? ( */}
-        <div className="w-full md:w-64">
-          <Label>{t('Price')}</Label>
-          <Select
-            // options={types}
-            // isLoading={loading}
-            getOptionLabel={(option: any) => option.name}
-            getOptionValue={(option: any) => option.slug}
-            placeholder={t('Filter by price')}
-            // onChange={onTypeFilter}
-            isClearable={true}
-          />
-        </div>
-      {/* ) : (
-        ''
-      )} */}
+  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [selectedDA, setSelectedDA] = useState(null);
+  const [selectedDR, setSelectedDR] = useState(null);
+  const [selectedTraffic, setSelectedTraffic] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedLinkType, setSelectedLinkType] = useState(null);
+  const [selectedNiche, setSelectedNiche] = useState(null);
+  const [selectedLI, setSelectedLI] = useState(null);
 
-      {/* {enableCategory ? 
-      ( */}
-        <div className="w-full md:w-64">
+  const clearAllFilters = () => {
+    setSelectedPrice(null);
+    setSelectedDA(null);
+    setSelectedDR(null);
+    setSelectedTraffic(null);
+    setSelectedCountry(null);
+    setSelectedLinkType(null);
+    setSelectedNiche(null);
+    setSelectedLI(null);
+
+    const defaultActionMeta = { action: 'clear' } as ActionMeta<unknown>;
+
+    if (onPriceFilter) onPriceFilter(null, defaultActionMeta);
+    if (onDAFilter) onDAFilter(null, defaultActionMeta);
+    if (onDRFilter) onDRFilter(null, defaultActionMeta);
+    if (onTrafficFilter) onTrafficFilter(null, defaultActionMeta);
+    if (onCountryFilter) onCountryFilter(null, defaultActionMeta);
+    if (onLinkTypeFilter) onLinkTypeFilter(null, defaultActionMeta);
+    if (onNicheFilter) onNicheFilter(null, defaultActionMeta);
+    if (onLIFilter) onLIFilter(null, defaultActionMeta);
+  };
+
+  return (
+    <div className={cn('flex w-full md:flex-wrap justify-start flex-col space-y-5 rtl:space-x-reverse md:flex-row md:items-end md:space-y-4', className)}>
+      {enablePrice && (
+        <div className="w-full md:w-[17vw] mr-5">
+          <Label>{t('Price')}</Label>
+          <Select
+            options={price}
+            value={selectedPrice}
+            getOptionLabel={(option: any) => option.name}
+            getOptionValue={(option: any) => option.slug}
+            placeholder={t('Filter by price')}
+            onChange={(newValue, actionMeta) => {
+              setSelectedPrice(newValue);
+              if (onPriceFilter) onPriceFilter(newValue, actionMeta);
+            }}
+            isClearable={true}
+          />
+        </div>
+      )}
+      {enableDA && (
+        <div className="w-full md:w-[17vw] mr-5">
+          <Label>{t('Domain Authority')}</Label>
+          <Select
+            options={domain_authority}
+            value={selectedDA}
+            getOptionLabel={(option: any) => option.name}
+            getOptionValue={(option: any) => option.slug}
+            placeholder={t('Filter by DA')}
+            onChange={(newValue, actionMeta) => {
+              setSelectedDA(newValue);
+              if (onDAFilter) onDAFilter(newValue, actionMeta);
+            }}
+            isClearable={true}
+          />
+        </div>
+      )}
+      {enableDR && (
+        <div className="w-full md:w-[17vw] mr-5">
+          <Label>{t('Domain Rating')}</Label>
+          <Select
+            options={domain_authority}
+            value={selectedDR}
+            getOptionLabel={(option: any) => option.name}
+            getOptionValue={(option: any) => option.slug}
+            placeholder={t('Filter by DR')}
+            onChange={(newValue, actionMeta) => {
+              setSelectedDR(newValue);
+              if (onDRFilter) onDRFilter(newValue, actionMeta);
+            }}
+            isClearable={true}
+          />
+        </div>
+      )}
+      {enableTrafficFilter && (
+        <div className="w-full md:w-[17vw] mr-5">
           <Label>{t('Traffic')}</Label>
           <Select
-            // options={categories}
+            options={organic_traffic}
+            value={selectedTraffic}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
             placeholder={t('Filter by traffic')}
-            // isLoading={categoryLoading}
-            // onChange={onCategoryFilter}
+            onChange={(newValue, actionMeta) => {
+              setSelectedTraffic(newValue);
+              if (onTrafficFilter) onTrafficFilter(newValue, actionMeta);
+            }}
             isClearable={true}
           />
         </div>
-      {/* ) : (
-        ''
-      )} */}
-
-      {/* {enableAuthor ? ( */}
-        <div className="w-full md:w-64">
+      )}
+      {enableCountry && (
+        <div className="w-full md:w-[17vw] mr-5">
           <Label>{t('Countries')}</Label>
           <Select
-            // options={authors}
+            options={countries}
+            value={selectedCountry}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
             placeholder={t('Filter by countries')}
-            // isLoading={authorLoading}
-            // onChange={onAuthorFilter}
+            onChange={(newValue, actionMeta) => {
+              setSelectedCountry(newValue);
+              if (onCountryFilter) onCountryFilter(newValue, actionMeta);
+            }}
             isClearable={true}
           />
         </div>
-      {/* ) : (
-        ''
-      )} */}
-
-      {enableProductType ? (
-        <div className="w-full md:w-64">
-          <Label>Link type</Label>
+      )}
+      {enableLinkType && (
+        <div className="w-full md:w-[17vw] mr-5">
+          <Label>{t('Link type')}</Label>
           <Select
-            options={productType}
+            options={linkType}
+            value={selectedLinkType}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
-            placeholder="Filter by Link type"
-            // isLoading={authorLoading}
-            onChange={onProductTypeFilter}
+            placeholder={t('Filter by Link type')}
+            onChange={(newValue, actionMeta) => {
+              setSelectedLinkType(newValue);
+              if (onLinkTypeFilter) onLinkTypeFilter(newValue, actionMeta);
+            }}
             isClearable={true}
           />
         </div>
-       ) : (
-        ''
-      )} 
-
-      {/* {enableManufacturer ? ( */}
-        <div className="w-full md:w-64">
-          <Label>Link Insertion</Label>
+      )}
+      {enableNiche && (
+        <div className="w-full md:w-[17vw] mr-5">
+          <Label>{t('Addon Links')}</Label>
           <Select
-            // options={manufacturers}
+            options={linkType}
+            value={selectedNiche}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
-            placeholder="Filter by link insertion"
-            // isLoading={manufactureLoading}
-            // onChange={onManufactureFilter}
+            placeholder={t('Filter by Link type')}
+            onChange={(newValue, actionMeta) => {
+              setSelectedNiche(newValue);
+              if (onNicheFilter) onNicheFilter(newValue, actionMeta);
+            }}
             isClearable={true}
           />
         </div>
-      {/* ) : (
-        ''
-      )} */}
+      )}
+      {enableLI && (
+        <div className="w-full md:w-[17vw] mr-5">
+          <Label>{t('Link Insertion')}</Label>
+          <Select
+            options={isLinkInsertion}
+            value={selectedLI}
+            getOptionLabel={(option: any) => option.name}
+            getOptionValue={(option: any) => option.slug}
+            placeholder={t('Filter by link insertion')}
+            onChange={(newValue, actionMeta) => {
+              setSelectedLI(newValue);
+              if (onLIFilter) onLIFilter(newValue, actionMeta);
+            }}
+            isClearable={true}
+          />
+        </div>
+      )}
+      <div className="w-full md:w-[17vw] mr-5">
+        <button onClick={clearAllFilters} className="btn btn-secondary">
+          {t('Clear All Filters')}
+        </button>
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { Table } from '@/components/ui/table';
 import { Router, useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { NoDataFound } from '@/components/icons/no-data-found';
+import { CircularProgress } from '@mui/material';
 import {
   Product,
   MappedPaginatorInfo,
@@ -20,6 +21,7 @@ import TitleWithSort from '@/components/ui/title-with-sort';
 // import LanguageSwitcher from '@/components/ui/lang-action/action';
 
 export type IProps = {
+  loading: boolean;
   products: Product[] | undefined;
   paginatorInfo: MappedPaginatorInfo | null;
   onPagination: (current: number) => void;
@@ -33,6 +35,7 @@ type SortingObjType = {
 };
 
 const ProductInventoryList = ({
+  loading,
   products,
   paginatorInfo,
   onPagination,
@@ -71,7 +74,7 @@ const ProductInventoryList = ({
     {
       title: (
         <TitleWithSort
-          title={t('table:table-item-title')}
+          title={t('Domain Name')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
           }
@@ -82,14 +85,14 @@ const ProductInventoryList = ({
       dataIndex: 'name',
       key: 'name',
       align: alignLeft,
-      width: 70,
+      width: 130,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
       render: (name: string, { image, type }: { image: any; type: any }) => (
         <div className="flex items-center">
           <div className="flex flex-col">
-            <span className="truncate font-medium">{name}</span>
-            
+            <a href={`https://${name}`} className="truncate font-large hover:underline text-blue-700 dark:text-blue-500 text-[16px] tracking-wider ">{name}</a>
+            <span className='text-brand hover:underline'>Add to campaign</span>
           </div>
         </div>
       ),
@@ -107,15 +110,14 @@ const ProductInventoryList = ({
       className: 'cursor-pointer',
       dataIndex: 'domain_authority',
       key: 'domain_authority',
-      align: alignLeft,
-      width: 70,
+      // align: alignLeft,
+      width: 50,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_authority'),
-      render: (domain_authority:number) => (
-        <div className="flex items-center">
-          <div className="flex flex-col">
-            <span className="truncate font-medium">{domain_authority}</span>
-            
+      render: (domain_authority: number) => (
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col ">
+            <span className="truncate font-medium  text-brand bg-brand/10 px-4 py-1 rounded-lg">{domain_authority}</span>
           </div>
         </div>
       ),
@@ -133,41 +135,15 @@ const ProductInventoryList = ({
       className: 'cursor-pointer',
       dataIndex: 'domain_rating',
       key: 'domain_rating',
-      align: alignLeft,
-      width: 70,
+      // align: alignLeft,
+      width: 50,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_rating'),
       render: (domain_rating: number) => (
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <div className="flex flex-col">
-            <span className="truncate font-medium">{domain_rating}</span>
-            
-          </div>
-        </div>
-      ),
-    },
-    {
-      title: (
-        <TitleWithSort
-          title={t('Traffic')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'organic_traffic'
-          }
-          isActive={sortingObj.column === 'organic_traffic'}
-        />
-      ),
-      className: 'cursor-pointer',
-      dataIndex: 'organic_traffic',
-      key: 'organic_traffic',
-      align: alignLeft,
-      width: 70,
-      ellipsis: true,
-      onHeaderCell: () => onHeaderClick('organic_traffic'),
-      render: (organic_traffic: number) => (
-        <div className="flex items-center">
-          <div className="flex flex-col">
-            <span className="truncate font-medium">{organic_traffic}</span>
-            
+            <span className="truncate font-medium text-brand bg-brand/10 px-4 py-1 rounded-lg">{domain_rating}</span>
+
           </div>
         </div>
       ),
@@ -185,15 +161,41 @@ const ProductInventoryList = ({
       className: 'cursor-pointer',
       dataIndex: 'spam_score',
       key: 'spam_score',
-      align: alignLeft,
-      width: 70,
+      // align: alignLeft,
+      width: 50,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('spam_score'),
       render: (spam_score: number) => (
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <div className="flex flex-col">
-            <span className="truncate font-medium">{spam_score}</span>
-            
+            <span className="truncate font-medium text-brand bg-brand/10 px-4 py-1 rounded-lg">{spam_score}</span>
+
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: (
+        <TitleWithSort
+          title={t('Traffic')}
+          ascending={
+            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'organic_traffic'
+          }
+          isActive={sortingObj.column === 'organic_traffic'}
+        />
+      ),
+      className: 'cursor-pointer',
+      dataIndex: 'organic_traffic',
+      key: 'organic_traffic',
+      // align: alignLeft,
+      width: 60,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('organic_traffic'),
+      render: (organic_traffic: number) => (
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col">
+            <span className="truncate font-medium text-brand bg-brand/10 px-4 py-1 rounded-lg">{organic_traffic}</span>
+
           </div>
         </div>
       ),
@@ -211,51 +213,100 @@ const ProductInventoryList = ({
       className: 'cursor-pointer',
       dataIndex: 'link_type',
       key: 'link_type',
-      align: alignLeft,
+      // align: alignLeft,
       width: 70,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('link_type'),
-      render: (link_type: number) => (
-        <div className="flex items-center">
+      render: (link_type: string) => (
+        <div className="flex items-center justify-center">
           <div className="flex flex-col">
-            <span className="truncate font-medium">{link_type}</span>
-            
+            {
+              link_type==='Dofollow'?(
+              <span className="truncate font-medium text-purple-500 bg-brand/10 px-4 py-1 rounded-lg">{link_type}</span>
+              ):
+              (
+                <span className="truncate font-medium text-blue-500 bg-brand/10 px-4 py-1 rounded-lg">{link_type}</span>
+
+              )
+            }
           </div>
         </div>
       ),
     },
     {
-      title: "Countries",
+      title: "Language",
       className: 'cursor-pointer',
-      dataIndex: 'countries',
-      key: 'countries',
-      align: alignLeft,
+      dataIndex: 'languages',
+      key: 'languages',
+      // align: alignLeft,
       width: 70,
       ellipsis: true,
-      onHeaderCell: () => onHeaderClick('countries'),
-      render: (countries: number) => (
-        <div className="flex items-center">
+      onHeaderCell: () => onHeaderClick('languages'),
+      render: (languages: number) => (
+        <div className="flex items-center justify-center">
           <div className="flex flex-col">
-            <span className="truncate font-medium">{countries}</span>
-            
+            <button className="truncate font-medium text-brand bg-brand/10 px-4 py-1 rounded-lg">{languages}</button>
           </div>
         </div>
       ),
     },
     {
-      title: "Guest Post",
+      title: "GP",
       className: 'cursor-pointer',
       dataIndex: 'price',
       key: 'price',
-      align: alignLeft,
+      // align: alignLeft,
       width: 70,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('price'),
-      render: (countries: number) => (
-        <div className="flex items-center">
+      render: (price: number, { slug }: { slug: any }) => (
+        <div className="flex items-center justify-center">
           <div className="flex flex-col">
-            <button className="border rounded-lg hover:text-white hover:bg-brand border-brand px-4 py-2">Buy ${countries}</button>
-            
+            <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition duration-300 hover:text-white hover:bg-brand border-brand py-1">Buy ${price}</button>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "LI",
+      className: 'cursor-pointer',
+      dataIndex: 'isLinkInsertion',
+      key: 'isLinkInsertion',
+      // align: alignLeft,
+      width: 70,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('price'),
+      render: (isLinkInsertion: string, { price, type, slug }: { price: any; type: any, slug: any }) => (
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col">
+            {isLinkInsertion === '1' ? (
+              <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition duration-300 hover:text-white hover:bg-brand border-brand py-1">Buy ${price}</button>
+            ) : (
+              <button className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition duration-300 hover:text-white hover:bg-brand border-brand py-1">N/A</button>
+            )
+            }
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Grey Niche",
+      className: 'cursor-pointer',
+      dataIndex: 'is_niche',
+      key: 'is_niche',
+      // align: alignLeft,
+      width: 80,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('price'),
+      render: (is_niche: string) => (
+        <div className="flex items-center justify-center">
+          <div className="flex flex-col">
+            {is_niche === '1' ? (
+              <button className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition border-brand py-1">Available</button>
+
+            ) : (
+              <button className="border justify-center w-[5rem] rounded-lg text-brand font-bold border-brand py-1">N/A</button>
+            )}
           </div>
         </div>
       ),
@@ -269,37 +320,46 @@ const ProductInventoryList = ({
 
   return (
     <>
-      <div className="mb-6 m-3 overflow-hidden rounded shadow">
-        <Table
-          /* @ts-ignore */
-          columns={columns}
-          emptyText={() => (
-            <div className="flex flex-col items-center py-7">
-              <NoDataFound className="w-52" />
-              <div className="mb-1 pt-6 text-base font-semibold text-heading">
-                {t('table:empty-table-data')}
-              </div>
-              <p className="text-[13px]">{t('table:empty-table-sorry-text')}</p>
-            </div>
-          )}
-          data={products}
-          rowKey="id"
-          scroll={{ x: 900 }}
-        />
+  <div className="mb-6 m-3 overflow-hidden bg-white dark:bg-dark-100 rounded-lg shadow">
+    {loading ? (
+      <div className="flex justify-center items-center w-full h-64">
+        <CircularProgress />
       </div>
+    ) : (
+      <Table
+        /* @ts-ignore */
+        columns={columns}
+        emptyText={() => (
+          <div className="flex flex-col items-center py-7">
+            <NoDataFound className="w-52" />
+            <div className="mb-1 pt-6 text-base font-semibold text-heading">
+              {t('No data found')}
+            </div>
+            <p className="text-[13px]">
+              {t('Sorry we couldn’t find any data')}
+            </p>
+          </div>
+        )}
+        data={products}
+        rowKey="id"
+        scroll={{ x: 900 }}
+      />
+    )}
+  </div>
 
-      {!!paginatorInfo?.total && (
-        <div className="flex items-center justify-end">
-          <Pagination
-            total={paginatorInfo.total}
-            current={paginatorInfo.currentPage}
-            pageSize={paginatorInfo.perPage}
-            onChange={onPagination}
-            showLessItems
-          />
-        </div>
-      )}
-    </>
+  {!!paginatorInfo?.total && (
+    <div className="flex mb-5 font items-center justify-center">
+      <Pagination
+        total={paginatorInfo.total}
+        current={paginatorInfo.currentPage}
+        pageSize={paginatorInfo.perPage}
+        onChange={onPagination}
+        showLessItems
+      />
+    </div>
+  )}
+</>
+
   );
 };
 

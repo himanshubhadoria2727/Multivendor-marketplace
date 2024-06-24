@@ -101,7 +101,15 @@ class Client {
         name,
         categories,
         shop_id,
+        price,
+        link_type,
+        countries,
+        domain_authority,
+        domain_rating,
+        isLinkInsertion,
+        organic_traffic,
         product_type,
+        status,
         ...params
       }: Partial<ProductQueryOptions>) => {
         return HttpClient.get<ProductPaginator>(API_ENDPOINTS.PRODUCTS, {
@@ -112,10 +120,17 @@ class Client {
           search: HttpClient.formatSearchParams({
             type,
             name,
-            categories,
             shop_id,
+            price,
+            organic_traffic,
+            domain_rating,
+            isLinkInsertion,
+            domain_authority,
+            countries,
+            link_type,
             product_type,
             status,
+            ...(status !== 'publish' && { categories }),
           }),
         });
       },

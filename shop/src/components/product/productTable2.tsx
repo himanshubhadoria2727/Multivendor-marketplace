@@ -1,4 +1,4 @@
-import { Product, SortOrder } from '@/types';
+import { Category, Product, SortOrder } from '@/types';
 import React, { useState } from 'react';
 import Slider from '@mui/material/Slider';
 import ProductFilter from '../filters/product-filter';
@@ -15,25 +15,17 @@ import ProductInventoryList from './product-list';
 import { useRouter } from 'next/router';
 import Loader from '../ui/loaderAdmin/loader';
 import ErrorMessage from '../ui/error-message';
+import { organic_traffic } from '../filters/options';
+import CategoryFilter from './category-filter';
 
 interface TableProps {
-    abc: Product[];
+  loading: boolean
 }
 interface ProductTypeOptions {
-    name: string;
-    slug: string;
-  }
+  name: string;
+  slug: string;
+}
 
-const organicTrafficOptions = [
-    { label: 'Less than 500', value: [0, 499] },
-    { label: '500 - 1000', value: [500, 1000] },
-    { label: '1000 - 2000', value: [1000, 2000] },
-    { label: '2000 - 3000', value: [2000, 3000] },
-    { label: '3000 - 5000', value: [3000, 5000] },
-    { label: '5000 - 10000', value: [5000, 10000] },
-    { label: '10000 - 50000', value: [10000, 50000] },
-    { label: '50000 and above', value: [50000, Infinity] },
-];
 // const shopId = shopData?.id!;
 // const [searchTerm, setSearchTerm] = useState('');
 // const [page, setPage] = useState(1);
@@ -49,11 +41,18 @@ export default function ProductTable() {
   const [page, setPage] = useState(1);
   const [orderBy, setOrder] = useState('created_at');
   const [sortedBy, setColumn] = useState<SortOrder>(SortOrder.Desc);
-  const [type, setType] = useState('');
-  const [category, setCategory] = useState('');
   const [productType, setProductType] = useState('');
+  const [countries, setcountries] = useState('');
+  const [link_Type, setLinkType] = useState('');
+  const [price, setPrice] = useState('');
+  const [organic_traffic, setOrganicTraffic] = useState('');
+  const [domain_authority, setDA] = useState('');
+  const [domain_rating, setDR] = useState('');
+  const [category, setCategory] = useState('');
+  const [status, setStatus] = useState('');
+  const [isLinkInsertion, setLinkInsertion] = useState('');
   const { locale } = useRouter();
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const toggleVisible = () => {
     setVisible((v) => !v);
@@ -62,15 +61,23 @@ export default function ProductTable() {
   const { products, paginatorInfo, loading, error } = useProductsQuery({
     language: locale,
     name: searchTerm,
-    limit: 5,
+    limit: 8,
     page,
     orderBy,
     sortedBy,
-    categories: category,
     product_type: productType,
-    type,
+    price: price,
+    domain_authority: domain_authority,
+    domain_rating: domain_rating,
+    categories: category,
+    organic_traffic: organic_traffic,
+    isLinkInsertion: isLinkInsertion,
+    link_type: link_Type,
+    countries: countries,
+    status:status,
   });
-  console.log("admin side products",products)
+  console.log(loading);
+  console.log("shop side products", products)
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
 
@@ -82,111 +89,119 @@ export default function ProductTable() {
   function handlePagination(current: any) {
     setPage(current);
   }
-    
-    return (<>
-  <Card className="m-3 mb-0 flex dark:bg-dark flex-col">
-        <div className="flex w-full flex-col items-center md:flex-row">
-          <div className="mb-4 md:mb-0 md:w-1/4">
-            <PageHeadingForFilter title={t('Explore all sites')} />
-          </div>
 
-          <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
-            <Search onSearch={handleSearch} placeholderText='Search all sites ....' />
-          </div>
+  return (<>
+    <CategoryFilter
+      onAllProductFilter={(status)=>{
+        setStatus(status);
+        setPage(1);
+      }}
+      onCategoryFilter={(categorySlug: string) => {
+        setStatus('');
+        setCategory(categorySlug);
+        setPage(1);
+      }}
+    />
 
-          <button
-            className="mt-5 flex items-center whitespace-nowrap text-base font-semibold text-brand md:mt-0 md:ms-5"
-            onClick={toggleVisible}
-          >
-            {t('Filters ')}{' '}
-            {visible ? (
-              <ArrowUp className="ms-2" />
-            ) : (
-              <ArrowDown className="ms-2" />
-            )}
-          </button>
+    <Card className="m-3 mb-0 border-l-2 border-r-2 border-brand/90 flex dark:bg-dark-300 flex-col">
+      <div className="flex w-full flex-col items-center md:flex-row">
+        <div className="mb-4 md:mb-0 md:w-1/4">
+          <PageHeadingForFilter title={t('Explore all sites')} />
         </div>
 
-        <div
-          className={`flex w-full transition ${visible ? 'visible h-auto' : 'invisible h-0'}`}
+        <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
+          <Search onSearch={handleSearch} placeholderText='Search all sites ....' />
+        </div>
+
+        <button
+          className="mt-5 flex items-center whitespace-nowrap text-base font-semibold text-brand md:mt-0 md:ms-5"
+          onClick={toggleVisible}
         >
+          {t('Filters ')}{' '}
+          {visible ? (
+            <ArrowUp className="ms-2" />
+          ) : (
+            <ArrowDown className="ms-2" />
+          )}
+        </button>
+      </div>
 
-          <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center md:pt-8">
-            <ProductFilter
-              className="w-full"
-              //   type={type}
-              //   onCategoryFilter={(category: Category) => {
-              //     setCategory(category?.slug!);
-              //     setPage(1);
-              //   }}
-              //   onTypeFilter={(type: Type) => {
-              //     setType(type?.slug!);
-              //     setPage(1);
-              //   }}
-              onProductTypeFilter={(productType: ProductTypeOptions) => {
-                setProductType(productType?.slug!);
-                setPage(1);
-              } }
-              //   enableCategory
-              //   enableType
-              enableProductType />
-          </div>
+      <div
+        className={`flex w-full transition ${visible ? 'visible h-auto' : 'invisible h-0'}`}
+      >
+
+        <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center">
+          <ProductFilter
+            className="w-full"
+            //   type={type}
+            //   onCategoryFilter={(category: Category) => {
+            //     setCategory(category?.slug!);
+            //     setPage(1);
+            //   }}
+            //   onTypeFilter={(type: Type) => {
+            //     setType(type?.slug!);
+            //     setPage(1);
+            //   }}
+            onProductTypeFilter={(productType: ProductTypeOptions) => {
+              setProductType(productType?.slug!);
+              setPage(1);
+            }}
+            onCountryFilter={(countries: ProductTypeOptions) => {
+              setcountries(countries?.slug!);
+              setPage(1);
+            }}
+            onLinkTypeFilter={(link_Type: ProductTypeOptions) => {
+              setLinkType(link_Type?.slug!);
+              setPage(1);
+            }}
+            onTrafficFilter={(organic_traffic: ProductTypeOptions) => {
+              setOrganicTraffic(organic_traffic?.slug!);
+              setPage(1);
+            }}
+            onPriceFilter={(price: ProductTypeOptions) => {
+              setPrice(price?.slug!);
+              setPage(1);
+            }}
+            onDAFilter={(domain_authority: ProductTypeOptions) => {
+              setDA(domain_authority?.slug!);
+              setPage(1);
+            }}
+            onDRFilter={(domain_rating: ProductTypeOptions) => {
+              setDR(domain_rating?.slug!);
+              setPage(1);
+            }}
+            onLIFilter={(isLinkInsertion: ProductTypeOptions) => {
+              setLinkInsertion(isLinkInsertion?.slug!);
+              setPage(1);
+            }}
+            //   enableCategory
+            //   enableType
+            enableDR
+            enablePrice
+            enableLinkType
+            enableCountry
+            enableDA
+            enableLI
+            enableTrafficFilter
+            enableProductType />
         </div>
-      </Card>
-      {/* <Card className="m-3 mb-5 md:p-0 rounded rounded-lg overflow-x-auto md:mt-5 p-0 flex dark:bg-dark flex-col">
-          <table className="min-w-full rounded rounded-lg bg-white dark:bg-black border border-gray-200 dark:border-gray-700">
-            <thead>
-              <tr className="bg-brand/90 dark:bg-gray-800">
-                <th className="py-4 px-4 border-b text-start border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">Domain Name</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">DA</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">DR</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">Traffic</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">SC</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">Links</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">Languages</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">Countries</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white">LI</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white">GP</th>
-                <th className="py-4 px-4 border-b border-gray-300 dark:border-gray-600 text-white/90 dark:text-white cursor-pointer">Grey Niche</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => (
-                <tr key={index} className="text-center">
-                  <td className="py-4 px-4 border-b text-start border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.name}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.domain_authority}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.domain_rating}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.organic_traffic}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.spam_score}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.link_type}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.languages}</td>
-                  <td className="py-4 px-auto border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">{product.countries}</td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    <button className='border hover:text-white hover:bg-brand transition text-brand w-20 mx-auto border-brand rounded-lg py-1'>Buy ${product.price}</button>
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    <button className='border hover:text-white hover:bg-brand transition text-brand w-20 mx-auto border-brand rounded-lg py-1'>Buy ${product.price}</button>
-                  </td>
-                  <td className="py-4 px-4 border-b border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white">
-                    {product.is_niche === '1' ? (
-                      <div className='border text-brand w-20 mx-auto border-brand rounded-lg py-1'>Available</div>
-                    ) : (
-                      <div className='border text-brand w-20 mx-auto border-brand rounded-lg py-1'>NA</div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card></> ):(<></>)} */}
+      </div>
+    </Card>
+    {loading ? (
+        <Loader text={t('hello')} /> // Display loader while products are being fetched
+      ) : error ? (
+        <ErrorMessage message={error.message} /> // Display error message if fetching fails
+      ) : (
         <ProductInventoryList
-        products={products}
-        paginatorInfo={paginatorInfo}
-        onPagination={handlePagination}
-        onOrder={setOrder}
-        onSort={setColumn}
-      />
-    </>
-    );
+          loading={loading}
+          products={products}
+          paginatorInfo={paginatorInfo}
+          onPagination={handlePagination}
+          onOrder={setOrder}
+          onSort={setColumn}
+        />
+      )}
+  </>
+  );
 };
 

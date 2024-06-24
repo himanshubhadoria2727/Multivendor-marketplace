@@ -36,7 +36,7 @@ class ProductResource extends Resource
             'organic_traffic'          => $this->organic_traffic,
             'spam_score'          => $this->spam_score,
             'is_niche'          => $this->is_niche,
-            'isLinkInsertion'          => $this->is_niche,
+            'isLinkInsertion'          => $this->isLinkInsertion,
             'is_gamble'          => $this->is_gamble,
             'is_cbd'          => $this->is_cbd,
             'is_crypto'          => $this->is_crypto,
