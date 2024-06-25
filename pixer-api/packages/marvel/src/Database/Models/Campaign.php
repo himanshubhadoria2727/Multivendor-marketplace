@@ -1,6 +1,7 @@
 <?php
 
 namespace Marvel\Models;
+
 use Marvel\Database\Models\Product;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,10 +15,11 @@ class Campaign extends Model
     protected $fillable = ['user_id', 'name'];
 
     public function products()
-
     {
         Log::info("Inside Controller");
-        return $this->belongsToMany(Product::class, 'campaign_products');
+        return $this->belongsToMany(Product::class, 'campaign_products')
+            ->withPivot('order_id', 'name')
+            ->withTimestamps();
     }
 }
 
