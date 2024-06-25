@@ -48,7 +48,8 @@ use Marvel\Http\Controllers\RefundPolicyController;
 use Marvel\Http\Controllers\RefundReasonController;
 use Marvel\Http\Controllers\StoreNoticeController;
 use Marvel\Http\Controllers\TermsAndConditionsController;
-use App\Http\Controllers\PaymentController;
+// use App\Http\Controllers\PaymentController;
+use Marvel\Http\Controllers\CampaignController;
 
 
 
@@ -59,12 +60,20 @@ use App\Http\Controllers\PaymentController;
  * Available Public Routes
  * ******************************************
  */
+
+
+
+    
+
+
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::post('razorpay-payment',[PaymentController::class,'store']);
 
 Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
-
+ //Custom route for CreateCampaigns
+Route::post('campaigns', [CampaignController::class, 'store']);
+Route::get('campaigns', [CampaignController::class, 'index']); 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/token', [UserController::class, 'token']);
 Route::post('/logout', [UserController::class, 'logout']);
