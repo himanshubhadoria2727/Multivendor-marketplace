@@ -4,10 +4,11 @@ import Seo from '@/layouts/_seo';
 import routes from '@/config/routes';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
-import { useEffect, useState } from 'react';;
+import { useEffect, useState } from 'react';
 import { useCampaigns } from '@/components/campaign/CampaignContext';
 import { useWishlist } from '@/data/wishlist';
-
+import TitleWithSort from '@/components/ui/title-with-sort'; // Import your sorting component here
+import { SortOrder } from '@/types'; // Define SortOrder type if not already defined
 
 type Campaign = {
   id: number;
@@ -30,6 +31,8 @@ const CampaignManager: React.FC = () => {
   const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
   const [validationError, setValidationError] = useState('');
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortingObj, setSortingObj] = useState<{ column: string; sort: SortOrder }>({ column: '', sort: SortOrder.Desc });
 
   const handleAddCampaign = () => {
     const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -53,14 +56,35 @@ const CampaignManager: React.FC = () => {
   };
 
   const handleDeleteCampaign = (id: number) => {
-    
+    // Implement delete functionality here
   };
 
   const handleDeleteAllCampaigns = () => {
-    
+    // Implement delete all functionality here
   };
 
-  const selectedCampaign = campaigns.find(campaign => campaign.id === selectedCampaignId);
+  const filteredCampaigns = campaigns.filter(campaign =>
+    campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedCampaigns = [...filteredCampaigns].sort((a, b) => {
+    // Sorting logic based on sortingObj
+    if (sortingObj.column === 'name') {
+      return sortingObj.sort === SortOrder.Asc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    }
+    // Add other columns' sorting logic similarly
+    return 0;
+  });
+
+  // Find selected campaign object
+  const selectedCampaign = selectedCampaignId ? campaigns.find(campaign => campaign.id === selectedCampaignId) : null;
+
+  const onHeaderClick = (column: string) => ({
+    onClick: () => {
+      const newSortOrder = sortingObj.sort === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc;
+      setSortingObj({ sort: newSortOrder, column });
+    },
+  });
 
   return (
     <div className="p-4 dark:bg-dark-200 dark:text-white">
@@ -108,40 +132,130 @@ const CampaignManager: React.FC = () => {
         </div>
       )}
 
-      {/* Campaign Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {campaigns.map((campaign) => (
-          <div
-            key={campaign.id}
-            className="bg-white dark:bg-dark-300 dark:text-white shadow-md rounded p-4 cursor-pointer relative"
-          >
-            <h3 className="text-lg font-bold text-center mb-4">{campaign.name}</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <p className="font-semibold">Total Order:</p>
-              <p>{campaign.totalOrder}</p>
-              <p className="font-semibold">Free to Use:</p>
-              <p>{campaign.freeToUse}</p>
-              <p className="font-semibold">Total Spending:</p>
-              <p>{campaign.totalSpending}</p>
-              <p className="font-semibold">Created At:</p>
-              <p>{campaign.createdAt}</p>
-            </div>
-            <div className="flex justify-center mt-4">
-              <button
-                className="bg-brand dark:bg-brand-dark text-white px-4 py-2 rounded mr-2"
-                onClick={() => handleCardClick(campaign.id)}
-              >
-                Open
-              </button>
-              <button
-                className="bg-red-500 dark:bg-red-700 text-white px-4 py-2 rounded"
-                onClick={() => handleDeleteCampaign(campaign.id)}
-              >
-                Delete
-              </button>
-            </div>
+      {/* Search Bar */}
+      <div className="mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search Campaigns"
+          className="border p-2 w-full dark:border-brand dark:focus:border-brand focus:border-brand"
+        />
+      </div>
+
+      {/* Campaign Table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-200 dark:bg-dark-400">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+              <th>
+                <TitleWithSort
+                  title="Campaign Name"
+                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'}
+                  isActive={sortingObj.column === 'name'}
+                  
+                />
+              </th>
+              <th>
+                <TitleWithSort
+                  title="Total Orders"
+                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'totalOrder'}
+                  isActive={sortingObj.column === 'totalOrder'}
+                  
+                />
+              </th>
+              <th>
+                <TitleWithSort
+                  title="Free to Use"
+                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'freeToUse'}
+                  isActive={sortingObj.column === 'freeToUse'}
+                  
+                />
+              </th>
+              <th>
+                <TitleWithSort
+                  title="Total Spending"
+                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'totalSpending'}
+                  isActive={sortingObj.column === 'totalSpending'}
+                  
+                />
+              </th>
+              <th>
+                <TitleWithSort
+                  title="Created At"
+                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'createdAt'}
+                  isActive={sortingObj.column === 'createdAt'}
+                 
+                />
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200 dark:bg-dark-300 dark:divide-gray-700">
+            {sortedCampaigns.length === 0 ? (
+              <tr>
+                <td className="px-6 py-4 whitespace-nowrap" colSpan={6}>
+                  No campaigns found
+                </td>
+              </tr>
+            ) : (
+              sortedCampaigns.map(campaign => (
+                <tr key={campaign.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button
+                      className="text-brand dark:text-white hover:text-brand-dark dark:hover:text-brand-dark"
+                      onClick={() => handleCardClick(campaign.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 inline-block mr-2"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6a1 1 0 011-1h.5a1 1 0 010 2H10a1 1 0 01-1-1zm1 8a1 1 0 100-2 1 1 0 000 2z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Open
+                    </button>
+                    <button
+                      className="text-red-500 dark:text-red-700 hover:text-red-700 dark:hover:text-red-500 ml-2"
+                      onClick={() => handleDeleteCampaign(campaign.id)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 inline-block mr-2"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM3 10a7 7 0 1114 0 7 7 0 01-14 0zm9-4a1 1 0 10-2 0v6a1 1 0 102 0V6zm-4 0a1 1 0 112 0v6a1 1 0 11-2 0V6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Delete
+                    </button>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{campaign.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{campaign.totalOrder}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{campaign.freeToUse}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{campaign.totalSpending}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{campaign.createdAt}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        {sortedCampaigns.length > 0 && (
+          <div className="bg-white dark:bg-dark-300 dark:text-white p-4 mt-4 rounded shadow">
+            Showing {sortedCampaigns.length} results
           </div>
-        ))}
+        )}
       </div>
 
       {/* Detail Modal */}
@@ -154,12 +268,11 @@ const CampaignManager: React.FC = () => {
                 <thead>
                   <tr className="bg-gray-200 dark:bg-dark-400">
                     <th className="border px-4 py-2">Actions</th>
-                    <th className="border px-4 py-2">Site</th>
-                    <th className="border px-4 py-2">Price</th>
-                    <th className="border px-4 py-2">Status</th>
+                    <th className="border px-4 py-2">Campaign Name</th>
+                    <th className="border px-4 py-2">Total Orders</th>
+                    <th className="border px-4 py-2">Free to Use</th>
+                    <th className="border px-4 py-2">Total Spending</th>
                     <th className="border px-4 py-2">Created At</th>
-                    <th className="border px-4 py-2">Action</th>
-                    <th className="border px-4 py-2">Remove</th>
                   </tr>
                 </thead>
                 <tbody>
