@@ -18,9 +18,20 @@ class CampaignRepository
     {
         $campaignProducts = [];
         foreach ($productIds as $productId) {
-            $campaignProducts[] = ['product_id' => $productId, 'order_id' => null, 'name' => ''];
+            $product = Product::find($productId);
+            if ($product) {
+                $campaignProducts[] = [
+                    'product_id' => $productId, 
+                    'order_id' => null, 
+                    'name' => $product->name
+                ];
+            } else {
+                Log::warning('Product not found', ['product_id' => $productId]);
+            }
         }
-        $campaign->products()->createMany($campaignProducts);
+        if (!empty($campaignProducts)) {
+            $campaign->products()->createMany($campaignProducts);
+        }
         return $campaign->load('products');
     }
 
@@ -48,17 +59,32 @@ class CampaignRepository
     {
         $campaignProducts = [];
         foreach ($productIds as $productId) {
-            $campaignProducts[] = ['product_id' => $productId, 'order_id' => null, 'name' => ''];
+            $product = Product::find($productId);
+            if ($product) {
+                $campaignProducts[] = [
+                    'product_id' => $productId, 
+                    'order_id' => null, 
+                    'name' => $product->name
+                ];
+            } else {
+                Log::warning('Product not found', ['product_id' => $productId]);
+            }
         }
-        $campaign->products()->createMany($campaignProducts);
+        if (!empty($campaignProducts)) {
+            $campaign->products()->createMany($campaignProducts);
+        }
         return $campaign->load('products');
     }
+
     public function getAllCampaignProducts($userId)
+
+
     {
+        Log::info('inside get all campaign products ');
         return CampaignProduct::whereHas('campaign', function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             })
+            ->with('product') // Ensure products are eager loaded
             ->get();
     }
-    
 }

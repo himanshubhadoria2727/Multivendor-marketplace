@@ -79,7 +79,7 @@ Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])-
     Route::post('campaigns/{id}/products', [CampaignController::class, 'addProducts']);
     Route::get('campaigns/{id}/products', [CampaignController::class, 'getCampaignProducts']);
     
-    // Add this line to fetch all campaign products for the authenticated user
+    
     Route::get('campaigns/products', [CampaignController::class, 'getAllCampaignProducts']);
 
 Route::post('/register', [UserController::class, 'register']);

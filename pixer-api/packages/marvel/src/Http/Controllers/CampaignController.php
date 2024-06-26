@@ -77,8 +77,10 @@ class CampaignController extends CoreController
         return response()->json(['products' => $products], 200);
     }
     public function getAllCampaignProducts(Request $request)
-    {
+    {Log::info('inside get all campaign products ');
+        
         $userId = Auth::id();
+      
         $campaignProducts = $this->campaignRepository->getAllCampaignProducts($userId);
 
         return response()->json(['campaign_products' => $campaignProducts], 200);

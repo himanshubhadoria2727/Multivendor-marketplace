@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Log;
 
 class Campaign extends Model
 {
-    use HasFactory;
-
-    protected $fillable = ['user_id', 'name'];
+    protected $fillable = [
+        'user_id', 'name'
+    ];
 
     public function products()
     {
