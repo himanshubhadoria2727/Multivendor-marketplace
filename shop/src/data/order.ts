@@ -87,7 +87,7 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
   };
 }
 
-export function useOrder({ tracking_number }: { tracking_number: string }) {
+export function   useOrder({ tracking_number }: { tracking_number: string }) {
   const { data, isLoading, error, isFetching, refetch } = useQuery<
     Order,
     Error

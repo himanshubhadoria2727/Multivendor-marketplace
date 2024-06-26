@@ -672,6 +672,13 @@ export interface ReadAllNotifyLogs {
 }
 
 export interface OrderProductPivot {
+  title:string;
+  ancor:string;
+  postUrl:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file:string;
   order_quantity?: number;
   unit_price?: number;
   subtotal?: number;
@@ -743,6 +750,7 @@ export interface Product {
   languages:string;
   countries:string;
   link_type:string;
+  niche_price:string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -766,6 +774,7 @@ export interface CreateProduct {
   languages:string;
   countries:string;
   link_type:string;
+  niche_price:string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];
@@ -955,6 +964,8 @@ export interface Manufacturer {
 }
 
 export interface ConnectProductOrderPivot {
+  title:string;
+  ancor:string;
   product_id: string;
   order_quantity?: number;
   unit_price?: number;

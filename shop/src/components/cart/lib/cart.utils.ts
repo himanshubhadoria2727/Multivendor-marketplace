@@ -1,3 +1,4 @@
+import { Attachment } from "@/types";
 import { Url } from "next/dist/shared/lib/router/router";
 
 export type Optional<T, K extends keyof T> = Partial<T> & Omit<T, K>;
@@ -10,17 +11,25 @@ export interface Item {
   price: number;
   quantity: number;
   stock: number;
-  selectedForm:string;
-  selectedNiche:string;
   shop: {
     slug: string;
     name: string;
   };
   language: string;
-  // postUrl:Url;
-  // ancor:string;
-  // before_ancor:string;
-  // after_ancor:string;
+  formData:FormData;
+}
+
+export interface FormData{
+  title:string;
+  postUrl: string;
+  ancor:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file: Attachment;
+  selectedForm:string;
+  selectedNiche:string;
+  totalPrice:number;
 }
 export interface VerifiedResponse {
   total_tax: number;

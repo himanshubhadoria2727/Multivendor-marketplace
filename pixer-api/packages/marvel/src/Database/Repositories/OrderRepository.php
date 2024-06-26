@@ -83,6 +83,15 @@ class OrderRepository extends BaseRepository
         'customer_contact',
         'customer_name',
         'note',
+        'title',
+        'ancor',
+        'postUrl',
+        'link_url',
+        'instructions',
+        'content',
+        'file',
+        'selectedForm',
+        'selectedNiche'
     ];
 
     public function boot()
@@ -325,14 +334,22 @@ class OrderRepository extends BaseRepository
 
         try {
             $orderInput = $request->only($this->dataArray);
+            Log::info("1");
             $order = $this->create($orderInput);
+            Log::info("2");
             $products = $this->processProducts($request['products'], $request['customer_id'], $order);
+            Log::info("3");
             $order->products()->attach($products);
+            Log::info("4");
             $this->createChildOrder($order->id, $request);
+            Log::info("5");
             //  $this->calculateShopIncome($order);
             $invoiceData = $this->createInvoiceDataForEmail($request, $order);
+            Log::info("6");
             $customer = $request->user() ?? null;
+            Log::info("7");
             event(new OrderCreated($order, $invoiceData, $customer));
+            Log::info("8");
             return $order;
         } catch (Exception $e) {
             Log::info("create order exception ". $e->getMessage());
@@ -447,7 +464,7 @@ class OrderRepository extends BaseRepository
             for ($i = 0; $i < $order_quantity; $i++) {
                 OrderedFile::create([
                     'purchase_key'    => Str::random(16),
-                    'digital_file_id' => $digital_file->id,
+                    'digital_file_id' => 1,
                     'customer_id'     => $customer_id,
                     'tracking_number'  => $order_tracking_number
                 ]);

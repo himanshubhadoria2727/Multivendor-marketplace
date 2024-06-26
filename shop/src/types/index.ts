@@ -339,6 +339,7 @@ export interface CreateProductInput{
   link_url:string;
   instructions:string;
   content:string;
+  file: Attachment;
 }
 
 export interface CreateAbuseReportInput {
@@ -478,12 +479,9 @@ export interface Product {
   name: string;
   slug: string;
   description: string;
-  postUrl: string;
-  ancor:string;
-  before_ancor:string;
-  after_ancor:string;
   price: number;
   is_niche:string;
+  niche_price:number;
   is_gamble:boolean;
   is_cbd:boolean;
   is_crypto:boolean;
@@ -523,6 +521,13 @@ export interface Product {
   external_product_url: string;
   external_product_button_text: string;
   video?: string[];
+  title:string;
+  postUrl: string;
+  ancor:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file: Attachment;
 }
 
 export interface ProductPaginator extends PaginatorInfo<Product> {}

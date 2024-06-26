@@ -87,6 +87,7 @@ class ProductRepository extends BaseRepository
         'link_type',
         'is_digital',
         'is_niche',
+        'niche_price',
         'is_gamble',
         'is_cbd',
         'is_crypto',

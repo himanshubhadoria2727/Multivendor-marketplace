@@ -6,13 +6,14 @@ import Button from '@/components/ui/button';
 import { ProductInputFieldSchemaGL, ProductInputFieldSchemaLI, contactUsFormSchema } from '@/components/contact-us/schema';
 import { Form } from '@/components/ui/forms/form';
 import { useTranslation } from 'next-i18next';
-import type { SubmitHandler } from 'react-hook-form';
+import { Controller, type SubmitHandler } from 'react-hook-form';
 import Spinner from '../ui/loader/spinner/spinner';
 import { useEffect, useState } from 'react';
 import ProductNicheOptions from './product-niche-options';
 import React from 'react';
 import RichTextEditor from '@/components/ui/wysiwyg-editor/editor';
 import Label from '../ui/forms/label';
+import Uploader from '../ui/forms/uploader';
 
 type ProductInputFormProps = {
   product: Product;
@@ -35,13 +36,11 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   // });
   const [selectedNiche, setSelectedNiche] = useState('none');
   const handleNicheChange = (value: string) => {
-    setTotalPrice(product.price + 25);
     {
       value == 'none' ? (
         setTotalPrice(product.price)
       ) :
-        setTotalPrice(product.price + 25);
-    }
+      setTotalPrice(+product.price + +product.niche_price);    }
     console.log(value)
     setSelectedNiche(value);
   };
@@ -134,11 +133,22 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                     error={errors.link_url?.message}
                     className="mt-10 mb-10"
                   />
-
+                  <Controller
+                    name="file"
+                    control={control}
+                    render={({ field: { ref, ...rest } }) => (
+                      <div className="sm:col-span-2 mb-5">
+                        <Label className='text-lg text-brand font-semibold mb-3'>{"Upload your article details file(optional):"}</Label>
+                        <div className="text-xs">
+                          <Uploader {...rest} multiple={false} />
+                        </div>
+                      </div>
+                    )}
+                  />
                   <div className="relative mb-5">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Article content:"}</Label>
                     <RichTextEditor
-                      editorClassName='h-60 pb-10 mb-10'
+                      editorClassName='h-60 pb-10 mb-10 max-sm:w-[80vw] md:w-[75vw]'
                       control={control}
                       placeholder='My amazing content'
                       className='mb'
@@ -149,7 +159,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <div className="relative mb-5 ">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Special Instructions:"}</Label>
                     <RichTextEditor
-                      editorClassName='h-60 pb-10 mb-10'
+                      editorClassName='h-60 pb-10 mb-10 max-sm:w-[80vw] md:w-[75vw]'
                       control={control}
                       placeholder='Describe your requirement'
                       className=''
@@ -232,7 +242,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <div className="relative mb-5">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Special Instructions:"}</Label>
                     <RichTextEditor
-                      editorClassName='h-60 pb-10 mb-10'
+                      editorClassName='h-60 pb-10 mb-10 max-sm:w-[80vw] md:w-[75vw]'
                       control={control}
                       placeholder='Your requirements'
                       className='mb'
@@ -272,7 +282,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
           </Form>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 
