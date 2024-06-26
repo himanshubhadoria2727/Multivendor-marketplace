@@ -72,8 +72,16 @@ Route::post('razorpay-payment',[PaymentController::class,'store']);
 
 Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
  //Custom route for CreateCampaigns
-Route::post('campaigns', [CampaignController::class, 'store']);
-Route::get('campaigns', [CampaignController::class, 'index']); 
+ 
+    Route::post('campaigns', [CampaignController::class, 'store']);
+    Route::get('campaigns', [CampaignController::class, 'index']);
+    Route::get('campaigns/{id}', [CampaignController::class, 'show']);
+    Route::post('campaigns/{id}/products', [CampaignController::class, 'addProducts']);
+    Route::get('campaigns/{id}/products', [CampaignController::class, 'getCampaignProducts']);
+    
+    // Add this line to fetch all campaign products for the authenticated user
+    Route::get('campaigns/products', [CampaignController::class, 'getAllCampaignProducts']);
+
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/token', [UserController::class, 'token']);
 Route::post('/logout', [UserController::class, 'logout']);

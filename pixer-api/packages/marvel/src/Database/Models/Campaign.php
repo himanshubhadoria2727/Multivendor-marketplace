@@ -16,10 +16,6 @@ class Campaign extends Model
 
     public function products()
     {
-        Log::info("Inside Controller");
-        return $this->belongsToMany(Product::class, 'campaign_products')
-            ->withPivot('order_id', 'name')
-            ->withTimestamps();
+        return $this->hasMany(CampaignProduct::class);
     }
 }
-
