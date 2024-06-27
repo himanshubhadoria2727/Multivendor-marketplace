@@ -68,7 +68,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           className="mb-5 max-md:w-80 w-80"
         /> */}
 
-        {!is_external && (
+        {/* {!is_external && (
           <Input
             label={`${t('form:input-label-quantity')}*`}
             type="number"
@@ -94,7 +94,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           variant="outline"
           className="mb-5 max-md:w-80 w-64"
           disabled={isTranslateProduct}
-        />
+        /> */}
 
         <Input
           label={`${t('form:input-label-preview-url')}`}
@@ -113,7 +113,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           className="mb-5 max-md:w-80 w-64"
         /> */}
 
-        {true ? (
+        {/* {true ? (
           <>
             <Label>{t('form:input-label-digital-file')}</Label>
             <FileInput
@@ -142,7 +142,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
               )
             }
           </>
-        ) : null}
+        ) : null} */}
 
         {/* {is_external ? (
           <div>

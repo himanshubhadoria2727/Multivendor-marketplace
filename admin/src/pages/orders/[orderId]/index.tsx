@@ -29,7 +29,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useFormatPhoneNumber } from '@/utils/format-phone-number';
 
@@ -42,7 +42,20 @@ export default function OrderDetailsPage() {
   const { alignLeft, alignRight, isRTL } = useIsRTL();
   const { resetCart } = useCart();
   const [, resetCheckout] = useAtom(clearCheckoutAtom);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalDetails, setModalDetails] = useState({});
 
+  const handleOpenModal = (item:any) => {
+    // Assume record.details contains the necessary details
+    setModalDetails(item.pivot);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setModalDetails({});
+  };
+  
   useEffect(() => {
     resetCart();
     // @ts-ignore
@@ -174,6 +187,14 @@ export default function OrderDetailsPage() {
             {item.pivot.order_quantity}
           </span>
         </div>
+      ),
+    },
+    {
+      title: t('table:table-item-action'),
+      key: 'action',
+      align: alignRight,
+      render: (text: any, pivot: any) => (
+        <Button onClick={() => handleOpenModal(pivot)}>View Details</Button>
       ),
     },
     {

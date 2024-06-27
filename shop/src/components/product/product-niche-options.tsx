@@ -17,6 +17,7 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
     const [noneOptionVisible, setNoneOptionVisible] = React.useState(false);
 
     const {
+        niche_price,
         is_niche,
         is_gamble,
         is_cbd,
@@ -68,7 +69,7 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
                                             label={option.label}
                                             style={{ fontFamily: "inherit", color: "#24b47e", fontWeight: "800" }}
                                         />
-                                        <span className='px-2 py-1 rounded-lg bg-blue-500 text-sm text-white'>$25</span>
+                                        <span className='px-2 py-1 rounded-lg bg-blue-500 text-sm text-white'>${niche_price}</span>
                                     </div>
                                 ))}
                             {noneOptionVisible && (

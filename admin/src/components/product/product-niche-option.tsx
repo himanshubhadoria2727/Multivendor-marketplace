@@ -76,6 +76,15 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
               disabled={Boolean(is_crypto) && !is_crypto}
               className="mb-5 font-semibold max-md:w-80 w-64"
             />
+            <Input
+            label={"Set niche Price"}
+            type='number'
+            {...register('niche_price')}
+            placeholder='Enter niche price'
+            error={t(errors.niche_price?.message!)}
+            variant="outline"
+            className="mb-5 w-64 max-md:w-full"
+          />
           </div>
         ) : (
           null)}

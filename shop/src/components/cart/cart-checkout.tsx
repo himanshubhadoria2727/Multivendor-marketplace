@@ -71,7 +71,6 @@ export default function CartCheckout() {
     (item) =>
       !verifiedResponse?.unavailable_products?.includes(item?.id?.toString()),
   );
-
   // Calculate price
   const { price: tax } = usePrice(
     verifiedResponse && {
@@ -139,12 +138,21 @@ export default function CartCheckout() {
     mutate({
       amount: base_amount,
       total: totalPrice,
-      paid_total: totalPrice,
+      paid_total: totalPrice, 
       products: available_items.map((item) => ({
+        title: item.formData.title,
+        ancor:item.formData.ancor,
+        link_url:item.formData.link_url,
+        postUrl:item.formData.postUrl,
+        instructions:item.formData.instructions,
+        content:item.formData.content,
+        file:item.formData.file?.original,
+        selectedForm:item.formData.selectedForm,
+        selectedNiche:item.formData.selectedNiche,  
         product_id: item.id,
         order_quantity: item.quantity,
         unit_price: item.price,
-        subtotal: item.price * item.quantity,
+        subtotal: (item.price+item.formData.totalPrice) * item.quantity,
       })),
       payment_gateway: gateWay,
       use_wallet_points,

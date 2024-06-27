@@ -168,7 +168,7 @@ export default function CreateOrUpdateProductForm({
         createProduct({
           ...inputValues,
           ...(initialValues?.slug && { slug: initialValues.slug }),
-          shop_id: shopId || initialValues?.shop_id,
+          shop_id: shopId || initialValues?.shop_id,quantity:100, sku:"samplesku",
         });
       } else {
         //@ts-ignore
@@ -529,89 +529,6 @@ export default function CreateOrUpdateProductForm({
               {/* <ProductAuthorInput control={control} /> */}
               {/* <ProductManufacturerInput control={control} setValue={setValue} /> */}
               <ProductTagInput control={control} setValue={setValue} />
-            </Card>
-          </div>
-          <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
-            <Description
-              title={t('form:featured-image-title')}
-              details={featuredImageInformation}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-            />
-
-            <Card className="w-full sm:w-8/12 md:w-2/3">
-              <FileInput name="image" control={control} multiple={false} />
-              {/* {errors.image?.message && (
-                <p className="my-2 text-xs text-red-500">
-                  {t(errors?.image?.message!)}
-                </p>
-              )} */}
-            </Card>
-          </div>
-
-          <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
-            <Description
-              title={t('form:gallery-title')}
-              details={galleryImageInformation}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-            />
-
-            <Card className="w-full sm:w-8/12 md:w-2/3">
-              <FileInput name="gallery" control={control} />
-            </Card>
-          </div>
-
-          <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
-            <Description
-              title={t('form:video-title')}
-              details={t('form:video-help-text')}
-              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-            />
-
-            <Card className="w-full sm:w-8/12 md:w-2/3">
-              {/* Video url picker */}
-              <div>
-                {fields.map((item: any, index: number) => (
-                  <div
-                    className="border-b border-dashed border-border-200 py-5 first:pt-0 last:border-b-0 md:py-8 md:first:pt-0"
-                    key={index}
-                  >
-                    {' '}
-                    <div className="mb-3 flex gap-1 text-sm font-semibold leading-none text-body-dark">
-                      {`${t('form:input-label-video-embed')} ${index + 1}`}
-                      <TooltipLabel toolTipText={'form:text-video-tooltip'} />
-                    </div>
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-5">
-                      <TextArea
-                        className="sm:col-span-4"
-                        variant="outline"
-                        {...register(`video.${index}.url` as const)}
-                        defaultValue={item?.url!}
-                        // @ts-ignore
-                        error={t(errors?.video?.[index]?.url?.message)}
-                      />
-                      <button
-                        onClick={() => {
-                          remove(index);
-                        }}
-                        type="button"
-                        className="text-sm text-red-500 transition-colors duration-200 hover:text-red-700 focus:outline-none sm:col-span-1"
-                      >
-                        {t('form:button-label-remove')}
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <Button
-                type="button"
-                onClick={() => {
-                  append({ url: '' });
-                }}
-                className="w-full sm:w-auto"
-              >
-                {t('form:button-label-add-video')}
-              </Button>
             </Card>
           </div>
 

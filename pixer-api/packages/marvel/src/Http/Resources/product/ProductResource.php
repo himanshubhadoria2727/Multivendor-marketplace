@@ -43,6 +43,7 @@ class ProductResource extends Resource
             'link_type'          => $this->link_type,
             'languages'          => $this->languages,
             'countries'          => $this->countries,
+            'niche_price'          => $this->niche_price,
             'sku'                  => $this->sku,
             'sold_quantity'        => $this->sold_quantity,
             'in_flash_sale'        => $this->in_flash_sale,
