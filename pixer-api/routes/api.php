@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\CampaignController;
 
+use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route::middleware('auth:api')->post('campaigns', [CampaignController::class, 'store']);
+
+// Route::middleware('auth:api')->group(function () {
+//     Route::post('campaigns', [CampaignController::class, 'store']);
+// });
+
