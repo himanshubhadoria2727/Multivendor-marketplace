@@ -86,7 +86,7 @@ export const useProductsQuery = (
   const { data, error, isLoading } = useQuery<ProductPaginator, Error>(
     [API_ENDPOINTS.PRODUCTS, params],
     ({ queryKey, pageParam }) =>
-      (Object.assign({}, queryKey[1], pageParam)),
+      client.products.paginated(Object.assign({}, queryKey[1], pageParam)),
     {
       keepPreviousData: true,
       ...options,
