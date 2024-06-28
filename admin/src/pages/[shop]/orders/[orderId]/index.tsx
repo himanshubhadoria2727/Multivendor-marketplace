@@ -144,19 +144,6 @@ export default function OrderDetailsPage() {
 
   const columns = [
     {
-      dataIndex: 'image',
-      key: 'image',
-      width: 70,
-      render: (image: Attachment) => (
-        <Image
-          src={image?.thumbnail ?? siteSettings.product.placeholder}
-          alt="alt text"
-          width={50}
-          height={50}
-        />
-      ),
-    },
-    {
       title: t('table:table-item-products'),
       dataIndex: 'name',
       key: 'name',
@@ -172,7 +159,7 @@ export default function OrderDetailsPage() {
       ),
     },
     {
-      title: t('table:table-item-action'),
+      title: t('View details'),
       key: 'action',
       align: alignRight,
       render: (text: any, pivot: any) => (

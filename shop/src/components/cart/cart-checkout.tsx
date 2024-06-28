@@ -152,7 +152,7 @@ export default function CartCheckout() {
         product_id: item.id,
         order_quantity: item.quantity,
         unit_price: item.price,
-        subtotal: (item.price+item.formData.totalPrice) * item.quantity,
+        subtotal: (item.price+item.formData.totalPrice),
       })),
       payment_gateway: gateWay,
       use_wallet_points,

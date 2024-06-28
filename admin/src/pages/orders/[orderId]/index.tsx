@@ -32,6 +32,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useFormatPhoneNumber } from '@/utils/format-phone-number';
+import DetailsModal from '../orderDetails';
 
 type FormValues = {
   order_status: any;
@@ -159,22 +160,6 @@ export default function OrderDetailsPage() {
 
   const columns = [
     {
-      dataIndex: 'image',
-      key: 'image',
-      width: 70,
-      render: (image: Attachment) => (
-        <div className="relative h-[50px] w-[50px]">
-          <Image
-            src={image?.thumbnail ?? siteSettings.product.placeholder}
-            alt="alt text"
-            fill
-            sizes="(max-width: 768px) 100vw"
-            className="object-fill"
-          />
-        </div>
-      ),
-    },
-    {
       title: t('table:table-item-products'),
       dataIndex: 'name',
       key: 'name',
@@ -190,11 +175,11 @@ export default function OrderDetailsPage() {
       ),
     },
     {
-      title: t('table:table-item-action'),
+      title: t('View details'),
       key: 'action',
       align: alignRight,
       render: (text: any, pivot: any) => (
-        <Button onClick={() => handleOpenModal(pivot)}>View Details</Button>
+        <Button onClick={() => handleOpenModal(pivot)}><p className='text-xs'>Details</p></Button>
       ),
     },
     {
@@ -202,11 +187,11 @@ export default function OrderDetailsPage() {
       dataIndex: 'price',
       key: 'price',
       align: alignRight,
-      render: function Render(_: any, item: any) {
-        const { price } = usePrice({
-          amount: parseFloat(item.pivot.subtotal),
-        });
-        return <span>{price}</span>;
+      render: function Render(pivot: any, item: any) {
+        // const { price } = usePrice({
+        //   amount: parseFloat(item.pivot.subtotal),
+        // });
+        return <span>${item.pivot.unit_price}</span>;
       },
     },
   ];
@@ -275,7 +260,7 @@ export default function OrderDetailsPage() {
 
         <div className="mb-10">
           {order ? (
-            <Table
+            <><Table
               //@ts-ignore
               columns={columns}
               emptyText={() => (
@@ -291,8 +276,11 @@ export default function OrderDetailsPage() {
               )}
               data={order?.products!}
               rowKey="id"
-              scroll={{ x: 300 }}
-            />
+              scroll={{ x: 300 }} />
+              <DetailsModal
+                open={isModalVisible}
+                onClose={handleCloseModal}
+                details={modalDetails} /></>
           ) : (
             <span>{t('common:no-order-found')}</span>
           )}
