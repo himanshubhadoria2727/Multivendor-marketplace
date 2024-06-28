@@ -236,7 +236,7 @@ export default function ProductFilter({
         </div>
       )}
       <div className="w-full md:w-[17vw] mr-5">
-        <button onClick={clearAllFilters} className="btn btn-secondary">
+        <button onClick={clearAllFilters} className="bg-brand hover:bg-brand/80 active:bg-brand text-white font-bold py-2 px-4 rounded">
           {t('Clear All Filters')}
         </button>
       </div>

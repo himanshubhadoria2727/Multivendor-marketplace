@@ -36,6 +36,8 @@ import { Routes } from '@/config/routes';
 import { useShopQuery } from '@/data/shop';
 import { useMeQuery } from '@/data/user';
 import { useFormatPhoneNumber } from '@/utils/format-phone-number';
+import { useState } from 'react';
+import DetailsModal from '../orderDetails';
 
 type FormValues = {
   order_status: any;
@@ -57,6 +59,21 @@ export default function OrderDetailsPage() {
     isLoading: loading,
     error,
   } = useOrderQuery({ id: query.orderId as string, language: locale! });
+  console.log("order is amdmin",order)
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalDetails, setModalDetails] = useState({});
+
+  const handleOpenModal = (item:any) => {
+    // Assume record.details contains the necessary details
+    setModalDetails(item.pivot);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setModalDetails({});
+  };
   const { refetch } = useDownloadInvoiceMutation(
     {
       order_id: query.orderId as string,
@@ -155,6 +172,14 @@ export default function OrderDetailsPage() {
       ),
     },
     {
+      title: t('table:table-item-action'),
+      key: 'action',
+      align: alignRight,
+      render: (text: any, pivot: any) => (
+        <Button onClick={() => handleOpenModal(pivot)}>View Details</Button>
+      ),
+    },
+    {
       title: t('table:table-item-total'),
       dataIndex: 'pivot',
       key: 'pivot',
@@ -238,7 +263,7 @@ export default function OrderDetailsPage() {
 
         <div className="mb-10">
           {order ? (
-            <Table
+            <><Table
               //@ts-ignore
               columns={columns}
               emptyText={() => (
@@ -255,8 +280,11 @@ export default function OrderDetailsPage() {
               //@ts-ignore
               data={order?.products!}
               rowKey="id"
-              scroll={{ x: 300 }}
-            />
+              scroll={{ x: 300 }} />
+              <DetailsModal
+                open={isModalVisible}
+                onClose={handleCloseModal}
+                details={modalDetails} /></>
           ) : (
             <span>{t('common:no-order-found')}</span>
           )}

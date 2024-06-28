@@ -67,6 +67,7 @@ class ProductCreateRequest extends FormRequest
             'countries'                  => ['nullable', 'string'],
             'link_type'                  => ['nullable', 'string'],
             'domain_authority'             => ['required', 'numeric'],
+            'niche_price'                  => ['required', 'numeric'],
             'domain_rating'                => ['required', 'numeric'],
             'organic_traffic'              => ['required', 'numeric'],
             'spam_score'                   => ['required', 'numeric'],

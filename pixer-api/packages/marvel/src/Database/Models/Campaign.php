@@ -10,16 +10,12 @@ use Illuminate\Support\Facades\Log;
 
 class Campaign extends Model
 {
-    use HasFactory;
-
-    protected $fillable = ['user_id', 'name'];
+    protected $fillable = [
+        'user_id', 'name'
+    ];
 
     public function products()
     {
-        Log::info("Inside Controller");
-        return $this->belongsToMany(Product::class, 'campaign_products')
-            ->withPivot('order_id', 'name')
-            ->withTimestamps();
+        return $this->hasMany(CampaignProduct::class);
     }
 }
-

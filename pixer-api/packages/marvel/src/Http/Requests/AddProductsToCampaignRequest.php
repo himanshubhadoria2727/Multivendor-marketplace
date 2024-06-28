@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Log;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCampaignRequest extends FormRequest
+class AddProductsToCampaignRequest extends FormRequest
 {
     public function authorize()
     {
@@ -15,8 +15,7 @@ class CreateCampaignRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|unique:campaigns,name',
-            'product_ids' => 'array',
+            'product_ids' => 'required|array',
             'product_ids.*' => 'exists:products,id'
         ];
     }
