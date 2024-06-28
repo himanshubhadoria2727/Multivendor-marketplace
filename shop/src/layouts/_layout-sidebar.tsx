@@ -101,7 +101,7 @@ export function Sidebar({
               icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
             />
             <NavLink
-              title={t('Campaingns')}
+              title={t('Campaigns')}
               href={routes.campaign}
               isCollapse={isCollapse}
               icon={<ProductIcon className="h-4 w-4 text-current" />}
@@ -126,14 +126,14 @@ export function Sidebar({
             /> */}
 
             <NavLink
-              title={t('text-feed')}
+              title={t('Feed')}
               href={routes.feed}
               isCollapse={isCollapse}
               icon={<FeedIcon className="h-[17px] w-[17px] text-current" />}
             />
 
             <NavLink
-              title={t('text-contact')}
+              title={t('Contact')}
               href={routes.contact}
               isCollapse={isCollapse}
               icon={
@@ -144,13 +144,13 @@ export function Sidebar({
 
           <nav className="mt-auto flex flex-col pb-4">
             <NavLink
-              title={t('text-settings')}
+              title={t('Settings')}
               href={routes.profile}
               isCollapse={isCollapse}
               icon={<SettingIcon className="h-[18px] w-[18px] text-current" />}
             />
             <NavLink
-              title={t('text-help-page-title')}
+              title={t('Help')}
               href={routes.help}
               isCollapse={isCollapse}
               icon={<HelpIcon className="h-[18px] w-[18px] text-current" />}
@@ -170,19 +170,19 @@ export function Sidebar({
             href={routes.terms}
             className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
           >
-            {t('text-terms')}
+            {t('Terms')}
           </ActiveLink>
           <ActiveLink
             href={routes.privacy}
             className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
           >
-            {t('text-privacy')}
+            {t('Privacy')}
           </ActiveLink>
           <ActiveLink
             href={routes.help}
             className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
           >
-            {t('text-help-page-title')}
+            {t('Help')}
           </ActiveLink>
         </nav>
         {/* <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-700" /> */}

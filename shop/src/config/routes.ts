@@ -6,6 +6,7 @@ const routes = {
   explore: '/explore',
   dashboard: '/dashboard',
   campaign :'/campaigns',
+  campaignDetails: (id: string | number) => `/campaigns/${id}`,
   popularProducts: '/popular-products',
   about: '/about-us',
   contact: '/contact-us',

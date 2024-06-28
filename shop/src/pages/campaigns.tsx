@@ -5,86 +5,105 @@ import routes from '@/config/routes';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
 import { useEffect, useState } from 'react';
-import { useCampaigns } from '@/components/campaign/CampaignContext';
-import { useWishlist } from '@/data/wishlist';
-import TitleWithSort from '@/components/ui/title-with-sort'; // Import your sorting component here
-import { SortOrder } from '@/types'; // Define SortOrder type if not already defined
+import { useRouter } from 'next/router';
+import { SortOrder } from '@/types';
+import Link from 'next/link';
+import AnchorLink from '@/components/ui/links/anchor-link';
+import { BsArrowRightCircle } from 'react-icons/bs'; // Import icons for sorting
 
 type Campaign = {
   id: number;
   name: string;
-  totalOrder: string;
-  freeToUse: string;
-  totalSpending: string;
-  createdAt: string;
-};
-
-const getCurrentDate = () => {
-  const today = new Date();
-  return today.toISOString().split('T')[0];
+  created_at: string;
+  product_count: number;
 };
 
 const CampaignManager: React.FC = () => {
-  const { campaigns, addCampaign } = useCampaigns();
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newCampaignName, setNewCampaignName] = useState('');
-  const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null);
   const [validationError, setValidationError] = useState('');
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortingObj, setSortingObj] = useState<{ column: string; sort: SortOrder }>({ column: '', sort: SortOrder.Desc });
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
-  const handleAddCampaign = () => {
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://127.0.0.1:8000/campaigns', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      setCampaigns(data.campaigns);
+      setIsLoading(false); // Turn off loading state
+    };
+
+    fetchCampaigns();
+  }, []);
+
+  const handleAddCampaign = async () => {
     const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
       setValidationError('Enter a valid campaign name');
       return;
     }
-    addCampaign(newCampaignName);
+
+    const token = localStorage.getItem('token');
+    await fetch('http://127.0.0.1:8000/campaigns', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name: newCampaignName }),
+    });
+
     setNewCampaignName('');
     setIsModalOpen(false);
     setValidationError('');
+
+    // Refresh campaigns
+    const response = await fetch('http://127.0.0.1:8000/campaigns', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    setCampaigns(data.campaigns);
   };
-
-  const handleCardClick = (id: number) => {
-    setSelectedCampaignId(id);
-    setIsDetailModalOpen(true);
-  };
-
-  const handleCloseDetailModal = () => {
-    setIsDetailModalOpen(false);
-  };
-
-  const handleDeleteCampaign = (id: number) => {
-    // Implement delete functionality here
-  };
-
-  const handleDeleteAllCampaigns = () => {
-    // Implement delete all functionality here
-  };
-
-  const filteredCampaigns = campaigns.filter(campaign =>
-    campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const sortedCampaigns = [...filteredCampaigns].sort((a, b) => {
-    // Sorting logic based on sortingObj
-    if (sortingObj.column === 'name') {
-      return sortingObj.sort === SortOrder.Asc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-    }
-    // Add other columns' sorting logic similarly
-    return 0;
-  });
-
-  // Find selected campaign object
-  const selectedCampaign = selectedCampaignId ? campaigns.find(campaign => campaign.id === selectedCampaignId) : null;
 
   const onHeaderClick = (column: string) => ({
     onClick: () => {
-      const newSortOrder = sortingObj.sort === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc;
+      const newSortOrder =
+        sortingObj.sort === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc;
       setSortingObj({ sort: newSortOrder, column });
     },
   });
+
+  const sortedCampaigns = [...campaigns].sort((a, b) => {
+    switch (sortingObj.column) {
+      case 'name':
+        return sortingObj.sort === SortOrder.Asc
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      case 'totalOrders':
+        return sortingObj.sort === SortOrder.Asc
+          ? (a.product_count || 0) - (b.product_count || 0)
+          : (b.product_count || 0) - (a.product_count || 0);
+      case 'createdAt':
+        return sortingObj.sort === SortOrder.Asc
+          ? new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      default:
+        return 0;
+    }
+  });
+
+  const filteredCampaigns = sortedCampaigns.filter(campaign =>
+    campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="p-4 dark:bg-dark-200 dark:text-white">
@@ -110,7 +129,9 @@ const CampaignManager: React.FC = () => {
               className="border dark:border-gray-600 p-2 w-full mb-2 bg-white dark:bg-dark-100 dark:text-white"
               placeholder="Enter Domain (example.com)"
             />
-            {validationError && <p className="text-red-500 text-sm mb-2">{validationError}</p>}
+            {validationError && (
+              <p className="text-red-500 text-sm mb-2">{validationError}</p>
+            )}
             <div className="flex justify-end">
               <button
                 className="bg-gray-500 dark:bg-gray-700 text-white px-4 py-2 rounded mr-2"
@@ -134,182 +155,106 @@ const CampaignManager: React.FC = () => {
 
       {/* Search Bar */}
       <div className="mb-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search Campaigns"
-          className="border p-2 w-full dark:border-brand dark:focus:border-brand focus:border-brand"
-        />
+        <div >
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search Campaigns"
+            className="border p-2 w-full text-sm focus:border-green-500 focus:outline-none bg-white text-black dark:bg-dark-100 dark:text-white dark:focus:border-green-500 rounded-l"
+          />
+        </div>
       </div>
 
       {/* Campaign Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-200 dark:bg-dark-400">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-              <th>
-                <TitleWithSort
-                  title="Campaign Name"
-                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'}
-                  isActive={sortingObj.column === 'name'}
-                  
-                />
-              </th>
-              <th>
-                <TitleWithSort
-                  title="Total Orders"
-                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'totalOrder'}
-                  isActive={sortingObj.column === 'totalOrder'}
-                  
-                />
-              </th>
-              <th>
-                <TitleWithSort
-                  title="Free to Use"
-                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'freeToUse'}
-                  isActive={sortingObj.column === 'freeToUse'}
-                  
-                />
-              </th>
-              <th>
-                <TitleWithSort
-                  title="Total Spending"
-                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'totalSpending'}
-                  isActive={sortingObj.column === 'totalSpending'}
-                  
-                />
-              </th>
-              <th>
-                <TitleWithSort
-                  title="Created At"
-                  ascending={sortingObj.sort === SortOrder.Asc && sortingObj.column === 'createdAt'}
-                  isActive={sortingObj.column === 'createdAt'}
-                 
-                />
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200 dark:bg-dark-300 dark:divide-gray-700">
-            {sortedCampaigns.length === 0 ? (
+        {isLoading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-12 w-12"></div>
+          </div>
+        ) : (
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-gray-200 dark:bg-dark-400">
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap" colSpan={6}>
-                  No campaigns found
-                </td>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
+                  Actions
+                </th>
+                <th
+                  onClick={onHeaderClick('name').onClick}
+                  className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                >
+                  Name <span className="ml-1">{sortingObj.column === 'name' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵" }</span>
+                </th>
+                <th
+                  onClick={onHeaderClick('totalOrders').onClick}
+                  className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                >
+                  Total Orders <span className="ml-1">{sortingObj.column === 'totalOrders' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}</span>
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
+                  Free Orders
+                </th>
+                <th
+                  onClick={onHeaderClick('createdAt').onClick}
+                  className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                >
+                  Created at <span className="ml-1">{sortingObj.column === 'createdAt' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}</span>
+                </th>
               </tr>
-            ) : (
-              sortedCampaigns.map(campaign => (
-                <tr key={campaign.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      className="text-brand dark:text-white hover:text-brand-dark dark:hover:text-brand-dark"
-                      onClick={() => handleCardClick(campaign.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 inline-block mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 2a8 8 0 100 16 8 8 0 000-16zM9 6a1 1 0 011-1h.5a1 1 0 010 2H10a1 1 0 01-1-1zm1 8a1 1 0 100-2 1 1 0 000 2z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Open
-                    </button>
-                    <button
-                      className="text-red-500 dark:text-red-700 hover:text-red-700 dark:hover:text-red-500 ml-2"
-                      onClick={() => handleDeleteCampaign(campaign.id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 inline-block mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM3 10a7 7 0 1114 0 7 7 0 01-14 0zm9-4a1 1 0 10-2 0v6a1 1 0 102 0V6zm-4 0a1 1 0 112 0v6a1 1 0 11-2 0V6z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Delete
-                    </button>
+            </thead>
+
+            <tbody className="bg-white divide-y divide-gray-200 dark:bg-dark-300 dark:divide-gray-700">
+              {sortedCampaigns.length === 0 ? (
+                <tr>
+                  <td className="px-6 py-4 whitespace-nowrap text-[15px]" colSpan={5}>
+                    No campaigns found
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{campaign.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{campaign.totalOrder}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{campaign.freeToUse}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{campaign.totalSpending}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{campaign.createdAt}</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                searchTerm ? (filteredCampaigns.length === 0 ? (
+                  <tr>
+                    <td className="px-6 py-4 whitespace-nowrap text-[15px]" colSpan={5}>
+                      No campaigns found
+                    </td>
+                  </tr>
+                ) : (
+                  filteredCampaigns.map(campaign => (
+                    <tr key={campaign.id} className="hover:bg-gray-100 dark:hover:bg-dark-400">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <AnchorLink href={`/campaigns/${campaign.id}`}>
+                          <BsArrowRightCircle className="text-xl text-brand hover:text-brand-dark dark:hover:text-brand-dark" />
+                        </AnchorLink>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px]">{campaign.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px] text-brand">{campaign.product_count}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px]">To</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px]">{new Date(campaign.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  ))
+                )) :
+                  (sortedCampaigns.map((campaign) => (
+                    <tr key={campaign.id} className="hover:bg-gray-100 dark:hover:bg-dark-400">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <AnchorLink href={`/campaigns/${campaign.id}`}>
+                          <BsArrowRightCircle className="text-2xl text-brand dark:text-white hover:text-brand-dark dark:hover:text-brand-dark" />
+                        </AnchorLink>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px]">{campaign.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px] text-brand">{campaign.product_count}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px]">To</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-[15px]">{new Date(campaign.created_at).toLocaleDateString()}</td>
+                    </tr>
+                  )))
+              )}
+            </tbody>
+          </table>
+        )}
+
         {sortedCampaigns.length > 0 && (
           <div className="bg-white dark:bg-dark-300 dark:text-white p-4 mt-4 rounded shadow">
             Showing {sortedCampaigns.length} results
           </div>
         )}
-      </div>
-
-      {/* Detail Modal */}
-      {isDetailModalOpen && selectedCampaign && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-dark-300 dark:text-white rounded shadow-lg max-w-full overflow-y-auto">
-            <div className="p-4">
-              <h2 className="text-lg font-bold mb-4">Campaign Details</h2>
-              <table className="w-full table-auto">
-                <thead>
-                  <tr className="bg-gray-200 dark:bg-dark-400">
-                    <th className="border px-4 py-2">Actions</th>
-                    <th className="border px-4 py-2">Campaign Name</th>
-                    <th className="border px-4 py-2">Total Orders</th>
-                    <th className="border px-4 py-2">Free to Use</th>
-                    <th className="border px-4 py-2">Total Spending</th>
-                    <th className="border px-4 py-2">Created At</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border px-4 py-2">
-                      {/* Add actions buttons */}
-                    </td>
-                    <td className="border px-4 py-2">{selectedCampaign.name}</td>
-                    <td className="border px-4 py-2">{selectedCampaign.totalOrder}</td>
-                    <td className="border px-4 py-2">{selectedCampaign.freeToUse}</td>
-                    <td className="border px-4 py-2">{selectedCampaign.totalSpending}</td>
-                    <td className="border px-4 py-2">{selectedCampaign.createdAt}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div className="flex justify-end mt-4">
-                <button
-                  className="bg-gray-500 dark:bg-gray-700 text-white px-4 py-2 rounded mr-2"
-                  onClick={handleCloseDetailModal}
-                >
-                  Close
-                </button>
-                {/* Additional buttons for actions */}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete All Campaigns Button */}
-      <div className="fixed bottom-4 left-4">
-        <button
-          className="bg-red-500 dark:bg-red-700 text-white px-4 py-2 rounded"
-          onClick={handleDeleteAllCampaigns}
-        >
-          Delete All Campaigns
-        </button>
       </div>
     </div>
   );
