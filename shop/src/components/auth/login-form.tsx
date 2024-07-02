@@ -36,6 +36,7 @@ export default function LoginUserForm() {
       setAuthCredentials(data.token, data.permissions);
       closeModal();
       localStorage.setItem("token",data.token);
+      console.log(data.token);
     },
   });
   const onSubmit: SubmitHandler<LoginUserInput> = (data) => {

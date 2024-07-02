@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { BsTrash } from 'react-icons/bs'; // Import trash icon for deletion
 import { SortOrder } from '@/types';
+import Spinner from './spinner';
 
 type Product = {
   id: number;
@@ -12,9 +13,11 @@ type Product = {
 
 type CampaignDetailsProps = {
   id: string;
+  name: string | null; // Allow name to be nullable
+  onBack: () => void;
 };
 
-const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id }) => {
+const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortingObj, setSortingObj] = useState<{ column: string; sort: SortOrder }>({ column: '', sort: SortOrder.Desc });
@@ -75,10 +78,20 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id }) => {
     setProducts(products.filter(product => product.id !== productId));
   };
 
+  const handleBackClick = () => {
+    onBack(); // Call the onBack function passed as prop
+  };
+
   return (
     <div className="p-4 dark:bg-dark-200 dark:text-white">
       <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded shadow">
-        <h1 className="text-2xl text-brand dark:text-white font-bold">Campaign Details</h1>
+        <h1 className="text-2xl text-brand dark:text-white font-bold">{name}</h1>
+        <button
+          className="bg-brand dark:bg-brand-dark text-white font-bold px-4 py-2 rounded"
+          onClick={handleBackClick}
+        >
+          All Campaigns
+        </button>
       </div>
 
       {/* Search Bar */}
@@ -88,7 +101,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id }) => {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search Campaigns"
+            placeholder="Search Products"
             className="border p-2 w-full text-sm focus:border-green-500 focus:outline-none bg-white text-black dark:bg-dark-100 dark:text-white dark:focus:border-green-500 rounded-l"
           />
         </div>
@@ -97,14 +110,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id }) => {
       {/* Products Table */}
       <div className="overflow-x-auto">
         {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-12 w-12"></div>
-          </div>
+          <Spinner/>
         ) : (
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-200 dark:bg-dark-400">
               <tr>
-               
+
                 <th
                   onClick={() => onHeaderClick('name').onClick()}
                   className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"

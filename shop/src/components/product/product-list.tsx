@@ -15,14 +15,21 @@ import {
   SortOrder,
 } from '@/types';
 import { useIsRTL } from '@/utils/locals';
-import { useState } from 'react';
 import TitleWithSort from '@/components/ui/title-with-sort';
-// import { Routes } from '@/config/routes';
-// import LanguageSwitcher from '@/components/ui/lang-action/action';
+import { useState, useEffect, SetStateAction } from 'react';
+
+
+type Campaign = {
+  id: number;
+  name: string;
+  created_at: string;
+  product_count: number;
+};
 
 export type IProps = {
   loading: boolean;
   products: Product[] | undefined;
+  product:Product;
   paginatorInfo: MappedPaginatorInfo | null;
   onPagination: (current: number) => void;
   onSort: (current: any) => void;
@@ -37,6 +44,7 @@ type SortingObjType = {
 const ProductInventoryList = ({
   loading,
   products,
+  product,
   paginatorInfo,
   onPagination,
   onSort,
@@ -46,7 +54,7 @@ const ProductInventoryList = ({
   const router = useRouter();
   const { t } = useTranslation();
   const {
-    query: { shop },
+    query: { },
   } = router;
   const { alignLeft } = useIsRTL();
 
@@ -54,6 +62,131 @@ const ProductInventoryList = ({
     sort: SortOrder.Desc,
     column: null,
   });
+
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+const [campaignNames, setCampaignNames] = useState<string[]>([]);
+const [newCampaignName, setNewCampaignName] = useState('');
+const [selectedCampaign, setSelectedCampaign] = useState<string>('');
+const [validationError, setValidationError] = useState('');
+const [isLoading, setIsLoading] = useState(true);
+const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const fetchCampaigns = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://127.0.0.1:8000/campaigns', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch campaigns');
+      }
+      const data = await response.json();
+      const campaignNames = data.campaigns.map((campaign: { name: any }) => campaign.name);
+      setCampaignNames(campaignNames);
+      setCampaigns(data.campaigns);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
+      setIsLoading(false);
+    }
+  };
+
+
+useEffect(() => {
+  if (showSuccessMessage) {
+    const timer = setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }
+}, [showSuccessMessage]);
+
+const handleAddProductToCampaign = async (productId: string) => {
+  const token = localStorage.getItem('token');
+
+  if (newCampaignName && campaignNames.includes(newCampaignName)) {
+    setValidationError('Campaign with the same name already present');
+    return;
+  }
+
+  try {
+    let response;
+    if (newCampaignName) {
+      const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
+      setValidationError('Enter a valid campaign name');
+      setNewCampaignName('');
+      return;
+      }
+      response = await fetch('http://127.0.0.1:8000/campaigns', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: newCampaignName,
+          product_ids: [productId],
+        }),
+      });
+    } else if (selectedCampaign) {
+      response = await fetch(`http://127.0.0.1:8000/campaigns/${selectedCampaign}/products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          product_ids: [productId],
+        }),
+      });
+    } else {
+      setValidationError('Select a campaign or create a new one');
+      return;
+    }
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Error adding product to campaign');
+    }
+
+    setValidationError('');
+    setSelectedCampaign('');
+    setNewCampaignName('');
+    setIsModalOpen(false);
+    setShowSuccessMessage(true);
+  } catch (error) {
+    console.error('Error adding product to campaign:', error);
+  }
+};
+
+const handleClick = () => {
+  setIsModalOpen(true);
+  fetchCampaigns();
+};
+
+
+const handleCampaignNameChange = (e: { target: { value: SetStateAction<string> } }) => {
+  setNewCampaignName(e.target.value);
+  if (e.target.value) {
+    setSelectedCampaign('');
+  }
+};
+
+const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string> } }) => {
+  setSelectedCampaign(e.target.value);
+  if (e.target.value) {
+    setNewCampaignName('');
+  }
+  setValidationError('');
+};
+
+
+
 
   const onHeaderClick = (column: string | null) => ({
     onClick: () => {
@@ -92,7 +225,7 @@ const ProductInventoryList = ({
         <div className="flex items-center">
           <div className="flex flex-col">
             <a href={`https://${name}`} className="truncate font-large hover:underline text-blue-700 dark:text-blue-500 text-[16px] tracking-wider ">{name}</a>
-            <span className='text-brand hover:underline'>Add to campaign</span>
+            <span className='text-brand hover:underline' onClick={handleClick}>Add to campaign</span>
           </div>
         </div>
       ),
@@ -318,6 +451,9 @@ const ProductInventoryList = ({
     columns = columns?.filter((column) => column?.key !== 'shop');
   }
 
+  
+
+
   return (
     <>
   <div className="mb-6 m-3 overflow-hidden bg-white dark:bg-dark-100 rounded-lg shadow">
@@ -345,6 +481,69 @@ const ProductInventoryList = ({
         scroll={{ x: 900 }}
       />
     )}
+    {isModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
+      <div>
+        <label className="block text-sm font-medium mb-2">Create a new campaign</label>
+        <input
+          type="text"
+          value={newCampaignName}
+          onChange={handleCampaignNameChange}
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+          placeholder="Campaign Name"
+        />
+        <label className="block text-sm font-medium mb-2">Or select from your campaigns</label>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <select
+            value={selectedCampaign}
+            onChange={handleCampaignSelectChange}
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+          >
+            {campaigns.map((campaign:any) => (
+              <option key={campaign.id} value={campaign.id}>
+                {campaign.name}
+              </option>
+            ))}
+          </select>
+        )}
+        <div className="flex justify-end">
+          <button
+            onClick={() => setIsModalOpen(false)}
+            className="px-4 py-2 bg-gray-300 text-black rounded mr-2"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => handleAddProductToCampaign(product.id)}
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Add
+          </button>
+        </div>
+        {validationError && <div className="text-red-500 mt-2">{validationError}</div>}
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Success Message */}
+{showSuccessMessage && (
+  <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg flex items-center">
+    <span>Product added successfully</span>
+    <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M5 13l4 4L19 7"
+      />
+    </svg>
+  </div>
+)}
   </div>
 
   {!!paginatorInfo?.total && (

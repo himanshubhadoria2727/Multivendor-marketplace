@@ -45,7 +45,8 @@ class CampaignRepository
                                'id' => $campaign->id,
                                'name' => $campaign->name,
                                'product_count' => $campaign->products->count(),
-                               'order_count' => $campaign->products->whereNotNull('order_id')->count()
+                               'order_count' => $campaign->products->whereNotNull('order_id')->count(),
+                               'created_at' => $campaign->created_at,
                            ];
                        });
     }
