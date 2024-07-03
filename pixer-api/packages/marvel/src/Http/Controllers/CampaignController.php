@@ -76,13 +76,25 @@ class CampaignController extends CoreController
 
         return response()->json(['products' => $products], 200);
     }
-    public function getAllCampaignProducts(Request $request)
-    {Log::info('inside get all campaign products ');
-        
-        $userId = Auth::id();
-      
-        $campaignProducts = $this->campaignRepository->getAllCampaignProducts($userId);
+    public function removeProduct(Request $request, $campaignId, $productId)
+    {
+        $campaign = $this->campaignRepository->getCampaignById($campaignId);
 
-        return response()->json(['campaign_products' => $campaignProducts], 200);
+        if ($campaign->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $this->campaignRepository->removeProductFromCampaign($campaign, $productId);
+
+        return response()->json(['message' => 'Product removed from campaign successfully'], 200);
     }
+    // public function getAllCampaignProducts(Request $request)
+    // {Log::info('inside get all campaign products ');
+        
+    //     $userId = Auth::id();
+      
+    //     $campaignProducts = $this->campaignRepository->getAllCampaignProducts($userId);
+
+    //     return response()->json(['campaign_products' => $campaignProducts], 200);
+    // }
 }

@@ -32,7 +32,10 @@ class Product extends Model
     protected $metaTable = 'products_meta'; //optional.
     // protected $disableFluentMeta = true;
     public $hideMeta = true;
-
+    protected $fillable = [
+        'name', 'price', // Add other attributes as needed
+        // If these are also fillable
+    ];
 
     protected $casts = [
         'image' => 'json',
