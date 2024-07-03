@@ -26,7 +26,6 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [type, setType] = useState('');
   const [category, setCategory] = useState('');
-  const [linkType,setLinkType] = useState('');
   const [productType, setProductType] = useState('');
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
@@ -41,15 +40,13 @@ export default function ProductsPage() {
 
   const { products, loading, paginatorInfo, error } = useProductsQuery({
     language: locale,
-    limit: 10,
+    limit: 20,
     page,
     type,
     categories: category,
     product_type: productType,
     name: searchTerm,
     orderBy,
-    link_type:linkType,
-    status,
     sortedBy,
   });
 
@@ -115,11 +112,6 @@ export default function ProductsPage() {
                 setProductType(productType?.slug!);
                 setPage(1);
               }}
-              onAuthorFilter={(author: ProductTypeOptions) => {
-                setAuthor(author?.slug!);
-                setPage(1);
-              }}
-              enableAuthor
               enableCategory
               enableType
               enableProductType

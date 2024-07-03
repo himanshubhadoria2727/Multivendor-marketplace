@@ -169,7 +169,7 @@ export default function ProductTable() {
       {loading ? (
         <Loader text={t('common:Loading')} /> 
       ) : error ? (
-        <ErrorMessage message={error} /> // Display error message if fetching fails
+        <ErrorMessage message={error.message} /> // Display error message if fetching fails
       ) : (
         <ProductInventoryList
           loading={loading}
