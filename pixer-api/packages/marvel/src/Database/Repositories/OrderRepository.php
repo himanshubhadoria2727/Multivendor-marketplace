@@ -256,7 +256,8 @@ class OrderRepository extends BaseRepository
 
         event(new OrderProcessed($order));
 
-
+       Log::info(`Order details`,$order);
+       Log::info(`request details`, $request);
         return $order;
     }
 

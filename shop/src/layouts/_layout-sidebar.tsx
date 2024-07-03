@@ -113,8 +113,8 @@ export function Sidebar({
               icon={<UserIconAlt className="h-4 w-4 text-current" />}
             />
             <NavLink
-              title={t('Purchases')}
-              href={routes.purchasesh}
+              title={t('Orders')}
+              href={routes.order}
               isCollapse={isCollapse}
               icon={<PurchaseIcon className="h-4 w-4 text-current" />}
             />

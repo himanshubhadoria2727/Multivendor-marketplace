@@ -80,7 +80,7 @@ Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])-
     Route::get('campaigns/{id}/products', [CampaignController::class, 'getCampaignProducts']);
     
     
-    Route::get('campaigns/products', [CampaignController::class, 'getAllCampaignProducts']);
+    // Route::get('campaigns/products', [CampaignController::class, 'getAllCampaignProducts']);
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/token', [UserController::class, 'token']);
