@@ -91,12 +91,12 @@ const ProductList = ({
       dataIndex: 'name',
       key: 'name',
       align: alignLeft,
-      width: 280,
+      width: 180,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
       render: (name: string, { image, type }: { image: any; type: any }) => (
         <div className="flex items-center">
-          <div className="relative aspect-square h-10 w-10 shrink-0 overflow-hidden rounded border border-border-200/80 bg-gray-100 me-2.5">
+          {/* <div className="relative aspect-square h-10 w-10 shrink-0 overflow-hidden rounded border border-border-200/80 bg-gray-100 me-2.5">
             <Image
               src={image?.thumbnail ?? siteSettings.product.placeholder}
               alt={name}
@@ -104,7 +104,7 @@ const ProductList = ({
               priority={true}
               sizes="(max-width: 768px) 100vw"
             />
-          </div>
+          </div> */}
           <div className="flex flex-col">
             <span className="truncate font-medium">{name}</span>
             <span className="truncate whitespace-nowrap pt-1 pb-0.5 text-[13px] text-body/80">
@@ -115,14 +115,14 @@ const ProductList = ({
       ),
     },
     {
-      title: t('table:table-item-product-type'),
-      dataIndex: 'product_type',
-      key: 'product_type',
+      title: t('Link Type'),
+      dataIndex: 'link_type',
+      key: 'link_type',
       width: 150,
       align: alignLeft,
-      render: (product_type: string) => (
+      render: (link_type: string) => (
         <span className="truncate whitespace-nowrap capitalize">
-          {product_type}
+          {link_type}
         </span>
       ),
     },
@@ -162,8 +162,8 @@ const ProductList = ({
       className: 'cursor-pointer',
       dataIndex: 'price',
       key: 'price',
-      align: alignRight,
-      width: 180,
+      align: alignLeft,
+      width: 150,
       onHeaderCell: () => onHeaderClick('price'),
       render: function Render(value: number, record: Product) {
         const { price: max_price } = usePrice({
@@ -189,42 +189,42 @@ const ProductList = ({
         );
       },
     },
-    {
-      title: (
-        <TitleWithSort
-          title={t('table:table-item-quantity')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc &&
-            sortingObj.column === 'quantity'
-          }
-          isActive={sortingObj.column === 'quantity'}
-        />
-      ),
-      className: 'cursor-pointer',
-      dataIndex: 'quantity',
-      key: 'quantity',
-      align: 'center',
-      width: 170,
-      onHeaderCell: () => onHeaderClick('quantity'),
-      render: (quantity: number) => {
-        if (quantity < 1) {
-          return (
-            <Badge
-              text={t('common:text-out-of-stock')}
-              color="bg-status-failed/10 text-status-failed"
-              className="capitalize"
-            />
-          );
-        }
-        return <span>{quantity}</span>;
-      },
-    },
+    // {
+    //   title: (
+    //     <TitleWithSort
+    //       title={t('table:table-item-quantity')}
+    //       ascending={
+    //         sortingObj.sort === SortOrder.Asc &&
+    //         sortingObj.column === 'quantity'
+    //       }
+    //       isActive={sortingObj.column === 'quantity'}
+    //     />
+    //   ),
+    //   className: 'cursor-pointer',
+    //   dataIndex: 'quantity',
+    //   key: 'quantity',
+    //   align: 'center',
+    //   width: 170,
+    //   onHeaderCell: () => onHeaderClick('quantity'),
+    //   render: (quantity: number) => {
+    //     if (quantity < 1) {
+    //       return (
+    //         <Badge
+    //           text={t('common:text-out-of-stock')}
+    //           color="bg-status-failed/10 text-status-failed"
+    //           className="capitalize"
+    //         />
+    //       );
+    //     }
+    //     return <span>{quantity}</span>;
+    //   },
+    // },
     {
       title: t('table:table-item-status'),
       dataIndex: 'status',
       key: 'status',
       align: 'left',
-      width: 200,
+      width: 120,
       render: (status: string, record: any) => (
         <div
           className={`flex justify-start ${
@@ -242,14 +242,14 @@ const ProductList = ({
             }
             className="capitalize"
           />
-          {record?.quantity > 0 && record?.quantity < 10 && (
+          {/* {record?.quantity > 0 && record?.quantity < 10 && (
             <Badge
               text={t('common:text-low-quantity')}
               color="bg-status-failed/10 text-status-failed"
               animate={true}
               className="capitalize"
             />
-          )}
+          )} */}
         </div>
       ),
     },
@@ -265,7 +265,7 @@ const ProductList = ({
           record={record}
           deleteModalView="DELETE_PRODUCT"
           routes={Routes?.product}
-          enablePreviewMode={true}
+          // enablePreviewMode={true}
           isShop={Boolean(shop)}
           shopSlug={(shop as string) ?? ''}
         />

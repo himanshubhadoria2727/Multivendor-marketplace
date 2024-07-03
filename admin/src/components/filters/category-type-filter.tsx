@@ -6,6 +6,7 @@ import { useManufacturersQuery } from '@/data/manufacturer';
 import { useTypesQuery } from '@/data/type';
 import { ProductType } from '@/types';
 import cn from 'classnames';
+import { link } from 'fs';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { ActionMeta } from 'react-select';
@@ -60,6 +61,7 @@ export default function CategoryTypeFilter({
     language: locale,
   });
 
+    console.log(authors)
   const { manufacturers, loading: manufactureLoading } = useManufacturersQuery({
     limit: 999,
     language: locale,
@@ -68,6 +70,10 @@ export default function CategoryTypeFilter({
   const productType = [
     { name: 'Simple product', slug: ProductType.Simple },
     { name: 'Variable product', slug: ProductType.Variable },
+  ];
+  const linktype = [
+    { name: 'DoFollow', slug: "DoFollow" },
+    { name: 'NoFollow', slug: "NoFollow" },
   ];
 
   return (
@@ -113,12 +119,12 @@ export default function CategoryTypeFilter({
 
       {enableAuthor ? (
         <div className="w-full">
-          <Label>{t('common:filter-by-author')}</Label>
+          <Label>{t('Filter by Link type')}</Label>
           <Select
-            options={authors}
+            options={linktype}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
-            placeholder={t('common:filter-by-author-placeholder')}
+            placeholder={t('Filter by link type')}
             isLoading={authorLoading}
             onChange={onAuthorFilter}
             isClearable={true}

@@ -52,7 +52,7 @@ class SettingsSeeder extends Seeder
                     "original" => "https://pixarlaravel.s3.ap-southeast-1.amazonaws.com/932/pixer_light.png",
                     "thumbnail" => "https://pixarlaravel.s3.ap-southeast-1.amazonaws.com/932/conversions/pixer_light-thumbnail.jpg"
                 ],
-                "siteTitle" => "GuestLink",
+                "siteTitle" => "Good Blogger",
                 "siteSubtitle" => "Your next ecommerce",
                 // "useOtp" => false,
                 "currency" => "USD",

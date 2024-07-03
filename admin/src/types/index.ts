@@ -1813,6 +1813,7 @@ export interface ProductQueryOptions extends QueryOptions {
   price: string;
   manufacturer: string;
   status: string;
+  link_type:string;
   is_active: string;
   shop_id: string;
   min_price: string;
