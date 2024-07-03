@@ -20,7 +20,7 @@ use Marvel\Traits\Excludable;
 use Kodeine\Metable\Metable;
 use Marvel\Exceptions\MarvelException;
 use Marvel\Traits\TranslationTrait;
-use Marvel\Models\Campaign;
+use Marvel\Models\CampaignProduct;
 
 class Product extends Model
 {
@@ -66,15 +66,10 @@ class Product extends Model
     }
 
     use HasFactory;
-    
 
-    protected $fillable = ['name', 'price'];
-
-    public function campaigns()
+    public function campaignProducts()
     {
-        return $this->belongsToMany(Campaign::class, 'campaign_products')
-                    ->withPivot('order_id', 'name', 'price')
-                    ->withTimestamps();
+        return $this->hasMany(CampaignProduct::class);
     }
 
     public function scopeWithUniqueSlugConstraints(Builder $query, Model $model): Builder
