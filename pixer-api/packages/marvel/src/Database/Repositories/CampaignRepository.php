@@ -23,7 +23,8 @@ class CampaignRepository
                 $campaignProducts[] = [
                     'product_id' => $productId, 
                     'order_id' => null, 
-                    'name' => $product->name
+                    'name' => $product->name,
+                    'price' => $product->price
                 ];
             } else {
                 Log::warning('Product not found', ['product_id' => $productId]);
@@ -75,6 +76,19 @@ class CampaignRepository
         if (!empty($campaignProducts)) {
             $campaign->products()->createMany($campaignProducts);
         }
+        return $campaign->load('products');
+    }
+
+    public function removeProductFromCampaign(Campaign $campaign, $productId)
+    {
+        $campaignProduct = $campaign->products()->where('product_id', $productId)->first();
+
+        if ($campaignProduct) {
+            $campaignProduct->delete();
+        } else {
+            Log::warning('Product not found in campaign', ['campaign_id' => $campaign->id, 'product_id' => $productId]);
+        }
+
         return $campaign->load('products');
     }
 
