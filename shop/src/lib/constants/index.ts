@@ -37,10 +37,6 @@ export const AuthorizedMenuItems = [
     path: routes.purchases,
   },
   {
-    label: 'text-auth-purchase',
-    path: routes.purchasesh,
-  },
-  {
     label: 'text-auth-wishlist',
     path: routes.wishlists,
   },

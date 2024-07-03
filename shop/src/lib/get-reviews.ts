@@ -6,6 +6,6 @@ import { Review } from '@/types';
  * @param reviews
  * @param orderId
  */
-export function getReview(reviews: Review[], orderId:  number | string) {
+export function getReview(reviews: Review[], orderId: string) {
   return reviews?.find((review: Review) => review?.order_id === orderId);
 }
