@@ -364,7 +364,7 @@ export interface CreateQuestionInput {
 export interface CreateReviewInput {
   product_id: string;
   shop_id: string;
-  order_id: string;
+  order_id:  number | string;
   comment?: string;
   rating: number;
   photos?: Attachment[];
@@ -475,6 +475,7 @@ export interface RatingCount {
 }
 
 export interface Product {
+  pivot: any;
   id: string;
   name: string;
   slug: string;
@@ -558,6 +559,8 @@ export interface TypePaginator extends PaginatorInfo<Type> {}
 export interface ShopPaginator extends PaginatorInfo<Shop> {}
 
 export interface Order {
+  digital_file_id(digital_file_id: any): void;
+  order: any;
   id: number | string;
   tracking_number: string;
   customer_id: number | string;
@@ -577,6 +580,19 @@ export interface Order {
   };
   sales_tax: number;
   reviews?: Review[];
+  formData:FormData;
+}
+export interface FormData{
+  title:string;
+  postUrl: string;
+  ancor:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file: Attachment;
+  selectedForm:string;
+  selectedNiche:string;
+  totalPrice:number;
 }
 
 export interface DigitalFile {
@@ -589,7 +605,7 @@ export interface OrderedFile {
   purchase_key: string;
   digital_file_id: string;
   customer_id: string;
-  order_id: string;
+  order_id: number | string;
   file: DigitalFile;
   created_at: string;
   updated_at: string;
@@ -637,7 +653,7 @@ export interface Review {
   positive_feedbacks_count: number;
   negative_feedbacks_count: number;
   my_feedback: Feedback;
-  order_id?: string;
+  order_id?:  number | string;
   created_at: string;
   updated_at: string;
 }

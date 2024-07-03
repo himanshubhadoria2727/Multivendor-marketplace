@@ -4,7 +4,7 @@ export interface State {
 }
 
 const initialState = {
-  siteTitle: 'Guestlink',
+  siteTitle: 'Good Blogger',
   siteSubtitle: '',
   currency: 'USD',
   currencyOptions: {
