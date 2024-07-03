@@ -280,7 +280,7 @@ export default function OrderDetailsPage() {
               <DetailsModal
                 open={isModalVisible}
                 onClose={handleCloseModal}
-                details={modalDetails} /></>
+                details={modalDetails} /></> 
           ) : (
             <span>{t('common:no-order-found')}</span>
           )}
