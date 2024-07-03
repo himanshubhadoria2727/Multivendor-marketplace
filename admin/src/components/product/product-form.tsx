@@ -558,7 +558,7 @@ export default function CreateOrUpdateProductForm({
                 </Button>
               )}
               <div className="ml-auto">
-                {showPreviewButton && (
+                {/* {showPreviewButton && (
                   <Link
                     href={`${process.env.NEXT_PUBLIC_SHOP_URL}/products/preview/${router.query.productSlug}`}
                     target="_blank"
@@ -567,7 +567,7 @@ export default function CreateOrUpdateProductForm({
                     <EyeIcon className="w-4 h-4 me-2" />
                     {t('form:button-label-preview-product-on-shop')}
                   </Link>
-                )}
+                )} */}
                 <Button
                   loading={updating || creating}
                   disabled={updating || creating}

@@ -37,6 +37,7 @@ const CheckoutPage: NextPageWithLayout = () => {
   const { price: totalPrice } = usePrice({
     amount: total,
   });
+  const totalPriceSum = items.reduce((acc, item) => acc + item.formData.totalPrice, 0);
   const { mutate, isLoading } = useMutation(client.orders.verify, {
     onSuccess: (res) => {
       setVerifiedResponse(res);
@@ -55,7 +56,7 @@ const CheckoutPage: NextPageWithLayout = () => {
         product_id: item.id,
         order_quantity: item.quantity,
         unit_price: item.price,
-        subtotal: item.price * item.quantity,
+        subtotal: item.formData.totalPrice * item.quantity,
       })),
     });
   }
@@ -106,7 +107,7 @@ const CheckoutPage: NextPageWithLayout = () => {
                 <div className="mb-6 flex flex-col gap-3 text-dark dark:text-light sm:mb-7">
                   <div className="flex justify-between">
                     <p>{t('text-subtotal')}</p>
-                    <strong className="font-semibold">{totalPrice}</strong>
+                    <strong className="font-semibold">${totalPriceSum}</strong>
                   </div>
                   <div className="flex justify-between">
                     <p>{t('text-tax')}</p>

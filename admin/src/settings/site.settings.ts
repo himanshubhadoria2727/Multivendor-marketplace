@@ -9,11 +9,11 @@ import { Routes } from '@/config/routes';
 // TODO : this area need to be checked in Pixer
 
 export const siteSettings = {
-  name: 'GuestLink',
+  name: 'Good Blogger',
   description: '',
   logo: {
     url: '/logo.svg',
-    alt: 'GuestLink',
+    alt: 'Good Blogger',
     href: '/',
     width: 138,
     height: 34,
