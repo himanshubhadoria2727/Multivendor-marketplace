@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { BsTrash } from 'react-icons/bs'; // Import trash icon for deletion
 import { SortOrder } from '@/types';
 import Spinner from './spinner';
@@ -64,6 +64,10 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
       setSortingObj({ sort: newSortOrder, column });
     },
   });
+
+  const handleNavigation = (slug: any) => {
+    router.push(`/products/product_page/${slug}`);
+  };
 
   const handleDeleteProduct = async (productId: number) => {
     const token = localStorage.getItem('token');
@@ -160,7 +164,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                     <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
                     <td className="px-6 py-4 whitespace-nowrap">Active</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="bg-brand text-white px-4 py-2 rounded">Place Order</button>
+                      <button className="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark" onClick={()=>handleNavigation(product.name)}>Place Order</button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
