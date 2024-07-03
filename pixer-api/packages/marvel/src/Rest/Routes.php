@@ -78,7 +78,7 @@ Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])-
     Route::get('campaigns/{id}', [CampaignController::class, 'show']);
     Route::post('campaigns/{id}/products', [CampaignController::class, 'addProducts']);
     Route::get('campaigns/{id}/products', [CampaignController::class, 'getCampaignProducts']);
-    
+    Route::delete('/campaigns/{campaignId}/products/{productId}', [CampaignController::class, 'removeProduct']);
     
     Route::get('campaigns/products', [CampaignController::class, 'getAllCampaignProducts']);
 
