@@ -29,7 +29,6 @@ type Campaign = {
 export type IProps = {
   loading: boolean;
   products: Product[] | undefined;
-  product:Product;
   paginatorInfo: MappedPaginatorInfo | null;
   onPagination: (current: number) => void;
   onSort: (current: any) => void;
@@ -44,7 +43,6 @@ type SortingObjType = {
 const ProductInventoryList = ({
   loading,
   products,
-  product,
   paginatorInfo,
   onPagination,
   onSort,
@@ -71,6 +69,7 @@ const [selectedCampaign, setSelectedCampaign] = useState<string>('');
 const [validationError, setValidationError] = useState('');
 const [isLoading, setIsLoading] = useState(true);
 const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+const [id, setId]=useState('');
 
   const fetchCampaigns = async () => {
     try {
@@ -164,7 +163,8 @@ const handleAddProductToCampaign = async (productId: string) => {
   }
 };
 
-const handleClick = () => {
+const handleClick = (id:any) => {
+  setId(id);
   setIsModalOpen(true);
   fetchCampaigns();
 };
@@ -221,11 +221,11 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
       width: 130,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
-      render: (name: string, { image, type }: { image: any; type: any }) => (
+      render: (name: string, { id, type }: { id: any; type: any }) => (
         <div className="flex items-center">
           <div className="flex flex-col">
             <a href={`https://${name}`} className="truncate font-large hover:underline text-blue-700 dark:text-blue-500 text-[16px] tracking-wider ">{name}</a>
-            <span className='text-brand hover:underline' onClick={handleClick}>Add to campaign</span>
+            <span className='text-brand hover:underline' onClick={() => handleClick(id)}>Add to campaign</span>
           </div>
         </div>
       ),
@@ -518,7 +518,7 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
             Cancel
           </button>
           <button
-            onClick={() => handleAddProductToCampaign(product.id)}
+            onClick={() => handleAddProductToCampaign(id)}
             className="px-4 py-2 bg-blue-500 text-white rounded"
           >
             Add

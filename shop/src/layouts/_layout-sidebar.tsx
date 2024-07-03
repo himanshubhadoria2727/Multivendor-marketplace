@@ -13,8 +13,6 @@ import Logo from '@/components/ui/logo';
 import Scrollbar from '@/components/ui/scrollbar';
 import routes from '@/config/routes';
 import Copyright from '@/layouts/_copyright';
-import { UserIconAlt } from '@/components/icons/user-icon-alt';
-import { PurchaseIcon } from '@/components/icons/purchase-icon';
 import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { useWindowSize } from 'react-use';
@@ -101,22 +99,10 @@ export function Sidebar({
               icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
             />
             <NavLink
-              title={t('Campaigns')}
+              title={t('Campaingns')}
               href={routes.campaign}
               isCollapse={isCollapse}
               icon={<ProductIcon className="h-4 w-4 text-current" />}
-            />
-            <NavLink
-              title={t('Profile')}
-              href={routes.profileh}
-              isCollapse={isCollapse}
-              icon={<UserIconAlt className="h-4 w-4 text-current" />}
-            />
-            <NavLink
-              title={t('Orders')}
-              href={routes.order}
-              isCollapse={isCollapse}
-              icon={<PurchaseIcon className="h-4 w-4 text-current" />}
             />
             {/* <NavLink
               title={t('text-top-authors')}
@@ -126,14 +112,14 @@ export function Sidebar({
             /> */}
 
             <NavLink
-              title={t('Feed')}
+              title={t('text-feed')}
               href={routes.feed}
               isCollapse={isCollapse}
               icon={<FeedIcon className="h-[17px] w-[17px] text-current" />}
             />
 
             <NavLink
-              title={t('Contact')}
+              title={t('text-contact')}
               href={routes.contact}
               isCollapse={isCollapse}
               icon={
@@ -144,13 +130,13 @@ export function Sidebar({
 
           <nav className="mt-auto flex flex-col pb-4">
             <NavLink
-              title={t('Settings')}
+              title={t('text-settings')}
               href={routes.profile}
               isCollapse={isCollapse}
               icon={<SettingIcon className="h-[18px] w-[18px] text-current" />}
             />
             <NavLink
-              title={t('Help')}
+              title={t('text-help-page-title')}
               href={routes.help}
               isCollapse={isCollapse}
               icon={<HelpIcon className="h-[18px] w-[18px] text-current" />}
@@ -170,19 +156,19 @@ export function Sidebar({
             href={routes.terms}
             className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
           >
-            {t('Terms')}
+            {t('text-terms')}
           </ActiveLink>
           <ActiveLink
             href={routes.privacy}
             className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
           >
-            {t('Privacy')}
+            {t('text-privacy')}
           </ActiveLink>
           <ActiveLink
             href={routes.help}
             className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
           >
-            {t('Help')}
+            {t('text-help-page-title')}
           </ActiveLink>
         </nav>
         {/* <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-700" /> */}

@@ -178,7 +178,6 @@ export default function ProductTable() {
           onPagination={handlePagination}
           onOrder={setOrder}
           onSort={setColumn}
-          product={products[0]}
         />
       )}
     </>
