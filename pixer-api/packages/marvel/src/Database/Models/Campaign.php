@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class Campaign extends Model
 {
-    protected $fillable = [
-        'user_id', 'name'
-    ];
+    use HasFactory;
+
+    protected $fillable = ['user_id', 'name'];
 
     public function products()
     {
-        return $this->hasMany(CampaignProduct::class);
+        return $this->belongsToMany(Product::class, 'campaign_products')
+                    ->withPivot('order_id', 'name', 'price')
+                    ->withTimestamps();
     }
 }

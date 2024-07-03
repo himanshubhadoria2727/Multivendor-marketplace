@@ -8,6 +8,7 @@ use Marvel\Repositories\CampaignRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Marvel\Models\Campaign;
 
 
 class CampaignController extends CoreController
@@ -65,7 +66,7 @@ class CampaignController extends CoreController
 
     // Add this method to fetch products for a specific campaign
     public function getCampaignProducts($id)
-    {
+    {Log::info('To check the atributes');
         $campaign = $this->campaignRepository->getCampaignById($id);
 
         if ($campaign->user_id !== Auth::id()) {
@@ -76,13 +77,26 @@ class CampaignController extends CoreController
 
         return response()->json(['products' => $products], 200);
     }
-    public function getAllCampaignProducts(Request $request)
-    {Log::info('inside get all campaign products ');
-        
-        $userId = Auth::id();
-      
-        $campaignProducts = $this->campaignRepository->getAllCampaignProducts($userId);
+    
+    public function removeProduct(Request $request, $campaignId, $productId)
+    {
+        $campaign = $this->campaignRepository->findById($campaignId);
 
-        return response()->json(['campaign_products' => $campaignProducts], 200);
+        if ($campaign->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $this->campaignRepository->removeProduct($campaign, $productId);
+
+        return response()->json(['campaign' => $campaign->load('products')], 200);
     }
+    // public function getAllCampaignProducts(Request $request)
+    // {Log::info('inside get all campaign products ');
+        
+    //     $userId = Auth::id();
+      
+    //     $campaignProducts = $this->campaignRepository->getAllCampaignProducts($userId);
+
+    //     return response()->json(['campaign_products' => $campaignProducts], 200);
+    // }
 }

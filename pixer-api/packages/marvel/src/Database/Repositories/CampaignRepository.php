@@ -13,6 +13,10 @@ class CampaignRepository
     {
         return Campaign::create($data);
     }
+    public function findById($id)
+    {
+        return Campaign::findOrFail($id);
+    }
 
     public function addProducts(Campaign $campaign, array $productIds)
     {
@@ -36,7 +40,7 @@ class CampaignRepository
     }
 
     public function getUserCampaigns($userId)
-    {
+    {Log::info('To check the atributes');
         return Campaign::with('products')
                        ->where('user_id', $userId)
                        ->get()
@@ -61,11 +65,13 @@ class CampaignRepository
         foreach ($productIds as $productId) {
             $product = Product::find($productId);
             if ($product) {
+
+                
                 $campaignProducts[] = [
                     'product_id' => $productId, 
                     'order_id' => null, 
                     'name' => $product->name,
-                    'price'=> $product->price
+                    'price' => $product->price
                 ];
             } else {
                 Log::warning('Product not found', ['product_id' => $productId]);
@@ -77,6 +83,15 @@ class CampaignRepository
         return $campaign->load('products');
     }
 
+
+    public function removeProduct(Campaign $campaign, $productId)
+    {
+        $campaignProduct = $campaign->products()->where('product_id', $productId)->first();
+        if ($campaignProduct) {
+            $campaignProduct->pivot->delete(); // Remove the pivot table entry
+        }
+        return $campaign->load('products');
+    }
     public function getAllCampaignProducts($userId)
 
 
