@@ -64,7 +64,8 @@ class CampaignRepository
                 $campaignProducts[] = [
                     'product_id' => $productId, 
                     'order_id' => null, 
-                    'name' => $product->name
+                    'name' => $product->name,
+                    'price'=> $product->price
                 ];
             } else {
                 Log::warning('Product not found', ['product_id' => $productId]);

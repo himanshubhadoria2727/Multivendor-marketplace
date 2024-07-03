@@ -9,7 +9,7 @@ class CampaignProduct extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['campaign_id', 'product_id', 'order_id', 'name'];
+    protected $fillable = ['campaign_id', 'product_id', 'order_id', 'name','price'];
 
     public function campaign()
     {
