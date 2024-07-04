@@ -68,6 +68,10 @@ export default function ProductTable() {
     countries: countries,
     status: status,
   });
+  console.log(loading);
+  console.log("shop side products", products)
+  if (loading) return <Loader text={t('Loading')} />;
+  if (error) return <ErrorMessage message={error.message} />;
 
   function handleSearch({ searchText }: { searchText: string }) {
     setSearchTerm(searchText);
@@ -169,7 +173,7 @@ export default function ProductTable() {
       {loading ? (
         <Loader text={t('common:Loading')} /> 
       ) : error ? (
-        <ErrorMessage /> // Display error message if fetching fails
+        <ErrorMessage message={error} /> // Display error message if fetching fails
       ) : (
         <ProductInventoryList
           loading={loading}

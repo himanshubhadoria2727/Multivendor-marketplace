@@ -29,140 +29,123 @@ class AnalyticsController extends CoreController
 
 
     public function analytics(Request $request)
-{
-    try {
-        $user = $request->user();
-        $shops = $user?->shops->pluck('id') ?? [];
+    {
+        try {
+            $user = $request->user();
+            // if (!$user || !$user->hasPermissionTo(Permission::STORE_OWNER)) {
+            //     throw new AuthenticationException();
+            // }
+            $shops = $user?->shops->pluck('id') ?? [];
 
-        // Check for customer role
-        $isCustomer = $user && $user->hasPermissionTo(Permission::CUSTOMER);
+            // Total revenue
+            $totalRevenueQuery = DB::table('orders as childOrder')
+                ->whereDate('childOrder.created_at', '<=', Carbon::now())
+                ->where('childOrder.order_status', OrderStatus::COMPLETED)
+                ->whereNotNull('childOrder.parent_id')
+                ->join('orders as parentOrder', 'childOrder.parent_id', '=', 'parentOrder.id')
+                ->whereDate('parentOrder.created_at', '<=', Carbon::now())
+                ->where('parentOrder.order_status', OrderStatus::COMPLETED)
+                ->select(
+                    'childOrder.id',
+                    'childOrder.parent_id',
+                    'childOrder.paid_total',
+                    'childOrder.created_at',
+                    'childOrder.shop_id',
+                    'parentOrder.delivery_fee',
+                    'parentOrder.sales_tax',
+                );
 
-        // Total revenue
-        $totalRevenueQuery = DB::table('orders as childOrder')
-            ->whereDate('childOrder.created_at', '<=', Carbon::now())
-            ->where('childOrder.order_status', OrderStatus::COMPLETED)
-            ->whereNotNull('childOrder.parent_id')
-            ->join('orders as parentOrder', 'childOrder.parent_id', '=', 'parentOrder.id')
-            ->whereDate('parentOrder.created_at', '<=', Carbon::now())
-            ->where('parentOrder.order_status', OrderStatus::COMPLETED)
-            ->select(
-                'childOrder.id',
-                'childOrder.parent_id',
-                'childOrder.paid_total',
-                'childOrder.created_at',
-                'childOrder.shop_id',
-                'parentOrder.delivery_fee',
-                'parentOrder.sales_tax',
-            );
+            if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
+                $totalRevenueQuery = $totalRevenueQuery->get();
+                $totalRevenue = $totalRevenueQuery->sum('paid_total')
+                    + $totalRevenueQuery->unique('parent_id')->sum('delivery_fee')
+                    + $totalRevenueQuery->unique('parent_id')->sum('sales_tax');
+            } else {
+                $totalRevenue = $totalRevenueQuery
+                    ->whereIn('childOrder.shop_id', $shops)
+                    ->get()
+                    ->sum('paid_total');
+            }
 
-        if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
-            $totalRevenueQuery = $totalRevenueQuery->get();
-            $totalRevenue = $totalRevenueQuery->sum('paid_total')
-                + $totalRevenueQuery->unique('parent_id')->sum('delivery_fee')
-                + $totalRevenueQuery->unique('parent_id')->sum('sales_tax');
-        } elseif ($isCustomer) {
-            $totalRevenue = $totalRevenueQuery
-                ->where('childOrder.customer_id', $user->id)
-                ->get()
-                ->sum('paid_total');
-        } else {
-            $totalRevenue = $totalRevenueQuery
-                ->whereIn('childOrder.shop_id', $shops)
-                ->get()
-                ->sum('paid_total');
+            // Today's revenue
+            $todaysRevenueQuery =  DB::table('orders as A')
+                ->whereDate('A.created_at', '>', Carbon::now()->subDays(1))
+                ->where('A.order_status', OrderStatus::COMPLETED)
+                ->where('A.parent_id', '!=', null)
+                ->join('orders as B', 'A.parent_id', '=', 'B.id')
+                ->where('B.order_status', OrderStatus::COMPLETED)
+                ->select(
+                    'A.id',
+                    'A.parent_id',
+                    'A.paid_total',
+                    'B.delivery_fee',
+                    'B.sales_tax',
+                    'A.created_at',
+                    'A.shop_id'
+                );
+
+            if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
+                $todaysRevenueQuery = $todaysRevenueQuery->get();
+                $todaysRevenue =  $todaysRevenueQuery->sum('paid_total') +
+                    $todaysRevenueQuery->unique('parent_id')->sum('delivery_fee') +
+                    $todaysRevenueQuery->unique('parent_id')->sum('sales_tax');
+            } else {
+                $todaysRevenue = $todaysRevenueQuery->whereIn('A.shop_id', $shops)->get()->sum('paid_total');
+            }
+
+            // total refunds
+            $totalRefundQuery = DB::table('refunds')->whereDate('created_at', '<', Carbon::now());
+            if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
+                $totalRefunds = $totalRefundQuery->where('shop_id', null)->sum('amount');
+            } else {
+                $totalRefunds = $totalRefundQuery->whereIn('shop_id', $shops)->sum('amount');
+            }
+
+            // total orders
+            $totalOrdersQuery = DB::table('orders')->whereDate('created_at', '<', Carbon::now());
+            if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
+                $totalOrders = $totalOrdersQuery->where('parent_id', null)->count();
+            } else {
+                $totalOrders = $totalOrdersQuery->whereIn('shop_id', $shops)->count();
+            }
+
+            // total shops
+            if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
+                $totalVendors = User::whereHas('permissions', function ($query) {
+                    $query->where('name', Permission::STORE_OWNER);
+                })->count();
+                $totalShops = Shop::count();
+            } else {
+                $totalShops = Shop::where('owner_id', '=', $user->id)->count();
+            }
+
+            $newCustomers = User::permission(Permission::CUSTOMER)->whereDate('created_at', '>', Carbon::now()->subDays(30))->count();
+
+            $totalYearSaleByMonth = $this->getTotalYearSaleByMonth($user);
+            $todayTotalOrderByStatus = $this->orderCountingByStatus($request, 1);
+            $weeklyDaysTotalOrderByStatus = $this->orderCountingByStatus($request, 7);
+            $monthlyTotalOrderByStatus = $this->orderCountingByStatus($request, 30);
+            $yearlyTotalOrderByStatus = $this->orderCountingByStatus($request, 365);
+
+
+            return [
+                'totalRevenue'              => $totalRevenue ?? 0,
+                'totalRefunds'              => $totalRefunds ?? 0,
+                'totalShops'                => $totalShops,
+                'totalVendors'              => $totalVendors ?? 0,
+                'todaysRevenue'             => $todaysRevenue,
+                'totalOrders'               => $totalOrders,
+                'newCustomers'              => $newCustomers,
+                'totalYearSaleByMonth'      => $totalYearSaleByMonth,
+                'todayTotalOrderByStatus'   => $todayTotalOrderByStatus,
+                'weeklyTotalOrderByStatus'  => $weeklyDaysTotalOrderByStatus,
+                'monthlyTotalOrderByStatus' => $monthlyTotalOrderByStatus,
+                'yearlyTotalOrderByStatus'  => $yearlyTotalOrderByStatus,
+            ];
+        } catch (MarvelException $e) {
+            throw new MarvelException(SOMETHING_WENT_WRONG, $e->getMessage());
         }
-
-        // Today's revenue
-        $todaysRevenueQuery = DB::table('orders as A')
-            ->whereDate('A.created_at', '>', Carbon::now()->subDays(1))
-            ->where('A.order_status', OrderStatus::COMPLETED)
-            ->where('A.parent_id', '!=', null)
-            ->join('orders as B', 'A.parent_id', '=', 'B.id')
-            ->where('B.order_status', OrderStatus::COMPLETED)
-            ->select(
-                'A.id',
-                'A.parent_id',
-                'A.paid_total',
-                'B.delivery_fee',
-                'B.sales_tax',
-                'A.created_at',
-                'A.shop_id'
-            );
-
-        if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
-            $todaysRevenueQuery = $todaysRevenueQuery->get();
-            $todaysRevenue = $todaysRevenueQuery->sum('paid_total') +
-                $todaysRevenueQuery->unique('parent_id')->sum('delivery_fee') +
-                $todaysRevenueQuery->unique('parent_id')->sum('sales_tax');
-        } elseif ($isCustomer) {
-            $todaysRevenue = $todaysRevenueQuery
-                ->where('A.customer_id', $user->id)
-                ->get()
-                ->sum('paid_total');
-        } else {
-            $todaysRevenue = $todaysRevenueQuery
-                ->whereIn('A.shop_id', $shops)
-                ->get()
-                ->sum('paid_total');
-        }
-
-        // Total refunds
-        $totalRefundQuery = DB::table('refunds')->whereDate('created_at', '<', Carbon::now());
-        if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
-            $totalRefunds = $totalRefundQuery->where('shop_id', null)->sum('amount');
-        } elseif ($isCustomer) {
-            $totalRefunds = $totalRefundQuery->where('customer_id', $user->id)->sum('amount');
-        } else {
-            $totalRefunds = $totalRefundQuery->whereIn('shop_id', $shops)->sum('amount');
-        }
-
-        // Total orders
-        $totalOrdersQuery = DB::table('orders')->whereDate('created_at', '<', Carbon::now());
-        if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
-            $totalOrders = $totalOrdersQuery->where('parent_id', null)->count();
-        } elseif ($isCustomer) {
-            $totalOrders = $totalOrdersQuery->where('customer_id', $user->id)->count();
-        } else {
-            $totalOrders = $totalOrdersQuery->whereIn('shop_id', $shops)->count();
-        }
-
-        // Total shops
-        if ($user && $user->hasPermissionTo(Permission::SUPER_ADMIN)) {
-            $totalVendors = User::whereHas('permissions', function ($query) {
-                $query->where('name', Permission::STORE_OWNER);
-            })->count();
-            $totalShops = Shop::count();
-        } else {
-            $totalShops = Shop::where('owner_id', '=', $user->id)->count();
-        }
-
-        $newCustomers = User::permission(Permission::CUSTOMER)->whereDate('created_at', '>', Carbon::now()->subDays(30))->count();
-
-        $totalYearSaleByMonth = $this->getTotalYearSaleByMonth($user);
-        $todayTotalOrderByStatus = $this->orderCountingByStatus($request, 1);
-        $weeklyDaysTotalOrderByStatus = $this->orderCountingByStatus($request, 7);
-        $monthlyTotalOrderByStatus = $this->orderCountingByStatus($request, 30);
-        $yearlyTotalOrderByStatus = $this->orderCountingByStatus($request, 365);
-
-        return [
-            'totalRevenue'              => $totalRevenue ?? 0,
-            'totalRefunds'              => $totalRefunds ?? 0,
-            'totalShops'                => $totalShops,
-            'totalVendors'              => $totalVendors ?? 0,
-            'todaysRevenue'             => $todaysRevenue,
-            'totalOrders'               => $totalOrders,
-            'newCustomers'              => $newCustomers,
-            'totalYearSaleByMonth'      => $totalYearSaleByMonth,
-            'todayTotalOrderByStatus'   => $todayTotalOrderByStatus,
-            'weeklyTotalOrderByStatus'  => $weeklyDaysTotalOrderByStatus,
-            'monthlyTotalOrderByStatus' => $monthlyTotalOrderByStatus,
-            'yearlyTotalOrderByStatus'  => $yearlyTotalOrderByStatus,
-        ];
-    } catch (MarvelException $e) {
-        throw new MarvelException(SOMETHING_WENT_WRONG, $e->getMessage());
     }
-}
-
 
     public function getTotalYearSaleByMonth(User $user)
     {

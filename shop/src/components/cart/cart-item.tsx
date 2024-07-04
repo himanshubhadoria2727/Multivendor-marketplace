@@ -13,7 +13,7 @@ export default function CartItem({
   notAvailable?: boolean;
 }) {
   console.log("item :", item);
-  const { name, image, slug, price, shop, quantity, formData} = item;
+  const { name, image, slug, price, shop, quantity, selectedForm, selectedNiche } = item;
   const { price: itemPrice } = usePrice({
     amount: price,
   });
@@ -53,7 +53,7 @@ export default function CartItem({
         </p> */}
         <p className="flex items-center gap-1"><p className='font-semibold max-sm:text-sm'>Price:</p>
           <span className="rounded-2xl bg-light-300 p-1.5 font-semibold uppercase max-sm:text-xs leading-none text-brand-dark dark:bg-dark-500">
-            ${formData.totalPrice}
+            {itemPrice}
           </span>
           {/* <span className="text-light-base dark:text-dark-base">
             X {quantity}
@@ -62,29 +62,29 @@ export default function CartItem({
       </div>
       <div className='flex w-full pt-2 border-t-2 flex-col'>
         <div className='flex pb-2'>
-          {formData.selectedForm === 'guest_post' ? (
+          {selectedForm == 'guest_post' ? (
             <h3 className='w-full flex justify-between text-base font-semibold max-sm:text-sm '>
               Service type: <p className='text-brand max-sm:text-sm ml-4'>Guest Post</p>
             </h3>
           ) :
             (
               <h3 className='w-full flex justify-between text-base font-semibold max-sm:text-sm'>
-                Service type: <p className='text-brand max-sm:text-sm'>Link Insertion</p>
+                Service type: <p className='text-brand max-sm:text-sm'>Guest Insertion</p>
               </h3>
             )
           }
         </div>
-        {formData.selectedNiche&&(
+        {selectedNiche&&(
           <span className='flex'>
-            {formData.selectedNiche === 'gamble' ? (
+            {selectedNiche === 'gamble' ? (
               <h3 className='w-full flex justify-between text-base font-semibold flex max-sm:text-sm'>
                 Niche type: <p className='text-brand ml-4 max-sm:text-sm'>Casino/Betting/Gambling Link</p>
               </h3>
-            ) : formData.selectedNiche === 'cbd' ? (
+            ) : selectedNiche === 'cbd' ? (
               <h3 className='w-full flex justify-between text-base font-semibold flex max-sm:text-sm'>
                 Niche type: <p className='text-brand ml-4 max-sm:text-sm'>CBD Link</p>
               </h3>
-            ) : formData.selectedNiche === 'business' ? (
+            ) : selectedNiche === 'business' ? (
               <h3 className='w-full flex justify-between text-base font-semibold flex max-sm:text-sm'>
                 Niche type: <p className='text-brand ml-4 max-sm:text-sm'>Cryptocurrency Link</p>
               </h3>
