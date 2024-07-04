@@ -22,6 +22,7 @@ import usePrice from '@/lib/hooks/use-price';
 import { useRouter } from 'next/router';
 import { SettingIcon } from '@/components/icons/setting-icon';
 import { CartIcon } from '@/components/icons/cart-icon';
+import PrivateRoute from '@/layouts/_private-route';
 
 
 interface DashboardProps {
@@ -234,9 +235,12 @@ const DashboardPage: NextPageWithLayout = () => {
       <Seo
         title="Dashboard"
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
-        url={routes.authors}
+        url={routes.dashboard}
       />
-      <Dashboard />
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+      
     </>
   );
 };
