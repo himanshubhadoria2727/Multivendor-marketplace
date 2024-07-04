@@ -7,7 +7,6 @@ import usePrice from '@/lib/hooks/use-price';
 import Button from '@/components/ui/button';
 import { useCart } from '@/components/cart/lib/cart.context';
 import {
-  Item,
   calculatePaidTotal,
   calculateTotal,
 } from '@/components/cart/lib/cart.utils';
@@ -78,15 +77,8 @@ export default function CartCheckout() {
       amount: verifiedResponse.total_tax ?? 0,
     },
   );
-  console.log('available items', available_items)
-
-
-  const calculateTotal = (items: Item[]): number => {
-    return items.reduce((acc, item) => acc + item.formData.totalPrice, 0);
-  };
 
   const base_amount = calculateTotal(available_items);
-  console.log('Base Amount:', base_amount);
 
   const { price: sub_total } = usePrice(
     verifiedResponse && {
@@ -96,13 +88,13 @@ export default function CartCheckout() {
 
   const totalPrice = verifiedResponse
     ? calculatePaidTotal(
-      {
-        totalAmount: base_amount,
-        tax: verifiedResponse.total_tax,
-        shipping_charge: verifiedResponse.shipping_charge,
-      },
-      0,
-    )
+        {
+          totalAmount: base_amount,
+          tax: verifiedResponse.total_tax,
+          shipping_charge: verifiedResponse.shipping_charge,
+        },
+        0,
+      )
     : 0;
 
   const { price: total } = usePrice(
@@ -146,21 +138,21 @@ export default function CartCheckout() {
     mutate({
       amount: base_amount,
       total: totalPrice,
-      paid_total: totalPrice,
+      paid_total: totalPrice, 
       products: available_items.map((item) => ({
         title: item.formData.title,
-        ancor: item.formData.ancor,
-        link_url: item.formData.link_url,
-        postUrl: item.formData.postUrl,
-        instructions: item.formData.instructions,
-        content: item.formData.content,
-        file: item.formData.file?.original,
-        selectedForm: item.formData.selectedForm,
-        selectedNiche: item.formData.selectedNiche,
+        ancor:item.formData.ancor,
+        link_url:item.formData.link_url,
+        postUrl:item.formData.postUrl,
+        instructions:item.formData.instructions,
+        content:item.formData.content,
+        file:item.formData.file?.original,
+        selectedForm:item.formData.selectedForm,
+        selectedNiche:item.formData.selectedNiche,  
         product_id: item.id,
         order_quantity: item.quantity,
         unit_price: item.price,
-        subtotal: (item.formData.totalPrice),
+        subtotal: (item.price+item.formData.totalPrice),
       })),
       payment_gateway: gateWay,
       use_wallet_points,
@@ -209,7 +201,7 @@ export default function CartCheckout() {
         {t('text-submit-order')}
       </Button>
       {/* <RazorpayPayment amount={totalPrice}   /> */}
-
+      
     </div>
   );
 }

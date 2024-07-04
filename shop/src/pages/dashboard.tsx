@@ -1,4 +1,4 @@
-import { OrderQueryOptions, User } from '@/types';
+  import { OrderQueryOptions, User } from '@/types';
 import { NextPageWithLayout } from '@/types';
 import Layout from '@/layouts/_layout';
 import Seo from '@/layouts/_seo';
@@ -17,6 +17,11 @@ import { UserIcon } from '@/components/icons/user-icon';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { GetStaticProps } from 'next';
 import { useOrders } from '@/data/order';
+import { useMe } from '@/data/user';
+import usePrice from '@/lib/hooks/use-price';
+import { useRouter } from 'next/router';
+import { SettingIcon } from '@/components/icons/setting-icon';
+import { CartIcon } from '@/components/icons/cart-icon';
 
 
 interface DashboardProps {
@@ -29,17 +34,36 @@ const Dashboard = () => {
     orderBy: '',
     sortedBy: ''
   };
-
+  const router = useRouter();
+  const { me } = useMe();
+  console.log("me",me);
+  const { price: currentWalletCurrency } = usePrice({
+    amount: Number(me?.wallet?.available_points_to_currency),
+  });
+  
   const { orders, isLoading, error, loadMore, hasNextPage, isLoadingMore } = useOrders(options);
 
   const successfulOrders = orders.filter(order => order.payment_status === "payment-success");
   const numberOfSuccessfulOrders = successfulOrders.length;
 
+  console.log('success',successfulOrders)
+// Extract and flatten all products from the successful orders
+const allProducts = successfulOrders.flatMap(order =>
+  order.products.map(product => ({
+    ...product,
+    subtotal: product.pivot.subtotal // Assuming `pivot` contains `subtotal`
+  }))
+);
+const allSubtotals = allProducts.map(product => product.subtotal);
+const { price: subtotal } = usePrice({
+  amount: Number(allSubtotals),
+});
+
+const totalSubtotal = allProducts.reduce((total, product) => total + parseFloat(product.subtotal), 0);
 
 const activeOrders = orders.filter(order => order.payment_status === "payment-pending");
 const numberOfActiveOrders = activeOrders.length;
 
-  console.log('Number of successful orders:', numberOfSuccessfulOrders);
   console.log('orders', orders);
   return (
     <div className="parent flex flex-col  p-4">
@@ -48,7 +72,7 @@ const numberOfActiveOrders = activeOrders.length;
           Hello Customer !
         </h1>
       </div>
-
+      
       <div className="OrderDetails-parent bg-white m-4 flex flex-wrap justify-around p-4 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:bg-dark-200">
         <div
           className="OrderDetails lg:w-1/5 relative w-full md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
@@ -85,7 +109,7 @@ const numberOfActiveOrders = activeOrders.length;
           <div className="flex justify-between sm:justify-between">
             <span className="flex-col text-base font-bold dark:text-white">
               Wallet Balance
-              <p className="absolute bottom-3 left-5 text-brand">$310</p>
+              <p className="absolute bottom-3 left-5 text-brand">{currentWalletCurrency}</p>
             </span>
             <span className="flex items-center justify-center">
               <BalanceIcon color="#3FD424" className="h-10 w-10" />
@@ -99,7 +123,7 @@ const numberOfActiveOrders = activeOrders.length;
           <div className="flex justify-between sm:justify-between">
             <span className="flex-col text-base font-bold dark:text-white">
               Lifetime Spending
-              <p className="absolute bottom-3 left-5 text-brand">$700</p>
+              <p className="absolute bottom-3 left-5 text-brand">${totalSubtotal}</p>
             </span>
             <span className="flex items-center justify-center">
               <BalanceIcon color="#3FD424" className="h-10 mb-4 w-10" />
@@ -108,7 +132,7 @@ const numberOfActiveOrders = activeOrders.length;
         </div>
       </div>
       <div className="OtherDetails-parent bg-white m-4 flex flex-wrap justify-around dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 ">
-        <div
+        <button onClick={()=>router.push('/profileh')}
           className="lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
            "
         >
@@ -118,30 +142,30 @@ const numberOfActiveOrders = activeOrders.length;
               My Profile
             </p>
           </span>
-        </div>
-        <div
+        </button>
+        <button onClick={()=>router.push('/campaigns')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
            "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
             <HeartIcon className="h-24 w-24 " />
             <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
-              My Wishlist
+              My Campaigns
             </p>
           </span>
-        </div>
+        </button>
         <div
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <PeopleIcon className="h-24 w-24 " />
+            <SettingIcon className="h-24 w-24 " />
             <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
-              My Publishers
+              Settings
             </p>
           </span>
         </div>
-        <div
+        <button onClick={()=>router.push('/order')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
@@ -151,18 +175,18 @@ const numberOfActiveOrders = activeOrders.length;
               My Order
             </p>
           </span>
-        </div>
-        <div
+        </button>
+        <button onClick={()=>router.push('/packages')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <InformationIcon className="h-24 w-24 " />
+            <CartIcon className="h-24 w-24 " />
             <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
-              My Questions
+              Buy subscription
             </p>
           </span>
-        </div>
+        </button>
         <div
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
@@ -174,7 +198,7 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </div>
-        <div
+        <button onClick={()=>router.push('/')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
@@ -184,8 +208,8 @@ const numberOfActiveOrders = activeOrders.length;
               Place Order
             </p>
           </span>
-        </div>
-        <div
+        </button>
+        <button onClick={()=>router.push('/')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
@@ -195,10 +219,10 @@ const numberOfActiveOrders = activeOrders.length;
               Place Order
             </p>
           </span>
-        </div>
+        </button>
       </div>
 
-
+      
     </div>
   );
 };
@@ -228,7 +252,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   return {
     props: {
-
+      
       ...(await serverSideTranslations(locale!, ['common'])),
     },
     revalidate: 60, // In seconds
@@ -236,6 +260,3 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export default DashboardPage;
-
-
-
