@@ -475,6 +475,7 @@ export interface RatingCount {
 }
 
 export interface Product {
+  pivot: any;
   id: string;
   name: string;
   slug: string;

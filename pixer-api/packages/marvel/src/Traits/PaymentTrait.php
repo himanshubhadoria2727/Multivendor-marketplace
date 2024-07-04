@@ -198,7 +198,6 @@ trait PaymentTrait
      */
     public function createPaymentIntent(Order $order, Request $request, string $payment_gateway): array
     {           Log::info("inside create payment intent");
-                Log::info("request inside intent".$request);
                 $requestData = json_decode($request->getContent(), true);
 
                 // Access the 'amount' field from the parsed data

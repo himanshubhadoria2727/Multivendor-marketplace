@@ -1,4 +1,4 @@
-  import { User } from '@/types';
+  import { OrderQueryOptions, User } from '@/types';
 import { NextPageWithLayout } from '@/types';
 import Layout from '@/layouts/_layout';
 import Seo from '@/layouts/_seo';
@@ -81,7 +81,7 @@ const numberOfActiveOrders = activeOrders.length;
           <div className="flex justify-between sm:justify-between">
             <span className="flex-col text-base font-bold dark:text-white">
               Active Orders
-              <p className="text-brand absolute bottom-3 left-5">6</p>
+              <p className="text-brand absolute bottom-3 left-5">{numberOfActiveOrders}</p>
             </span>
             <span className="flex items-center justify-center">
               <PurchaseIconDB color="#3FD424" className="h-10 w-10" />
@@ -95,7 +95,7 @@ const numberOfActiveOrders = activeOrders.length;
           <div className="flex justify-between sm:justify-between">
             <span className="flex-col text-base font-bold dark:text-white">
               Completed Orders
-              <p className="text-brand absolute bottom-3 left-5">10</p>
+              <p className="text-brand absolute bottom-3 left-5">{numberOfSuccessfulOrders}</p>
             </span>
             <span className="flex items-center justify-center">
               <PurchaseIconDB color="#F5EA04" className="h-10 w-10" />

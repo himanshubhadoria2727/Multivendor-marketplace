@@ -37,7 +37,6 @@ class Razorpay extends Base implements PaymentInterface
      */
     public function createOrder(object $request): array
     {
-        Log::info('request body in razor pay'.$request);
         try {
             // Validate and extract required data from the input array
             if (!isset($request['tracking_number'], $request['amount'])) {
@@ -96,7 +95,6 @@ class Razorpay extends Base implements PaymentInterface
                 'amount'   => (int)round($amount, 2) * 100,
                 'currency' => $this->currency,
             ]);
-            Log::info('razor pay intent order ' . json_encode($data));
             return [
                 'payment_id'            => $order->id,
                 'order_tracking_number' => $order->receipt,

@@ -121,8 +121,6 @@ class OrderRepository extends BaseRepository
      */
     public function storeOrder($request, $settings): mixed
     {
-        Log::info("store_order_repo");
-        Log::info("order request".$request);
         $request['tracking_number'] = $this->generateTrackingNumber();
         $settings = Settings::getData($request?->language);
         $fullWalletOrCODPayment = $request->isFullWalletPayment ? PaymentGatewayType::FULL_WALLET_PAYMENT : $settings['defaultPaymentGateway'];
@@ -228,7 +226,6 @@ class OrderRepository extends BaseRepository
 
         $order = $this->createOrder($request);
 
-        LOG::info("order info". $order);
 
 
         if (($useWalletPoints || $request->isFullWalletPayment) && $user) {
@@ -257,8 +254,6 @@ class OrderRepository extends BaseRepository
         
         event(new OrderProcessed($order));
 
-       Log::info(`Order details`,$order);
-       Log::info(`request details`, $request);
         return $order;
     }
 
