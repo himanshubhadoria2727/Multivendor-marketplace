@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
-import type { NextPageWithLayout, Order, OrderQueryOptions, OrderedFile } from '@/types';
+import type { NextPageWithLayout, OrderedFile } from '@/types';
 import PayNowButton from '@/components/payment/pay-now-button';
 import dayjs from 'dayjs';
 import { useMutation } from 'react-query';
@@ -11,7 +11,7 @@ import DashboardLayout from '@/layouts/_dashboard';
 import Image from '@/components/ui/image';
 import { Menu } from '@/components/ui/dropdown';
 import { Transition } from '@/components/ui/transition';
-import { useDownloadableProductOrders, useOrders } from '@/data/order';
+import { useDownloadableProductOrders } from '@/data/order';
 import { DownloadIcon } from '@/components/icons/download-icon';
 import client from '@/data/client';
 import CartEmpty from '@/components/cart/cart-empty';
@@ -27,12 +27,11 @@ import routes from '@/config/routes';
 import AnchorLink from '@/components/ui/links/anchor-link';
 import { CreditCardIcon } from '@/components/icons/credit-card-icon';
 import Layout from '@/layouts/_layout';
-import { CheckIconWithBg } from '@/components/icons/check-icon-with-bg';
 
-function OrderedItem({ item }: { item:Order}) {
+function OrderedItem({ item }: { item: OrderedFile }) {
   const { t } = useTranslation('common');
   const { openModal } = useModalAction();
-  const { id: order_id, tracking_number } = item;
+  const { id: order_id, tracking_number } = item.order;
   const {
     id: product_id,
     shop_id,
@@ -41,17 +40,7 @@ function OrderedItem({ item }: { item:Order}) {
     image,
     preview_url,
     my_review,
-  } = item.products && item.products.length > 0 ? item.products[0] : {};
-  // const options: OrderQueryOptions = {
-  //   limit: 1000,
-  //   orderBy: '',
-  //   sortedBy: ''
-  // };
-  // const { orders, isLoading, error, loadMore, hasNextPage, isLoadingMore } = useOrders(options);
-
-  // const nameNew = orders.filter(order => order.products );
-  // console.log("ordered products", nameNew)
-  
+  } = item.file.fileable ?? {};
   const { mutate } = useMutation(client.orders.generateDownloadLink, {
     onSuccess: (data) => {
       function download(fileUrl: string, fileName: string) {
@@ -76,24 +65,33 @@ function OrderedItem({ item }: { item:Order}) {
     });
   }
   const getStatus =
-    item?.payment_status === PaymentStatus.SUCCESS ||
-    item?.payment_status === PaymentStatus.WALLET;
+    item?.order?.payment_status === PaymentStatus.SUCCESS ||
+    item?.order?.payment_status === PaymentStatus.WALLET;
     return (
         <div className="flex flex-col md:flex-row items-start min-h-10 gap-4 border-b border-light-400 p-4 last:border-b-0 bg-white dark:bg-dark-200 dark:text-white sm:gap-5">
           <AnchorLink href={routes.productUrl(slug)}>
+          <div className="relative aspect-[5/3.4] w-full flex-shrink-0 sm:w-28 border border-light-300 dark:border-0 sm:w-32 md:w-36">
+          <Image
+            alt={name}
+            fill
+            quality={100}
+            src={image?.thumbnail ?? placeholder}
+            className="bg-light-400 object-cover dark:bg-dark-400"
+          />
+        </div>
           </AnchorLink>
           <div className="flex flex-col flex-1 gap-4 sm:flex-row sm:items-center sm:justify-between md:gap-0">
             <div className="border-b border-light-400 pb-3 dark:border-dark-600 sm:border-b-0 sm:pb-0">
               <p className="text-gray-500 dark:text-gray-400">
                 {t('text-purchased-on')}{' '}
-                {dayjs(item.products[0].pivot?.updated_at).format('MMM D, YYYY')}
+                {dayjs(item.updated_at).format('MMM D, YYYY')}
               </p>
               <h3
                 className="my-1.5 font-medium text-dark dark:text-light sm:mb-3"
                 title={name}
               >
                 <AnchorLink
-                  href={`https://${name}`}
+                  href={routes.productUrl(slug)}
                   className="transition-colors hover:text-brand"
                 >
                   {name}
@@ -121,17 +119,16 @@ function OrderedItem({ item }: { item:Order}) {
                       ? t('text-update-review')
                       : t('text-write-review')}
                   </button>
-                  
-                    <div className='border-2 flex gap-2 text-brand border-brand font-bold rounded-[0.5rem] py-3 px-2'>Order Completed
-                      <CheckIconWithBg className="h-5 w-5" />
-                    </div>
-                  
+                  <Button onClick={() => mutate(item.digital_file_id)}>
+                    <DownloadIcon className="h-auto w-4" />
+                    {t('text-download')}
+                  </Button>
                 </>
               ) : (
                 <PayNowButton
                   tracking_number={tracking_number}
                   // @ts-ignore
-                  order={item}
+                  order={item?.order}
                   variant="card"
                 />
               )}
@@ -190,20 +187,13 @@ function OrderItemLoader() {
 const LIMIT = 10;
 const Purchases: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
-  // const { downloadableFiles, isLoading, isLoadingMore, hasNextPage, loadMore } =
-  //   useDownloadableProductOrders({
-  //     limit: LIMIT,
-  //     orderBy: 'updated_at',
-  //     sortedBy: 'desc',
-  //   });
-    const options: OrderQueryOptions = {
-      limit: 1000,
-      orderBy: '',
-      sortedBy: ''
-    };
-  
-    const { orders, isLoading, error, loadMore, hasNextPage, isLoadingMore } = useOrders(options);
-    console.log("orders",orders)
+  const { downloadableFiles, isLoading, isLoadingMore, hasNextPage, loadMore } =
+    useDownloadableProductOrders({
+      limit: LIMIT,
+      orderBy: 'updated_at',
+      sortedBy: 'desc',
+    });
+
   // const {
   //   downloadableFiles,
   //   error,
@@ -226,22 +216,22 @@ const Purchases: NextPageWithLayout = () => {
       <h1 className="mb-3 text-15px font-medium text-dark dark:text-light">
         {t('text-my-purchase-list')}
         <span className="ml-1 text-light-900">
-          ({orders.length})
+          ({downloadableFiles.length})
         </span>
       </h1>
 
       {isLoading &&
-        !orders.length &&
+        !downloadableFiles.length &&
         rangeMap(LIMIT, (i) => <OrderItemLoader key={`order-loader-${i}`} />)}
 
-      {!isLoading && !orders.length ? (
+      {!isLoading && !downloadableFiles.length ? (
         <CartEmpty
           className="my-auto"
           description={t('text-product-purchase-message')}
         />
       ) : (
-        orders.map((order) => (
-          <OrderedItem key={order.id} item={order} />
+        downloadableFiles.map((file) => (
+          <OrderedItem key={file.id} item={file} />
         ))
       )}
 

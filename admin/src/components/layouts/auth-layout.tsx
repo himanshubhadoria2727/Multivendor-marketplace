@@ -16,7 +16,7 @@ export default function AuthPageLayout({
       <div className="m-auto w-full max-w-[420px] rounded bg-light p-5 sm:p-8 sm:shadow">
         <div className="mb-2 flex justify-center font-sans text-3xl	font-semibold	">
           {/* <Logo /> */}
-          Good Blogger
+          GuestLink
         </div>
         {children}
       </div>

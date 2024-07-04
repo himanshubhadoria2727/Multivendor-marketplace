@@ -65,7 +65,7 @@ const ProfilePage: NextPageWithLayout = () => {
   return (
     <motion.div
       variants={fadeInBottom()}
-      className="flex min-h-full flex-grow flex-col p-10 bg-white dark:bg-gray-900 rounded-lg shadow-lg"
+      className="flex min-h-full flex-grow flex-col p-10 bg-white dark:bg-dark-200 rounded-lg shadow-lg"
     >
       <h1 className="mb-5 text-xl font-semibold text-gray-900 dark:text-white sm:mb-6">
         {t('text-profile-page-title')}
@@ -87,16 +87,16 @@ const ProfilePage: NextPageWithLayout = () => {
       >
         {({ register, reset, control, formState: { errors } }) => (
           <>
-            <fieldset className="mb-6 grid gap-5 pb-5 sm:grid-cols-2 md:pb-9 lg:mb-8">
+            <fieldset className="mb-6 grid gap-5 pb-5 sm:grid-cols-2 md:pb-9 lg:mb-8 ">
               <Controller
                 name="profile.avatar"
                 control={control}
                 render={({ field: { ref, ...rest } }) => (
                   <div className="sm:col-span-2">
-                    <span className="block cursor-pointer pb-2.5 font-normal text-gray-600 dark:text-gray-300">
+                    <span className="block cursor-pointer pb-2.5 font-normal text-gray-600 dark:text-gray-300 ">
                       {t('text-profile-avatar')}
                     </span>
-                    <div className="text-xs">
+                    <div className="text-xs dark:bg-dark-300">
                       <Uploader {...rest} multiple={false} />
                     </div>
                   </div>
@@ -110,10 +110,10 @@ const ProfilePage: NextPageWithLayout = () => {
                   <Input
                     label={''} {...register('name')}
                     error={errors.name?.message}
-                    className="border-gray-300 dark:border-gray-700" />
+                    className="border-gray-300 dark:border-gray-700 dark:bg-dark-300" />
                 </div>
                 <div className="flex-1">
-                  <label className="block cursor-pointer font-bold pb-2.5 text-gray-600 dark:text-gray-300">
+                  <label className="block cursor-pointer font-bold pb-2.5 text-gray-600  dark:text-gray-300">
                     {t('text-profile-contact')}
                   </label>
                   <Controller
@@ -134,12 +134,18 @@ const ProfilePage: NextPageWithLayout = () => {
                 </div>
               </div>
 
-              <Textarea
-                label={t('text-profile-bio')}
+              <label htmlFor="profile-bio" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                {t('text-profile-bio')}
+              </label>
+              <textarea
+                id="profile-bio"
                 {...register('profile.bio')}
-                error={errors.profile?.bio?.message && t('bio field is required')}
-                className="sm:col-span-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
+                className="sm:col-span-2 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white dark:bg-dark-300 focus:border-green-500 focus:ring-green-500"
+                aria-invalid={errors.profile?.bio ? 'true' : 'false'}
               />
+              {errors.profile?.bio?.message && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-400">{t('bio field is required')}</p>
+              )}
             </fieldset>
 
 

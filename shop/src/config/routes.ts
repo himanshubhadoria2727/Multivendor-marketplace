@@ -10,7 +10,7 @@ const routes = {
   about: '/about-us',
   contact: '/contact-us',
   purchases: '/purchases',
-  purchasesh: '/purchasesh',
+  order: '/order',
   wishlists: '/wishlists',
   reports: '/reports',
   questions: '/questions',

@@ -7,6 +7,7 @@ use Carbon\CarbonPeriod;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,10 +20,11 @@ use Marvel\Traits\Excludable;
 use Kodeine\Metable\Metable;
 use Marvel\Exceptions\MarvelException;
 use Marvel\Traits\TranslationTrait;
+use Marvel\Models\CampaignProduct;
 
 class Product extends Model
 {
-    use Sluggable, SoftDeletes, Excludable, Metable, TranslationTrait;
+    use Sluggable, SoftDeletes, Excludable, Metable, TranslationTrait,HasFactory;
 
     public $guarded = [];
 
@@ -63,6 +65,12 @@ class Product extends Model
         ];
     }
 
+    use HasFactory;
+
+    public function campaignProducts()
+    {
+        return $this->hasMany(CampaignProduct::class);
+    }
 
     public function scopeWithUniqueSlugConstraints(Builder $query, Model $model): Builder
     {

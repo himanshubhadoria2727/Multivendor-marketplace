@@ -26,7 +26,6 @@ export default function LoginUserForm() {
   const { authorize } = useAuth();
   const { mutate: login, isLoading } = useMutation(client.users.login, {
     onSuccess: (data) => {
-      console.log(`user token`,data.token)
       if (!data.token) {
         toast.error(<b>{t('text-wrong-user-name-and-pass')}</b>, {
           className: '-mt-10 xs:mt-0',
@@ -36,6 +35,8 @@ export default function LoginUserForm() {
       authorize(data.token);
       setAuthCredentials(data.token, data.permissions);
       closeModal();
+      localStorage.setItem("token",data.token);
+      console.log(data.token);
     },
   });
   const onSubmit: SubmitHandler<LoginUserInput> = (data) => {

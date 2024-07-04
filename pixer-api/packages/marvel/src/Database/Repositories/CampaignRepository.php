@@ -45,7 +45,8 @@ class CampaignRepository
                                'id' => $campaign->id,
                                'name' => $campaign->name,
                                'product_count' => $campaign->products->count(),
-                               'order_count' => $campaign->products->whereNotNull('order_id')->count()
+                               'order_count' => $campaign->products->whereNotNull('order_id')->count(),
+                               'created_at' => $campaign->created_at,
                            ];
                        });
     }
@@ -64,7 +65,8 @@ class CampaignRepository
                 $campaignProducts[] = [
                     'product_id' => $productId, 
                     'order_id' => null, 
-                    'name' => $product->name
+                    'name' => $product->name,
+                    'price'=> $product->price
                 ];
             } else {
                 Log::warning('Product not found', ['product_id' => $productId]);

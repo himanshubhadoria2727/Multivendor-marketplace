@@ -1,18 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import type { Product } from '@/types';
-import Router from 'next/router';
-import cn from 'classnames';
-import { motion } from 'framer-motion';
-import Image from '@/components/ui/image';
-import AnchorLink from '@/components/ui/links/anchor-link';
+import Router, { useRouter } from 'next/router';
 import { useModalAction } from '@/components/modal-views/context';
 import routes from '@/config/routes';
 import usePrice from '@/lib/hooks/use-price';
-import { PreviewIcon } from '@/components/icons/preview-icon';
-import { DetailsIcon } from '@/components/icons/details-icon';
 import { CheckIconWithBg } from '@/components/icons/check-icon-with-bg';
 import { InformationIcon } from '../icons/information-icon';
-import { PeopleIcon } from '../icons/people-icon';
+import { PeopleIcon } from '../icons/people-icon'; 
 import { StarIcon } from '../icons/star-icon';
 import { UserIconAlt } from '../icons/user-icon-alt';
 import { HelpIcon } from '../icons/help-icon';
@@ -22,56 +16,154 @@ import { GlobalIcon } from '../icons/featured/global-icon';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import { isFree } from '@/lib/is-free';
 import { useTranslation } from 'next-i18next';
-import { ExternalIcon } from '@/components/icons/external-icon';
-import { fadeInBottomWithScaleX } from '@/lib/framer-motion/fade-in-bottom';
-import placeholder from '@/assets/images/placeholders/product.svg';
-import router from 'next/router';
-import FavoriteButton, { useFavoriteButton } from '../favorite/favorite-button';
 
-import { useCampaigns } from '../campaign/CampaignContext';
+
+
+type Campaign = {
+  id: number;
+  name: string;
+  created_at: string;
+  product_count: number;
+};
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { campaigns, addCampaign } = useCampaigns();
-  const [showModal, setShowModal] = useState(false);
-  const [campaignName, setCampaignName] = useState('');
-  const [selectedCampaign, setSelectedCampaign] = useState('');
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [campaignNames, setCampaignNames] = useState<string[]>([]);
+  const [newCampaignName, setNewCampaignName] = useState('');
+  const [selectedCampaign, setSelectedCampaign] = useState<string>('');
+  const [validationError, setValidationError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
+  const router = useRouter();
   const { id, name, slug, image, shop, is_external, is_niche, isLinkInsertion } = product ?? {};
-  const { openModal } = useModalAction();
   const { isGridCompact } = useGridSwitcher();
   const { price, basePrice } = usePrice({
     amount: product.sale_price ? product.sale_price : product.price,
     baseAmount: product.price,
   });
-  const goToDetailsPage = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    Router.push(routes.productUrl(slug));
-  };
   const { t } = useTranslation('common');
   const isFreeItem = isFree(product?.sale_price ?? product?.price);
 
-  const handleNavigation = () => {
-    router.push(`/products/product_page/${product?.slug}`); // Replace '/target-page' with your target route
-  };
+    const fetchCampaigns = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://127.0.0.1:8000/campaigns', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch campaigns');
+        }
+        const data = await response.json();
+        const campaignNames = data.campaigns.map((campaign: { name: any }) => campaign.name);
+        setCampaignNames(campaignNames);
+        setCampaigns(data.campaigns);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching campaigns:', error);
+        setIsLoading(false);
+      }
+    };
 
-  const handleAddToCampaign = () => {
-    setShowModal(true);
-  };
 
-  const handleFavorite = () => {
-    // Replace with your favorite logic
-    console.log('Favorite clicked for:', product.name);
-  };
+  useEffect(() => {
+    if (showSuccessMessage) {
+      const timer = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
 
-  const handleCampaignSubmit = () => {
-    if (campaignName.trim()) {
-      addCampaign(campaignName);
+      return () => clearTimeout(timer);
     }
-    setShowModal(false);
+  }, [showSuccessMessage]);
+
+  const handleAddProductToCampaign = async (productId: string) => {
+    const token = localStorage.getItem('token');
+
+    if (newCampaignName && campaignNames.includes(newCampaignName)) {
+      setValidationError('Campaign with the same name already present');
+      return;
+    }
+
+    try {
+      let response;
+      if (newCampaignName) {
+        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
+        setValidationError('Enter a valid campaign name');
+        setNewCampaignName('');
+        return;
+        }
+        response = await fetch('http://127.0.0.1:8000/campaigns', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: newCampaignName,
+            product_ids: [productId],
+          }),
+        });
+      } else if (selectedCampaign) {
+        response = await fetch(`http://127.0.0.1:8000/campaigns/${selectedCampaign}/products`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            product_ids: [productId],
+          }),
+        });
+      } else {
+        setValidationError('Select a campaign or create a new one');
+        return;
+      }
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Error adding product to campaign');
+      }
+
+      setValidationError('');
+      setSelectedCampaign('');
+      setNewCampaignName('');
+      setIsModalOpen(false);
+      setShowSuccessMessage(true);
+    } catch (error) {
+      console.error('Error adding product to campaign:', error);
+    }
+  };
+
+  const handleClick = () => {
+    setIsModalOpen(true);
+    fetchCampaigns();
+  };
+
+  const handleNavigation = () => {
+    router.push(`/products/product_page/${product?.slug}`);
+  };
+
+  const handleCampaignNameChange = (e: { target: { value: SetStateAction<string> } }) => {
+    setNewCampaignName(e.target.value);
+    if (e.target.value) {
+      setSelectedCampaign('');
+    }
+  };
+
+  const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string> } }) => {
+    setSelectedCampaign(e.target.value);
+    if (e.target.value) {
+      setNewCampaignName('');
+    }
+    setValidationError('');
   };
 
   return (
-    <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-3.5 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
+    <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-3.5 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
   
       {/* Left Column: Name and Domain Details */}
       <div className="flex flex-col w-full sm:w-4/5">
@@ -171,36 +263,36 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
   
       {/* Right Column: Price and Buy Section */}
-      <div className="Price_Buy flex flex-col w-full sm:w-1/3 justify-center items-center sm:pl-0 ">
-        <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-lg font-bold uppercase text-2xl text-brand dark:text-brand-dark">
-          {isFreeItem ? 'Free' : price}
-        </span>
-        {!isFreeItem && basePrice && (
-          <del className="text-xs md:text-sm font-medium text-dark-900 dark:text-dark-700">
-            {basePrice}
-          </del>
-        )}
-        <div className="flex flex-col mt-2">
-          <button
-            onClick={handleNavigation}
-            className="flex justify-center rounded-lg w-full px-8 py-2 text-xl font-semibold text-white bg-brand dark:bg-brand dark:text-white mt-2"
+    <div className="Price_Buy flex flex-col w-full sm:w-1/3 justify-center items-center sm:pl-0">
+      <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-lg font-bold uppercase text-2xl text-brand dark:text-brand-dark">
+        {isFreeItem ? 'Free' : price}
+      </span>
+      {!isFreeItem && basePrice && (
+        <del className="text-xs md:text-sm font-medium text-dark-900 dark:text-dark-700">
+          {basePrice}
+        </del>
+      )}
+      <div className="flex flex-col mt-2">
+        <button
+          onClick={handleNavigation}
+          className="flex justify-center rounded-lg w-full px-8 py-2 text-xl font-semibold text-white bg-brand dark:bg-brand dark:text-white mt-2"
+        >
+          Buy
+        </button>
+        <div className="mt-2 text-center flex items-center gap-2">
+          <span
+            onClick={handleClick}
+            className="block text-base text-brand font-semibold cursor-pointer hover:underline"
           >
-            Buy
-          </button>
-          <div className="mt-2 text-center flex items-center gap-2">
-            <span
-              onClick={handleAddToCampaign}
-              className="block text-base text-brand font-semibold cursor-pointer hover:underline"
-            >
-              Add to Campaign
-            </span>
-            <FavoriteButton productId={id} />
-          </div>
+            Add to Campaign
+          </span>
         </div>
+      </div>
+
       </div>
   
       {/* Modal Section */}
-      {showModal && (
+      {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
@@ -208,43 +300,61 @@ export default function ProductCard({ product }: { product: Product }) {
               <label className="block text-sm font-medium mb-2">Create a new campaign</label>
               <input
                 type="text"
-                value={campaignName}
-                onChange={(e) => setCampaignName(e.target.value)}
+                value={newCampaignName}
+                onChange={handleCampaignNameChange}
                 className="w-full p-2 border border-gray-300 rounded mb-4"
                 placeholder="Campaign Name"
               />
               <label className="block text-sm font-medium mb-2">Or select from your campaigns</label>
-              <select
-                value={selectedCampaign}
-                onChange={(e) => setSelectedCampaign(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
-              >
-                <option value="">Select Campaign</option>
-                {campaigns.map((campaign) => (
-                  <option key={campaign.id} value={campaign.id}>
-                    {campaign.name}
-                  </option>
-                ))}
-              </select>
+              {isLoading ? (
+                <div>Loading...</div>
+              ) : (
+                <select
+                  value={selectedCampaign}
+                  onChange={handleCampaignSelectChange}
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                >
+                  {campaigns.map((campaign) => (
+                    <option key={campaign.id} value={campaign.id}>
+                      {campaign.name}
+                    </option>
+                  ))}
+                </select>
+              )}
               <div className="flex justify-end">
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setIsModalOpen(false)}
                   className="px-4 py-2 bg-gray-300 text-black rounded mr-2"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleCampaignSubmit}
+                  onClick={() => handleAddProductToCampaign(product.id)}
                   className="px-4 py-2 bg-blue-500 text-white rounded"
                 >
                   Add
                 </button>
               </div>
+              {validationError && <div className="text-red-500 mt-2">{validationError}</div>}
             </div>
           </div>
         </div>
       )}
-  
+
+      {/* Success Message */}
+      {showSuccessMessage && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg flex items-center">
+          <span>Product added successfully</span>
+          <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+      )}
     </div>
   );
 }

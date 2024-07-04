@@ -25,18 +25,18 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
   return (
     <Link
       href={siteSettings?.logo?.href}
-      className={cn('inline-flex items-center gap-3 w-full', className)}
+      className={cn('inline-flex items-center gap-3', className)}
       // {...props}
     >
       {miniSidebar && width >= RESPONSIVE_WIDTH ? (
         <span
-          className="relative font-bold overflow-hidden "
+          className="relative overflow-hidden "
           style={{
             width: siteSettings.collapseLogo.width,
             height: siteSettings.collapseLogo.height,
           }}
         >
-          G B
+          GuestLink
           {/* <Image
             src={
               settings?.options?.collapseLogo?.original ??
@@ -50,14 +50,14 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
           /> */}
         </span>
       ) : (
-        <div
-          className="flex-row flex w-full font-serif text-lg tracking-wider font-semibold"
+        <span
+          className="relative w-full font-serif text-3xl font-semibold"
           style={{
             width: siteSettings.logo.width,
             height: siteSettings.logo.height,
           }}
         >
-          Good Blogger
+          GuestLink
           {/* <Image
             src={settings?.options?.logo?.original ?? siteSettings.logo.url}
             alt={settings?.options?.siteTitle ?? siteSettings.logo.alt}
@@ -66,7 +66,7 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
             className="object-contain"
             loading="eager"
           /> */}
-        </div>
+        </span>
       )}
     </Link>
   );

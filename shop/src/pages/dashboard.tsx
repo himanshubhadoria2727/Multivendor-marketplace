@@ -1,4 +1,4 @@
-import { OrderQueryOptions, User } from '@/types';
+  import { User } from '@/types';
 import { NextPageWithLayout } from '@/types';
 import Layout from '@/layouts/_layout';
 import Seo from '@/layouts/_seo';
@@ -72,7 +72,7 @@ const numberOfActiveOrders = activeOrders.length;
           Hello Customer !
         </h1>
       </div>
-
+      
       <div className="OrderDetails-parent bg-white m-4 flex flex-wrap justify-around p-4 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:bg-dark-200">
         <div
           className="OrderDetails lg:w-1/5 relative w-full md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
@@ -81,7 +81,7 @@ const numberOfActiveOrders = activeOrders.length;
           <div className="flex justify-between sm:justify-between">
             <span className="flex-col text-base font-bold dark:text-white">
               Active Orders
-              <p className="text-brand absolute bottom-3 left-5">{numberOfActiveOrders}</p>
+              <p className="text-brand absolute bottom-3 left-5">6</p>
             </span>
             <span className="flex items-center justify-center">
               <PurchaseIconDB color="#3FD424" className="h-10 w-10" />
@@ -95,7 +95,7 @@ const numberOfActiveOrders = activeOrders.length;
           <div className="flex justify-between sm:justify-between">
             <span className="flex-col text-base font-bold dark:text-white">
               Completed Orders
-              <p className="text-brand absolute bottom-3 left-5">{numberOfSuccessfulOrders}</p>
+              <p className="text-brand absolute bottom-3 left-5">10</p>
             </span>
             <span className="flex items-center justify-center">
               <PurchaseIconDB color="#F5EA04" className="h-10 w-10" />
@@ -222,7 +222,7 @@ const numberOfActiveOrders = activeOrders.length;
         </button>
       </div>
 
-
+      
     </div>
   );
 };
@@ -252,7 +252,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   return {
     props: {
-
+      
       ...(await serverSideTranslations(locale!, ['common'])),
     },
     revalidate: 60, // In seconds
@@ -260,6 +260,3 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export default DashboardPage;
-
-
-
