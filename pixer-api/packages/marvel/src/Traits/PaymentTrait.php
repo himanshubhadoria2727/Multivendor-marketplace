@@ -198,9 +198,14 @@ trait PaymentTrait
      */
     public function createPaymentIntent(Order $order, Request $request, string $payment_gateway): array
     {           Log::info("inside create payment intent");
-  
+                Log::info("request inside intent".$request);
+                $requestData = json_decode($request->getContent(), true);
+
+                // Access the 'amount' field from the parsed data
+                $amount = $requestData['amount'];
+            
         $created_intent = [
-        "amount"                => $order->paid_total - intval($order->wallet_point?->amount),
+        "amount"                => $amount,
         "order_tracking_number" => $order->tracking_number,
     ];
         try{    
@@ -221,11 +226,12 @@ trait PaymentTrait
                 Log::info('inside razorpay intent');
                 // For Razorpay, you typically create an order instead of a customer
                 // Here, we assume that the Razorpay integration requires the order amount and details
-                $razorpayOrder = $this->createRazorpayOrder($request);
-                $created_intent["order_id"] = $razorpayOrder["order_id"];
-                Log::info("order id in create intent",$razorpayOrder["order_id"]);
-                $created_intent["order_amount"] = $razorpayOrder["order_amount"];
-                $created_intent["order_receipt"] = $razorpayOrder["order_receipt"];
+                // $razorpayOrder = $this->createRazorpayOrder($request);
+                // Log::info('razorpay order',$razorpayOrder );
+                $created_intent["order_id"] = $order["order_id"];
+                Log::info("order id in create intent".$order["order_id"]);
+                $created_intent["order_amount"] = $request["paid_total"];
+                // $created_intent["order_receipt"] = $order["order_receipt"];
                 // Include any other necessary parameters for Razorpay
             }
     

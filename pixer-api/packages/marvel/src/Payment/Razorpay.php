@@ -37,6 +37,7 @@ class Razorpay extends Base implements PaymentInterface
      */
     public function createOrder(object $request): array
     {
+        Log::info('request body in razor pay'.$request);
         try {
             // Validate and extract required data from the input array
             if (!isset($request['tracking_number'], $request['amount'])) {
@@ -44,7 +45,7 @@ class Razorpay extends Base implements PaymentInterface
             }
             Log::info("inside createOrder funtion in razorpay");
             $orderTrackingNumber = $request['tracking_number'];
-            $amount = (int)round($request['amount'], 2) * 100; // Convert to the smallest currency unit
+            $amount = (int)round($request['paid_total'], 2) * 100; // Convert to the smallest currency unit
             Log::info("inside createOrder funtion in razorpay ".$amount);
             Log::info("create order tracking number".$orderTrackingNumber);
             Debugbar::addMessage('tracking number',$orderTrackingNumber);
@@ -95,7 +96,7 @@ class Razorpay extends Base implements PaymentInterface
                 'amount'   => (int)round($amount, 2) * 100,
                 'currency' => $this->currency,
             ]);
-
+            Log::info('razor pay intent order ' . json_encode($data));
             return [
                 'payment_id'            => $order->id,
                 'order_tracking_number' => $order->receipt,

@@ -122,7 +122,7 @@ class OrderRepository extends BaseRepository
     public function storeOrder($request, $settings): mixed
     {
         Log::info("store_order_repo");
-
+        Log::info("order request".$request);
         $request['tracking_number'] = $this->generateTrackingNumber();
         $settings = Settings::getData($request?->language);
         $fullWalletOrCODPayment = $request->isFullWalletPayment ? PaymentGatewayType::FULL_WALLET_PAYMENT : $settings['defaultPaymentGateway'];
@@ -253,7 +253,7 @@ class OrderRepository extends BaseRepository
         } else {
             $this->orderStatusManagementOnPayment($order, OrderStatus::PENDING, PaymentStatus::PENDING);
         }
-
+        
         event(new OrderProcessed($order));
 
 

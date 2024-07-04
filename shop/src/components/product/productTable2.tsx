@@ -78,7 +78,7 @@ export default function ProductTable() {
   });
   console.log(loading);
   console.log("shop side products", products)
-  if (loading) return <Loader text={t('common:text-loading')} />;
+  if (loading) return <Loader text={t('Loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
 
   function handleSearch({ searchText }: { searchText: string }) {
