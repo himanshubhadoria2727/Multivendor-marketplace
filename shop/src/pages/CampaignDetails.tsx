@@ -6,9 +6,11 @@ import Spinner from './spinner';
 
 type Product = {
   id: number;
+  product_id: number;
   name: string;
   created_at: string;
   price: number;
+  campaign_id: number;
 };
 
 type CampaignDetailsProps = {
@@ -22,6 +24,8 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   const [searchTerm, setSearchTerm] = useState('');
   const [sortingObj, setSortingObj] = useState<{ column: string; sort: SortOrder }>({ column: '', sort: SortOrder.Desc });
   const [isLoading, setIsLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -69,9 +73,16 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
     router.push(`/products/product_page/${slug}`);
   };
 
-  const handleDeleteProduct = async (productId: number) => {
+  const confirmDeleteProduct = (product: Product) => {
+    setProductToDelete(product);
+    setShowModal(true);
+  };
+
+  const handleDeleteProduct = async () => {
+    if (!productToDelete) return;
+
     const token = localStorage.getItem('token');
-    await fetch(`http://127.0.0.1:8000/products/${productId}`, {
+    await fetch(`http://127.0.0.1:8000/campaigns/${productToDelete.campaign_id}/products/${productToDelete.product_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -79,7 +90,14 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
     });
 
     // Remove the product from the list
-    setProducts(products.filter(product => product.id !== productId));
+    setProducts(products.filter(product => product.product_id !== productToDelete.product_id));
+    setShowModal(false);
+    setProductToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowModal(false);
+    setProductToDelete(null);
   };
 
   const handleBackClick = () => {
@@ -144,7 +162,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
                   Action
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
                   Remove
                 </th>
               </tr>
@@ -168,7 +186,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
-                        onClick={() => handleDeleteProduct(product.id)}
+                        onClick={() => confirmDeleteProduct(product)}
                         className="text-red-500 hover:text-red-700"
                       >
                         <BsTrash className="text-xl" />
@@ -187,6 +205,29 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showModal && productToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-75">
+          <div className="bg-white dark:bg-dark-200 p-6 rounded shadow-lg border border-black dark:border-white">
+            <p className="text-lg text-gray-800 dark:text-white mb-4">Are you sure you want to delete {productToDelete.name}?</p>
+            <div className="flex justify-end">
+              <button
+                onClick={handleCancelDelete}
+                className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-2 mr-2 rounded"
+              >
+                No
+              </button>
+              <button
+                onClick={handleDeleteProduct}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

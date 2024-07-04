@@ -171,7 +171,7 @@ const ProfilePage: NextPageWithLayout = () => {
                 {t('text-cancel')}
               </Button>
               <Button
-                className="flex-1 lg:flex-none bg-blue-600 text-white dark:bg-blue-500 dark:text-gray-200"
+                className="flex-1 lg:flex-none bg-brand text-white dark:bg-brand hover:bg-brand-dark dark:text-gray-200"
                 isLoading={isLoading}
                 disabled={isLoading}
               >
