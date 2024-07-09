@@ -99,7 +99,7 @@ function OrderedItem({ item }: { item:Order}) {
                   {name}
                 </AnchorLink>
               </h3>
-              {preview_url && (
+              {/* {preview_url && (
                 <a
                   href={preview_url}
                   target="_blank"
@@ -108,7 +108,7 @@ function OrderedItem({ item }: { item:Order}) {
                 >
                   {t('text-preview')}
                 </a>
-              )}
+              )} */}
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               {getStatus ? (

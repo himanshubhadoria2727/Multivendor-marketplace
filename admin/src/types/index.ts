@@ -1815,6 +1815,7 @@ export interface ProductQueryOptions extends QueryOptions {
   status: string;
   is_active: string;
   shop_id: string;
+  link_type:string;
   min_price: string;
   max_price: string;
   rating: string;
