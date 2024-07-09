@@ -74,7 +74,7 @@ const [id, setId]=useState('');
   const fetchCampaigns = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://127.0.0.1:8000/campaigns', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -121,7 +121,7 @@ const handleAddProductToCampaign = async (productId: string) => {
       setNewCampaignName('');
       return;
       }
-      response = await fetch('http://127.0.0.1:8000/campaigns', {
+      response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ const handleAddProductToCampaign = async (productId: string) => {
         }),
       });
     } else if (selectedCampaign) {
-      response = await fetch(`http://127.0.0.1:8000/campaigns/${selectedCampaign}/products`, {
+      response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

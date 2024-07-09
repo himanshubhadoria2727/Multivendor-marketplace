@@ -49,7 +49,7 @@ export default function ProductCard({ product }: { product: Product }) {
     const fetchCampaigns = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://127.0.0.1:8000/campaigns', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -96,7 +96,7 @@ export default function ProductCard({ product }: { product: Product }) {
         setNewCampaignName('');
         return;
         }
-        response = await fetch('http://127.0.0.1:8000/campaigns', {
+        response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ export default function ProductCard({ product }: { product: Product }) {
           }),
         });
       } else if (selectedCampaign) {
-        response = await fetch(`http://127.0.0.1:8000/campaigns/${selectedCampaign}/products`, {
+        response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -31,7 +31,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
     const fetchProducts = async () => {
       if (id) {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://127.0.0.1:8000/campaigns/${id}/products`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${id}/products`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -82,7 +82,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
     if (!productToDelete) return;
 
     const token = localStorage.getItem('token');
-    await fetch(`http://127.0.0.1:8000/campaigns/${productToDelete.campaign_id}/products/${productToDelete.product_id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${productToDelete.campaign_id}/products/${productToDelete.product_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

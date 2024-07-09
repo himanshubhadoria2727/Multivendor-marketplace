@@ -29,7 +29,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
     useEffect(() => {
         const fetchCampaigns = async () => {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://127.0.0.1:8000/campaigns', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -52,7 +52,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
         }
 
         const token = localStorage.getItem('token');
-        await fetch('http://127.0.0.1:8000/campaigns', {
+        await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
         setValidationError('');
 
         // Refresh campaigns
-        const response = await fetch('http://127.0.0.1:8000/campaigns', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
