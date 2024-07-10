@@ -62,6 +62,7 @@ class CampaignRepository
         $campaignProducts = [];
         foreach ($productIds as $productId) {
             $product = Product::find($productId);
+            Log::info('product'.$product);
             if ($product) {
                 $campaignProducts[] = [
                     'product_id' => $productId, 

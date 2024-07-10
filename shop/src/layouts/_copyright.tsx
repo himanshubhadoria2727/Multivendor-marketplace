@@ -16,7 +16,7 @@ export default function Copyright({ className }: { className?: string }) {
       >
         {settings?.siteTitle}
       </Link> */}
-      .Copyright © GuestLink. All rights reserved worldwide.
+      .Copyright © GoodBlogger. All rights reserved worldwide.
       {/* . {settings?.copyrightText}{' '}
       {settings?.externalText ? (
         <Link

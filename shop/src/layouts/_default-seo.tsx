@@ -33,7 +33,7 @@ const DefaultSeo = () => {
       titleTemplate={`${
         settings?.siteTitle ?? settings?.seo?.metaTitle ?? 'Digital Download'
       } | %s`}
-      defaultTitle="GuestLink"
+      defaultTitle="Good Blogger"
       description={settings?.seo?.metaDescription || settings?.siteSubtitle}
       canonical={settings?.seo?.canonicalUrl}
       openGraph={{
