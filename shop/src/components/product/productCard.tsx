@@ -343,8 +343,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Success Message */}
       {showSuccessMessage && (
-        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg flex items-center">
-          <span>Product added successfully</span>
+        <div className="fixed bottom-16 md:bottom-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg flex items-center">
+        <span>Product added successfully</span>
           <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
