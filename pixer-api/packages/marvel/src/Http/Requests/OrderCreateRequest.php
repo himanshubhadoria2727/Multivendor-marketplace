@@ -42,6 +42,7 @@ class OrderCreateRequest extends FormRequest
             'selectedNiche'                     => ['nullable', 'string'],
             'selectedForm'                     => ['nullable', 'string'],
             'amount'                  => 'required|numeric',
+            'price'                  => 'nullable|numeric',
             'paid_total'              => 'required|numeric',
             'total'                   => 'required|numeric',
             'delivery_time'           => 'nullable|string',

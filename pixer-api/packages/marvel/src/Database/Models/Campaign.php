@@ -16,6 +16,6 @@ class Campaign extends Model
 
     public function products()
     {
-        return $this->hasMany(CampaignProduct::class);
+        return $this->belongsToMany(Product::class, 'campaign_products')->withPivot('order_id', 'price');
     }
 }
