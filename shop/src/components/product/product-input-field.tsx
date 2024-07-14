@@ -40,7 +40,8 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
       value == 'none' ? (
         setTotalPrice(product.price)
       ) :
-      setTotalPrice(+product.price + +product.niche_price);    }
+        setTotalPrice(+product.price + +product.niche_price);
+    }
     console.log(value)
     setSelectedNiche(value);
   };
@@ -148,7 +149,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <div className="relative mb-5">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Article content:"}</Label>
                     <RichTextEditor
-                      editorClassName='h-60 pb-10 mb-10 max-sm:w-[80vw] md:w-[75vw]'
+                      editorClassName='h-60 pb-10 mb-10 max-sm:border-none max-sm:mb-[7rem] xs:max-w-[370px] sm:max-w-[470px] md:max-w-[570px] lg:max-w-[850px] xl:max-w-[1050px] 2xl:max-w-[1150px] 3xl:max-w-[1350px]'
                       control={control}
                       placeholder='My amazing content'
                       className='mb'
@@ -159,7 +160,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <div className="relative mb-5 ">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Special Instructions:"}</Label>
                     <RichTextEditor
-                      editorClassName='h-60 pb-10 mb-10 max-sm:w-[80vw] md:w-[75vw]'
+                      editorClassName='h-60 pb-10 mb-10 max-sm:border-none max-sm:mb-[7rem]  xs:max-w-[370px] sm:max-w-[470px] md:max-w-[570px] lg:max-w-[850px] xl:max-w-[1050px] 2xl:max-w-[1150px] 3xl:max-w-[1350px]'
                       control={control}
                       placeholder='Describe your requirement'
                       className=''

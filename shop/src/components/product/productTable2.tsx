@@ -53,7 +53,7 @@ export default function ProductTable() {
   const { products, paginatorInfo, loading, error} = useProductsQuery({
     language: locale,
     name: searchTerm,
-    limit: 8,
+    limit: 10,
     page,
     orderBy,
     sortedBy,
@@ -103,7 +103,7 @@ export default function ProductTable() {
           </div>
 
           <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
-            <Search onSearch={handleSearch} placeholderText='Search all sites ....' />
+            <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all sites ....' />
           </div>
 
           <button
@@ -122,7 +122,7 @@ export default function ProductTable() {
         <div
           className={`flex w-full transition ${visible ? 'visible h-auto' : 'invisible h-0'}`}
         >
-          <div className="mt-5 flex w-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center">
+          <div className="mt-5 flex w-full h-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center">
             <ProductFilter
               className="w-full"
               onProductTypeFilter={(productType: ProductTypeOptions) => {

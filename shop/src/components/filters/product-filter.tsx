@@ -101,7 +101,8 @@ export default function ProductFilter({
     <div className={cn('flex w-full md:flex-wrap justify-start flex-col space-y-5 rtl:space-x-reverse md:flex-row md:items-end md:space-y-4', className)}>
       {enablePrice && (
         <div className="w-full md:w-[17vw] mr-5">
-          <Label>{t('Price')}</Label>
+          <Label
+          >{t('Price')}</Label>
           <Select
             options={price}
             value={selectedPrice}

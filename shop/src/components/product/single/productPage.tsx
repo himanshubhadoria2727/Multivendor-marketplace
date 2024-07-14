@@ -56,7 +56,7 @@ const SingleProductNew: React.FC<SingleProps> = ({ product }) => {
   const content = useSanitizeContent({ description: description });
   return (
     <div className="relative">
-      <div className="h-full min-h-screen p-4 md:px-6 lg:px-8 lg:pt-6">
+      <div className="w-full  h-full min-h-screen p-4 md:px-6 lg:px-8 lg:pt-6">
         <div className="sticky top-0 z-20 -mx-4 mb-1 -mt-2 flex items-center bg-light-300 p-4 dark:bg-dark-100 sm:static sm:top-auto sm:z-0 sm:m-0 sm:mb-4 sm:bg-transparent sm:p-0 sm:dark:bg-transparent">
           <button
             onClick={() => router.push(routes?.home)}
@@ -68,7 +68,7 @@ const SingleProductNew: React.FC<SingleProps> = ({ product }) => {
         </div>
         <motion.div
           variants={staggerTransition()}
-          className=" gap-4 sm:grid-cols-2 lg:gap-6"
+          className=" w-full gap-4 sm:grid-cols-2 lg:gap-6"
         >            {/* form field code here */}
 
           <ProductInputDisplay product={product} />
@@ -123,10 +123,10 @@ const SingleProductNew: React.FC<SingleProps> = ({ product }) => {
             </div>
           </div> */}
 
-          <ProductSocialShare
+          {/* <ProductSocialShare
             productSlug={slug}
             className="border-t border-light-500 pt-5 dark:border-dark-400 md:pt-7 lg:hidden"
-          />
+          /> */}
         </motion.div>
       </div>
       {/* <motion.div

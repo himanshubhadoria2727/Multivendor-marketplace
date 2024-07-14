@@ -13,13 +13,13 @@ export const selectStyles = {
       ? '#E5E7EB'
       : state.isFocused
       ? '#F9FAFB'
-      : '#ffffff',
+      : '#bg-white dark:bg-gray-800',
   }),
   control: (_: any, state: any) => ({
     display: 'flex',
     alignItems: 'center',
     minHeight: 50,
-    backgroundColor: state?.isDisabled ? '#EEF1F4' : '#ffffff',
+    backgroundColor: state?.isDisabled ? '#EEF1F4' : 'bg-white dark:bg-gray-800',
     borderRadius: 5,
     border: '1px solid #D1D5DB',
     borderColor: state?.isDisabled ? '#D4D8DD' : state.isFocused ? 'rgb(var(--color-accent-500))' : '#D1D5DB',
@@ -61,7 +61,7 @@ export const selectStyles = {
   singleValue: (provided: any, _: any) => ({
     ...provided,
     fontSize: '0.875rem',
-    color: '#4B5563',
+    color: 'text-white',
   }),
   multiValue: (provided: any, _: any) => ({
     ...provided,
@@ -93,7 +93,7 @@ export const selectStyles = {
   placeholder: (provided: any, _: any) => ({
     ...provided,
     fontSize: '0.875rem',
-    color: 'rgba(107, 114, 128, 0.7)',
+    color: 'text-white',
   }),
   noOptionsMessage: (provided: any, _: any) => ({
     ...provided,

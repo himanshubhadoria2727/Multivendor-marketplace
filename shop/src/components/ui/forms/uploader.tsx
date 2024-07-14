@@ -110,7 +110,7 @@ export default function Uploader({
                   </Button>
                 </div>
               ))
-            : 'Upload Your Avatar Image (80 X 80)'
+            : 'Upload Your file here! '
           : !isLoading && <PlusIcon className="h-5 w-5" />}
 
         {isLoading && (

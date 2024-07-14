@@ -336,7 +336,8 @@ class OrderRepository extends BaseRepository
             $products = $this->processProducts($request['products'], $request['customer_id'], $order);
             Log::info("3");
             $order->products()->attach($products);
-            Log::info("4");
+            Log::info("4",$products);
+            Log::info("4".$order);
             $this->createChildOrder($order->id, $request);
             Log::info("5");
             //  $this->calculateShopIncome($order);

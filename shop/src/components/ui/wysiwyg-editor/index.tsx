@@ -195,7 +195,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             }}
             className={twMerge(
               classNames(
-                'relative mb-5 rounded border border-border-base',
+                'relative mb-5 dark: rounded border border-border-brand',
                 editorClassName,
                 disabled
                   ? 'select-none bg-[#EEF1F4] cursor-not-allowed disabled-editor'

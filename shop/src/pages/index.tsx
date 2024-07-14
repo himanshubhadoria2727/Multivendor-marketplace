@@ -85,7 +85,7 @@ function Products() {
       ):(
         <>
         <ProductTable2
-        />
+        />  
             </>
         )
         }
