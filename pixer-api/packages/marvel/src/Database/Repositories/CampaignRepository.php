@@ -127,7 +127,7 @@ class CampaignRepository
             ]);
 
             // Associate the CampaignProduct with the Campaign and save
-            $campaign->products()->save($campaignProduct); // This ensures campaign_id is set correctly
+            $campaignProduct->save(); // This ensures campaign_id is set correctly
         } else {
             Log::warning('Product not found', ['product_id' => $productId]);
         }
