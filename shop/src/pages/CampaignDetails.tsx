@@ -232,4 +232,5 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   );
 };
 
+CampaignDetails.autherization= true;
 export default CampaignDetails;

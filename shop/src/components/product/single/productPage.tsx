@@ -21,6 +21,7 @@ import { Product } from '@/types';
 import { isEmpty } from 'lodash';
 import { useSanitizeContent } from '@/lib/sanitize-content';
 import ProductInputDisplay from '../product-input-main';
+import PrivateRoute from '@/layouts/_private-route';
 
 type SingleProps = {
   product: Product;
@@ -71,7 +72,7 @@ const SingleProductNew: React.FC<SingleProps> = ({ product }) => {
           className=" w-full gap-4 sm:grid-cols-2 lg:gap-6"
         >            {/* form field code here */}
 
-          <ProductInputDisplay product={product} />
+          <PrivateRoute><ProductInputDisplay product={product} /></PrivateRoute>
 
         </motion.div>
         <motion.div
