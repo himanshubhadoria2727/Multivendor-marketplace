@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3002:3002"
-      - "2222:22"
+      - "2002:20"
     volumes:
       - .:/app
     environment:
