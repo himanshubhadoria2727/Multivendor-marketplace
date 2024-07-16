@@ -40,6 +40,7 @@ use Marvel\Traits\PaymentTrait;
 use Marvel\Traits\WalletsTrait;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
+use Marvel\Repositories\CampaignRepository;
 
 class OrderRepository extends BaseRepository
 {
@@ -336,6 +337,7 @@ class OrderRepository extends BaseRepository
             $products = $this->processProducts($request['products'], $request['customer_id'], $order);
             Log::info("3");
             $order->products()->attach($products);
+            $this->createOrUpdateCampaign($order,$request->products);
             Log::info("4",$products);
             Log::info("4".$order);
             $this->createChildOrder($order->id, $request);
@@ -354,6 +356,24 @@ class OrderRepository extends BaseRepository
             throw $e;
         }
     }
+
+    private function createOrUpdateCampaign($order, $products)
+{
+    $campaignRepository = app(CampaignRepository::class);
+
+    foreach ($products as $productData) {
+        $product = Product::find($productData['product_id']);
+        
+        log::info("pdfsddfs".$product);
+        if ($product) {
+            $link_url = $productData['link_url'];
+            $price = $productData['unit_price'];
+            $userId = $order->customer_id;
+
+            $campaignRepository->createOrUpdateCampaign($link_url, $product->id, $price, $order->id,$userId);
+        }
+    }
+}
     /**
      * This function creates an array of data for an email invoice, including order information,
      * settings, translated text, and URL.
