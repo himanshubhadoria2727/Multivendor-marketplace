@@ -11,5 +11,5 @@ services:
     volumes:
       - .:/app
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     command: sh -c "npm install && npm run dev"
