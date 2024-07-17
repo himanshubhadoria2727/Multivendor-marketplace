@@ -6,7 +6,7 @@ import Button from '@/components/ui/button';
 import { ProductInputFieldSchemaGL, ProductInputFieldSchemaLI, contactUsFormSchema } from '@/components/contact-us/schema';
 import { Form } from '@/components/ui/forms/form';
 import { useTranslation } from 'next-i18next';
-import { Controller, type SubmitHandler } from 'react-hook-form';
+import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import Spinner from '../ui/loader/spinner/spinner';
 import { useEffect, useState } from 'react';
 import ProductNicheOptions from './product-niche-options';
@@ -14,12 +14,16 @@ import React from 'react';
 import RichTextEditor from '@/components/ui/wysiwyg-editor/editor';
 import Label from '../ui/forms/label';
 import Uploader from '../ui/forms/uploader';
+import Cookies from 'js-cookie';
+import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
+
 
 type ProductInputFormProps = {
   product: Product;
   onSubmit: SubmitHandler<CreateProductInput>;
   reset: CreateProductInput | null;
   isLoading: boolean;
+  campaignname?: string | string[] | undefined;
 };
 
 const ProductInputField: React.FC<ProductInputFormProps> = ({
@@ -27,6 +31,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
   onSubmit,
   reset,
   isLoading,
+  campaignname,
 }) => {
   const { t } = useTranslation('common');
   // const { data } = useModalState();
@@ -45,7 +50,6 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
     console.log(value)
     setSelectedNiche(value);
   };
-
   const [formValid, setFormValid] = useState(false); // State to track form validity
   const [selectedForm, setSelectedForm] = useState('guest_post'); // State to track selected form
   const [totalPrice, setTotalPrice] = useState(product.price)
@@ -78,6 +82,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
     is_cbd,
     is_crypto,
   } = product ?? {};
+
 
   return (
     <div className="flex max-w-full p-6 rounded-md flex-col bg-light text-left dark:bg-dark-250 xs:max-w-[430px] sm:max-w-[550px] md:max-w-[600px] lg:max-w-[960px] xl:max-w-[1200px] 2xl:max-w-[1266px] 3xl:max-w-[1460px]">
@@ -129,10 +134,12 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <Input
                     label={t('Landing Page/Link URL:')}
                     type="text"
-                    placeholder="Enter your ancor text"
+                    placeholder="Enter your anchor text"
+                    defaultValue={campaignname !== undefined?`https://${campaignname}`:'https://'}
                     {...register('link_url')}
                     error={errors.link_url?.message}
                     className="mt-10 mb-10"
+                    readOnly={campaignname !== undefined} // Disable if campaignname is defined
                   />
                   <Controller
                     name="file"
@@ -227,10 +234,12 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <Input
                     label={t('Landing Page/Link URL:')}
                     type="text"
-                    placeholder="Enter your link url here"
+                    placeholder="Enter your anchor text"
+                    defaultValue={campaignname !== undefined?`https://${campaignname}`:'https://'}
                     {...register('link_url')}
                     error={errors.link_url?.message}
                     className="mt-10 mb-10"
+                    readOnly={campaignname !== undefined} // Disable if campaignname is defined
                   />
                   {/* <Input
                     label={t('Special instructions')}

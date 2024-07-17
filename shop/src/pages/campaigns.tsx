@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from '@/types';
 import Layout from '@/layouts/_layout';
@@ -14,18 +14,17 @@ const CampaignPage: NextPageWithLayout = () => {
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   const [selectedCampaignName, setSelectedCampaignName] = useState<string | null>(null);
 
-  // Handle click on campaign link
+
   const handleCampaignClick = (id: string,name:string) => {
     setSelectedCampaignId(id);
     setSelectedCampaignName(name);
-    // router.push(`/campaigns/${id}`); // No need to push the URL directly here
+
   };
 
-  // Handle click to go back to CampaignManager
   const handleBackClick = () => {
     setSelectedCampaignId(null);
     setSelectedCampaignName(" ");
-    router.push(routes.campaign); // or the appropriate route to go back
+    router.push(routes.campaign); 
   };
 
   return (

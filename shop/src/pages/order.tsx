@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps } from 'next';
 import { useTranslation } from 'next-i18next';
@@ -28,8 +28,10 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import { CreditCardIcon } from '@/components/icons/credit-card-icon';
 import Layout from '@/layouts/_layout';
 import { CheckIconWithBg } from '@/components/icons/check-icon-with-bg';
+import router from 'next/router';
 
 function OrderedItem({ item }: { item:Order}) {
+  const { id } = router.query;
   const { t } = useTranslation('common');
   const { openModal } = useModalAction();
   const { id: order_id, tracking_number } = item;
@@ -64,6 +66,10 @@ function OrderedItem({ item }: { item:Order}) {
       download(data, name);
     },
   });
+
+  useEffect(() => {
+    if(id==order_id)router.push(`${routes.orderUrl(item?.tracking_number)}/payment`)
+  }, [id]);
 
   function openReviewModal() {
     openModal('REVIEW_RATING', {

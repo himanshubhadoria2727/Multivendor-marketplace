@@ -53,7 +53,11 @@ export function getAuthCredentials(context?: any): {
     authCred = Cookies.get(AUTH_CRED);
   }
   if (authCred) {
-    return JSON.parse(authCred);
+    try {
+      return JSON.parse(authCred);
+    } catch (error) {
+      console.error("Error parsing auth credentials:", error);
+    }
   }
   return { token: null, permissions: null };
 }
