@@ -3,14 +3,20 @@ import router, { useRouter } from 'next/router';
 import { BsTrash } from 'react-icons/bs'; // Import trash icon for deletion
 import { SortOrder } from '@/types';
 import Spinner from './spinner';
+import Cookies from 'js-cookie';
+import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 
 type Product = {
   id: number;
-  product_id: number;
   name: string;
   created_at: string;
   price: number;
-  campaign_id: number;
+  status: string;
+  pivot: {
+    product_id: any;
+    order_id: number | null;
+    campaign_id: any;
+  };
 };
 
 type CampaignDetailsProps = {
@@ -26,11 +32,12 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [campaignname,setcampaignname]= useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
       if (id) {
-        const token = localStorage.getItem('token');
+        const token = Cookies.get(AUTH_TOKEN_KEY)
         const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${id}/products`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,9 +75,18 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
       setSortingObj({ sort: newSortOrder, column });
     },
   });
-
-  const handleNavigation = (slug: any) => {
-    router.push(`/products/product_page/${slug}`);
+  const handleNavigation = (slug: string) => {
+    router.push({
+      pathname: `/products/product_page/${slug}`,
+      query: { name },
+    });
+  };
+  
+  const orderNavigation = (id: number|null) => {
+    router.push({
+      pathname: `/order`,
+      query: { id },
+    });
   };
 
   const confirmDeleteProduct = (product: Product) => {
@@ -82,7 +98,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
     if (!productToDelete) return;
 
     const token = localStorage.getItem('token');
-    await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${productToDelete.campaign_id}/products/${productToDelete.product_id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${productToDelete.pivot.campaign_id}/products/${productToDelete.pivot.product_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -90,7 +106,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
     });
 
     // Remove the product from the list
-    setProducts(products.filter(product => product.product_id !== productToDelete.product_id));
+    setProducts(products.filter(product => product.pivot.product_id !== productToDelete.pivot.product_id));
     setShowModal(false);
     setProductToDelete(null);
   };
@@ -103,6 +119,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   const handleBackClick = () => {
     onBack(); // Call the onBack function passed as prop
   };
+
 
   return (
     <div className="p-4 dark:bg-dark-200 dark:text-white">
@@ -132,7 +149,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
       {/* Products Table */}
       <div className="overflow-x-auto">
         {isLoading ? (
-          <Spinner/>
+          <Spinner />
         ) : (
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead className="bg-gray-200 dark:bg-dark-400">
@@ -180,10 +197,26 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                     <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(product.created_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">Active</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark" onClick={()=>handleNavigation(product.name)}>Place Order</button>
-                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">{product.status}</td>
+                    {product.pivot.order_id ? (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button
+                          className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
+                          onClick={() => orderNavigation(product.pivot.order_id)}
+                        >
+                          View Order
+                        </button>
+                      </td>
+                    ) : (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button
+                          className="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark"
+                          onClick={() => handleNavigation(product.name)}
+                        >
+                          Place Order
+                        </button>
+                      </td>
+                    )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <button
                         onClick={() => confirmDeleteProduct(product)}

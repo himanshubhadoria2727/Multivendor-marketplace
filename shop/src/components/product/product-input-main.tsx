@@ -19,10 +19,12 @@ type SingleProps = {
 
 const ProductInputDisplay: NextPageWithLayout<SingleProps> = ({product}) => {
   const { t } = useTranslation('common');
+
   let [reset, setReset] = useState<CreateProductInput | null>(null);
   const { mutate, isLoading, isSuccess } = useContactUs();
   const { addItemToCart } = useCart();
   const router = useRouter();
+  const { name } = router.query;
   const onSubmit: SubmitHandler<CreateProductInput> = (formData) => {
 
     const productData = {
@@ -42,6 +44,7 @@ const ProductInputDisplay: NextPageWithLayout<SingleProps> = ({product}) => {
               onSubmit={onSubmit}
               reset={reset}
               isLoading={isLoading}
+              campaignname={name}
             />
     </>
   );

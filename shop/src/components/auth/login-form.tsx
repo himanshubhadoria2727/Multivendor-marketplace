@@ -10,6 +10,7 @@ import client from '@/data/client';
 import { setAuthCredentials } from '@/data/client/token.utils';
 import type { LoginUserInput } from '@/types';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useMutation } from 'react-query';
@@ -35,8 +36,6 @@ export default function LoginUserForm() {
       authorize(data.token);
       setAuthCredentials(data.token, data.permissions);
       closeModal();
-      localStorage.setItem("token",data.token);
-      console.log(data.token);
     },
   });
   const onSubmit: SubmitHandler<LoginUserInput> = (data) => {
