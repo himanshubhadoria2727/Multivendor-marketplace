@@ -37,7 +37,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const router = useRouter();
-  const { id, name, slug, image, shop, is_external, is_niche, isLinkInsertion } = product ?? {};
+  const { id, name, slug, image, shop,preview_url, is_external, is_niche, isLinkInsertion } = product ?? {};
   const { isGridCompact } = useGridSwitcher();
   const { price, basePrice } = usePrice({
     amount: product.sale_price ? product.sale_price : product.price,
@@ -170,83 +170,85 @@ export default function ProductCard({ product }: { product: Product }) {
   
         {/* Top Row: Tags */}
           <div className="mb-2 flex gap-2 p-1 flex-wrap justify-center sm:justify-start">
-            <span className="flex text-xs items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+            <span className="flex text-[10px] items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
               <CheckIconWithBg className="w-4 h-4 mr-1" />
               Guest Post
             </span>
             {isLinkInsertion && (
-              <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-xs font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
                 <CheckIconWithBg className="w-4 h-4 mr-1" />
                 Link Insertion
               </span>
             )}
-            {is_niche && (
-                <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-xs font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
-                  <CheckIconWithBg className="w-4 h-4 mr-1" />
-                  Grey Niche
-                </span>
-              )}
+            
           </div>
       
   
         {/* Bottom Row: Site Name, Domain Details */}
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start">
-          <div className="flex flex-col w-full md:w-1/3 items-center md:items-start justify-center md:justify-start mb-4 md:mb-0">
-            <h3 title={name} className="mb-0.5 text-xl truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-left">
+        <div className="flex flex-col md:flex-row   md:items-start justify-center md:justify-start">
+          <div className="flex flex-col w-full md:w-1/3  mt-5 content-center items-center md:items-start justify-center md:justify-start mb-4 md:mb-0">
+            <div>
+            <h3 title={name} className="mb-0.5 text-lg truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-left">
               <a href={`https://${name}`} target="_blank" rel="noopener noreferrer">
                 {name}
               </a>
             </h3>
-            <h3 className="font-medium text-lg pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand text-left">
+            <h3 className="font-medium text-sm  pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand text-left">
               {shop?.name}
             </h3>
+            </div>
             <div className="flex flex-col mt-2 ml-0 p-1">
-              <span className="mt-2 w-fit bg-light-300 rounded-2xl px-3 py-1 font-semibold capitalize text-xs text-brand dark:bg-dark-300 dark:text-brand-dark text-center">
-                News, Media & Updates
+            <span className='mb-0.5 text-sm truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-left'>
+              <a href={preview_url} target="_blank" rel="noopener noreferrer">View posts</a>
               </span>
-              
+              {is_niche==='1' && (
+                <span className="flex items-center rounded-2xl bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+                  <CheckIconWithBg className="w-4 h-4 mr-1" />
+                  Grey Niche
+                </span>
+              )}
             </div>
           </div>
           <div className=" w-full md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-2">
             <span className="flex m-2 capitalize justify-start text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
               <UserIconAlt className="w-4 h-4 mr-1" />
               Domain Authority
-              <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
                 {product?.domain_authority}
               </p>
             </span>
             <span className="flex m-2 capitalize justify-start text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
               <StarIcon className="w-4 h-4 mr-1" />
               Domain Rating
-              <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
                 {product?.domain_rating}
               </p>
             </span>
             <span className="flex m-2 capitalize justify-start text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
               <PeopleIcon className="w-4 h-4 mr-1" />
               Organic Traffic
-              <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
                 {product?.organic_traffic}
               </p>
             </span>
             <span className="flex m-2 capitalize justify-start text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
               <HelpIcon className="w-4 h-4 mr-1" />
               Spam Score
-              <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
                 {product?.spam_score}
               </p>
             </span>
             <span className="flex m-2 capitalize justify-start text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
               <LangIcon className="w-4 h-4 mr-1" />
               Language
-              <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
                 {product?.languages}
               </p>
             </span>
             <span className="flex m-2 capitalize justify-start text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
               <LinkIcon className="w-4 h-4 mr-1" />
               Links
-              <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
                 {product?.link_type}
               </p>
             </span>
@@ -255,7 +257,7 @@ export default function ProductCard({ product }: { product: Product }) {
       <div className="flex justify-start m-2 capitalize text-sm text-[#919494] dark:text-[#E4DFDF] items-center">
         <GlobalIcon className="w-4 h-4 mr-1" />
         Countries
-        <p className="text-xs ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
+        <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize  text-brand dark:bg-dark-300 dark:text-brand-dark">
           {product?.countries}
         </p>
       </div>
@@ -263,12 +265,12 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
   
       {/* Right Column: Price and Buy Section */}
-    <div className="Price_Buy flex flex-col w-full sm:w-1/3 justify-center items-center sm:pl-0">
-      <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-lg font-bold uppercase text-2xl text-brand dark:text-brand-dark">
+    <div className="flex flex-col w-full border-l-2 border-dotted  sm:w-1/4 justify-center items-center sm:pl-0">
+      <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-xs  font-bold uppercase text-2xl text-brand dark:text-brand-dark">
         {isFreeItem ? 'Free' : price}
       </span>
       {!isFreeItem && basePrice && (
-        <del className="text-xs md:text-sm font-medium text-dark-900 dark:text-dark-700">
+        <del className="text-[10px] md:text-sm font-medium text-dark-900 dark:text-dark-700">
           {basePrice}
         </del>
       )}

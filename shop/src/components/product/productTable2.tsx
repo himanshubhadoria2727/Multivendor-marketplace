@@ -83,7 +83,7 @@ export default function ProductTable() {
   }
 
   return (
-    <>
+    <>  
       <CategoryFilter
         onAllProductFilter={(status) => {
           setStatus(status);

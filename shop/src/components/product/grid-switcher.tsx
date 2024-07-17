@@ -19,7 +19,7 @@ export default function GridSwitcher() {
       onClick={() => setIsGridCompact(!isGridCompact)}
       variant="icon"
       aria-label="Layout"
-      className="hidden 2xl:flex 2xl:w-5"
+      className="2xl:flex 2xl:w-5"
     >
       {isGridCompact ? (
         <CompactGridIcon className="h-[18px] w-[18px]" />

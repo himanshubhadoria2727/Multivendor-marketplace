@@ -72,23 +72,23 @@ function Products() {
     });
   return (
     <>
-    {!isGridCompact?
-    (
-      <List
-        products={products}
-        limit={30}
-        onLoadMore={loadMore}
-        hasNextPage={hasNextPage}
-        isLoadingMore={isLoadingMore}
-        isLoading={isLoading}
-      />
-      ):(
-        <>
-        <ProductTable2
-        />  
-            </>
+      {!isGridCompact ?
+        (
+          <><CategoryFilter />
+            <List
+              products={products}
+              limit={30}
+              onLoadMore={loadMore}
+              hasNextPage={hasNextPage}
+              isLoadingMore={isLoadingMore}
+              isLoading={isLoading} /></>
+        ) : (
+          <>
+            <ProductTable2
+            />
+          </>
         )
-        }
+      }
     </>
   );
 }
