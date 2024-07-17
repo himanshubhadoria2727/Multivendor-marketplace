@@ -258,7 +258,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                     <div className="flex flex-col justify-between w-full">
                       <div className="flex-1 p-3 dark:bg-dark bg-gray-100 rounded mb-3">
                         {selectedForm === 'link_insertion' ? (
-                          <span className="font-semibold dark:bg-dark text-base">Service Type: Guest Posting</span>
+                          <span className="font-semibold dark:bg-dark text-base">Service Type: Link Insertion</span>
                         ) :
                           null}
                       </div>
