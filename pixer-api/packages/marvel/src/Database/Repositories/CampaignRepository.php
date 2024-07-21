@@ -93,7 +93,18 @@ class CampaignRepository
         return $campaign->load('products');
     }
 
-    
+    // public function getAllCampaignProducts($userId)
+
+
+    // {
+    //     Log::info('inside get all campaign products ');
+    //     return CampaignProduct::whereHas('campaign', function ($query) use ($userId) {
+    //             $query->where('user_id', $userId);
+    //         })
+    //         ->with('product') // Ensure products are eager loaded
+    //         ->get();
+    // }
+
     public function createOrUpdateCampaign($linkUrl, $productId, $price, $orderId, $userId)
 {
     // Find or create the campaign by name and user_id
@@ -133,8 +144,4 @@ class CampaignRepository
         }
     }
 }
-
-    
-
-
 }

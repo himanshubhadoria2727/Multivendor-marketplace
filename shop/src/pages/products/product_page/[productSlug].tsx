@@ -12,6 +12,7 @@ const ProductPage: NextPageWithLayout<
   return <SingleProductNew product={product} />;
 };
 
+ProductPage.authorization = true;
 ProductPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };

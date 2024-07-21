@@ -237,14 +237,13 @@ const DashboardPage: NextPageWithLayout = () => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes.dashboard}
       />
-      <PrivateRoute>
         <Dashboard />
-      </PrivateRoute>
       
     </>
   );
 };
 
+DashboardPage.authorization = true;
 DashboardPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };

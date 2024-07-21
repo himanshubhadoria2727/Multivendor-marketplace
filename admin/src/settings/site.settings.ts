@@ -27,8 +27,8 @@ export const siteSettings = {
   },
   defaultLanguage: 'en',
   author: {
-    name: 'RedQ',
-    websiteUrl: 'https://redq.io',
+    name: 'Good blogger',
+    websiteUrl: 'https://goodblogger.co',
     address: '',
   },
   headerLinks: [],
@@ -168,11 +168,11 @@ export const siteSettings = {
                 label: 'text-my-draft-products',
                 icon: 'ProductsIcon',
               },
-              {
-                href: Routes.outOfStockOrLowProducts,
-                label: 'text-all-out-of-stock',
-                icon: 'ProductsIcon',
-              },
+              // {
+              //   href: Routes.outOfStockOrLowProducts,
+              //   label: 'text-all-out-of-stock',
+              //   icon: 'ProductsIcon',
+              // },
             ],
           },
           {
@@ -380,23 +380,23 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: '',
-            label: 'sidebar-nav-item-staffs',
-            icon: 'StaffIcon',
-            childMenu: [
-              {
-                href: Routes.myStaffs,
-                label: 'sidebar-nav-item-my-staffs',
-                icon: 'UsersIcon',
-              },
-              {
-                href: Routes.vendorStaffs,
-                label: 'sidebar-nav-item-vendor-staffs',
-                icon: 'UsersIcon',
-              },
-            ],
-          },
+          // {
+          //   href: '',
+          //   label: 'sidebar-nav-item-staffs',
+          //   icon: 'StaffIcon',
+          //   childMenu: [
+          //     {
+          //       href: Routes.myStaffs,
+          //       label: 'sidebar-nav-item-my-staffs',
+          //       icon: 'UsersIcon',
+          //     },
+          //     {
+          //       href: Routes.vendorStaffs,
+          //       label: 'sidebar-nav-item-vendor-staffs',
+          //       icon: 'UsersIcon',
+          //     },
+          //   ],
+          // },
           {
             href: Routes.customerList,
             label: 'text-customers',

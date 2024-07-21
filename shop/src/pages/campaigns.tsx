@@ -43,6 +43,7 @@ const CampaignPage: NextPageWithLayout = () => {
   );
 };
 
+CampaignPage.authorization = true;
 CampaignPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };

@@ -252,7 +252,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                   <div className="relative mb-5">
                     <Label className='text-lg text-brand font-semibold mb-3'>{"Special Instructions:"}</Label>
                     <RichTextEditor
-                      editorClassName='h-60 pb-10 mb-10 max-sm:w-[80vw] md:w-[75vw]'
+                      editorClassName='h-60 pb-10 mb-10 max-sm:border-none max-sm:mb-[7rem]  xs:max-w-[370px] sm:max-w-[470px] md:max-w-[570px] lg:max-w-[850px] xl:max-w-[1050px] 2xl:max-w-[1150px] 3xl:max-w-[1350px]'
                       control={control}
                       placeholder='Your requirements'
                       className='mb'
@@ -267,7 +267,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
                     <div className="flex flex-col justify-between w-full">
                       <div className="flex-1 p-3 dark:bg-dark bg-gray-100 rounded mb-3">
                         {selectedForm === 'link_insertion' ? (
-                          <span className="font-semibold dark:bg-dark text-base">Service Type: Guest Posting</span>
+                          <span className="font-semibold dark:bg-dark text-base">Service Type: Link Insertion</span>
                         ) :
                           null}
                       </div>
