@@ -17,6 +17,7 @@ import {
 import { useIsRTL } from '@/utils/locals';
 import TitleWithSort from '@/components/ui/title-with-sort';
 import { useState, useEffect, SetStateAction } from 'react';
+import Spinner from '../ui/loader/spinner/spinner';
 
 
 type Campaign = {
@@ -74,6 +75,7 @@ const [id, setId]=useState('');
   const fetchCampaigns = async () => {
     try {
       const token = localStorage.getItem('token');
+      console.log('token',token)
       const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -83,6 +85,7 @@ const [id, setId]=useState('');
         throw new Error('Failed to fetch campaigns');
       }
       const data = await response.json();
+      console.log('comapaign data',data);
       const campaignNames = data.campaigns.map((campaign: { name: any }) => campaign.name);
       setCampaignNames(campaignNames);
       setCampaigns(data.campaigns);
@@ -184,9 +187,6 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
   }
   setValidationError('');
 };
-
-
-
 
   const onHeaderClick = (column: string | null) => ({
     onClick: () => {
@@ -367,18 +367,18 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
       ),
     },
     {
-      title: "Language",
+      title: "Countries",
       className: 'cursor-pointer',
-      dataIndex: 'languages',
-      key: 'languages',
+      dataIndex: 'countries',
+      key: 'countries',
       // align: alignLeft,
       width: 70,
       ellipsis: true,
-      onHeaderCell: () => onHeaderClick('languages'),
-      render: (languages: number) => (
+      onHeaderCell: () => onHeaderClick('countries'),
+      render: (countries: number) => (
         <div className="flex items-center justify-center">
           <div className="flex flex-col">
-            <button className="truncate font-medium text-brand bg-brand/10 px-4 py-1 rounded-lg">{languages}</button>
+            <button className="truncate font-medium text-brand bg-brand/10 px-4 py-1 rounded-lg">{countries}</button>
           </div>
         </div>
       ),
@@ -459,7 +459,7 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
   <div className="mb-6 m-3 overflow-hidden bg-white dark:bg-dark-100 rounded-lg shadow">
     {loading ? (
       <div className="flex justify-center items-center w-full h-64">
-        <CircularProgress />
+        <Spinner />
       </div>
     ) : (
       <Table

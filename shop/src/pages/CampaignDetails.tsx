@@ -198,7 +198,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(product.created_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{product.status}</td>
-                    {product.pivot.order_id ? (
+                    {product.pivot?.order_id ? (
                       <td className="px-6 py-4 whitespace-nowrap">
                         <button
                           className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
@@ -265,5 +265,4 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   );
 };
 
-CampaignDetails.autherization= true;
 export default CampaignDetails;
