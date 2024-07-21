@@ -16,6 +16,8 @@ import { GlobalIcon } from '../icons/featured/global-icon';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import { isFree } from '@/lib/is-free';
 import { useTranslation } from 'next-i18next';
+import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
+import Cookies from 'js-cookie';
 
 
 
@@ -48,7 +50,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const fetchCampaigns = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = Cookies.get(AUTH_TOKEN_KEY);
       const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,7 +82,7 @@ export default function ProductCard({ product }: { product: Product }) {
   }, [showSuccessMessage]);
 
   const handleAddProductToCampaign = async (productId: string) => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get(AUTH_TOKEN_KEY);
 
     if (newCampaignName && campaignNames.includes(newCampaignName)) {
       setValidationError('Campaign with the same name already present');

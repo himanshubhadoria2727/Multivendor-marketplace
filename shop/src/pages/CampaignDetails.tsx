@@ -97,7 +97,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   const handleDeleteProduct = async () => {
     if (!productToDelete) return;
 
-    const token = localStorage.getItem('token');
+    const token = Cookies.get(AUTH_TOKEN_KEY);
     await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${productToDelete.pivot.campaign_id}/products/${productToDelete.pivot.product_id}`, {
       method: 'DELETE',
       headers: {
@@ -265,5 +265,4 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   );
 };
 
-CampaignDetails.autherization= true;
 export default CampaignDetails;

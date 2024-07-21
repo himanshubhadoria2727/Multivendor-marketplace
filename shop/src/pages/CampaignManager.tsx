@@ -27,9 +27,9 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
     const [searchTerm, setSearchTerm] = useState('');
     const [sortingObj, setSortingObj] = useState<{ column: string; sort: SortOrder }>({ column: '', sort: SortOrder.Desc });
     const [isLoading, setIsLoading] = useState(true); // Loading state
+    const token = Cookies.get(AUTH_TOKEN_KEY);
     useEffect(() => {
         const fetchCampaigns = async () => {
-            const token = Cookies.get(AUTH_TOKEN_KEY);
             const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -58,8 +58,6 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
             setNewCampaignName('');
             return;
         }
-
-        const token = localStorage.getItem('token');
         await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
             method: 'POST',
             headers: {
