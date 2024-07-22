@@ -17,7 +17,8 @@ import {
 import { useIsRTL } from '@/utils/locals';
 import TitleWithSort from '@/components/ui/title-with-sort';
 import { useState, useEffect, SetStateAction } from 'react';
-import Spinner from '../ui/loader/spinner/spinner';
+import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
+import Cookies from 'js-cookie';
 
 
 type Campaign = {
@@ -74,8 +75,7 @@ const [id, setId]=useState('');
 
   const fetchCampaigns = async () => {
     try {
-      const token = localStorage.getItem('token');
-      console.log('token',token)
+      const token = Cookies.get(AUTH_TOKEN_KEY);
       const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ useEffect(() => {
 }, [showSuccessMessage]);
 
 const handleAddProductToCampaign = async (productId: string) => {
-  const token = localStorage.getItem('token');
+  const token = Cookies.get(AUTH_TOKEN_KEY);
 
   if (newCampaignName && campaignNames.includes(newCampaignName)) {
     setValidationError('Campaign with the same name already present');
