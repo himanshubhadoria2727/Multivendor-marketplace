@@ -99,15 +99,16 @@ export default function ProductTable() {
       <Card className="m-3 mb-0 border-l-2 border-r-2 border-brand/90 flex dark:bg-dark-300 flex-col">
         <div className="flex w-full flex-col items-center md:flex-row">
           <div className="mb-4 md:mb-0 md:w-1/4">
-            <PageHeadingForFilter title={t('Explore all sites')} />
+            <PageHeadingForFilter className='max-sm:text-[13px]' title={t('Explore all sites')} />
           </div>
 
-          <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
-            <Search inputClassName="bg-white dark:bg-dark-400 text-sm" onSearch={handleSearch} placeholderText="Search all sites ...." />
+          <div className='flex w-full flex-row max-sm:flex max-sm:gap-6  '>
+          <div className="flex max-sm:w-full max-sm:flex-col max-sm:w-full items-center ms-auto md:w-2/4">
+            <Search inputClassName="bg-white dark:bg-dark-400 max-sm:h-8 text-sm" onSearch={handleSearch} placeholderText="Search all sites ...." />
           </div>
 
           <button
-            className="mt-5 flex items-center whitespace-nowrap text-base font-semibold text-brand md:mt-0 md:ms-5 text-sm"
+            className="mt-5 max-sm:mt-1 flex items-center whitespace-nowrap text-base font-semibold text-brand md:mt-0 md:ms-5 text-sm"
             onClick={toggleVisible}
           >
             {t('Filters ')}{' '}
@@ -118,6 +119,7 @@ export default function ProductTable() {
             )}
           </button>
         </div>
+          </div>
 
         <div className={`flex w-full transition ${visible ? 'visible h-auto' : 'invisible h-0'}`}>
           <div className="mt-5 flex w-full h-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center">

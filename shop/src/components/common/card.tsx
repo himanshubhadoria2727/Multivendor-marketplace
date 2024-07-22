@@ -8,7 +8,7 @@ type Props = {
 const Card: React.FC<Props> = ({ className, ...props }) => {
   return (
     <div
-      className={twMerge(cn('rounded bg-light p-5 shadow md:p-8', className))}
+      className={twMerge(cn('rounded bg-light p-4 shadow md:p-5', className))}
       {...props}
     />
   );

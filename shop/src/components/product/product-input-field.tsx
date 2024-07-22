@@ -85,7 +85,7 @@ const ProductInputField: React.FC<ProductInputFormProps> = ({
 
 
   return (
-    <div className="flex max-w-full p-6 rounded-md flex-col bg-light text-left dark:bg-dark-250 xs:max-w-[430px] sm:max-w-[550px] md:max-w-[600px] lg:max-w-[960px] xl:max-w-[1200px] 2xl:max-w-[1266px] 3xl:max-w-[1460px]">
+    <div className="flex max-w-full p-6 shadow-md rounded-md flex-col bg-light text-left dark:bg-dark-250 xs:max-w-[430px] sm:max-w-[550px] md:max-w-[600px] lg:max-w-[960px] xl:max-w-[1200px] 2xl:max-w-[1266px] 3xl:max-w-[1460px]">
       <div className="pb-7 xs:pb-8 lg:pb-10">
         <div className='flex mb-5 text-align justify-between p-3 bg-brand/20 rounded-lg'>
           <span className='text-2xl max-sm:text-sm max-md:text-lg flex text-gray-500 font-semibold'>Publish on <p className='pl-2 text-brand'>{name}</p></span>

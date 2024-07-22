@@ -138,8 +138,9 @@ const ProductTable = ({ abc }: TableProps) => {
         paginatorInfo={paginatorInfo}
         onPagination={handlePagination}
         onOrder={setOrder}
-        onSort={setColumn}
-      />
+        onSort={setColumn} 
+        loading={false}      
+        />
     </>
     );
 };
