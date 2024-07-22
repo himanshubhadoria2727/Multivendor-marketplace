@@ -22,7 +22,7 @@
         initial="exit"
         animate="enter"
         exit="exit"
-        className="flex min-h-screen w-full flex-col bg-light-300 dark:bg-dark-100"
+        className="flex min-h-screen w-full flex-col bg-light dark:bg-dark-100"
       >
         <Header
           isCollapse={collapse}
