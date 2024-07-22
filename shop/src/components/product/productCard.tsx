@@ -16,6 +16,8 @@ import { GlobalIcon } from '../icons/featured/global-icon';
 import { useGridSwitcher } from '@/components/product/grid-switcher';
 import { isFree } from '@/lib/is-free';
 import { useTranslation } from 'next-i18next';
+import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
+import Cookies from 'js-cookie';
 
 
 
@@ -48,7 +50,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   const fetchCampaigns = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = Cookies.get(AUTH_TOKEN_KEY);
       const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,7 +82,7 @@ export default function ProductCard({ product }: { product: Product }) {
   }, [showSuccessMessage]);
 
   const handleAddProductToCampaign = async (productId: string) => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get(AUTH_TOKEN_KEY);
 
     if (newCampaignName && campaignNames.includes(newCampaignName)) {
       setValidationError('Campaign with the same name already present');
@@ -194,7 +196,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 </a>
               </h3>
               <h3 className="font-medium text-sm pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand text-center md:text-left">
-                {shop?.name} 
+                {shop?.name}
               </h3>
             </div>
 
@@ -202,17 +204,17 @@ export default function ProductCard({ product }: { product: Product }) {
               <span className='mb-0.5 text-sm truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-center'>
                 <a href={preview_url} target="_blank" rel="noopener noreferrer">View posts</a>
               </span>
-              {is_niche === '1'?(
+              {is_niche === '1' ? (
                 <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
                   <CheckIconWithBg className="w-4 h-4 mr-1" />
                   Grey Niche
                 </span>
-              ):
-              (
-                <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
-                  No niche allowed
-                </span>
-              )
+              ) :
+                (
+                  <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+                    No niche allowed
+                  </span>
+                )
               }
             </div>
           </div>
@@ -237,9 +239,17 @@ export default function ProductCard({ product }: { product: Product }) {
           <div className="flex justify-center md:justify-start m-2 capitalize text-[12px] text-[#919494] dark:text-[#E4DFDF] items-center">
             <GlobalIcon className="w-4 h-4 mr-1" />
             Countries
-            <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
-              {product?.countries}
-            </p>
+            <div className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+              <div className='flex gap-1 mr-2'>
+                <img
+                  src={`https://flagsapi.com/${product?.countries}/shiny/16.png`} alt={''}
+                  width='16'
+                  height='16'
+                  className=''
+                />
+                {product?.countries}
+              </div>
+            </div>
           </div>
         </div>
 

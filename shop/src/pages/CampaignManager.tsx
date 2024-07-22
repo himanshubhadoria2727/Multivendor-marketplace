@@ -4,6 +4,8 @@ import AnchorLink from '@/components/ui/links/anchor-link';
 import { BsArrowRightCircle } from 'react-icons/bs'; // Import icons for sorting
 import { Button } from '@mui/material';
 import Spinner from '@/components/ui/loader/spinner/spinner';
+import Cookies from 'js-cookie';
+import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 
 type Campaign = {
     id: string;
@@ -25,18 +27,24 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
     const [searchTerm, setSearchTerm] = useState('');
     const [sortingObj, setSortingObj] = useState<{ column: string; sort: SortOrder }>({ column: '', sort: SortOrder.Desc });
     const [isLoading, setIsLoading] = useState(true); // Loading state
-
+    const token = Cookies.get(AUTH_TOKEN_KEY);
     useEffect(() => {
         const fetchCampaigns = async () => {
-            const token = localStorage.getItem('token');
             const response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
             const data = await response.json();
-            setCampaigns(data.campaigns);
-            setIsLoading(false); // Turn off loading state
+            const processedCampaigns = data.campaigns.map((campaign:any) => {
+                return {
+                    ...campaign,
+                    name: campaign.name.replace(/^https?:\/\//, ''),
+                };
+            });
+    
+            setCampaigns(processedCampaigns);
+            setIsLoading(false);
 
         };
 
@@ -50,8 +58,6 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
             setNewCampaignName('');
             return;
         }
-
-        const token = localStorage.getItem('token');
         await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
             method: 'POST',
             headers: {
@@ -72,7 +78,14 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
             },
         });
         const data = await response.json();
-        setCampaigns(data.campaigns);
+        const processedCampaigns = data.campaigns.map((campaign:any) => {
+            return {
+                ...campaign,
+                name: campaign.name.replace(/^https?:\/\//, ''),
+            };
+        });
+
+        setCampaigns(processedCampaigns);
     };
 
     const onHeaderClick = (column: string) => ({
@@ -226,6 +239,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                                     </tr>
                                 ) : (
                                     filteredCampaigns.map(campaign => (
+                                        
                                         <tr key={campaign.id} className="hover:bg-gray-100 dark:hover:bg-dark-400">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <Button onClick={() => onCampaignClick(campaign.id, campaign.name)}>

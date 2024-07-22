@@ -50,7 +50,7 @@ export default function ProductTable() {
     setVisible((v) => !v);
   };
 
-  const { products, paginatorInfo, loading, error} = useProductsQuery({
+  const { products, paginatorInfo, loading, error } = useProductsQuery({
     language: locale,
     name: searchTerm,
     limit: 10,
@@ -83,7 +83,7 @@ export default function ProductTable() {
   }
 
   return (
-    <>  
+    <>
       <CategoryFilter
         onAllProductFilter={(status) => {
           setStatus(status);
@@ -103,11 +103,11 @@ export default function ProductTable() {
           </div>
 
           <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
-            <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all sites ....' />
+            <Search inputClassName="bg-white dark:bg-dark-400 text-sm" onSearch={handleSearch} placeholderText="Search all sites ...." />
           </div>
 
           <button
-            className="mt-5 flex items-center whitespace-nowrap text-base font-semibold text-brand md:mt-0 md:ms-5"
+            className="mt-5 flex items-center whitespace-nowrap text-base font-semibold text-brand md:mt-0 md:ms-5 text-sm"
             onClick={toggleVisible}
           >
             {t('Filters ')}{' '}
@@ -119,12 +119,10 @@ export default function ProductTable() {
           </button>
         </div>
 
-        <div
-          className={`flex w-full transition ${visible ? 'visible h-auto' : 'invisible h-0'}`}
-        >
+        <div className={`flex w-full transition ${visible ? 'visible h-auto' : 'invisible h-0'}`}>
           <div className="mt-5 flex w-full h-full flex-col border-t border-gray-200 pt-5 md:mt-8 md:flex-row md:items-center">
             <ProductFilter
-              className="w-full"
+              className="w-full text-sm"
               onProductTypeFilter={(productType: ProductTypeOptions) => {
                 setProductType(productType?.slug!);
                 setPage(1);
@@ -169,11 +167,11 @@ export default function ProductTable() {
           </div>
         </div>
       </Card>
-      
+
       {loading ? (
-        <Loader text={t('common:Loading')} /> 
+        <Loader text={t('common:Loading')} />
       ) : error ? (
-        <ErrorMessage message={error} /> // Display error message if fetching fails
+        <ErrorMessage message={error} />
       ) : (
         <ProductInventoryList
           loading={loading}

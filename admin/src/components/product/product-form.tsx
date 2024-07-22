@@ -151,7 +151,7 @@ export default function CreateOrUpdateProductForm({
     console.log("HI nandu");
     console.log(values.languages);
     values.languages=values.languages.label;
-    values.countries = values.countries.label;
+    values.countries = values.countries.value;
     values.link_type= values.link_type.label;
     const inputValues = {
       language: router.locale,
@@ -453,7 +453,7 @@ export default function CreateOrUpdateProductForm({
                   control={control}
                   options={allCountries?.map((country:any) => ({
                     label: country.name.common,
-                    value: country.cca3,
+                    value: country.cca2,
                   }))}
                   error={t(errors.countries?.message!)}
                 />
