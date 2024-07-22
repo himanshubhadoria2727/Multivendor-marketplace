@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { SortOrder } from '@/types';
 import AnchorLink from '@/components/ui/links/anchor-link';
-import { BsArrowRightCircle } from 'react-icons/bs'; // Import icons for sorting
+import { BsBarChartLine, BsBox, BsCalendar, BsCart, BsCartCheck, BsCartCheckFill, BsClipboard, BsEye, BsMegaphone, BsPlus } from 'react-icons/bs'; // Import icons for sorting
 import { Button } from '@mui/material';
 import Spinner from '@/components/ui/loader/spinner/spinner';
 import Cookies from 'js-cookie';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
+import Search from '@/components/common/search';
+import { useTranslation } from 'react-i18next';
 
 type Campaign = {
     id: string;
@@ -20,6 +22,7 @@ interface CampaignManagerProps {
 }
 
 const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) => {
+    const { t } = useTranslation('common');
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newCampaignName, setNewCampaignName] = useState('');
@@ -36,13 +39,13 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                 },
             });
             const data = await response.json();
-            const processedCampaigns = data.campaigns.map((campaign:any) => {
+            const processedCampaigns = data.campaigns.map((campaign: any) => {
                 return {
                     ...campaign,
                     name: campaign.name.replace(/^https?:\/\//, ''),
                 };
             });
-    
+
             setCampaigns(processedCampaigns);
             setIsLoading(false);
 
@@ -78,7 +81,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
             },
         });
         const data = await response.json();
-        const processedCampaigns = data.campaigns.map((campaign:any) => {
+        const processedCampaigns = data.campaigns.map((campaign: any) => {
             return {
                 ...campaign,
                 name: campaign.name.replace(/^https?:\/\//, ''),
@@ -87,6 +90,10 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
 
         setCampaigns(processedCampaigns);
     };
+
+    function handleSearch({ searchText }: { searchText: string }) {
+        setSearchTerm(searchText);
+    }
 
     const onHeaderClick = (column: string) => ({
         onClick: () => {
@@ -126,13 +133,19 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
 
     return (
         <div className="p-4 dark:bg-dark-200 dark:text-white">
+
             <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded shadow">
-                <h1 className="text-2xl text-brand dark:text-white font-bold">Campaigns</h1>
+                <h1 className="text-xl text-brand dark:text-white font-bold flex gap-1">
+                    <BsMegaphone/>
+                    {t('Campaigns')}</h1>
+                <div className="flex w-full flex-col items-center ms-auto md:w-2/4 mx-2">
+                    <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all campaigns ....' />
+                </div>
                 <button
-                    className="bg-brand dark:bg-brand-dark text-white font-bold px-4 py-2 rounded"
+                    className="bg-brand hover:bg-brand-dark text-white text-3xl font-bold p-1.5 rounded-full shadow-lg transition-transform transform hover:scale-105"
                     onClick={() => setIsModalOpen(true)}
                 >
-                    Add Campaign
+                    <BsPlus />
                 </button>
             </div>
 
@@ -172,53 +185,55 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                 </div>
             )}
 
-            {/* Search Bar */}
-            <div className="mb-4">
-                <div >
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search Campaigns"
-                        className="border p-2 w-full text-sm focus:border-green-500 focus:outline-none bg-white text-black dark:bg-dark-100 dark:text-white dark:focus:border-green-500 rounded-l"
-                    />
-                </div>
-            </div>
-
             {/* Campaign Table */}
             <div className="overflow-x-auto">
                 {isLoading ? (
-                    <Spinner/>
+                    <Spinner />
                 ) : (
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-200 dark:bg-dark-400">
                             <tr>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
-                                    Actions
+                                <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
+                                    View
                                 </th>
                                 <th
                                     onClick={onHeaderClick('name').onClick}
-                                    className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                                 >
                                     Name <span className="ml-1">{sortingObj.column === 'name' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}</span>
                                 </th>
                                 <th
                                     onClick={onHeaderClick('totalOrders').onClick}
-                                    className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                                 >
-                                    Total Orders <span className="ml-1">{sortingObj.column === 'totalOrders' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}</span>
+                                    <div className="flex items-center gap-1">
+                                        <BsCartCheck />
+                                        Total Orders
+                                        <span className="ml-1">
+                                            {sortingObj.column === 'totalOrders' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}
+                                        </span>
+                                    </div>
                                 </th>
                                 <th
                                     onClick={onHeaderClick('totalProducts').onClick}
-                                    className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                                 >
-                                    Total Products <span className="ml-1">{sortingObj.column === 'totalOrders' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}</span>
+                                    <div className="flex items-center gap-1">
+                                        <BsBox />
+                                        Total Products
+                                        <span className="ml-1">
+                                            {sortingObj.column === 'totalProducts' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}
+                                        </span>
+                                    </div>
                                 </th>
                                 <th
                                     onClick={onHeaderClick('createdAt').onClick}
-                                    className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                                 >
+                                    <div className="flex items-center gap-1">
+                                    <BsCalendar/>
                                     Created at <span className="ml-1">{sortingObj.column === 'createdAt' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}</span>
+                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -239,31 +254,31 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                                     </tr>
                                 ) : (
                                     filteredCampaigns.map(campaign => (
-                                        
+
                                         <tr key={campaign.id} className="hover:bg-gray-100 dark:hover:bg-dark-400">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Button onClick={() => onCampaignClick(campaign.id, campaign.name)}>
-                                                    <BsArrowRightCircle className="text-xl text-brand hover:text-brand-dark dark:hover:text-brand-dark" />
+                                            <td className="px-1.5 py-2 whitespace-nowrap">
+                                                <Button onClick={() => onCampaignClick(campaign.id, campaign.name)} className="transition-transform transform hover:scale-125">
+                                                    <BsEye className="text-xl text-brand hover:text-brand-dark dark:hover:text-brand-dark " />
                                                 </Button>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px]">{campaign.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px] text-brand">{campaign.order_count}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px]">{campaign.product_count}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px]">{new Date(campaign.created_at).toLocaleDateString()}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px]">{campaign.name}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px] text-brand">{campaign.order_count}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px]">{campaign.product_count}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px]">{new Date(campaign.created_at).toLocaleDateString()}</td>
                                         </tr>
                                     ))
                                 )) :
                                     (sortedCampaigns.map((campaign) => (
                                         <tr key={campaign.id} className="hover:bg-gray-100 dark:hover:bg-dark-400">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Button onClick={() => onCampaignClick(campaign.id, campaign.name)}>
-                                                    <BsArrowRightCircle className="text-xl text-brand hover:text-brand-dark dark:hover:text-brand-dark" />
+                                            <td className="px-1.5 py-2 whitespace-nowrap">
+                                                <Button onClick={() => onCampaignClick(campaign.id, campaign.name)} className="transition-transform transform hover:scale-125">
+                                                    <BsEye className="text-xl text-brand hover:text-brand-dark dark:hover:text-brand-dark " />
                                                 </Button>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px]">{campaign.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px] text-brand">{campaign.order_count}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px]">{campaign.product_count}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-[15px]">{new Date(campaign.created_at).toLocaleDateString()}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px]">{campaign.name}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px] text-brand">{campaign.order_count}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px]">{campaign.product_count}</td>
+                                            <td className="px-6 py-2 whitespace-nowrap text-[15px]">{new Date(campaign.created_at).toLocaleDateString()}</td>
                                         </tr>
                                     )))
                             )}

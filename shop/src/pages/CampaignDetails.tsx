@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import router, { useRouter } from 'next/router';
-import { BsTrash } from 'react-icons/bs'; // Import trash icon for deletion
+import { BsArrowLeftCircle, BsArrowRightCircle, BsCalendar, BsCart4, BsCash, BsInfo, BsTagFill, BsTrash } from 'react-icons/bs'; // Import trash icon for deletion
 import { SortOrder } from '@/types';
-import Spinner from './spinner';
+import Spinner from '@/components/ui/loader/spinner/spinner';
 import Cookies from 'js-cookie';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
+import Search from '@/components/common/search';
 
 type Product = {
   id: number;
@@ -32,7 +33,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-  const [campaignname,setcampaignname]= useState('');
+  const [campaignname, setcampaignname] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -81,8 +82,8 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
       query: { name },
     });
   };
-  
-  const orderNavigation = (id: number|null) => {
+
+  const orderNavigation = (id: number | null) => {
     router.push({
       pathname: `/order`,
       query: { id },
@@ -119,32 +120,27 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
   const handleBackClick = () => {
     onBack(); // Call the onBack function passed as prop
   };
+  function handleSearch({ searchText }: { searchText: string }) {
+    setSearchTerm(searchText);
+  }
 
 
   return (
     <div className="p-4 dark:bg-dark-200 dark:text-white">
       <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded shadow">
-        <h1 className="text-2xl text-brand dark:text-white font-bold">{name}</h1>
+        <h1 className="text-xl text-brand dark:text-white font-bold flex gap-1"><BsTagFill />{name}</h1>
+        <div className="flex w-full flex-col items-center ms-auto md:w-2/4 mx-2">
+          <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all products ....' />
+        </div>
+
         <button
-          className="bg-brand dark:bg-brand-dark text-white font-bold px-4 py-2 rounded"
+          className="rounded-full shadow-lg transition-transform transform hover:scale-105"
           onClick={handleBackClick}
         >
-          All Campaigns
+          <BsArrowLeftCircle className="text-3xl text-brand hover:text-brand-dark" />
         </button>
       </div>
 
-      {/* Search Bar */}
-      <div className="mb-4">
-        <div >
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search Products"
-            className="border p-2 w-full text-sm focus:border-green-500 focus:outline-none bg-white text-black dark:bg-dark-100 dark:text-white dark:focus:border-green-500 rounded-l"
-          />
-        </div>
-      </div>
 
       {/* Products Table */}
       <div className="overflow-x-auto">
@@ -163,23 +159,35 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                 </th>
                 <th
                   onClick={() => onHeaderClick('createdAt').onClick()}
-                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                  className="cursor-pointer px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                 >
-                  Created At <span className="ml-1">{sortingObj.column === 'createdAt' && sortingObj.sort === SortOrder.Asc ? '⇅' : '⇵'}</span>
+                  <div className="flex items-center text-center  gap-1">
+                    <BsCalendar />
+                    Created At <span className="ml-1">{sortingObj.column === 'createdAt' && sortingObj.sort === SortOrder.Asc ? '⇅' : '⇵'}</span>
+                  </div>
                 </th>
                 <th
                   onClick={() => onHeaderClick('price').onClick()}
-                  className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
+                  className="cursor-pointer px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                 >
-                  Price <span className="ml-1">{sortingObj.column === 'price' && sortingObj.sort === SortOrder.Asc ? '⇅' : '⇵'}</span>
+                  <div className="flex items-center text-center  gap-1">
+                    <BsCash />
+                    Price <span className="ml-1">{sortingObj.column === 'price' && sortingObj.sort === SortOrder.Asc ? '⇅' : '⇵'}</span>
+                  </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
-                  Status
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
+                  <div className="flex items-center text-center gap-1">
+                    <BsInfo />
+                    Status
+                  </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
-                  Action
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
+                  <div className="flex gap-1">
+                    <BsCart4 />
+                    Place Order
+                  </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
+                <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
                   Remove
                 </th>
               </tr>
@@ -194,30 +202,32 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
               ) : (
                 sortedProducts.map(product => (
                   <tr key={product.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{new Date(product.created_at).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{product.status}</td>
+                    <td className="px-6 py-2 whitespace-nowrap">{product.name}</td>
+                    <td className="px-9 py-2 whitespace-nowrap ">{new Date(product.created_at).toLocaleDateString()}</td>
+                    <td className="px-8 py-2 whitespace-nowrap">{product.price}</td>
+                    <td className="px-8 py-2 whitespace-nowrap">{product.status}</td>
                     {product.pivot.order_id ? (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-10 py-2 whitespace-nowrap">
+                        <text className="text-yellow-400 hover:text-yellow-500">View </text>
                         <button
-                          className="bg-yellow-400 text-white px-4 py-2 rounded hover:bg-yellow-500"
+                          className="rounded-full shadow-lg transition-transform transform hover:scale-125"
                           onClick={() => orderNavigation(product.pivot.order_id)}
                         >
-                          View Order
+                          <BsArrowRightCircle className="text-yellow-400 text-xl hover:text-yellow-500" />
                         </button>
                       </td>
                     ) : (
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-10 py-2 whitespace-nowrap ">
+                        <text className=" text-brand hover:text-brand-dark">Buy </text>
                         <button
-                          className="bg-brand text-white px-4 py-2 rounded hover:bg-brand-dark"
+                          className="rounded-full shadow-lg transition-transform transform hover:scale-125"
                           onClick={() => handleNavigation(product.name)}
                         >
-                          Place Order
+                          <BsArrowRightCircle className="text-xl text-brand hover:text-brand-dark" />
                         </button>
                       </td>
                     )}
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-2 whitespace-nowrap text-center">
                       <button
                         onClick={() => confirmDeleteProduct(product)}
                         className="text-red-500 hover:text-red-700"

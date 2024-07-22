@@ -19,6 +19,7 @@ import TitleWithSort from '@/components/ui/title-with-sort';
 import { useState, useEffect, SetStateAction } from 'react';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 import Cookies from 'js-cookie';
+import { SpinnerLoader } from '../ui/loader/spinner/spinner';
 
 
 type Campaign = {
@@ -70,6 +71,7 @@ const [newCampaignName, setNewCampaignName] = useState('');
 const [selectedCampaign, setSelectedCampaign] = useState<string>('');
 const [validationError, setValidationError] = useState('');
 const [isLoading, setIsLoading] = useState(true);
+const [Loading, setLoading] = useState(false);
 const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 const [id, setId]=useState('');
 
@@ -85,9 +87,14 @@ const [id, setId]=useState('');
         throw new Error('Failed to fetch campaigns');
       }
       const data = await response.json();
-      const campaignNames = data.campaigns.map((campaign: { name: any }) => campaign.name);
-      setCampaignNames(campaignNames);
-      setCampaigns(data.campaigns);
+      const processedCampaigns = data.campaigns.map((campaign:any) => {
+        return {
+            ...campaign,
+            name: campaign.name.replace(/^https?:\/\//, ''),
+        };
+    });
+      setCampaignNames(processedCampaigns);
+      setCampaigns(processedCampaigns);
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
@@ -123,6 +130,7 @@ const handleAddProductToCampaign = async (productId: string) => {
       setNewCampaignName('');
       return;
       }
+      setLoading(true);
       response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
         method: 'POST',
         headers: {
@@ -135,6 +143,7 @@ const handleAddProductToCampaign = async (productId: string) => {
         }),
       });
     } else if (selectedCampaign) {
+      setLoading(true);
       response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
         method: 'POST',
         headers: {
@@ -158,6 +167,7 @@ const handleAddProductToCampaign = async (productId: string) => {
     setValidationError('');
     setSelectedCampaign('');
     setNewCampaignName('');
+    setLoading(false);
     setIsModalOpen(false);
     setShowSuccessMessage(true);
   } catch (error) {
@@ -485,7 +495,7 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
     )}
     {isModalOpen && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-[#F9F9F9] dark:bg-dark-200 p-6 rounded-lg shadow-lg">
       <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
       <div>
         <label className="block text-sm font-medium mb-2">Create a new campaign</label>
@@ -493,7 +503,7 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
           type="text"
           value={newCampaignName}
           onChange={handleCampaignNameChange}
-          className="w-full p-2 border border-gray-300 rounded mb-4"
+          className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
           placeholder="Campaign Name"
         />
         <label className="block text-sm font-medium mb-2">Or select from your campaigns</label>
@@ -503,7 +513,7 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
           <select
             value={selectedCampaign}
             onChange={handleCampaignSelectChange}
-            className="w-full p-2 border border-gray-300 rounded mb-4"
+            className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
           >
             {campaigns.map((campaign:any) => (
               <option key={campaign.id} value={campaign.id}>
@@ -521,9 +531,9 @@ const handleCampaignSelectChange = (e: { target: { value: SetStateAction<string>
           </button>
           <button
             onClick={() => handleAddProductToCampaign(id)}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
+            className="px-4 py-2 bg-brand hover:bg-brand-dark text-white rounded"
           >
-            Add
+            Add {Loading?<SpinnerLoader/>:""}
           </button>
         </div>
         {validationError && <div className="text-red-500 mt-2">{validationError}</div>}
