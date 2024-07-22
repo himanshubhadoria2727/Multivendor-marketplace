@@ -165,13 +165,13 @@ export default function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-3.5 dark:text-brand-dark p-5 rounded-l border-transparent bg-[#F9F9F9] dark:bg-dark-200 shadow-lg hover:shadow-2xl transition-shadow duration-300 dark:hover:shadow-[#787676]">
+    <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-[#F9F9F9] dark:bg-dark-200   ">
 
       {/* Left Column: Name and Domain Details */}
-      <div className="flex flex-col w-full sm:w-4/5">
+      <div className="flex flex-col w-full sm:w-4/5 ">
 
         {/* Top Row: Tags */}
-        <div className="mb-2 flex gap-3 p-1 flex-wrap max-sm:gap-4 justify-center sm:justify-start">
+        {/* <div className="mb-2 flex gap-3 p-1 flex-wrap max-sm:gap-4 justify-center sm:justify-start">
           <span className="flex text-[10px] max-sm:text-[15px] max items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
             <CheckIconWithBg className="w-4 h-4 mr-1" />
             Guest Post
@@ -183,7 +183,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </span>
           )}
 
-        </div>
+        </div> */}
 
 
         {/* Bottom Row: Site Name, Domain Details */}
@@ -256,7 +256,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Right Column: Price and Buy Section */}
-      <div className="flex flex-col w-full max-sm:border-t-2 md:border-l-2 border-dotted  sm:w-1/4 justify-center items-center sm:pl-0">
+      <div className="flex flex-col w-full   sm:w-1/4 justify-center items-center sm:pl-0">
         <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-xs  font-bold uppercase text-2xl text-brand dark:text-brand-dark">
           {isFreeItem ? 'Free' : price}
         </span>
@@ -287,7 +287,7 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Modal Section */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg ">
             <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
             <div>
               <label className="block text-sm font-medium mb-2">Create a new campaign</label>
@@ -336,7 +336,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Success Message */}
       {showSuccessMessage && (
-        <div className="fixed bottom-16 md:bottom-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg flex items-center">
+        <div className="fixed bottom-16 md:bottom-4 right-4 bg-green-500 text-white p-4 rounded  flex items-center">
           <span>Product added successfully</span>
           <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
