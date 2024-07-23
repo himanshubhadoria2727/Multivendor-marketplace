@@ -29,7 +29,7 @@ module.exports = {
       colors: {
         brand: {
           DEFAULT: '#4682A9',
-          dark: '#00997B',
+          dark: '#4682A9',
         },
         light: {
           DEFAULT: '#ffffff',
