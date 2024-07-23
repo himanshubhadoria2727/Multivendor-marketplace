@@ -176,13 +176,13 @@ export default function ProductCard({ product }: { product: Product }) {
   const IconLabels = [
     { icon: Authority, label: "DA", value: product?.domain_authority },
     { icon: RatingIcon, label: "DR", value: product?.domain_rating },
-    { icon: GraphTraffic, label: "Traffic", value: product?.organic_traffic }
+    { icon: TrafficIcon, label: "Traffic", value: product?.organic_traffic }
   ];
 
   const IconLabels2 = [
     { icon: SpamIcon, label: "Spam", value: product?.spam_score },
     { icon: LanguageICon, label: "Lang", value: product?.languages },
-    { icon: LinkIcon, label: "Links", value: product?.link_type }
+    { icon: LinkIconCx, label: "Links", value: product?.link_type }
   ];
   return (
     <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-light dark:bg-dark-200   ">
