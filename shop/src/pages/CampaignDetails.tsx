@@ -127,18 +127,17 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
 
   return (
     <div className="p-4 dark:bg-dark-200 dark:text-white">
-      <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded shadow">
-        <h1 className="text-xl text-brand dark:text-white font-bold flex gap-1"><BsTagFill />{name}</h1>
-        <div className="flex w-full flex-col items-center ms-auto md:w-2/4 mx-2">
-          <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all products ....' />
-        </div>
-
-        <button
+      <button
           className="rounded-full shadow-lg transition-transform transform hover:scale-105"
           onClick={handleBackClick}
         >
-          <BsArrowLeftCircle className="text-3xl text-brand hover:text-brand-dark" />
+          <BsArrowLeftCircle className="text-2xl text-brand hover:text-brand-dark" />
         </button>
+      <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded-lg shadow gap-2">
+        <h1 className="text-xl text-brand dark:text-white font-bold flex gap-1"><BsTagFill />{name}</h1>
+        <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
+          <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all products ....' />
+        </div>
       </div>
 
 
@@ -147,7 +146,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
         {isLoading ? (
           <Spinner />
         ) : (
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg overflow-hidden">
             <thead className="bg-gray-200 dark:bg-dark-400">
               <tr>
 
@@ -243,7 +242,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
         )}
 
         {sortedProducts.length > 0 && (
-          <div className="bg-white dark:bg-dark-300 dark:text-white p-4 mt-4 rounded shadow">
+          <div className="bg-white dark:bg-dark-300 dark:text-white p-4 mt-4 rounded-lg shadow">
             Showing {sortedProducts.length} results
           </div>
         )}

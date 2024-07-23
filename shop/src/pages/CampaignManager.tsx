@@ -134,11 +134,11 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
     return (
         <div className="p-4 dark:bg-dark-200 dark:text-white">
 
-            <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded shadow">
+            <div className="flex justify-between items-center mb-4 bg-white dark:bg-dark-300 dark:text-white p-4 rounded-lg gap-2 shadow">
                 <h1 className="text-xl text-brand dark:text-white font-bold flex gap-1">
                     <BsMegaphone/>
                     {t('Campaigns')}</h1>
-                <div className="flex w-full flex-col items-center ms-auto md:w-2/4 mx-2">
+                <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
                     <Search inputClassName='bg-white dark:bg-dark-400' onSearch={handleSearch} placeholderText='Search all campaigns ....' />
                 </div>
                 <button
@@ -190,8 +190,8 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                 {isLoading ? (
                     <Spinner />
                 ) : (
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-200 dark:bg-dark-400">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg overflow-hidden">
+                        <thead className="bg-gray-200 dark:bg-dark-400 ">
                             <tr>
                                 <th className="px-5 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
                                     View
@@ -287,7 +287,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                 )}
 
                 {sortedCampaigns.length > 0 && (
-                    <div className="bg-white dark:bg-dark-300 dark:text-white p-4 mt-4 rounded shadow">
+                    <div className="bg-white dark:bg-dark-300 dark:text-white p-4 mt-4 rounded-lg shadow">
                         Showing {sortedCampaigns.length} results
                     </div>
                 )}
