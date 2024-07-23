@@ -60,9 +60,14 @@ export default function ProductCard({ product }: { product: Product }) {
         throw new Error('Failed to fetch campaigns');
       }
       const data = await response.json();
-      const campaignNames = data.campaigns.map((campaign: { name: any }) => campaign.name);
-      setCampaignNames(campaignNames);
-      setCampaigns(data.campaigns);
+      const processedCampaigns = data.campaigns.map((campaign:any) => {
+        return {
+            ...campaign,
+            name: campaign.name.replace(/^https?:\/\//, ''),
+        };
+    });
+      setCampaignNames(processedCampaigns);
+      setCampaigns(processedCampaigns);
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
@@ -287,7 +292,7 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Modal Section */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg ">
+          <div className="bg-[#F9F9F9] dark:bg-dark-200 p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
             <div>
               <label className="block text-sm font-medium mb-2">Create a new campaign</label>
@@ -323,7 +328,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 </button>
                 <button
                   onClick={() => handleAddProductToCampaign(product.id)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                  className="px-4 py-2 bg-brand hover:bg-brand-dark text-white rounded"
                 >
                   Add
                 </button>

@@ -92,7 +92,7 @@ function OrderedItem({ item }: { item:Order}) {
             <div className="border-b border-light-400 pb-3 dark:border-dark-600 sm:border-b-0 sm:pb-0">
               <p className="text-gray-500 dark:text-gray-400">
                 {t('text-purchased-on')}{' '}
-                {dayjs(item.products[0].pivot?.updated_at).format('MMM D, YYYY')}
+                {dayjs(item.products[0]?.pivot?.updated_at).format('MMM D, YYYY')}
               </p>
               <h3
                 className="my-1.5 font-medium text-dark dark:text-light sm:mb-3"

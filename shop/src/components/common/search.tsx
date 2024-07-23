@@ -26,6 +26,7 @@ type SearchProps = {
 };
 
 type SearchValue = {
+    target: any;
 	searchText: string;
 };
 

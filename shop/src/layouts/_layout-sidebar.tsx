@@ -26,6 +26,7 @@ import {
 } from '@/lib/constants';
 import { useAtom } from 'jotai';
 import { twMerge } from 'tailwind-merge';
+import { BsMegaphoneFill } from 'react-icons/bs';
 
 interface NavLinkProps {
   href: string;
@@ -101,10 +102,10 @@ export function Sidebar({
               icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
             />
             <NavLink
-              title={t('Campaingns')}
+              title={t('Campaigns')}
               href={routes.campaign}
               isCollapse={isCollapse}
-              icon={<ProductIcon className="h-4 w-4 text-current" />}
+              icon={<BsMegaphoneFill className="h-4 w-4 text-current" />}
             />
             <NavLink
               title={t('Profile')}
