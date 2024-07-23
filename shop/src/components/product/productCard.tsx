@@ -300,7 +300,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 type="text"
                 value={newCampaignName}
                 onChange={handleCampaignNameChange}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
                 placeholder="Campaign Name"
               />
               <label className="block text-sm font-medium mb-2">Or select from your campaigns</label>
@@ -310,7 +310,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 <select
                   value={selectedCampaign}
                   onChange={handleCampaignSelectChange}
-                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
                 >
                   {campaigns.map((campaign) => (
                     <option key={campaign.id} value={campaign.id}>

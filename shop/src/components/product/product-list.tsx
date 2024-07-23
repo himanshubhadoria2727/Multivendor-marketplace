@@ -490,7 +490,7 @@ const ProductInventoryList = ({
         )}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="bg-[#F9F9F9] dark:bg-dark-200 p-6 rounded-lg shadow-lg">
               <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
               <div>
                 <label className="block text-sm font-medium mb-2">Create a new campaign</label>
@@ -498,7 +498,7 @@ const ProductInventoryList = ({
                   type="text"
                   value={newCampaignName}
                   onChange={handleCampaignNameChange}
-                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
                   placeholder="Campaign Name"
                 />
                 <label className="block text-sm font-medium mb-2">Or select from your campaigns</label>
@@ -508,7 +508,7 @@ const ProductInventoryList = ({
                   <select
                     value={selectedCampaign}
                     onChange={handleCampaignSelectChange}
-                    className="w-full p-2 border border-gray-300 rounded mb-4"
+                    className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
                   >
                     {campaigns.map((campaign: any) => (
                       <option key={campaign.id} value={campaign.id}>
