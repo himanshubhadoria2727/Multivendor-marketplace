@@ -20,9 +20,8 @@ class CampaignRepository
         foreach ($productIds as $productId) {
             $product = Product::find($productId);
             if ($product) {
-                $campaignProducts[] = [
-                    'product_id' => $productId, 
-                    'order_id' => null, 
+                $campaignProducts[$productId] = [
+                    'order_id' => null,
                     'name' => $product->name,
                     'price' => $product->price
                 ];
@@ -31,7 +30,7 @@ class CampaignRepository
             }
         }
         if (!empty($campaignProducts)) {
-            $campaign->products()->createMany($campaignProducts);
+            $campaign->products()->attach($campaignProducts);
         }
         return $campaign->load('products');
     }
@@ -46,7 +45,7 @@ class CampaignRepository
                                'id' => $campaign->id,
                                'name' => $campaign->name,
                                'product_count' => $campaign->products->count(),
-                               'order_count' => $campaign->products->whereNotNull('order_id')->count(),
+                               'order_count' => $campaign->products->whereNotNull('pivot.order_id')->count(),
                                'created_at' => $campaign->created_at,
                            ];
                        });
@@ -58,28 +57,27 @@ class CampaignRepository
     }
 
     public function addProductToExistingCampaign(Campaign $campaign, array $productIds)
-{
-    $campaignProducts = [];
-    foreach ($productIds as $productId) {
-        $product = Product::find($productId);
-        Log::info('product: ' . $product);
-        if ($product) {
-            $campaignProducts[] = [
-                'product_id' => $productId,
-                'order_id' => null,
-                'name' => $product->name,
-                'price' => $product->price
-            ];
-        } else {
-            Log::warning('Product not found', ['product_id' => $productId]);
+    {
+        $campaignProducts = [];
+        foreach ($productIds as $productId) {
+            $product = Product::find($productId);
+            Log::info('product: ' . $product);
+            if ($product) {
+                $campaignProducts[] = [
+                    'product_id' => $productId,
+                    'order_id' => null,
+                    'name' => $product->name,
+                    'price' => $product->price
+                ];
+            } else {
+                Log::warning('Product not found', ['product_id' => $productId]);
+            }
         }
+        if (!empty($campaignProducts)) {
+            $campaign->products()->attach($campaignProducts);
+        }
+        return $campaign->load('products');
     }
-    if (!empty($campaignProducts)) {
-        $campaign->products()->attach($campaignProducts);
-    }
-    return $campaign->load('products');
-}
-
 
     public function removeProductFromCampaign(Campaign $campaign, $productId)
     {
@@ -94,55 +92,58 @@ class CampaignRepository
         return $campaign->load('products');
     }
 
-    // public function getAllCampaignProducts($userId)
-
-
-    // {
-    //     Log::info('inside get all campaign products ');
-    //     return CampaignProduct::whereHas('campaign', function ($query) use ($userId) {
-    //             $query->where('user_id', $userId);
-    //         })
-    //         ->with('product') // Ensure products are eager loaded
-    //         ->get();
-    // }
-
     public function createOrUpdateCampaign($linkUrl, $productId, $price, $orderId, $userId)
-{
-    // Find or create the campaign by name and user_id
-    $campaign = Campaign::firstOrCreate(
-        ['name' => $linkUrl, 'user_id' => $userId],
-        ['user_id' => $userId]
-    );
+    {
+        // Extract the domain name from the link URL
+        $campaignName = parse_url($linkUrl, PHP_URL_HOST);
 
-    // Check if the product is already associated with the campaign
-    $existingProduct = $campaign->products()->where('product_id', $productId)->first();
-
-    if (!$existingProduct) {
-        // Add the product to the campaign
-        $product = Product::find($productId);
-        if ($product) {
-            // Create a new CampaignProduct instance
-            $campaignProduct = new CampaignProduct([
-                'campaign_id' => $campaign->id,
-                'product_id' => $productId,
-                'order_id' => $orderId,
-                'name'=> $product->name,
-                'price' => $price,
-            ]);
-
-            // Log details for debugging
-            Log::info('CampaignProduct to be saved', [
-                'campaign_id' => $campaign->id,
-                'product_id' => $productId,
-                'order_id' => $orderId,
-                'price' => $price
-            ]);
-
-            // Associate the CampaignProduct with the Campaign and save
-            $campaignProduct->save(); // This ensures campaign_id is set correctly
-        } else {
-            Log::warning('Product not found', ['product_id' => $productId]);
+        // Ensure the campaign name is not empty
+        if (empty($campaignName)) {
+            Log::warning('Invalid link URL', ['link_url' => $linkUrl]);
+            return null;
         }
+
+        // Find or create the campaign by name and user_id
+        $campaign = Campaign::firstOrCreate(
+            ['name' => $campaignName, 'user_id' => $userId],
+            ['user_id' => $userId]
+        );
+
+        // Check if the product is already associated with the campaign
+        $existingProduct = $campaign->products()->where('product_id', $productId)->first();
+
+        if ($existingProduct) {
+            // Update the order_id if the product is already in the campaign
+            $existingProduct->pivot->order_id = $orderId;
+            $existingProduct->pivot->save();
+        } else {
+            // Add the product to the campaign
+            $product = Product::find($productId);
+            if ($product) {
+                // Create a new CampaignProduct instance
+                $campaignProduct = new CampaignProduct([
+                    'campaign_id' => $campaign->id,
+                    'product_id' => $productId,
+                    'order_id' => $orderId,
+                    'name' => $product->name,
+                    'price' => $price,
+                ]);
+
+                // Log details for debugging
+                Log::info('CampaignProduct to be saved', [
+                    'campaign_id' => $campaign->id,
+                    'product_id' => $productId,
+                    'order_id' => $orderId,
+                    'price' => $price
+                ]);
+
+                // Associate the CampaignProduct with the Campaign and save
+                $campaignProduct->save(); // This ensures campaign_id is set correctly
+            } else {
+                Log::warning('Product not found', ['product_id' => $productId]);
+            }
+        }
+
+        return $campaign->load('products');
     }
-}
 }
