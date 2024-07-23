@@ -185,7 +185,7 @@ export default function ProductCard({ product }: { product: Product }) {
     { icon: LinkIconCx, label: "Links", value: product?.link_type }
   ];
   return (
-    <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-light dark:bg-dark-200   ">
+    <div className="maincard flex flex-col sm:flex-row border-t items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-light dark:bg-dark-200   ">
 
       {/* Left Column: Name and Domain Details */}
       <div className="flex flex-col w-full sm:w-4/5 ">
@@ -276,7 +276,7 @@ export default function ProductCard({ product }: { product: Product }) {
               <Icon className="w-4 h-4 mr-1" />
               {label}
             </td>
-            <td className="text-[12px] ml-1 items-center font-semibold capitalize text-blue-700 dark:bg-dark-300 dark:text-brand-dark">
+            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
               {value}
             </td>
           </tr>
@@ -291,7 +291,7 @@ export default function ProductCard({ product }: { product: Product }) {
               <Icon className="w-4 h-4 mr-1" />
               {label}
             </td>
-            <td className="text-[12px] ml-1 items-center font-semibold capitalize text-blue-700 dark:bg-dark-300 dark:text-brand-dark">
+            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
               {value}
             </td>
           </tr>
@@ -304,7 +304,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Right Column: Price and Buy Section */}
-      <div className="flex flex-col w-full   sm:w-1/4 justify-end items-end sm:pl-0">
+      <div className="flex flex-col w-full   sm:w-1/4 justify-center items-center sm:pl-0">
         <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-xs  font-bold uppercase text-2xl text-brand dark:text-brand-dark">
           {isFreeItem ? 'Free' : price}
         </span>
