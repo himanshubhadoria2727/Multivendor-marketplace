@@ -49,7 +49,7 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
             <div className='flex flex-wrap border-brand/80 border-2 p-4 rounded-lg'>
                 <div className='w-full md:w-2/3'>
                     <FormControl>
-                        <FormLabel id="product-niche-options-label" style={{ fontSize: "1.2rem", fontWeight: "600", fontFamily: "inherit", color: "#24b47e" }}>Product Niche Options</FormLabel>
+                        <FormLabel id="product-niche-options-label" style={{ fontSize: "1.2rem", fontWeight: "600", fontFamily: "inherit", color: "#228CDB" }}>Product Niche Options</FormLabel>
                         <p className='mt-2 py-3 text-sm text-brand'>Grey niche consists of CBD, Casino, Betting, Gambling, Adult, Dating, Crypto etc. categories.</p>
 
                         <RadioGroup
@@ -67,7 +67,7 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
                                             value={option.value}
                                             control={<Radio />}
                                             label={option.label}
-                                            style={{ fontFamily: "inherit", color: "#24b47e", fontWeight: "800" }}
+                                            style={{ fontFamily: "inherit", color: "#228CDB", fontWeight: "800" }}
                                         />
                                         <span className='px-2 py-1 rounded-lg bg-blue-500 text-sm text-white'>${niche_price}</span>
                                     </div>

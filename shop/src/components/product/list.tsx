@@ -41,14 +41,16 @@ export default function List({
     );
   }
   return (
-    <div className="w-full px-4 pt-5 pb-9 md:px-6 md:pb-10 md:pt-6 lg:px-7 lg:pb-12 3xl:px-8 ">
+    <div className="w-full   ">
   <motion.div
     variants={staggerTransition(0.025)}
     className={cn(
-      'flex flex-col gap-5',
+      'flex flex-col ',
       {
         'md:flex-col': !isGridCompact,
+
       }
+
     )}
   >
     {isLoading && !products.length
@@ -57,7 +59,10 @@ export default function List({
         ))
       : products.map((product) => (
           <ProductCard key={product.id} product={product} />
-        ))}
+        ))
+        
+        }
+        <hr className="mt-auto border-t border-gray-300" />
   </motion.div>
 
   {hasNextPage && (

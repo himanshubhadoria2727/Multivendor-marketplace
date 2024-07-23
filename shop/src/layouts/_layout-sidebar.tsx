@@ -77,7 +77,7 @@ export function Sidebar({
     <aside
       className={twMerge(
         cn(
-          'h-full flex-col justify-between overflow-y-auto border-r border-light-400 bg-light pt-[82px] text-dark-100 dark:border-0 dark:bg-dark-200',
+          'h-full flex-col justify-between overflow-y-auto border-r border-light-400 bg-light pt-[82px] text-dark-700 dark:border-0 dark:bg-dark-200',
           isCollapse ? 'sm:w-60 xl:w-[75px]' : 'sm:w-[75px] xl:w-60',
           width >= RESPONSIVE_WIDTH && underMaintenanceIsComing && !isScrolling
             ? 'pt-[9.625rem]'
@@ -90,7 +90,7 @@ export function Sidebar({
         <div className="flex h-full w-full flex-col">
           <nav className="flex flex-col">
             <NavLink
-              title={t('Explore')}
+              title={t('Website Catalogs')}
               href={routes.home}
               isCollapse={isCollapse}
               icon={<HomeIcon className="h-[18px] w-[18px] text-current" />}

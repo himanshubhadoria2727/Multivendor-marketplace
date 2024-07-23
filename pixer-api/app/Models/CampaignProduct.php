@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class CampaignProduct extends Model
+class CampaignProduct extends Pivot
 {
-    use HasFactory;
+    protected $table = 'campaign_products';
+    protected $fillable = ['campaign_id', 'product_id', 'order_id', 'name', 'price'];
 }

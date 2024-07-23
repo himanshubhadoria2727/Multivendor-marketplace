@@ -6,7 +6,12 @@ import { Table } from '@/components/ui/table';
 import { Router, useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { NoDataFound } from '@/components/icons/no-data-found';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, IconButton, Tooltip } from '@mui/material';
+import PublicIcon from '@mui/icons-material/Public';
+import DomainIcon from '@mui/icons-material/Domain';
+import StarIcon from '@mui/icons-material/Star';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import LinkIcon from '@mui/icons-material/Link';
 import {
   Product,
   MappedPaginatorInfo,
@@ -207,13 +212,22 @@ const ProductInventoryList = ({
   let columns = [
     {
       title: (
-        <TitleWithSort
+        <div className='flex'>
+          <TitleWithSort
           title={t('Domain Name')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
           }
           isActive={sortingObj.column === 'name'}
         />
+        <div className="flex items-center">
+          <Tooltip title="This column shows the domain names">
+            <IconButton size="small" style={{}}>
+              <DomainIcon style={{fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
+
       ),
       className: 'cursor-pointer',
       dataIndex: 'name',
@@ -226,232 +240,262 @@ const ProductInventoryList = ({
         <div className="flex flex-col items-start">
           <div className="flex flex-col">
             <div className='flex'>
-              <a href={`https://${name}`} className="truncate text-dark font-semibold hover:underline text-blue-700 dark:text-blue-500 text-[16px] tracking-wider ">{name}</a>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link" viewBox="0 0 16 16">
-                <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
-                <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z" />
-              </svg>
+              <a href={`https://${name}`} className="truncate text-dark font-semibold hover:underline text-blue-700 dark:text-blue-500 text-[16px] max-sm:text-[13px] tracking-wider ">{name}</a>
+              <LinkIcon style={{fontSize: 14 }} />
             </div>
           </div>
-          <p className='text-blue-600 bg-blue-100 text-[0.7rem] px-3 border rounded-lg hover:underline' onClick={() => handleClick(id)}>Add to campaign</p>
-
+          <p className='text-blue-600 bg-blue-100 text-[12px] max-sm:text-[10px] px-3 border rounded-lg hover:underline' onClick={() => handleClick(id)}>Add to campaign</p>
         </div>
       ),
     },
     {
       title: (
-        <TitleWithSort
+        <div className='flex'>
+          <TitleWithSort
           title={t('DA')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'domain_authority'
           }
           isActive={sortingObj.column === 'domain_authority'}
         />
+        <div className="flex items-center">
+          <Tooltip title="Domain Authority">
+            <IconButton size="small" style={{}}>
+              <StarIcon style={{fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
       ),
       className: 'cursor-pointer',
       dataIndex: 'domain_authority',
       key: 'domain_authority',
-      // align: alignLeft,
-      width: 80,
+      width: 60,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_authority'),
       render: (domain_authority: number) => (
-        <div className="flex items-center justify-center">
-          <span className="truncate font-medium px-4 py-1 rounded-lg">{domain_authority}</span>
+        <div className="flex items-center gap-2 items-start">
           <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16}/>
+          <span className="truncate font-medium rounded-lg">{domain_authority}</span>
         </div>
       ),
     },
     {
       title: (
-        <TitleWithSort
+        <div className='flex'>
+          <TitleWithSort
           title={t('DR')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'domain_rating'
           }
           isActive={sortingObj.column === 'domain_rating'}
         />
+        <div className="flex items-center">
+          <Tooltip title="Domain Rating">
+            <IconButton size="small" style={{}}>
+              <StarIcon style={{fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
       ),
       className: 'cursor-pointer',
       dataIndex: 'domain_rating',
       key: 'domain_rating',
-      // align: alignLeft,
-      width: 50,
+      width: 60,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_rating'),
       render: (domain_rating: number) => (
-        <div className="flex items-center gap-1 justify-center">
-            <span className="truncate font-medium px-4 py-1 rounded-lg">{domain_rating}</span>
-            <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+        <div className="flex items-center gap-1 items-start">
+          <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+          <span className="truncate font-medium">{domain_rating}</span>
         </div>
       ),
     },
     {
       title: (
-        <TitleWithSort
+        <div className='flex'>
+          <TitleWithSort
           title={t('SC')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'spam_score'
           }
           isActive={sortingObj.column === 'spam_score'}
         />
+        <div className="flex items-center">
+          <Tooltip title="Spam Score">
+            <IconButton size="small" style={{}}>
+              <StarIcon style={{fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
       ),
       className: 'cursor-pointer',
       dataIndex: 'spam_score',
       key: 'spam_score',
-      // align: alignLeft,
-      width: 50,
+      width: 60,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('spam_score'),
       render: (spam_score: number) => (
-        <div className="flex items-center gap-1 justify-center">
-            <span className="truncate font-medium px-4 py-1 rounded-lg">{spam_score}</span>
-            <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
-          </div>
+        <div className="flex items-center gap-1 items-start">
+          <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+          <span className="truncate font-medium">{spam_score}</span>
+        </div>
       ),
     },
     {
       title: (
-        <TitleWithSort
+        <div className='flex'>
+          <TitleWithSort
           title={t('Traffic')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'organic_traffic'
           }
           isActive={sortingObj.column === 'organic_traffic'}
         />
+        <div className="flex items-center">
+          <Tooltip title="Organic Traffic">
+            <IconButton size="small" style={{}}>
+              <TrendingUpIcon style={{fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
       ),
-      className: 'cursor-pointer',
+      className: 'cursor-pointer max-sm:w-10',
       dataIndex: 'organic_traffic',
       key: 'organic_traffic',
-      // align: alignLeft,
-      width: 100,
+      width: 70,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('organic_traffic'),
       render: (organic_traffic: number) => (
-        <div className="flex items-center gap-1 justify-center">
-            <span className="truncate font-medium px-4 py-1 rounded-lg">{organic_traffic}</span>
-            <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+        <div className="flex items-center gap-1 items-start">
+          <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+          <span className="truncate font-medium">{organic_traffic}</span>
         </div>
       ),
     },
-    // {
-    //   title: (
-    //     <TitleWithSort
-    //       title={t('Links')}
-    //       ascending={
-    //         sortingObj.sort === SortOrder.Asc && sortingObj.column === 'link_type'
-    //       }
-    //       isActive={sortingObj.column === 'link_type'}
-    //     />
-    //   ),
-    //   className: 'cursor-pointer',
-    //   dataIndex: 'link_type',
-    //   key: 'link_type',
-    //   // align: alignLeft,
-    //   width: 100,
-    //   ellipsis: true,
-    //   onHeaderCell: () => onHeaderClick('link_type'),
-    //   render: (link_type: string) => (
-    //     <div className="flex items-center justify-center">
-    //         {
-    //           link_type === 'Dofollow' ? (
-    //             <><span className="truncate font-medium px-4 py-1 rounded-lg">{link_type}</span>
-    //             <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" /></>
-    //           ) :
-    //             (
-    //               <><span className="truncate font-medium px-4 py-1 rounded-lg">{link_type}</span>
-    //               <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt=""/></>
-    //             )
-    //         }
-    //     </div>
-    //   ),
-    // },
     {
-      title: "Countries",
+      title: (
+        <div className='flex'>
+          <TitleWithSort
+          title={t('Links')}
+          ascending={
+            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'link_type'
+          }
+          isActive={sortingObj.column === 'link_type'}
+        />
+        <div className="flex items-center">
+          <Tooltip title="Link Type">
+            <IconButton size="small" style={{}}>
+              <LinkIcon style={{fontSize: 14 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
+      ),
+      className: 'cursor-pointer',
+      dataIndex: 'link_type',
+      key: 'link_type',
+      width: 80,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('link_type'),
+      render: (link_type: string) => (
+        <div className="flex items-center gap-2 items-start">
+          {
+            link_type === 'Dofollow' ? (
+              <>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16}/>
+                <span className="truncate font-medium">{link_type}</span>
+              </>
+            ) : (
+              <>
+                <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt=""/>
+                <span className="truncate font-medium">{link_type}</span>
+              </>
+            )
+          }
+        </div>
+      ),
+    },
+    {
+      title: (
+          <div className='flex'>
+            <TitleWithSort
+            title={t('Country')}
+            ascending={
+              sortingObj.sort === SortOrder.Asc && sortingObj.column === 'countries'
+            }
+            isActive={sortingObj.column === 'countries'}
+          />
+        <div className="flex items-center">
+          <Tooltip title="This column shows the country flags and names">
+            <IconButton size="small" style={{}}>
+              <PublicIcon style={{ fontSize: 13 }} />
+            </IconButton>
+          </Tooltip>
+        </div></div>
+      ),
       className: 'cursor-pointer',
       dataIndex: 'countries',
       key: 'countries',
-      // align: alignLeft,
       width: 70,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('countries'),
       render: (countries: number) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center items-start">
           <div className="flex flex-col">
-            <button className="flex gap-1 truncate font-medium px-3 py-1 rounded-lg">
+            <button className="flex gap-1 truncate font-medium rounded-lg">
               <Image
-                src={`https://flagsapi.com/${countries}/flat/64.png`}
+                src={`https://flagsapi.com/${countries}/shiny/64.png`}
                 width={16}
                 height={16} alt={''} />
               {countries}
-
             </button>
           </div>
         </div>
       ),
     },
     {
-      title: "Grey Niche",
+      title: (
+        <div className="flex items-center">
+          <span>Grey Niche</span>
+        </div>
+      ),
       className: 'cursor-pointer',
       dataIndex: 'is_niche',
       key: 'is_niche',
-      // align: alignLeft,
-      width: 80,
+      width: 70,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('price'),
       render: (is_niche: string) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center items-start">
           <div className="flex flex-col">
             {is_niche === '1' ? (
-              <button className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition border-brand py-1">Available</button>
-
+              <button className="border items-start w-[5rem] rounded-lg text-brand font-bold transition border-brand py-1">Available</button>
             ) : (
-              <button className="border justify-center w-[5rem] rounded-lg text-brand font-bold border-brand py-1">N/A</button>
+              <button className="border items-start w-[5rem] rounded-lg text-brand font-bold border-brand py-1">N/A</button>
             )}
           </div>
         </div>
       ),
     },
     {
-      title: "Buy Now",
+      title: (
+        <div className="flex items-center">
+          <span>Buy Now</span>
+        </div>
+      ),
       className: 'cursor-pointer',
       dataIndex: 'price',
       key: 'price',
-      // align: alignLeft,
       width: 70,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('price'),
       render: (price: number, { slug }: { slug: any }) => (
-        <div className="flex items-center justify-center">
+        <div className="flex items-center items-start">
           <div className="flex flex-col">
-            <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border justify-center w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>
+            <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border items-start w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>
           </div>
         </div>
       ),
     },
-    // {
-    //   title: "LI",
-    //   className: 'cursor-pointer',
-    //   dataIndex: 'isLinkInsertion',
-    //   key: 'isLinkInsertion',
-    //   // align: alignLeft,
-    //   width: 70,
-    //   ellipsis: true,
-    //   onHeaderCell: () => onHeaderClick('price'),
-    //   render: (isLinkInsertion: string, { price, type, slug }: { price: any; type: any, slug: any }) => (
-    //     <div className="flex items-center justify-center">
-    //       <div className="flex flex-col">
-    //         {isLinkInsertion === '1' ? (
-    //           <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition duration-300 hover:text-white hover:bg-brand border-brand py-1">Buy ${price}</button>
-    //         ) : (
-    //           <button className="border justify-center w-[5rem] rounded-lg text-brand font-bold transition duration-300 hover:text-white hover:bg-brand border-brand py-1">N/A</button>
-    //         )
-    //         }
-    //       </div>
-    //     </div>
-    //   ),
-    // },
-
   ];
 
   if (router?.query?.shop) {
@@ -465,7 +509,7 @@ const ProductInventoryList = ({
     <>
       <div className="mb-6 m-3 overflow-hidden bg-white dark:bg-dark-100 rounded-lg shadow">
         {loading ? (
-          <div className="flex justify-center items-center w-full h-64">
+          <div className="flex items-start items-center w-full h-64">
             <Spinner />
           </div>
         ) : (
@@ -485,7 +529,7 @@ const ProductInventoryList = ({
             )}
             data={products}
             rowKey="id"
-            scroll={{ x: 900 }}
+            scroll={{ x: 1050 }}
           />
         )}
         {isModalOpen && (
@@ -554,7 +598,7 @@ const ProductInventoryList = ({
       </div>
 
       {!!paginatorInfo?.total && (
-        <div className="flex mb-5 font items-center justify-center">
+        <div className="flex mb-5 font items-center justify-center items-start">
           <Pagination
             total={paginatorInfo.total}
             current={paginatorInfo.currentPage}

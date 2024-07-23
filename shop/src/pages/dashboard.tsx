@@ -68,19 +68,19 @@ const numberOfActiveOrders = activeOrders.length;
   console.log('orders', orders);
   return (
     <div className="parent flex flex-col  p-4">
-      <div className="Username flex flex-col md:flex-row items-center justify-center h-auto m-2 md:m-4 p-5 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:shadow dark:shadow-[#8D9797] w-full md:w-auto sm:w-auto">
+      <div className="Username flex flex-col md:flex-row border-l-2 border-r-2 border-brand/90 items-center justify-center h-auto m-2 md:m-4 p-3 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-md bg-white dark:shadow dark:shadow-[#8D9797] w-full md:w-auto sm:w-auto">
         <h1 className="text-3xl w-100 text-[#474E4E] font-bold dark:text-white p-4">
           Hello Customer !
         </h1>
       </div>
       
-      <div className="OrderDetails-parent bg-white m-4 flex flex-wrap justify-around p-4 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-xl bg-white dark:bg-dark-200">
+      <div className="OrderDetails-parent bg-white m-4 flex flex-wrap justify-around p-2 dark:bg-dark-200 border-l-2 border-r-2 border-brand/90 dark:text-brand-dark rounded-lg shadow-md bg-white dark:bg-dark-200">
         <div
           className="OrderDetails lg:w-1/5 relative w-full md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           border border-grey-700 dark:border-grey-700 border-b-4 border-b-blue-400 dark:border-b-blue-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-base font-bold dark:text-white">
+            <span className="flex-col text-sm font-bold dark:text-white">
               Active Orders
               <p className="text-brand absolute bottom-3 left-5">{numberOfActiveOrders}</p>
             </span>
@@ -94,7 +94,7 @@ const numberOfActiveOrders = activeOrders.length;
           border border-grey-700 dark:border-grey-700 border-b-4 border-b-green-400 dark:border-b-green-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-base font-bold dark:text-white">
+            <span className="flex-col text-sm font-bold dark:text-white">
               Completed Orders
               <p className="text-brand absolute bottom-3 left-5">{numberOfSuccessfulOrders}</p>
             </span>
@@ -108,7 +108,7 @@ const numberOfActiveOrders = activeOrders.length;
           border border-grey-700 dark:border-grey-700 border-b-4 border-b-purple-400 dark:border-b-purple-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-base font-bold dark:text-white">
+            <span className="flex-col text-sm font-bold dark:text-white">
               Wallet Balance
               <p className="absolute bottom-3 left-5 text-brand">{currentWalletCurrency}</p>
             </span>
@@ -122,7 +122,7 @@ const numberOfActiveOrders = activeOrders.length;
           border border-grey-700 dark:border-grey-700 border-b-4 border-b-yellow-400 dark:border-b-yellow-400"
         >
           <div className="flex justify-between sm:justify-between">
-            <span className="flex-col text-base font-bold dark:text-white">
+            <span className="flex-col text-sm font-bold dark:text-white">
               Lifetime Spending
               <p className="absolute bottom-3 left-5 text-brand">${totalSubtotal}</p>
             </span>
@@ -132,14 +132,14 @@ const numberOfActiveOrders = activeOrders.length;
           </div>
         </div>
       </div>
-      <div className="OtherDetails-parent bg-white m-4 flex flex-wrap justify-around dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 ">
+      <div className="OtherDetails-parent bg-white border-l-2 border-r-2 border-brand/90 m-4 flex flex-wrap justify-around dark:bg-dark-200 dark:text-brand-dark p-3 rounded-lg shadow-md bg-white dark:bg-dark-200 ">
         <button onClick={()=>router.push('/profileh')}
           className="lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
            "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <UserIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <UserIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               My Profile
             </p>
           </span>
@@ -149,8 +149,8 @@ const numberOfActiveOrders = activeOrders.length;
            "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <HeartIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <HeartIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               My Campaigns
             </p>
           </span>
@@ -160,8 +160,8 @@ const numberOfActiveOrders = activeOrders.length;
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <SettingIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <SettingIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               Settings
             </p>
           </span>
@@ -171,8 +171,8 @@ const numberOfActiveOrders = activeOrders.length;
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <ProductIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <ProductIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               My Order
             </p>
           </span>
@@ -182,8 +182,8 @@ const numberOfActiveOrders = activeOrders.length;
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <CartIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <CartIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               Buy subscription
             </p>
           </span>
@@ -193,8 +193,8 @@ const numberOfActiveOrders = activeOrders.length;
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <ReportIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <ReportIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               My Reports
             </p>
           </span>
@@ -204,8 +204,8 @@ const numberOfActiveOrders = activeOrders.length;
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <UserFollowingIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <UserFollowingIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               Place Order
             </p>
           </span>
@@ -215,8 +215,8 @@ const numberOfActiveOrders = activeOrders.length;
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
-            <CreditCardIcon className="h-24 w-24 " />
-            <p className="flex-col text-lg text-[#515A5A] mt-4 dark:text-white">
+            <CreditCardIcon className="h-20 w-20 " />
+            <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               Place Order
             </p>
           </span>
