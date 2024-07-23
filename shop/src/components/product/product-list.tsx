@@ -533,7 +533,7 @@ const ProductInventoryList = ({
           />
         )}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex justif-center items-center items-start bg-black bg-opacity-50">
+          <div className="fixed inset-0 z-50 flex justif-end items-center items-start bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg">
               <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
               <div>

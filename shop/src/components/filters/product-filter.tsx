@@ -98,11 +98,10 @@ export default function ProductFilter({
   };
 
   return (
-    <div className={cn('flex w-full md:flex-wrap justify-start flex-col space-y-5 rtl:space-x-reverse md:flex-row md:items-end md:space-y-4', className)}>
+    <div className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-4 w-full', className)}>
       {enablePrice && (
-        <div className="w-full md:w-[17vw] mr-5">
-          <Label
-          >{t('Price')}</Label>
+        <div className="w-full">
+          <Label>{t('Price')}</Label>
           <Select
             options={price}
             value={selectedPrice}
@@ -118,7 +117,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableDA && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Domain Authority')}</Label>
           <Select
             options={domain_authority}
@@ -135,7 +134,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableDR && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Domain Rating')}</Label>
           <Select
             options={domain_authority}
@@ -152,7 +151,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableTrafficFilter && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Traffic')}</Label>
           <Select
             options={organic_traffic}
@@ -169,7 +168,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableCountry && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Countries')}</Label>
           <Select
             options={countries}
@@ -186,7 +185,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableLinkType && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Link type')}</Label>
           <Select
             options={linkType}
@@ -203,7 +202,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableNiche && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Addon Links')}</Label>
           <Select
             options={linkType}
@@ -220,7 +219,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableLI && (
-        <div className="w-full md:w-[17vw] mr-5">
+        <div className="w-full">
           <Label>{t('Link Insertion')}</Label>
           <Select
             options={isLinkInsertion}
@@ -236,11 +235,12 @@ export default function ProductFilter({
           />
         </div>
       )}
-      <div className="w-full md:w-[17vw] mr-5">
+      <div className="w-full">
         <button onClick={clearAllFilters} className="bg-brand hover:bg-brand/80 active:bg-brand text-white font-bold py-2 px-4 rounded">
           {t('Clear All Filters')}
         </button>
       </div>
     </div>
+
   );
 }
