@@ -58,27 +58,28 @@ class CampaignRepository
     }
 
     public function addProductToExistingCampaign(Campaign $campaign, array $productIds)
-    {
-        $campaignProducts = [];
-        foreach ($productIds as $productId) {
-            $product = Product::find($productId);
-            Log::info('product'.$product);
-            if ($product) {
-                $campaignProducts[] = [
-                    'product_id' => $productId, 
-                    'order_id' => null, 
-                    'name' => $product->name,
-                    'price'=> $product->price
-                ];
-            } else {
-                Log::warning('Product not found', ['product_id' => $productId]);
-            }
+{
+    $campaignProducts = [];
+    foreach ($productIds as $productId) {
+        $product = Product::find($productId);
+        Log::info('product: ' . $product);
+        if ($product) {
+            $campaignProducts[] = [
+                'product_id' => $productId,
+                'order_id' => null,
+                'name' => $product->name,
+                'price' => $product->price
+            ];
+        } else {
+            Log::warning('Product not found', ['product_id' => $productId]);
         }
-        if (!empty($campaignProducts)) {
-            $campaign->products()->createMany($campaignProducts);
-        }
-        return $campaign->load('products');
     }
+    if (!empty($campaignProducts)) {
+        $campaign->products()->attach($campaignProducts);
+    }
+    return $campaign->load('products');
+}
+
 
     public function removeProductFromCampaign(Campaign $campaign, $productId)
     {
