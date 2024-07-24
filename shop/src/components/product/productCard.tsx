@@ -190,19 +190,19 @@ export default function ProductCard({ product }: { product: Product }) {
     { icon: LinkIconCx, label: "Links", value: product?.link_type }
   ];
   return (
-    <div className="maincard flex flex-col sm:flex-row border-t items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-light dark:bg-dark-200   ">
+    <div className="maincard flex flex-col sm:flex-row border-t items-center justify-center pt-[0.1rem] dark:text-brand-dark p-4   bg-light dark:bg-dark-200   ">
 
       {/* Left Column: Name and Domain Details */}
       <div className="flex flex-col w-full sm:w-4/5 ">
 
         {/* Top Row: Tags */}
         {/* <div className="mb-2 flex gap-3 p-1 flex-wrap max-sm:gap-4 justify-center sm:justify-start">
-          <span className="flex text-[10px] max-sm:text-[15px] max items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+          <span className="flex text-[10px] max-sm:text-[15px] max items-center rounded-2xl bg-light-300 px-2 py-[3px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
             <CheckIconWithBg className="w-4 h-4 mr-1" />
             Guest Post
           </span>
           {isLinkInsertion && (
-            <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+            <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-2 py-[3px] text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
               <CheckIconWithBg className="w-4 h-4 mr-1" />
               Link Insertion
             </span>
@@ -230,7 +230,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 </a>
               </h3>
               <div className="flex ml-0 p-1 items-center md:items-start">
-                <h3 className="font-medium text-[10px] pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand text-center md:text-left">
+                <h3 className="font-medium text-[10px] text-dark-700 pl-2 hover:text-brand dark:text-light-200 text-center md:text-left">
                   {shop?.name}
                 </h3>
                 <span className='mb-0.5 text-[10px] truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-center'>
@@ -241,16 +241,16 @@ export default function ProductCard({ product }: { product: Product }) {
 
             </div>
 
-            <div className="gap-2 ml-0 p-1 items-center md:items-start">
+            <div className="flex gap-2 ml-0 p-1 items-center md:items-start">
               <div className="flex gap-2 ml-0 p-1 items-center md:items-start">
-                <span className="flex text-[10px] max-sm:text-[15px] max items-center rounded-2xl bg-blue-100 px-3 py-1 font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                <span className="flex text-[10px] text-dark-700 dark:text-light-200 max-sm:text-[15px] max items-center rounded-2xl bg-blue-100 px-2 py-[3px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
                   < GuestPostIcon className="w-4 h-4 mr-1" />
-                  Guest Post
+                  GP
                 </span>
                 {isLinkInsertion && (
-                  <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-blue-100 px-3 py-1 text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                  <span className="flex items-center text-dark-700 dark:text-light-200 rounded-2xl max-sm:text-[15px] bg-blue-100 px-2 py-[3px] text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
                     <LinkIconCx className="w-4 h-4 mr-1" />
-                    Link Insertion
+                    LI
                   </span>
                 )}
 
@@ -258,13 +258,13 @@ export default function ProductCard({ product }: { product: Product }) {
               </div>
               <div className="flex gap-2 ml-0 p-1 items-center md:items-start">
                 {is_niche === '1' ? (
-                  <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-blue-100 px-3 py-1 text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                  <span className="flex items-center text-dark-700 dark:text-light-200 rounded-2xl max-sm:text-[15px] bg-blue-100 px-2 py-[3px] text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
                     <NicheIcon className="w-4 h-4 mr-1" />
-                    Grey Niche
+                    Niche
                   </span>
                 ) :
                   (
-                    <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-blue-100 px-3 py-1 text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                    <span className="flex items-center text-dark-700 dark:text-light-200 rounded-2xl max-sm:text-[15px] bg-blue-100 px-2 py-[3px] text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
                       No niche allowed
                     </span>
                   )
@@ -277,11 +277,11 @@ export default function ProductCard({ product }: { product: Product }) {
       <tbody>
         {IconLabels.map(({ icon: Icon, label, value }, index) => (
           <tr key={index} className="text-[12px] text-black dark:text-[#E4DFDF]">
-            <td className="flex items-center capitalize p-1 text-black font-semibold">
+            <td className="flex items-center text-dark-700 dark:text-light-200 capitalize p-1 text-black font-semibold">
               <Icon className="w-4 h-4 mr-1" />
               {label}
             </td>
-            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:text-brand">
               {value}
             </td>
           </tr>
@@ -292,11 +292,11 @@ export default function ProductCard({ product }: { product: Product }) {
       <tbody>
         {IconLabels2.map(({ icon: Icon, label, value }, index) => (
           <tr key={index} className="text-[12px] text-black dark:text-[#E4DFDF]">
-            <td className="flex items-center capitalize p-1 text-black font-semibold">
+            <td className="flex items-center capitalize p-1 text-dark-700 dark:text-light-200 text-black font-semibold">
               <Icon className="w-4 h-4 mr-1" />
               {label}
             </td>
-            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:text-brand">
               {value}
             </td>
           </tr>
@@ -309,19 +309,19 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Right Column: Price and Buy Section */}
-      <div className="flex flex-col w-full   sm:w-1/4 justify-center items-center sm:pl-0">
-        <span className="mt-2 rounded-l bg-light-00 px-4 py-2 !important-text-xs  font-bold uppercase text-2xl text-brand dark:text-brand-dark">
+      <div className="flex flex-col w-full h-ful  sm:w-1/4 justify-center items-center sm:pl-0">
+        <span className="rounded-lg px-4 py-2 !important-text-xs  font-bold uppercase text-2xl text-brand dark:text-brand-dark">
           {isFreeItem ? 'Free' : price}
         </span>
         {!isFreeItem && basePrice && (
-          <del className="text-[10px] md:text-sm font-medium text-dark-900 dark:text-dark-700">
+          <span className="text-[10px] md:text-sm font-medium text-dark-900 dark:text-dark-700">
             {basePrice}
-          </del>
+          </span>
         )}
-        <div className="flex flex-col mt-2">
+        <div className="flex flex-col">
           <button
             onClick={handleNavigation}
-            className="flex justify-center rounded-lg w-full px-8 py-2 text-xl  text-white bg-brand dark:bg-brand dark:text-white mt-2"
+            className="flex justify-center rounded-lg w-full px-6x py-2 text-base  text-white bg-brand dark:bg-brand dark:text-white"
           >
             Buy
           </button>

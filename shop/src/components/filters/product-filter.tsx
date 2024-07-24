@@ -1,10 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Label from '@/components/ui/label';
 import Select from '@/components/ui/select/select';
-// import { useAuthorsQuery } from '@/data/author';
-// import { useCategoriesQuery } from '@/data/category';
-// import { useManufacturersQuery } from '@/data/manufacturer';
-// import { useTypesQuery } from '@/data/type';
 import { LinkType, ProductType } from '@/types';
 import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
@@ -96,6 +92,25 @@ export default function ProductFilter({
     if (onNicheFilter) onNicheFilter(null, defaultActionMeta);
     if (onLIFilter) onLIFilter(null, defaultActionMeta);
   };
+
+  const isAnyFilterApplied = [
+    selectedPrice,
+    selectedDA,
+    selectedDR,
+    selectedTraffic,
+    selectedCountry,
+    selectedLinkType,
+    selectedNiche,
+    selectedLI
+  ].some(filter => filter !== null);
+
+  useEffect(() => {
+    if (!isAnyFilterApplied && document.getElementById('clear-filters-button')) {
+      document.getElementById('clear-filters-button').style.display = 'none';
+    } else if (isAnyFilterApplied && document.getElementById('clear-filters-button')) {
+      document.getElementById('clear-filters-button').style.display = 'block';
+    }
+  }, [isAnyFilterApplied]);
 
   return (
     <div className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-4 w-full', className)}>
@@ -235,12 +250,13 @@ export default function ProductFilter({
           />
         </div>
       )}
-      <div className="w-full">
-        <button onClick={clearAllFilters} className="bg-brand hover:bg-brand/80 active:bg-brand text-white font-bold py-2 px-4 rounded">
-          {t('Clear All Filters')}
-        </button>
-      </div>
+      {isAnyFilterApplied && (
+        <div className="w-full">
+          <button id="clear-filters-button" onClick={clearAllFilters} className="bg-brand hover:bg-brand/80 md:mt-8 active:bg-brand text-white font-semibold py-1 px-3 rounded">
+            {t('Clear All Filters')}
+          </button>
+        </div>
+      )}
     </div>
-
   );
 }

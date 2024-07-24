@@ -17,7 +17,7 @@ const TitleWithSort = ({
   className,
 }: Props) => {
   return (
-    <span className={classNames('inline-flex items-center', className)}>
+    <span className={classNames('inline-flex items-center text-dark-100 dark:text-light', className)}>
       <span title={`Sort by ${title}`}>{title}</span>
 
       {ascending ? (

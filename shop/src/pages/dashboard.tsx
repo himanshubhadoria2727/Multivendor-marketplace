@@ -155,7 +155,7 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </button>
-        <div
+        <button onClick={()=>router.push('/profile')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "
         >
@@ -165,7 +165,7 @@ const numberOfActiveOrders = activeOrders.length;
               Settings
             </p>
           </span>
-        </div>
+        </button>
         <button onClick={()=>router.push('/order')}
           className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
           "

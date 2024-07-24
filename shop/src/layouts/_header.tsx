@@ -63,17 +63,17 @@ export default function Header({
             <Hamburger
               isToggle={isCollapse}
               onClick={onClickHamburger}
-              className="hidden sm:flex"
+              className="hidden text-[#1A181B] dark:text-light sm:flex"
             />
           )}
           <Logo />
         </div>
         <div className="relative flex items-center gap-5 pr-0.5 xs:gap-6 sm:gap-7">
           {/* <SearchButton className="hidden sm:flex" /> */}
-          <ThemeSwitcher />
+          <ThemeSwitcher/>
           <GridSwitcher />
           {asPath !== routes.checkout && (
-            <CartButton className="hidden sm:flex" />
+            <CartButton className="hidden text-[#FFB20F] hover:text-[#FFA20F] sm:flex" />
           )}
           {isMultiLangEnable ? (
             <div className="ltr:ml-auto rtl:mr-auto">

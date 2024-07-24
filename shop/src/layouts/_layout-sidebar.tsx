@@ -77,7 +77,7 @@ export function Sidebar({
     <aside
       className={twMerge(
         cn(
-          'h-full flex-col justify-between overflow-y-auto border-r border-light-400 bg-light pt-[82px] text-dark-700 dark:border-0 dark:bg-dark-200',
+          'h-full flex-col justify-between overflow-y-auto border-r border-light-400 bg-light pt-[82px] text-dark-100 dark:text-light dark:text-dark-100 dark:text-light dark:border-0 dark:bg-dark-200',
           isCollapse ? 'sm:w-60 xl:w-[75px]' : 'sm:w-[75px] xl:w-60',
           width >= RESPONSIVE_WIDTH && underMaintenanceIsComing && !isScrolling
             ? 'pt-[9.625rem]'
@@ -93,31 +93,31 @@ export function Sidebar({
               title={t('Website Catalogs')}
               href={routes.home}
               isCollapse={isCollapse}
-              icon={<HomeIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<HomeIcon className="h-[18px] w-[18px] text-[#D91E36] text-current" />}
             />
             <NavLink
               title={t('Dashboard')}
               href={routes.dashboard}
               isCollapse={isCollapse}
-              icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<DiscoverIcon className="h-[18px] w-[18px] text-[#0582CA] text-current" />}
             />
             <NavLink
               title={t('Campaigns')}
               href={routes.campaign}
               isCollapse={isCollapse}
-              icon={<BsMegaphoneFill className="h-4 w-4 text-current" />}
+              icon={<BsMegaphoneFill className="h-4 text-[#6B7FD7] w-4 text-current" />}
             />
             <NavLink
               title={t('Profile')}
               href={routes.profileh}
               isCollapse={isCollapse}
-              icon={<UserIconAlt className="h-4 w-4 text-current" />}
+              icon={<UserIconAlt className="h-4 w-4 text-[#FF86C8] text-current" />}
             />
             <NavLink
               title={t('Orders')}
               href={routes.order}
               isCollapse={isCollapse}
-              icon={<PurchaseIcon className="h-4 w-4 text-current" />}
+              icon={<PurchaseIcon className="h-4 w-4 text-[#F2A541] text-current" />}
             />
             {/* <NavLink
               title={t('text-top-authors')}
@@ -138,7 +138,7 @@ export function Sidebar({
               href={routes.contact}
               isCollapse={isCollapse}
               icon={
-                <PaperPlaneIcon className="h-[18px] w-[18px] text-current" />
+                <PaperPlaneIcon className="h-[18px] w-[18px] text-[#7D53DE] text-current" />
               }
             />
           </nav>
@@ -148,13 +148,13 @@ export function Sidebar({
               title={t('text-settings')}
               href={routes.profile}
               isCollapse={isCollapse}
-              icon={<SettingIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<SettingIcon className="h-[18px] w-[18px] text-[#1A181B] dark:text-light text-current" />}
             />
             <NavLink
               title={t('text-help-page-title')}
               href={routes.help}
               isCollapse={isCollapse}
-              icon={<HelpIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<HelpIcon className="h-[18px] w-[18px] text-[#91CB3E] text-current" />}
             />
           </nav>
         </div>
@@ -169,24 +169,24 @@ export function Sidebar({
         <nav className="flex items-center justify-center gap-5 pb-1.5 text-13px font-medium capitalize tracking-[0.2px]">
           <ActiveLink
             href={routes.terms}
-            className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
+            className="block py-2 text-dark-100 dark:text-light hover:text-dark-100 dark:hover:text-brand"
           >
             {t('text-terms')}
           </ActiveLink>
           <ActiveLink
             href={routes.privacy}
-            className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
+            className="block py-2 text-dark-100 dark:text-light hover:text-dark-100 dark:hover:text-brand"
           >
             {t('text-privacy')}
           </ActiveLink>
           <ActiveLink
             href={routes.help}
-            className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
+            className="block py-2 text-dark-100 dark:text-light hover:text-dark-100 dark:hover:text-brand"
           >
             {t('text-help-page-title')}
           </ActiveLink>
         </nav>
-        {/* <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-700" /> */}
+        {/* <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-100 dark:text-light" /> */}
       </footer>
     </aside>
   );

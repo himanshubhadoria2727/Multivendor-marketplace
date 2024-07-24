@@ -116,7 +116,7 @@ export default function ProductTable() {
       <Card className="m-3 mb-0 border-l-2 border-r-2 border-brand/90 flex dark:bg-dark-300 flex-col">
         <div className="flex w-full flex-col items-center md:flex-row">
           <div className="mb-4 md:mb-0 md:w-1/4">
-            <PageHeadingForFilter className='max-sm:text-[13px]' title={t('Explore all sites')} />
+            <PageHeadingForFilter className='max-sm:text-[13px] text-dark-100 dark:text-light-200' title={t('Explore all sites')} />
           </div>
           <div className='flex w-full flex-row max-sm:flex max-sm:gap-6  '>
         

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import ReactConfetti from 'react-confetti';
 import type { NextPageWithLayout } from '@/types';
 import GeneralLayout from '@/layouts/_general-layout';
@@ -28,6 +28,8 @@ import { PageLoader } from '@/components/ui/loader/spinner/spinner';
 import { Order } from '@/types';
 import ErrorMessage from '@/components/ui/error-message';
 import { getOrderPaymentSummery } from '@/lib/get-order-payment-summery';
+import { LongArrowIcon } from '@/components/icons/long-arrow-icon';
+import routes from '@/config/routes';
 
 type Props = {
   title: string;
@@ -97,6 +99,15 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
 
   return (
     <div className="p-4 sm:p-8">
+      <div className="sticky top-0 z-20 -mx-4 mb-1 -mt-2 flex items-center bg-light-300 p-4 dark:bg-dark-100 sm:static sm:top-auto sm:z-0 sm:m-0 sm:mb-4 sm:bg-transparent sm:p-0 sm:dark:bg-transparent">
+          <button
+            onClick={() => router.push(routes?.home)}
+            className="group inline-flex items-center gap-1.5 font-medium text-dark/70 hover:text-dark rtl:flex-row-reverse dark:text-light/70 hover:dark:text-light lg:mb-6"
+          >
+            <LongArrowIcon className="h-4 w-4" />
+            {t('text-back')}
+          </button>
+        </div>
       <div className="mx-auto w-full max-w-screen-lg">
         <div className="relative overflow-hidden rounded">
           <OrderViewHeader

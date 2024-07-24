@@ -128,7 +128,7 @@ function OrderedItem({ item }: { item:Order}) {
                       : t('text-write-review')}
                   </button>
                   
-                    <div className='border-2 flex gap-2 text-brand border-brand font-bold rounded-[0.5rem] py-3 px-2'>Order Completed
+                    <div className='border-2 flex gap-2 text-brand border-brand font-bold rounded-[0.3rem] py-3 px-2'>Order Completed
                       <CheckIconWithBg className="h-5 w-5" />
                     </div>
                   

@@ -24,7 +24,11 @@ import TitleWithSort from '@/components/ui/title-with-sort';
 import { useState, useEffect, SetStateAction } from 'react';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 import Cookies from 'js-cookie';
-import { SpinnerLoader } from '../ui/loader/spinner/spinner';
+import Spinner, { SpinnerLoader } from '../ui/loader/spinner/spinner';
+import Loader from '../ui/loaderAdmin/loader';
+import { GuestPostIcon } from '../icons/custom/guest-post';
+import { LinkIconCx } from '../icons/custom/Link-icon';
+import { NicheIcon } from '../icons/custom/niche';
 
 
 type Campaign = {
@@ -69,16 +73,16 @@ const ProductInventoryList = ({
     column: null,
   });
 
-const [isModalOpen, setIsModalOpen] = useState(false);
-const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-const [campaignNames, setCampaignNames] = useState<string[]>([]);
-const [newCampaignName, setNewCampaignName] = useState('');
-const [selectedCampaign, setSelectedCampaign] = useState<string>('');
-const [validationError, setValidationError] = useState('');
-const [isLoading, setIsLoading] = useState(true);
-const [Loading, setLoading] = useState(false);
-const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-const [id, setId]=useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [campaignNames, setCampaignNames] = useState<string[]>([]);
+  const [newCampaignName, setNewCampaignName] = useState('');
+  const [selectedCampaign, setSelectedCampaign] = useState<string>('');
+  const [validationError, setValidationError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [Loading, setLoading] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [id, setId] = useState('');
 
   const fetchCampaigns = async () => {
     try {
@@ -92,12 +96,12 @@ const [id, setId]=useState('');
         throw new Error('Failed to fetch campaigns');
       }
       const data = await response.json();
-      const processedCampaigns = data.campaigns.map((campaign:any) => {
+      const processedCampaigns = data.campaigns.map((campaign: any) => {
         return {
-            ...campaign,
-            name: campaign.name.replace(/^https?:\/\//, ''),
+          ...campaign,
+          name: campaign.name.replace(/^https?:\/\//, ''),
         };
-    });
+      });
       setCampaignNames(processedCampaigns);
       setCampaigns(processedCampaigns);
       setIsLoading(false);
@@ -108,71 +112,71 @@ const [id, setId]=useState('');
   };
 
 
-useEffect(() => {
-  if (showSuccessMessage) {
-    const timer = setTimeout(() => {
-      setShowSuccessMessage(false);
-    }, 3000);
+  useEffect(() => {
+    if (showSuccessMessage) {
+      const timer = setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
 
-    return () => clearTimeout(timer);
-  }
-}, [showSuccessMessage]);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccessMessage]);
 
-const handleAddProductToCampaign = async (productId: string) => {
-  const token = Cookies.get(AUTH_TOKEN_KEY);
+  const handleAddProductToCampaign = async (productId: string) => {
+    const token = Cookies.get(AUTH_TOKEN_KEY);
 
-  if (newCampaignName && campaignNames.includes(newCampaignName)) {
-    setValidationError('Campaign with the same name already present');
-    return;
-  }
-
-  try {
-    let response;
-    if (newCampaignName) {
-      const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
-      setValidationError('Enter a valid campaign name');
-      setNewCampaignName('');
+    if (newCampaignName && campaignNames.includes(newCampaignName)) {
+      setValidationError('Campaign with the same name already present');
       return;
+    }
+
+    try {
+      let response;
+      if (newCampaignName) {
+        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
+          setValidationError('Enter a valid campaign name');
+          setNewCampaignName('');
+          return;
+        }
+        setLoading(true);
+        response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: newCampaignName,
+            product_ids: [productId],
+          }),
+        });
+      } else if (selectedCampaign) {
+        setLoading(true);
+        response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            product_ids: [productId],
+          }),
+        });
+      } else {
+        setValidationError('Select a campaign or create a new one');
+        return;
       }
-      setLoading(true);
-      response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: newCampaignName,
-          product_ids: [productId],
-        }),
-      });
-    } else if (selectedCampaign) {
-      setLoading(true);
-      response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          product_ids: [productId],
-        }),
-      });
-    } else {
-      setValidationError('Select a campaign or create a new one');
-      return;
-    }
 
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || 'Error adding product to campaign');
-    }
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Error adding product to campaign');
+      }
 
-    setValidationError('');
-    setSelectedCampaign('');
-    setNewCampaignName('');
-    setLoading(false);
+      setValidationError('');
+      setSelectedCampaign('');
+      setNewCampaignName('');
+      setLoading(false);
       setIsModalOpen(false);
       setShowSuccessMessage(true);
     } catch (error) {
@@ -222,57 +226,93 @@ const handleAddProductToCampaign = async (productId: string) => {
       title: (
         <div className='flex'>
           <TitleWithSort
-          title={t('Domain Name')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
-          }
-          isActive={sortingObj.column === 'name'}
-        />
-        <div className="flex items-center">
-          <Tooltip title="This column shows the domain names">
-            <IconButton size="small" style={{}}>
-              <DomainIcon style={{fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+            title={t('Domain Name')}
+            ascending={
+              sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
+            }
+            isActive={sortingObj.column === 'name'}
+          />
+          <div className="flex items-center">
+            <Tooltip title="This column shows the domain names">
+              <IconButton size="small" style={{}}>
+                <DomainIcon style={{ fontSize: 14 }} />
+              </IconButton>
+            </Tooltip>
+          </div></div>
 
       ),
       className: 'cursor-pointer',
       dataIndex: 'name',
       key: 'name',
       align: alignLeft,
-      width: 130,
+      width: 150,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
-      render: (name: string, { id, type }: { id: any; type: any }) => (
-        <div className="flex flex-col items-start">
+      render: (name: string, { id, type, isLinkInsertion, is_niche }: { id: any; type: any; isLinkInsertion: any; is_niche: any }) => (
+        <div className="flex flex-col items-start text-dark-100 gap-[4px] dark:text-light-400">
           <div className="flex flex-col">
             <div className='flex'>
-              <a href={`https://${name}`} className="truncate text-dark font-semibold hover:underline text-blue-700 dark:text-blue-500 text-[16px] max-sm:text-[13px] tracking-wider ">{name}</a>
-              <LinkIcon style={{fontSize: 14 }} />
+              <a href={`https://${name}`} className="truncate text-dark font-semibold hover:underline text-blue-700 dark:text-blue-500 text-[16px] max-sm:text-[14px] tracking-wider ">{name}</a>
+              <LinkIcon style={{ fontSize: 14 }} />
             </div>
           </div>
-          <p className='text-blue-600 bg-blue-100 text-[12px] max-sm:text-[10px] px-3 border rounded-lg hover:underline' onClick={() => handleClick(id)}>Add to campaign</p>
+          <div className='flex gap-1'>
+            <Tooltip title="Guest post available">
+              <span className="flex text-[10px] max-sm:text-[8px] text-dark-100 dark:text-light-400 max items-center rounded-2xl bg-blue-100 px-2 py-[3px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                < GuestPostIcon className="w-4 h-4 mr-1" />
+                GP
+              </span>
+            </Tooltip>
+            {isLinkInsertion && (
+              <Tooltip title="Link Insertion allowed">
+                <span className="flex text-[10px] max-sm:text-[8px] items-center text-dark-100 dark:text-light-400 rounded-2xl max-sm:text-[8px] bg-red-100 px-2 py-[3px] text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                  <LinkIconCx className="w-4 h-4 mr-1" />
+                  LI
+                </span>
+              </Tooltip>
+            )}
+            {is_niche === '1' ? (
+              <Tooltip title="Grey Niche links allowed">
+                <span className="flex text-[10px] max-sm:text-[8px] items-center text-dark-100 dark:text-light-400 rounded-2xl max-sm:text-[8px] bg-green-100 px-2 py-[3px] text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                  <NicheIcon className="w-4 h-4 mr-1" />
+                  Niche
+                </span>
+              </Tooltip>
+            ) :
+              (
+                <Tooltip title="Grey Niche links not allowed">
+                <span className="flex text-[10px] max-sm:text-[8px] items-center text-dark-100 dark:text-light-400 rounded-2xl max-sm:text-[8px] bg-green-100 px-2 py-[3px] text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                  No niche allowed
+                </span>
+                </Tooltip>
+              )
+            }
+          </div>
+          <p className='flex gap-1 text-dark-600 dark:text-light-400 bg-purple-100 dark:bg-dark-400 text-[12px] max-sm:text-[10px] px-2 border rounded-lg hover:underline' onClick={() => handleClick(id)}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" className="bi mt-[3px] bi-bookmark-plus-fill" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5z" />
+            </svg>Add to campaign</p>
+
         </div>
       ),
     },
     {
       title: (
-        <div className='flex'>
-          <TitleWithSort
-          title={t('DA')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'domain_authority'
-          }
-          isActive={sortingObj.column === 'domain_authority'}
-        />
-        <div className="flex items-center">
-          <Tooltip title="Domain Authority">
-            <IconButton size="small" style={{}}>
-              <StarIcon style={{fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+        <Tooltip title="Domain Authority">
+          <div className='flex'>
+            <TitleWithSort
+              title={t('DA')}
+              ascending={
+                sortingObj.sort === SortOrder.Asc && sortingObj.column === 'domain_authority'
+              }
+              isActive={sortingObj.column === 'domain_authority'}
+            />
+            <div className="flex items-center">
+              <IconButton size="small" style={{}}>
+                <StarIcon style={{ fontSize: 14 }} />
+              </IconButton>
+            </div></div>
+        </Tooltip>
       ),
       className: 'cursor-pointer',
       dataIndex: 'domain_authority',
@@ -281,29 +321,31 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_authority'),
       render: (domain_authority: number) => (
-        <div className="flex items-center gap-2 items-start">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16}/>
-          <span className="truncate font-medium rounded-lg">{domain_authority}</span>
-        </div>
+        <Tooltip title={'Verified by Moz'}>
+          <div className="flex items-center gap-2 items-start text-dark-100 dark:text-light-400">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16} />
+            <span className="truncate font-medium rounded-lg">{domain_authority}</span>
+          </div>
+        </Tooltip>
       ),
     },
     {
       title: (
-        <div className='flex'>
-          <TitleWithSort
-          title={t('DR')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'domain_rating'
-          }
-          isActive={sortingObj.column === 'domain_rating'}
-        />
-        <div className="flex items-center">
-          <Tooltip title="Domain Rating">
-            <IconButton size="small" style={{}}>
-              <StarIcon style={{fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+        <Tooltip title="Domain Rating">
+          <div className='flex'>
+            <TitleWithSort
+              title={t('DR')}
+              ascending={
+                sortingObj.sort === SortOrder.Asc && sortingObj.column === 'domain_rating'
+              }
+              isActive={sortingObj.column === 'domain_rating'}
+            />
+            <div className="flex items-center">
+              <IconButton size="small" style={{}}>
+                <StarIcon style={{ fontSize: 14 }} />
+              </IconButton>
+            </div></div>
+        </Tooltip>
       ),
       className: 'cursor-pointer',
       dataIndex: 'domain_rating',
@@ -312,29 +354,31 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_rating'),
       render: (domain_rating: number) => (
-        <div className="flex items-center gap-1 items-start">
-          <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
-          <span className="truncate font-medium">{domain_rating}</span>
-        </div>
+        <Tooltip title={'Verified by Ahref'}>
+          <div className="flex items-center gap-1 items-start text-dark-100 dark:text-light-400">
+            <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+            <span className="truncate font-medium">{domain_rating}</span>
+          </div>
+        </Tooltip>
       ),
     },
     {
       title: (
-        <div className='flex'>
-          <TitleWithSort
-          title={t('SC')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'spam_score'
-          }
-          isActive={sortingObj.column === 'spam_score'}
-        />
-        <div className="flex items-center">
-          <Tooltip title="Spam Score">
-            <IconButton size="small" style={{}}>
-              <StarIcon style={{fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+        <Tooltip title="Spam Score">
+          <div className='flex'>
+            <TitleWithSort
+              title={t('SC')}
+              ascending={
+                sortingObj.sort === SortOrder.Asc && sortingObj.column === 'spam_score'
+              }
+              isActive={sortingObj.column === 'spam_score'}
+            />
+            <div className="flex items-center">
+              <IconButton size="small" style={{}}>
+                <StarIcon style={{ fontSize: 14 }} />
+              </IconButton>
+            </div></div>
+        </Tooltip>
       ),
       className: 'cursor-pointer',
       dataIndex: 'spam_score',
@@ -343,29 +387,31 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('spam_score'),
       render: (spam_score: number) => (
-        <div className="flex items-center gap-1 items-start">
-          <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
-          <span className="truncate font-medium">{spam_score}</span>
-        </div>
+        <Tooltip title={'Verified by Ahref'}>
+          <div className="flex items-center gap-1 items-start text-dark-100 dark:text-light-400">
+            <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+            <span className="truncate font-medium">{spam_score}</span>
+          </div>
+        </Tooltip>
       ),
     },
     {
       title: (
-        <div className='flex'>
-          <TitleWithSort
-          title={t('Traffic')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'organic_traffic'
-          }
-          isActive={sortingObj.column === 'organic_traffic'}
-        />
-        <div className="flex items-center">
-          <Tooltip title="Organic Traffic">
-            <IconButton size="small" style={{}}>
-              <TrendingUpIcon style={{fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+        <Tooltip title="Organic Traffic">
+          <div className='flex'>
+            <TitleWithSort
+              title={t('Traffic')}
+              ascending={
+                sortingObj.sort === SortOrder.Asc && sortingObj.column === 'organic_traffic'
+              }
+              isActive={sortingObj.column === 'organic_traffic'}
+            />
+            <div className="flex items-center">
+              <IconButton size="small" style={{}}>
+                <TrendingUpIcon style={{ fontSize: 14 }} />
+              </IconButton>
+            </div></div>
+        </Tooltip>
       ),
       className: 'cursor-pointer max-sm:w-10',
       dataIndex: 'organic_traffic',
@@ -374,29 +420,31 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('organic_traffic'),
       render: (organic_traffic: number) => (
-        <div className="flex items-center gap-1 items-start">
-          <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
-          <span className="truncate font-medium">{organic_traffic}</span>
-        </div>
+        <Tooltip title={'Verified by Ahref'}>
+          <div className="flex items-center gap-1 items-start text-dark-100 dark:text-light-400">
+            <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+            <span className="truncate font-medium">{organic_traffic}</span>
+          </div>
+        </Tooltip>
       ),
     },
     {
       title: (
-        <div className='flex'>
-          <TitleWithSort
-          title={t('Links')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'link_type'
-          }
-          isActive={sortingObj.column === 'link_type'}
-        />
-        <div className="flex items-center">
-          <Tooltip title="Link Type">
-            <IconButton size="small" style={{}}>
-              <LinkIcon style={{fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+        <Tooltip title="Link Type">
+          <div className='flex'>
+            <TitleWithSort
+              title={t('Links')}
+              ascending={
+                sortingObj.sort === SortOrder.Asc && sortingObj.column === 'link_type'
+              }
+              isActive={sortingObj.column === 'link_type'}
+            />
+            <div className="flex items-center">
+              <IconButton size="small" style={{}}>
+                <LinkIcon style={{ fontSize: 14 }} />
+              </IconButton>
+            </div></div>
+        </Tooltip>
       ),
       className: 'cursor-pointer',
       dataIndex: 'link_type',
@@ -405,40 +453,42 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('link_type'),
       render: (link_type: string) => (
-        <div className="flex items-center gap-2 items-start">
-          {
-            link_type === 'Dofollow' ? (
-              <>
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16}/>
-                <span className="truncate font-medium">{link_type}</span>
-              </>
-            ) : (
-              <>
-                <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt=""/>
-                <span className="truncate font-medium">{link_type}</span>
-              </>
-            )
-          }
-        </div>
+        <Tooltip title={'Verified by Ahref and Moz'}>
+          <div className="flex items-center gap-2 items-start text-dark-100 dark:text-light-400">
+            {
+              link_type === 'Dofollow' ? (
+                <>
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16} />
+                  <span className="truncate font-medium">{link_type}</span>
+                </>
+              ) : (
+                <>
+                  <img src="https://static.ahrefs.com/static/assets/conference-icon-UWOS37EX.svg" alt="" />
+                  <span className="truncate font-medium">{link_type}</span>
+                </>
+              )
+            }
+          </div>
+        </Tooltip>
       ),
     },
     {
       title: (
+        <Tooltip title="Countries">
           <div className='flex'>
             <TitleWithSort
-            title={t('Country')}
-            ascending={
-              sortingObj.sort === SortOrder.Asc && sortingObj.column === 'countries'
-            }
-            isActive={sortingObj.column === 'countries'}
-          />
-        <div className="flex items-center">
-          <Tooltip title="This column shows the country flags and names">
-            <IconButton size="small" style={{}}>
-              <PublicIcon style={{ fontSize: 13 }} />
-            </IconButton>
-          </Tooltip>
-        </div></div>
+              title={t('Country')}
+              ascending={
+                sortingObj.sort === SortOrder.Asc && sortingObj.column === 'countries'
+              }
+              isActive={sortingObj.column === 'countries'}
+            />
+            <div className="flex items-center">
+              <IconButton size="small" style={{}}>
+                <PublicIcon style={{ fontSize: 13 }} />
+              </IconButton>
+            </div></div>
+        </Tooltip>
       ),
       className: 'cursor-pointer',
       dataIndex: 'countries',
@@ -447,41 +497,38 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('countries'),
       render: (countries: number) => (
-        <div className="flex items-center items-start">
-          <div className="flex flex-col">
-            <button className="flex gap-1 truncate font-medium rounded-lg">
+        <Tooltip title={'Verified by Ahref'}>
+          <div className="flex items-center items-start text-dark-100 dark:text-light-400">
+            <div className="flex gap">
               <Image
                 src={`https://flagsapi.com/${countries}/shiny/64.png`}
                 width={16}
                 height={16} alt={''} />
               {countries}
-            </button>
+            </div>
           </div>
-        </div>
+        </Tooltip>
       ),
     },
     {
       title: (
         <div className="flex items-center">
-          <span>Grey Niche</span>
+          <span>Language</span>
         </div>
       ),
       className: 'cursor-pointer',
-      dataIndex: 'is_niche',
-      key: 'is_niche',
+      dataIndex: 'languages',
+      key: 'languages',
       width: 70,
       ellipsis: true,
-      onHeaderCell: () => onHeaderClick('price'),
-      render: (is_niche: string) => (
-        <div className="flex items-center items-start">
-          <div className="flex flex-col">
-            {is_niche === '1' ? (
-              <button className="border items-start w-[5rem] rounded-lg text-brand font-bold transition border-brand py-1">Available</button>
-            ) : (
-              <button className="border items-start w-[5rem] rounded-lg text-brand font-bold border-brand py-1">N/A</button>
-            )}
+      onHeaderCell: () => onHeaderClick('languages'),
+      render: (languages: string) => (
+        <Tooltip title={'Verified by Moz'}>
+          <div className="flex items-center gap-1 items-start text-dark-100 dark:text-light-400">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVNvetVv+xfwuxEuuqt3/X////z+/6/5vhmxe2o3fT5/f7M6/m54/ea2fSM1PKs4PXl9fx4y++f2vQMWunWAAAAhElEQVR4Ad3RxxXDMAwEUTCMJK7E5P57dc6mGxBu8/5tYTs75713fzJEmOblkcs8QQwPTAJWfyu/AkqfqO2qftMAUXRmLooRomyWxRihFBigagMkoFV9Y+kXvVgvvxjyBDDlMELLAmX7wgic0RIkOyNvC1nPh3xdr9brfufsgw842+mdAC4OBqWvVW0xAAAAAElFTkSuQmCC" alt="" width={16} height={16} />
+            <span className="truncate font-medium">{languages}</span>
           </div>
-        </div>
+        </Tooltip>
       ),
     },
     {
@@ -497,9 +544,9 @@ const handleAddProductToCampaign = async (productId: string) => {
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('price'),
       render: (price: number, { slug }: { slug: any }) => (
-        <div className="flex items-center items-start">
+        <div className="flex items-center items-start text-dark-100 dark:text-light-400">
           <div className="flex flex-col">
-            <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border items-start w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>
+            <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border items-start text-dark-100 dark:text-light-400 w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>
           </div>
         </div>
       ),
@@ -517,8 +564,8 @@ const handleAddProductToCampaign = async (productId: string) => {
     <>
       <div className="mb-6 m-3 overflow-hidden bg-white dark:bg-dark-100 rounded-lg shadow">
         {loading ? (
-          <div className="flex items-start items-center w-full h-64">
-            <Spinner />
+          <div className="flex items-start text-dark-100 dark:text-light-400 items-center w-full h-64">
+            <Loader />
           </div>
         ) : (
           <Table
@@ -541,7 +588,7 @@ const handleAddProductToCampaign = async (productId: string) => {
           />
         )}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex justify-center items-center items-start bg-black bg-opacity-50">
+          <div className="fixed inset-0 z-50 flex justify-center items-center items-start text-dark-100 dark:text-light-400 bg-black bg-opacity-50">
             <div className="bg-white dark:bg-dark-300 p-6 rounded-lg shadow-lg">
               <h2 className="text-2xl font-semibold mb-4">Add to Campaign</h2>
               <div>
@@ -606,7 +653,7 @@ const handleAddProductToCampaign = async (productId: string) => {
       </div>
 
       {!!paginatorInfo?.total && (
-        <div className="flex mb-5 font items-center justify-center items-start">
+        <div className="flex mb-5 font items-center justify-center items-start text-dark-100 dark:text-light-400">
           <Pagination
             total={paginatorInfo.total}
             current={paginatorInfo.currentPage}
