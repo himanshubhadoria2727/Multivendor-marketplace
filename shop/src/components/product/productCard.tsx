@@ -5,6 +5,15 @@ import { useModalAction } from '@/components/modal-views/context';
 import routes from '@/config/routes';
 import usePrice from '@/lib/hooks/use-price';
 import { CheckIconWithBg } from '@/components/icons/check-icon-with-bg';
+import { NicheIcon } from '../icons/custom/niche';
+import { GuestPostIcon } from '../icons/custom/guest-post';
+import { Authority } from '../icons/custom/authorityicon';
+import { RatingIcon } from '../icons/custom/ratings';
+import { TrafficIcon } from '../icons/custom/traffic';
+import { LinkIconCx } from '../icons/custom/Link-icon';
+import { GraphTraffic } from '../icons/custom/trafficgraph';
+import { SpamIcon } from '../icons/custom/Spam';
+import { LanguageICon } from '../icons/custom/language';
 import { InformationIcon } from '../icons/information-icon';
 import { PeopleIcon } from '../icons/people-icon';
 import { StarIcon } from '../icons/star-icon';
@@ -169,8 +178,19 @@ export default function ProductCard({ product }: { product: Product }) {
     setValidationError('');
   };
 
+  const IconLabels = [
+    { icon: Authority, label: "DA", value: product?.domain_authority },
+    { icon: RatingIcon, label: "DR", value: product?.domain_rating },
+    { icon: TrafficIcon, label: "Traffic", value: product?.organic_traffic }
+  ];
+
+  const IconLabels2 = [
+    { icon: SpamIcon, label: "Spam", value: product?.spam_score },
+    { icon: LanguageICon, label: "Lang", value: product?.languages },
+    { icon: LinkIconCx, label: "Links", value: product?.link_type }
+  ];
   return (
-    <div className="maincard flex flex-col sm:flex-row items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-[#F9F9F9] dark:bg-dark-200   ">
+    <div className="maincard flex flex-col sm:flex-row border-t items-center justify-center pt-[0.5rem] dark:text-brand-dark p-5   bg-light dark:bg-dark-200   ">
 
       {/* Left Column: Name and Domain Details */}
       <div className="flex flex-col w-full sm:w-4/5 ">
@@ -195,67 +215,95 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="flex flex-col md:flex-row justify-center md:justify-start items-center md:items-start">
           <div className="flex flex-col w-full md:w-1/3 mt-5 items-center md:items-start justify-center md:justify-start mb-4 md:mb-0">
             <div className='flex flex-col justify-center items-center md:items-start'>
-              <h3 title={name} className="mb-0.5 text-lg max-sm:text-2xl truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-center">
-                <a href={`https://${name}`} target="_blank" rel="noopener noreferrer">
-                  {name}
-                </a>
-              </h3>
-              <h3 className="font-medium text-sm pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand text-center md:text-left">
-                {shop?.name}
-              </h3>
-            </div>
-
-            <div className="flex flex-col mt-2 ml-0 p-1 items-center md:items-start">
-              <span className='mb-0.5 text-sm truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-center'>
-                <a href={preview_url} target="_blank" rel="noopener noreferrer">View posts</a>
-              </span>
-              {is_niche === '1' ? (
-                <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
-                  <CheckIconWithBg className="w-4 h-4 mr-1" />
-                  Grey Niche
-                </span>
-              ) :
-                (
-                  <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-light-300 px-3 py-1 text-[10px] font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
-                    No niche allowed
-                  </span>
-                )
-              }
-            </div>
-          </div>
-          <div className="w-full md:w-2/3 grid grid-cols-2 gap-2">
-            {[
-              { icon: UserIconAlt, label: "Domain Authority", value: product?.domain_authority },
-              { icon: StarIcon, label: "Domain Rating", value: product?.domain_rating },
-              { icon: PeopleIcon, label: "Organic Traffic", value: product?.organic_traffic },
-              { icon: HelpIcon, label: "Spam Score", value: product?.spam_score },
-              { icon: LangIcon, label: "Language", value: product?.languages },
-              { icon: LinkIcon, label: "Links", value: product?.link_type }
-            ].map(({ icon: Icon, label, value }, index) => (
-              <span key={index} className="flex m-2 capitalize justify-center md:justify-start text-[11px] text-[#919494] dark:text-[#E4DFDF] items-center">
-                <Icon className="w-4 h-4 mr-1" />
-                {label}
-                <p className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
-                  {value}
-                </p>
-              </span>
-            ))}
-          </div>
-          <div className="flex justify-center md:justify-start m-2 capitalize text-[12px] text-[#919494] dark:text-[#E4DFDF] items-center">
-            <GlobalIcon className="w-4 h-4 mr-1" />
-            Countries
-            <div className="text-[10px] ml-1 items-center rounded-2xl bg-light-300 px-3 py-1 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
               <div className='flex gap-1 mr-2'>
                 <img
                   src={`https://flagsapi.com/${product?.countries}/shiny/16.png`} alt={''}
-                  width='16'
-                  height='16'
+                  width='24'
+                  height='24'
                   className=''
                 />
                 {product?.countries}
               </div>
+              <h3 title={name} className="mb-0.5 text-lg max-sm:text-2xl truncate pl-2 font-medium text-black-500 font-extrabold dark:text-blue-500 hover:underline text-center">
+                <a href={`https://${name}`} target="_blank" rel="noopener noreferrer">
+                  {name}
+                </a>
+              </h3>
+              <div className="flex ml-0 p-1 items-center md:items-start">
+                <h3 className="font-medium text-[10px] pl-2 hover:text-brand dark:text-dark-800 dark:hover:text-brand text-center md:text-left">
+                  {shop?.name}
+                </h3>
+                <span className='mb-0.5 text-[10px] truncate pl-2 font-medium text-blue-500 dark:text-blue-500 hover:underline text-center'>
+                  <a href={preview_url} target="_blank" rel="noopener noreferrer">View posts</a>
+                </span>
+              </div>
+
+
+            </div>
+
+            <div className="gap-2 ml-0 p-1 items-center md:items-start">
+              <div className="flex gap-2 ml-0 p-1 items-center md:items-start">
+                <span className="flex text-[10px] max-sm:text-[15px] max items-center rounded-2xl bg-blue-100 px-3 py-1 font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                  < GuestPostIcon className="w-4 h-4 mr-1" />
+                  Guest Post
+                </span>
+                {isLinkInsertion && (
+                  <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-blue-100 px-3 py-1 text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                    <LinkIconCx className="w-4 h-4 mr-1" />
+                    Link Insertion
+                  </span>
+                )}
+
+
+              </div>
+              <div className="flex gap-2 ml-0 p-1 items-center md:items-start">
+                {is_niche === '1' ? (
+                  <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-blue-100 px-3 py-1 text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                    <NicheIcon className="w-4 h-4 mr-1" />
+                    Grey Niche
+                  </span>
+                ) :
+                  (
+                    <span className="flex items-center rounded-2xl max-sm:text-[15px] bg-blue-100 px-3 py-1 text-[10px] font-semibold capitalize text-black dark:bg-dark-300 dark:text-brand-dark">
+                      No niche allowed
+                    </span>
+                  )
+                }
+              </div>
             </div>
           </div>
+          <div className="w-full flex flex-col ml-24 mt-12 items-center md:flex-row gap-1">
+    <table className="w-full md:w-1/2">
+      <tbody>
+        {IconLabels.map(({ icon: Icon, label, value }, index) => (
+          <tr key={index} className="text-[12px] text-black dark:text-[#E4DFDF]">
+            <td className="flex items-center capitalize p-1 text-black font-semibold">
+              <Icon className="w-4 h-4 mr-1" />
+              {label}
+            </td>
+            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+              {value}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <table className="w-full md:w-1/2">
+      <tbody>
+        {IconLabels2.map(({ icon: Icon, label, value }, index) => (
+          <tr key={index} className="text-[12px] text-black dark:text-[#E4DFDF]">
+            <td className="flex items-center capitalize p-1 text-black font-semibold">
+              <Icon className="w-4 h-4 mr-1" />
+              {label}
+            </td>
+            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:bg-dark-300 dark:text-brand-dark">
+              {value}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
         </div>
 
       </div>
@@ -273,7 +321,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="flex flex-col mt-2">
           <button
             onClick={handleNavigation}
-            className="flex justify-center rounded-lg w-full px-8 py-2 text-xl font-semibold text-white bg-brand dark:bg-brand dark:text-white mt-2"
+            className="flex justify-center rounded-lg w-full px-8 py-2 text-xl  text-white bg-brand dark:bg-brand dark:text-white mt-2"
           >
             Buy
           </button>
