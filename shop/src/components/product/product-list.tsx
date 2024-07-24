@@ -233,7 +233,7 @@ const ProductInventoryList = ({
             isActive={sortingObj.column === 'name'}
           />
           <div className="flex items-center">
-            <Tooltip title="This column shows the domain names">
+            <Tooltip title="Domain name">
               <IconButton size="small" style={{}}>
                 <DomainIcon style={{ fontSize: 14 }} />
               </IconButton>

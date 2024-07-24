@@ -69,12 +69,12 @@ export default function ProductCard({ product }: { product: Product }) {
         throw new Error('Failed to fetch campaigns');
       }
       const data = await response.json();
-      const processedCampaigns = data.campaigns.map((campaign:any) => {
+      const processedCampaigns = data.campaigns.map((campaign: any) => {
         return {
-            ...campaign,
-            name: campaign.name.replace(/^https?:\/\//, ''),
+          ...campaign,
+          name: campaign.name.replace(/^https?:\/\//, ''),
         };
-    });
+      });
       setCampaignNames(processedCampaigns);
       setCampaigns(processedCampaigns);
       setIsLoading(false);
@@ -190,7 +190,7 @@ export default function ProductCard({ product }: { product: Product }) {
     { icon: LinkIconCx, label: "Links", value: product?.link_type }
   ];
   return (
-    <div className="maincard flex flex-col sm:flex-row border-t items-center justify-center pt-[0.1rem] dark:text-brand-dark p-4   bg-light dark:bg-dark-200   ">
+    <div className="maincard flex flex-col sm:flex-row border-t items-center justify-center pt-[0.1rem] dark:text-brand-dark p-4 md:pr-0   bg-light dark:bg-dark-200   ">
 
       {/* Left Column: Name and Domain Details */}
       <div className="flex flex-col w-full sm:w-4/5 ">
@@ -272,38 +272,36 @@ export default function ProductCard({ product }: { product: Product }) {
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col ml-24 mt-12 items-center md:flex-row gap-1">
-    <table className="w-full md:w-1/2">
-      <tbody>
-        {IconLabels.map(({ icon: Icon, label, value }, index) => (
-          <tr key={index} className="text-[12px] text-black dark:text-[#E4DFDF]">
-            <td className="flex items-center text-dark-700 dark:text-light-200 capitalize p-1 text-black font-semibold">
-              <Icon className="w-4 h-4 mr-1" />
-              {label}
-            </td>
-            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:text-brand">
-              {value}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <table className="w-full md:w-1/2">
-      <tbody>
-        {IconLabels2.map(({ icon: Icon, label, value }, index) => (
-          <tr key={index} className="text-[12px] text-black dark:text-[#E4DFDF]">
-            <td className="flex items-center capitalize p-1 text-dark-700 dark:text-light-200 text-black font-semibold">
-              <Icon className="w-4 h-4 mr-1" />
-              {label}
-            </td>
-            <td className="text-[12px] ml-1 items-center p-1 m-0 font-semibold capitalize text-brand dark:text-brand">
-              {value}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+          <div className="w-full item-start justify-start flex md:ml-24 md:mt-12 items-center gap-12">
+            <div className="w-full justify-start md:w-1/2">
+              {IconLabels.map(({ icon: Icon, label, value }, index) => (
+                <div key={index} className="flex justify-between items-center p-1 text-[12px] text-black dark:text-[#E4DFDF]">
+                  <div className="flex items-center text-black dark:text-light-200 capitalize font-semibold space-x-1">
+                    <Icon className="w-4 h-4" />
+                    <span className="truncate">{label}</span>
+                  </div>
+                  <span className="text-[12px] items-center font-semibold capitalize text-brand dark:text-brand ml-1">
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="w-full md:w-1/2">
+              {IconLabels2.map(({ icon: Icon, label, value }, index) => (
+                <div key={index} className="flex justify-between items-center p-1 text-[12px] text-black dark:text-[#E4DFDF]">
+                  <div className="flex items-center text-black dark:text-light-200 capitalize font-semibold space-x-1">
+                    <Icon className="w-4 h-4" />
+                    <span className="truncate">{label}</span>
+                  </div>
+                  <span className="text-[12px] items-center font-semibold capitalize text-brand dark:text-brand ml-1">
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+          </div>
         </div>
 
       </div>
