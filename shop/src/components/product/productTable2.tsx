@@ -118,11 +118,8 @@ export default function ProductTable() {
           <div className="mb-4 md:mb-0 md:w-1/4">
             <PageHeadingForFilter className='max-sm:text-[13px]' title={t('Explore all sites')} />
           </div>
-          
           <div className='flex w-full flex-row max-sm:flex max-sm:gap-6  '>
-        {/* <button onClick={handleClearAllFilters} className="bg-brand hover:bg-brand/80 active:bg-brand text-white font-bold py-2 px-4 rounded">
-          {t('Clear All Filters')}
-        </button> */}
+        
           <div className="flex max-sm:w-full max-sm:flex-col max-sm:w-full items-center ms-auto md:w-2/4">
             <Search inputClassName="bg-white dark:bg-dark-400 h-19 max-sm:h-8 text-sm" onSearch={handleSearch} placeholderText="Search all sites ...." />
           </div>
@@ -144,6 +141,7 @@ export default function ProductTable() {
         <div className={`flex w-full transition ${visible ? 'block' : 'hidden'}`}>
           <div className="flex w-full h-full flex-col border-t border-gray-200 md:mt-3 md:flex-row md:items-center">
             <ProductFilter
+              
               className="w-full text-sm"
               onProductTypeFilter={(productType: ProductTypeOptions) => {
                 setProductType(productType?.slug!);

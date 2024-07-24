@@ -24,7 +24,7 @@ import TitleWithSort from '@/components/ui/title-with-sort';
 import { useState, useEffect, SetStateAction } from 'react';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 import Cookies from 'js-cookie';
-import Spinner from '@/pages/spinner';
+import { SpinnerLoader } from '../ui/loader/spinner/spinner';
 
 
 type Campaign = {
@@ -69,15 +69,16 @@ const ProductInventoryList = ({
     column: null,
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [campaignNames, setCampaignNames] = useState<string[]>([]);
-  const [newCampaignName, setNewCampaignName] = useState('');
-  const [selectedCampaign, setSelectedCampaign] = useState<string>('');
-  const [validationError, setValidationError] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [id, setId] = useState('');
+const [isModalOpen, setIsModalOpen] = useState(false);
+const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+const [campaignNames, setCampaignNames] = useState<string[]>([]);
+const [newCampaignName, setNewCampaignName] = useState('');
+const [selectedCampaign, setSelectedCampaign] = useState<string>('');
+const [validationError, setValidationError] = useState('');
+const [isLoading, setIsLoading] = useState(true);
+const [Loading, setLoading] = useState(false);
+const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+const [id, setId]=useState('');
 
   const fetchCampaigns = async () => {
     try {
@@ -91,10 +92,14 @@ const ProductInventoryList = ({
         throw new Error('Failed to fetch campaigns');
       }
       const data = await response.json();
-      console.log('comapaign data', data);
-      const campaignNames = data.campaigns.map((campaign: { name: any }) => campaign.name);
-      setCampaignNames(campaignNames);
-      setCampaigns(data.campaigns);
+      const processedCampaigns = data.campaigns.map((campaign:any) => {
+        return {
+            ...campaign,
+            name: campaign.name.replace(/^https?:\/\//, ''),
+        };
+    });
+      setCampaignNames(processedCampaigns);
+      setCampaigns(processedCampaigns);
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching campaigns:', error);
@@ -103,68 +108,71 @@ const ProductInventoryList = ({
   };
 
 
-  useEffect(() => {
-    if (showSuccessMessage) {
-      const timer = setTimeout(() => {
-        setShowSuccessMessage(false);
-      }, 3000);
+useEffect(() => {
+  if (showSuccessMessage) {
+    const timer = setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [showSuccessMessage]);
+    return () => clearTimeout(timer);
+  }
+}, [showSuccessMessage]);
 
-  const handleAddProductToCampaign = async (productId: string) => {
-    const token = Cookies.get(AUTH_TOKEN_KEY);
+const handleAddProductToCampaign = async (productId: string) => {
+  const token = Cookies.get(AUTH_TOKEN_KEY);
 
-    if (newCampaignName && campaignNames.includes(newCampaignName)) {
-      setValidationError('Campaign with the same name already present');
+  if (newCampaignName && campaignNames.includes(newCampaignName)) {
+    setValidationError('Campaign with the same name already present');
+    return;
+  }
+
+  try {
+    let response;
+    if (newCampaignName) {
+      const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
+      setValidationError('Enter a valid campaign name');
+      setNewCampaignName('');
+      return;
+      }
+      setLoading(true);
+      response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: newCampaignName,
+          product_ids: [productId],
+        }),
+      });
+    } else if (selectedCampaign) {
+      setLoading(true);
+      response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          product_ids: [productId],
+        }),
+      });
+    } else {
+      setValidationError('Select a campaign or create a new one');
       return;
     }
 
-    try {
-      let response;
-      if (newCampaignName) {
-        const domainPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (newCampaignName.trim() === '' || !domainPattern.test(newCampaignName)) {
-          setValidationError('Enter a valid campaign name');
-          setNewCampaignName('');
-          return;
-        }
-        response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            name: newCampaignName,
-            product_ids: [productId],
-          }),
-        });
-      } else if (selectedCampaign) {
-        response = await fetch(`${process.env.NEXT_PUBLIC_REST_API_ENDPOINT}/campaigns/${selectedCampaign}/products`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            product_ids: [productId],
-          }),
-        });
-      } else {
-        setValidationError('Select a campaign or create a new one');
-        return;
-      }
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Error adding product to campaign');
+    }
 
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Error adding product to campaign');
-      }
-
-      setValidationError('');
-      setSelectedCampaign('');
-      setNewCampaignName('');
+    setValidationError('');
+    setSelectedCampaign('');
+    setNewCampaignName('');
+    setLoading(false);
       setIsModalOpen(false);
       setShowSuccessMessage(true);
     } catch (error) {
