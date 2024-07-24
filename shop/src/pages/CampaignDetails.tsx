@@ -207,23 +207,27 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                     <td className="px-8 py-2 whitespace-nowrap">{product.status}</td>
                     {product.pivot.order_id ? (
                       <td className="px-10 py-2 whitespace-nowrap">
-                        <text className="text-yellow-400 hover:text-yellow-500">View </text>
+                        <div className='flex gap-2 cursor-pointer transition-transform transform hover:scale-105' onClick={() => orderNavigation(product.pivot.order_id)}>
+                        <span className="text-base text-yellow-400 hover:text-yellow-500">View </span>
                         <button
-                          className="rounded-full shadow-lg transition-transform transform hover:scale-125"
+                          className="rounded-full "
                           onClick={() => orderNavigation(product.pivot.order_id)}
                         >
-                          <BsArrowRightCircle className="text-yellow-400 text-xl hover:text-yellow-500" />
+                          <BsArrowRightCircle className=" text-yellow-400 text-xl hover:text-yellow-500" />
                         </button>
+                        </div>
                       </td>
                     ) : (
                       <td className="px-10 py-2 whitespace-nowrap ">
-                        <text className=" text-brand hover:text-brand-dark">Buy </text>
+                        <div className='flex gap-2 cursor-pointer transition-transform transform hover:scale-105' onClick={() => handleNavigation(product.name)}>
+                        <span className="text-base text-brand hover:text-brand-dark ">Buy </span>
                         <button
-                          className="rounded-full shadow-lg transition-transform transform hover:scale-125"
+                          className="rounded-full"
                           onClick={() => handleNavigation(product.name)}
                         >
                           <BsArrowRightCircle className="text-xl text-brand hover:text-brand-dark" />
                         </button>
+                        </div>
                       </td>
                     )}
                     <td className="px-6 py-2 whitespace-nowrap text-center">
