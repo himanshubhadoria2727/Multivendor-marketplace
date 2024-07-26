@@ -110,7 +110,11 @@ const ProductInventoryList = ({
       setIsLoading(false);
     }
   };
-
+  const campaignOptions = campaigns.map((campaign) => (
+    <option key={campaign.id} value={campaign.id}>
+      {campaign.name}
+    </option>
+  ));
 
   useEffect(() => {
     if (showSuccessMessage) {
@@ -605,16 +609,13 @@ const ProductInventoryList = ({
                   <div>Loading...</div>
                 ) : (
                   <select
-                    value={selectedCampaign}
-                    onChange={handleCampaignSelectChange}
-                    className="w-full bg-white dark:bg-dark-300 p-2 border border-gray-300 rounded mb-4"
-                  >
-                    {campaigns.map((campaign: any) => (
-                      <option key={campaign.id} value={campaign.id}>
-                        {campaign.name}
-                      </option>
-                    ))}
-                  </select>
+                  value={selectedCampaign}
+                  onChange={handleCampaignSelectChange}
+                  className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
+                >
+                  <option value="" disabled>Select Campaign</option>
+                  {campaignOptions}
+                </select>
                 )}
                 <div className="flex justify-end">
                   <button

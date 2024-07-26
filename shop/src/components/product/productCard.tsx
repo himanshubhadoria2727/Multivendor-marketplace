@@ -83,6 +83,11 @@ export default function ProductCard({ product }: { product: Product }) {
       setIsLoading(false);
     }
   };
+  const campaignOptions = campaigns.map((campaign) => (
+    <option key={campaign.id} value={campaign.id}>
+      {campaign.name}
+    </option>
+  ));
 
 
   useEffect(() => {
@@ -358,11 +363,8 @@ export default function ProductCard({ product }: { product: Product }) {
                   onChange={handleCampaignSelectChange}
                   className="w-full p-2 border border-gray-300 rounded mb-4 bg-[#F9F9F9] dark:bg-dark-200"
                 >
-                  {campaigns.map((campaign) => (
-                    <option key={campaign.id} value={campaign.id}>
-                      {campaign.name}
-                    </option>
-                  ))}
+                  <option value="" disabled>Select Campaign</option>
+                  {campaignOptions}
                 </select>
               )}
               <div className="flex justify-end">
