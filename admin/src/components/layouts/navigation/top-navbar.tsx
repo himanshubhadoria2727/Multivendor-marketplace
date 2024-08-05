@@ -184,7 +184,7 @@ const Navbar = () => {
           <div className="flex shrink-0 grow-0 basis-auto items-center">
             {hasAccess(adminAndOwnerOnly, permissions) && (
               <>
-                <div className="hidden border-gray-200/80 px-6 py-5 border-e 2xl:block">
+                {/* <div className="hidden border-gray-200/80 px-6 py-5 border-e 2xl:block">
                   <LinkButton
                     href={Routes.shop.create}
                     size="small"
@@ -192,7 +192,7 @@ const Navbar = () => {
                   >
                     {t('common:text-create-shop')}
                   </LinkButton>
-                </div>
+                </div> */}
 
                 <div className="hidden px-6 py-5 2xl:block">
                   <VisitStore />

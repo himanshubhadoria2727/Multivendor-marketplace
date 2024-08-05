@@ -41,10 +41,12 @@ const LoginForm = () => {
           if (data?.token) {
             if (hasAccess(allowedRoles, data?.permissions)) {
               setAuthCredentials(data?.token, data?.permissions, data?.role);
+              
               Router.push(Routes.dashboard);
-              return;
+
+            
             }
-            setErrorMessage('form:error-enough-permission');
+          else  setErrorMessage('form:error-enough-permission');
           } else {
             setErrorMessage('form:error-credential-wrong');
           }

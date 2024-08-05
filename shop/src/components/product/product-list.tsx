@@ -257,7 +257,7 @@ const ProductInventoryList = ({
           <div className="flex flex-col">
             <div className='flex'>
               <a href={`https://${name}`} className="truncate text-dark font-semibold hover:underline text-blue-700 dark:text-blue-500 text-[16px] max-sm:text-[14px] tracking-wider ">{name}</a>
-              <LinkIcon style={{ fontSize: 14 }} />
+              {/* <LinkIcon style={{ fontSize: 14 }} /> */}
             </div>
           </div>
           <div className='flex gap-1'>

@@ -254,7 +254,7 @@ const OwnerDashboard = () => {
   const { permissions } = getAuthCredentials();
   let permission = hasAccess(adminOnly, permissions);
 
-  return permission ? <ShopList /> : <OwnerShopLayout />;
+  return permission ? null : <OwnerShopLayout />;
 };
 
 export default OwnerDashboard;

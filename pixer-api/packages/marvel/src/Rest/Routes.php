@@ -297,7 +297,7 @@ Route::group(['middleware' => ['can:' . Permission::CUSTOMER, 'auth:sanctum', 'e
 
 /**
  * ******************************************
- * Authorized Route for Staff & Store Owner
+ * Authorized Route for Staff & Publisher
  * ******************************************
  */
 
@@ -368,7 +368,7 @@ Route::group(
 
 /**
  * *****************************************
- * Authorized Route for Store owner Only
+ * Authorized Route for Publisher Only
  * *****************************************
  */
 

@@ -22,6 +22,9 @@ import '@/assets/css/scrollbar.css';
 import '@/assets/css/swiper-carousel.css';
 import '@/assets/css/pagination.css';
 import '@/assets/css/globals.css';
+//firebase
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -37,6 +40,13 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+// Import the functions you need from the SDKs you need
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Initialize Firebase
+
 function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   const { locale } = useRouter();
   const [queryClient] = useState(() => new QueryClient());
@@ -48,7 +58,8 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [dir]);
 
   const authenticationRequired = Component.authorization ?? false;
-
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>

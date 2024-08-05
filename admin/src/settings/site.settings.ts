@@ -3,6 +3,7 @@ import {
   adminOnly,
   adminOwnerAndStaffOnly,
   ownerAndStaffOnly,
+  ownerOnly,
 } from '@/utils/auth-utils';
 import { Routes } from '@/config/routes';
 
@@ -123,11 +124,11 @@ export const siteSettings = {
                 label: 'text-all-shops',
                 icon: 'MyShopIcon',
               },
-              {
-                href: Routes.shop.create,
-                label: 'text-add-all-shops',
-                icon: 'ShopIcon',
-              },
+              // {
+              //   href: Routes.shop.create,
+              //   label: 'text-add-all-shops',
+              //   icon: 'ShopIcon',
+              // },
               {
                 href: Routes.newShops,
                 label: 'text-inactive-shops',
@@ -135,11 +136,11 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: Routes.adminMyShops,
-            label: 'sidebar-nav-item-my-shops',
-            icon: 'MyShopIcon',
-          },
+          // {
+          //   href: Routes.adminMyShops,
+          //   label: 'sidebar-nav-item-my-shops',
+          //   icon: 'MyShopIcon',
+          // },
         ],
       },
 
@@ -180,11 +181,11 @@ export const siteSettings = {
             label: 'text-groups',
             icon: 'HomeIcon',
           },
-          {
-            href: Routes.productInventory,
-            label: 'text-inventory',
-            icon: 'InventoryIcon',
-          },
+          // {
+          //   href: Routes.productInventory,
+          //   label: 'text-inventory',
+          //   icon: 'InventoryIcon',
+          // },
           {
             href: Routes.category.list,
             label: 'sidebar-nav-item-categories',
@@ -663,12 +664,12 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: (shop: string) => `/${shop}${Routes.productInventory}`,
-            label: 'text-inventory',
-            icon: 'InventoryIcon',
-            permissions: adminOwnerAndStaffOnly,
-          },
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.productInventory}`,
+          //   label: 'text-inventory',
+          //   icon: 'InventoryIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
           // {
           //   href: (shop: string) => `/${shop}${Routes.attribute.list}`,
           //   label: 'sidebar-nav-item-attributes',
@@ -932,12 +933,12 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: (shop: string) => `/${shop}${Routes.productInventory}`,
-            label: 'text-inventory',
-            icon: 'InventoryIcon',
-            permissions: adminOwnerAndStaffOnly,
-          },
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.productInventory}`,
+          //   label: 'text-inventory',
+          //   icon: 'InventoryIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
           // {
           //   href: (shop: string) => `/${shop}${Routes.attribute.list}`,
           //   label: 'sidebar-nav-item-attributes',

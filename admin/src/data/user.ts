@@ -3,7 +3,7 @@ import { Routes } from '@/config/routes';
 import Cookies from 'js-cookie';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { QueryClient, useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 import { API_ENDPOINTS } from './client/api-endpoints';
 import { userClient } from './client/user';

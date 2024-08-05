@@ -8,6 +8,8 @@ import { useRouter } from 'next/router';
 import { ActionMeta } from 'react-select';
 import useCountries from './useCountry';
 import { domain_authority, isLinkInsertion, linkType, organic_traffic, price } from './options';
+import { useCategories } from '@/data/category';
+import Loader from '../ui/loaderAdmin/loader';
 
 type Props = {
   onProductTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
@@ -19,6 +21,7 @@ type Props = {
   onDRFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onNicheFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onLIFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onCategoryFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   className?: string;
   enableLinkType?: boolean;
   enableTrafficFilter?: boolean;
@@ -28,6 +31,7 @@ type Props = {
   enableNiche?: boolean;
   enableProductType?: boolean;
   enableCountry?: boolean;
+  enableCategory?: boolean;
   enablePrice?: boolean;
 };
 
@@ -35,6 +39,7 @@ export default function ProductFilter({
   onProductTypeFilter,
   onCountryFilter,
   onDAFilter,
+  onCategoryFilter,
   onDRFilter,
   onTrafficFilter,
   onPriceFilter,
@@ -50,13 +55,14 @@ export default function ProductFilter({
   enablePrice,
   enableNiche,
   enableDR,
+  enableCategory,
   enableProductType,
 }: Props) {
   const { locale } = useRouter();
   const { t } = useTranslation();
 
   const { countries, loading: manufactureLoading } = useCountries();
-
+  const { categories } = useCategories();
   const productType = [
     { name: 'simple', slug: ProductType.Simple },
     { name: 'variable', slug: ProductType.Variable },
@@ -70,6 +76,7 @@ export default function ProductFilter({
   const [selectedLinkType, setSelectedLinkType] = useState(null);
   const [selectedNiche, setSelectedNiche] = useState(null);
   const [selectedLI, setSelectedLI] = useState(null);
+  const [selectedCategory, setCategory] = useState(null);
 
   const clearAllFilters = () => {
     setSelectedPrice(null);
@@ -80,6 +87,7 @@ export default function ProductFilter({
     setSelectedLinkType(null);
     setSelectedNiche(null);
     setSelectedLI(null);
+    setCategory(null);
 
     const defaultActionMeta = { action: 'clear' } as ActionMeta<unknown>;
 
@@ -91,6 +99,7 @@ export default function ProductFilter({
     if (onLinkTypeFilter) onLinkTypeFilter(null, defaultActionMeta);
     if (onNicheFilter) onNicheFilter(null, defaultActionMeta);
     if (onLIFilter) onLIFilter(null, defaultActionMeta);
+    if (onCategoryFilter) onCategoryFilter(null, defaultActionMeta);
   };
 
   const isAnyFilterApplied = [
@@ -101,9 +110,10 @@ export default function ProductFilter({
     selectedCountry,
     selectedLinkType,
     selectedNiche,
-    selectedLI
+    selectedCategory,
+    selectedLI,
+    selectedCategory
   ].some(filter => filter !== null);
-
   useEffect(() => {
     if (!isAnyFilterApplied && document.getElementById('clear-filters-button')) {
       document.getElementById('clear-filters-button').style.display = 'none';
@@ -233,6 +243,23 @@ export default function ProductFilter({
           />
         </div>
       )}
+      {enableCategory && (
+        <div className="w-full">
+          <Label>{t('Categories')}</Label>
+          <Select
+            options={categories}
+            value={selectedCategory}
+            getOptionLabel={(option: any) => option.name}
+            getOptionValue={(option: any) => option.slug}
+            placeholder={t('Filter by Link type')}
+            onChange={(newValue, actionMeta) => {
+              setCategory(newValue);
+              if (onCategoryFilter) onCategoryFilter(newValue, actionMeta);
+            }}
+            isClearable={true}
+          />
+        </div>
+      )}
       {enableLI && (
         <div className="w-full">
           <Label>{t('Link Insertion')}</Label>
@@ -252,7 +279,7 @@ export default function ProductFilter({
       )}
       {isAnyFilterApplied && (
         <div className="w-full">
-          <button id="clear-filters-button" onClick={clearAllFilters} className="bg-brand hover:bg-brand/80 md:mt-8 active:bg-brand text-white font-semibold py-1 px-3 rounded">
+          <button id="clear-filters-button" onClick={clearAllFilters} className="bg-brand hover:bg-brand/80 md:mt-2 active:bg-brand text-white font-semibold py-1 px-3 rounded">
             {t('Clear All Filters')}
           </button>
         </div>

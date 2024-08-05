@@ -12,7 +12,7 @@ INSERT INTO `user_profiles` (
 VALUES (
     1,
     '{\"id\": \"883\", \"original\": \"https://pickbazarlaravel.s3.ap-southeast-1.amazonaws.com/881/aatik-tasneem-7omHUGhhmZ0-unsplash%402x.png\", \"thumbnail\": \"https://pickbazarlaravel.s3.ap-southeast-1.amazonaws.com/881/conversions/aatik-tasneem-7omHUGhhmZ0-unsplash%402x-thumbnail.jpg\"}',
-    'This is the store owner and we have 6 shops under our banner. We are running all the shops to give our customers hassle-free service and quality products. Our goal is to provide best possible customer service and products for our clients',
+    'This is the Publisher and we have 6 shops under our banner. We are running all the shops to give our customers hassle-free service and quality products. Our goal is to provide best possible customer service and products for our clients',
     NULL,
     '12365141641631',
     NULL,

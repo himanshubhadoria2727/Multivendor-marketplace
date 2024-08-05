@@ -1,5 +1,5 @@
 import Navbar from '@/components/layouts/navigation/top-navbar';
-import { miniSidebarInitialValue } from '@/utils/constants';
+import { miniSidebarInitialValue, SUPER_ADMIN } from '@/utils/constants';
 import { useRouter } from 'next/router';
 import { getAuthCredentials, hasAccess } from '@/utils/auth-utils';
 import SidebarItem from '@/components/layouts/navigation/sidebar-item';
@@ -54,6 +54,7 @@ const SidebarItemMap = ({ menuItems }: any) => {
 
   let termsAndConditions;
   let coupons;
+  let dashboard;
 
   if (!Boolean(isEnableTermsRoute)) {
     termsAndConditions = menuItems?.childMenu.find(
@@ -61,7 +62,6 @@ const SidebarItemMap = ({ menuItems }: any) => {
     );
     if (termsAndConditions) termsAndConditions.permissions = adminOnly;
   }
-
   if (!isEnableCouponsRoute) {
     coupons = menuItems?.childMenu.find(
       (item: any) => item.label === 'Coupons',
@@ -85,6 +85,9 @@ const SidebarItemMap = ({ menuItems }: any) => {
           childMenu: any;
           permissions: any;
         }) => {
+          //  if (label === 'text-main' && hasAccess(permissions, currentUserPermissions)) {
+          //   return null;
+          // }
           if (!childMenu && !hasAccess(permissions, currentUserPermissions)) {
             return null;
           }
@@ -113,6 +116,13 @@ const SideBarGroup = () => {
     role === 'staff'
       ? siteSettings?.sidebarLinks?.staff
       : siteSettings?.sidebarLinks?.shop;
+      if (role === SUPER_ADMIN) {
+        console.log(menuItems.root)
+        delete menuItems.root
+        // menuItems?.map((val,ind)=>{
+        //   console.log(val)
+        // });
+      }
   const menuKeys = Object.keys(menuItems);
   const { width } = useWindowSize();
   const { t } = useTranslation();
@@ -160,7 +170,7 @@ const ShopLayout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       <Navbar />
       <MobileNavigation>
         <SideBarGroup />
-      </MobileNavigation>
+      </MobileNavigation> 
 
       <div className="flex flex-1">
         <aside

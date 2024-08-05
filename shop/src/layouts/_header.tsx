@@ -88,7 +88,7 @@ export default function Header({
             rel="noreferrer"
             className="focus:ring-accent-700 hidden h-9 shrink-0 items-center justify-center rounded border border-transparent bg-brand px-3 py-0 text-sm font-semibold leading-none text-light outline-none transition duration-300 ease-in-out hover:bg-brand-dark focus:shadow focus:outline-none focus:ring-1 sm:inline-flex"
           >
-            {t('text-become-seller')}
+            {t('Become a publisher')}
           </a>
           <LoginMenu />
         </div>

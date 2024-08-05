@@ -66,20 +66,20 @@ const ShopList = ({
     {
       title: (
         <TitleWithSort
-          title={t('table:table-item-shop')}
+          title={t('Publiser email')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
           }
           isActive={sortingObj.column === 'name'}
         />
       ),
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'Email',
+      key: 'Email',
       align: alignLeft,
       width: 250,
       className: 'cursor-pointer',
       onHeaderCell: () => onHeaderClick('name'),
-      render: (name: any, { slug, logo }: any) => (
+      render: (name: any, { slug, logo,owner }: any) => (
         <div className="flex items-center">
           <div className="relative aspect-square h-10 w-10 shrink-0 overflow-hidden rounded border border-border-200/80 bg-gray-100 me-2.5">
             <Image
@@ -90,11 +90,11 @@ const ShopList = ({
               sizes="(max-width: 768px) 100vw"
             />
           </div>
-          <Link href={`/${slug}`}>
+          {/* <Link href={`/${slug}`}> */}
             <span className="truncate whitespace-nowrap font-medium">
-              {name}
+              {owner.email}
             </span>
-          </Link>
+          {/* </Link> */}
         </div>
       ),
     },
@@ -190,7 +190,7 @@ const ShopList = ({
           <ActionButtons
             id={id}
             approveButton={true}
-            detailsUrl={`/${slug}`}
+            detailsUrl={`/${id}/products`}
             isShopActive={is_active}
           />
         );

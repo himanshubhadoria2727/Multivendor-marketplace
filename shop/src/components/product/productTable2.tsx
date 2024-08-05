@@ -18,6 +18,12 @@ import ErrorMessage from '../ui/error-message';
 import { organic_traffic } from '../filters/options';
 import CategoryFilter from './category-filter';
 import { clearAllFilters } from '@/utils/clearFilterProducts';
+import { Alert } from '@mui/material';
+import CountdownTimer from '../ui/countdown-timer';
+import { useAtom } from 'jotai';
+import { checkIsMaintenanceModeComing, RESPONSIVE_WIDTH } from '@/lib/constants';
+import { useSettings } from '@/data/settings';
+import { CheckMark } from '../icons/checkmark';
 
 interface TableProps {
   loading: boolean
@@ -46,6 +52,10 @@ export default function ProductTable() {
   const [isLinkInsertion, setLinkInsertion] = useState('');
   const { locale } = useRouter();
   const [visible, setVisible] = useState(false);
+  const [underMaintenanceIsComing] = useAtom(checkIsMaintenanceModeComing);
+  const { settings } = useSettings();
+
+
 
   const toggleVisible = () => {
     setVisible((v) => !v);
@@ -101,7 +111,16 @@ export default function ProductTable() {
 
   return (
     <>
-      <CategoryFilter
+        {/* {width >= RESPONSIVE_WIDTH && underMaintenanceIsComing? ( */}
+        <div
+          className="flex flex-row m-3 p-2 pr-6 pl-4 bg-light border rounded-lg content-center shadow-sm mb-0 justify-between dark:bg-dark-300"
+        >
+          
+         <div className='text-base flex gap-2'><CheckMark/>You are good to go!</div>
+          <div className='text-blue-600 [&>p]:bg-blue-200 [&>p]:p-2 [&>p]:text-xs [&>p]:text-blue-600'>Adding 500+ websites every week !</div>
+        </div>
+      
+      {/* <CategoryFilter
         onAllProductFilter={(status) => {
           setStatus(status);
           setPage(1);
@@ -111,7 +130,7 @@ export default function ProductTable() {
           setCategory(categorySlug);
           setPage(1);
         }}
-      />
+      /> */}
 
       <Card className="m-3 mb-0 border-l-2 border-r-2 border-brand/90 flex dark:bg-dark-300 flex-col">
         <div className="flex w-full flex-col items-center md:flex-row">
@@ -175,19 +194,24 @@ export default function ProductTable() {
                 setLinkInsertion(isLinkInsertion?.slug!);
                 setPage(1);
               }}
+              onCategoryFilter={(categories: ProductTypeOptions) => {
+                setCategory(categories?.slug!);
+                setPage(1);
+              }}
               enableDR
               enablePrice
               enableLinkType
               enableCountry
               enableDA
               enableLI
+              enableCategory
               enableTrafficFilter
               enableProductType
             />
           </div>
         </div>
       </Card>
-
+              
       {loading ? (
         <Loader text={t('common:Loading')} />
       ) : error ? (

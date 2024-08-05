@@ -16,6 +16,8 @@ module.exports = {
       'localhost',
       '127.0.0.1',
       '127.0.0.1:8000',
+      'goodblogger.co',
+      'goodblogger.co:3000',
       'maps.googleapis.com',
       's3.amazonaws.com',
       'flagsapi.com',

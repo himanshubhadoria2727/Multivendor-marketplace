@@ -15,12 +15,17 @@ import type { SubmitHandler } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useMutation } from 'react-query';
 import * as yup from 'yup';
+import {signInWithGooglePopup} from 'firebase.utils'
 
 const loginValidationSchema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup.string().required(),
 });
 
+const logGoogleUser = async () => {
+  const response = await signInWithGooglePopup();
+  console.log(response);
+}
 export default function LoginUserForm() {
   const { t } = useTranslation('common');
   const { openModal, closeModal } = useModalAction();
@@ -33,15 +38,18 @@ export default function LoginUserForm() {
         });
         return;
       }
+      console.log('login data',data);
       authorize(data.token);
       setAuthCredentials(data.token, data.permissions);
       closeModal();
     },
   });
   const onSubmit: SubmitHandler<LoginUserInput> = (data) => {
+    // logGoogleUser()
     login(data);
   };
   return (
+    <>
     <div className="bg-light px-6 pt-10 pb-8 dark:bg-dark-300 sm:px-8 lg:p-12">
       <RegisterBgPattern className="absolute bottom-0 left-0 text-light dark:text-dark-300 dark:opacity-60" />
       <div className="relative z-10 flex items-center">
@@ -101,11 +109,14 @@ export default function LoginUserForm() {
                 >
                   {t('text-get-login')}
                 </Button>
+                {/* <Button>Sign in with google</Button> */}
               </>
             )}
           </Form>
         </div>
       </div>
     </div>
+    </>
+    
   );
 }

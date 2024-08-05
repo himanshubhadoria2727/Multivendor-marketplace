@@ -42,6 +42,8 @@ use Marvel\Otp\Gateways\OtpGateway;
 use Marvel\Traits\UsersTrait;
 use Marvel\Traits\WalletsTrait;
 use Spatie\Newsletter\Facades\Newsletter;
+use Illuminate\Support\Facades\Log;
+
 
 class UserController extends CoreController
 {
@@ -275,38 +277,97 @@ class UserController extends CoreController
         return $request->user()->currentAccessToken()->delete();
     }
 
+    protected $dataArray = ['name', 'email', 'password', 'slug', 'owner_id', 'categories', 'balance'];
+
     public function register(UserCreateRequest $request)
     {
+        Log::info('Register method called', ['request' => $request->all()]);
+
         $notAllowedPermissions = [Permission::SUPER_ADMIN];
         if ((isset($request->permission->value) && in_array($request->permission->value, $notAllowedPermissions)) || (isset($request->permission) && in_array($request->permission, $notAllowedPermissions))) {
+            Log::warning('Unauthorized permission attempted', ['permission' => $request->permission]);
             throw new AuthorizationException(NOT_AUTHORIZED);
         }
+
         $permissions = [Permission::CUSTOMER];
         $role = Role::CUSTOMER;
         if (isset($request->permission)) {
             $permissions[] = isset($request->permission->value) ? $request->permission->value : $request->permission;
             $role = Role::STORE_OWNER;
         }
+
+        Log::info('Creating user', ['name' => $request->name, 'email' => $request->email]);
+
         $user = $this->repository->create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
+        Log::info('User created', ['user_id' => $user->id]);
+
         $user->givePermissionTo($permissions);
         $user->assignRole($role);
         $this->giveSignupPointsToCustomer($user->id);
+
+        Log::info('Permissions and role assigned', ['user_id' => $user->id, 'permissions' => $permissions, 'role' => $role]);
+
         $setting = Settings::first();
         $useMustVerifyEmail = isset($setting->options['useMustVerifyEmail']) ? $setting->options['useMustVerifyEmail'] : false;
         if ($useMustVerifyEmail) {
             event(new Registered($user));
+            Log::info('User registered event triggered', ['user_id' => $user->id]);
         }
-        event(new ProcessUserData());
-        return [
-            "token" => $user->createToken('auth_token')->plainTextToken,
-            "permissions" => $user->getPermissionNames(),
-            "role" => $user->getRoleNames()->first()
-        ];
+
+        try {
+            $data = $request->only($this->dataArray);
+            $data['slug'] = $this->makeSlug($request);
+            $data['owner_id'] = $user->id;
+
+            Log::info('Creating shop', ['data' => $data]);
+
+            $shopData = [
+                'name' => 'dashboard',
+                // 'email' => $request->email,
+                'slug' => 'dashboard',
+                'is_active'=>'1',
+                'owner_id' => $data['owner_id']
+            ];
+
+            $shop = Shop::create($shopData);
+
+            Log::info('Shop created', ['shop_id' => $shop->id]);
+
+            if (isset($request['categories'])) {
+                $shop->categories()->attach($request['categories']);
+                Log::info('Categories attached to shop', ['shop_id' => $shop->id, 'categories' => $request['categories']]);
+            }
+
+            if (isset($request['balance']['payment_info'])) {
+                $shop->balance()->create($request['balance']);
+                Log::info('Balance created for shop', ['shop_id' => $shop->id, 'balance' => $request['balance']]);
+            }
+
+            $shop->categories = $shop->categories;
+            $shop->staffs = $shop->staffs;
+
+            Log::info('Shop details updated', ['shop_id' => $shop->id]);
+
+            return [
+                "token" => $user->createToken('auth_token')->plainTextToken,
+                "permissions" => $user->getPermissionNames(),
+                "role" => $user->getRoleNames()->first(),
+                "shop" => $shop
+            ];
+        } catch (Exception $e) {
+            Log::error('Error creating shop', ['error' => $e->getMessage()]);
+            throw new HttpException(400, 'COULD_NOT_CREATE_THE_RESOURCE');
+        }
+    }
+
+    protected function makeSlug(Request $request)
+    {
+        return Str::slug($request->name . '-' . uniqid());
     }
 
     public function banUser(Request $request)
