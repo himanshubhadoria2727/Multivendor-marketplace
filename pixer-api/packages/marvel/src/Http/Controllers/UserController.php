@@ -321,15 +321,15 @@ class UserController extends CoreController
 
         try {
             $data = $request->only($this->dataArray);
-            $data['slug'] = $this->makeSlug($request);
+            $data['slug'] = $user['name'];
             $data['owner_id'] = $user->id;
 
             Log::info('Creating shop', ['data' => $data]);
 
             $shopData = [
-                'name' => 'dashboard',
+                'name' => $request->name,
                 // 'email' => $request->email,
-                'slug' => 'dashboard',
+                'slug' => $data['slug'],
                 'is_active'=>'1',
                 'owner_id' => $data['owner_id']
             ];
@@ -365,10 +365,10 @@ class UserController extends CoreController
         }
     }
 
-    protected function makeSlug(Request $request)
-    {
-        return Str::slug($request->name . '-' . uniqid());
-    }
+    // protected function makeSlug(Request $request)
+    // {
+    //     return Str::slug($request->name . '-' . uniqid());
+    // }
 
     public function banUser(Request $request)
     {

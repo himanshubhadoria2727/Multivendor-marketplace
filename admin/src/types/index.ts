@@ -503,6 +503,7 @@ export interface CouponInput {
 }
 
 export interface StoreNotice {
+  slug: any;
   id: string;
   translated_languages: string[];
   priority: StoreNoticePriorityType;

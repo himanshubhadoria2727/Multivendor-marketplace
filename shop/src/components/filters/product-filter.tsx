@@ -251,7 +251,7 @@ export default function ProductFilter({
             value={selectedCategory}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
-            placeholder={t('Filter by Link type')}
+            placeholder={t('Filter by Categories')}
             onChange={(newValue, actionMeta) => {
               setCategory(newValue);
               if (onCategoryFilter) onCategoryFilter(newValue, actionMeta);

@@ -7,7 +7,7 @@ import { useIsDarkMode } from '@/lib/hooks/use-is-dark-mode';
 import { siteSettings } from '@/data/static/site-settings';
 import { useSettings } from '@/data/settings';
 
-export default function Logo({
+export default function   Logo({
   className = 'w-50',
   ...props
 }: React.AnchorHTMLAttributes<{}>) {
@@ -31,8 +31,8 @@ export default function Logo({
           height: siteSettings?.height,
         }}
       >
-        GoodBlogger
-        {/* {isMounted && isDarkMode && (
+        {/* GoodBlogger */}
+        {isMounted && isDarkMode && (
           <Image
             src={settings?.dark_logo?.original ?? darkLogo}
             fill
@@ -53,7 +53,7 @@ export default function Logo({
             alt={settings?.siteTitle ?? 'Light Logo'}
             className="object-contain"
           />
-        )} */}
+        )}
       </span>
     </AnchorLink>
   );

@@ -190,7 +190,7 @@ const ShopList = ({
           <ActionButtons
             id={id}
             approveButton={true}
-            detailsUrl={`/${id}/products`}
+            detailsUrl={`/${slug}/products`}
             isShopActive={is_active}
           />
         );
