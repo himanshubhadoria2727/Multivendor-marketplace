@@ -542,7 +542,7 @@ const ProductInventoryList = ({
       width: 80,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('price'),
-      render: (price: number, { slug }: { slug: any }) => (
+      render: (price: number, { slug ,id }: { slug: any,id:any }) => (
         <div className="flex items-center justify-center text-dark-100 dark:text-light-400">
           <div className="flex flex-col items-center gap-1 justify-center">
             <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border items-start text-dark-100 dark:text-light-400 w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>

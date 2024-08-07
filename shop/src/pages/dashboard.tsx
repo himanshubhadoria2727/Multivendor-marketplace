@@ -1,4 +1,4 @@
-  import { OrderQueryOptions, User } from '@/types';
+import { OrderQueryOptions, User } from '@/types';
 import { NextPageWithLayout } from '@/types';
 import Layout from '@/layouts/_layout';
 import Seo from '@/layouts/_seo';
@@ -37,43 +37,40 @@ const Dashboard = () => {
   };
   const router = useRouter();
   const { me } = useMe();
-  console.log("me",me);
   const { price: currentWalletCurrency } = usePrice({
     amount: Number(me?.wallet?.available_points_to_currency),
   });
-  
+
   const { orders, isLoading, error, loadMore, hasNextPage, isLoadingMore } = useOrders(options);
 
   const successfulOrders = orders.filter(order => order.payment_status === "payment-success");
   const numberOfSuccessfulOrders = successfulOrders.length;
 
-  console.log('success',successfulOrders)
-// Extract and flatten all products from the successful orders
-const allProducts = successfulOrders.flatMap(order =>
-  order.products.map(product => ({
-    ...product,
-    subtotal: product.pivot.subtotal // Assuming `pivot` contains `subtotal`
-  }))
-);
-const allSubtotals = allProducts.map(product => product.subtotal);
-const { price: subtotal } = usePrice({
-  amount: Number(allSubtotals),
-});
+  // Extract and flatten all products from the successful orders
+  const allProducts = successfulOrders.flatMap(order =>
+    order.products.map(product => ({
+      ...product,
+      subtotal: product.pivot.subtotal // Assuming `pivot` contains `subtotal`
+    }))
+  );
+  const allSubtotals = allProducts.map(product => product.subtotal);
+  const { price: subtotal } = usePrice({
+    amount: Number(allSubtotals),
+  });
 
-const totalSubtotal = allProducts.reduce((total, product) => total + parseFloat(product.subtotal), 0);
+  const totalSubtotal = allProducts.reduce((total, product) => total + parseFloat(product.subtotal), 0);
 
-const activeOrders = orders.filter(order => order.payment_status === "payment-pending");
-const numberOfActiveOrders = activeOrders.length;
+  const activeOrders = orders.filter(order => order.payment_status === "payment-pending");
+  const numberOfActiveOrders = activeOrders.length;
 
-  console.log('orders', orders);
   return (
     <div className="parent flex flex-col  p-4">
       <div className="Username flex flex-col md:flex-row border-l-2 border-r-2 border-brand/90 items-center justify-center h-auto m-2 md:m-4 p-3 dark:bg-dark-200 dark:text-brand-dark rounded-lg shadow-md bg-white dark:shadow dark:shadow-[#8D9797] w-full md:w-auto sm:w-auto">
         <h1 className="text-3xl w-100 text-[#474E4E] font-bold dark:text-white p-4">
-          Hello Customer !
+          Hello {me?.name} !
         </h1>
       </div>
-      
+
       <div className="OrderDetails-parent bg-white m-4 flex flex-wrap justify-around p-2 dark:bg-dark-200 border-l-2 border-r-2 border-brand/90 dark:text-brand-dark rounded-lg shadow-md bg-white dark:bg-dark-200">
         <div
           className="OrderDetails lg:w-1/5 relative w-full md:full p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
@@ -133,19 +130,21 @@ const numberOfActiveOrders = activeOrders.length;
         </div>
       </div>
       <div className="OtherDetails-parent bg-white border-l-2 border-r-2 border-brand/90 m-4 flex flex-wrap justify-around dark:bg-dark-200 dark:text-brand-dark p-3 rounded-lg shadow-md bg-white dark:bg-dark-200 ">
-        <button onClick={()=>router.push('/profileh')}
-          className="lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/profileh')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105
            "
         >
-          <span className=" flex flex-col items-center justify-center p-4 ">
+          <span className=" flex flex-col items-center justify-center p-4 hover:color">
             <UserIcon className="h-20 w-20 " />
             <p className="flex-col text-base text-[#515A5A] mt-4 dark:text-white">
               My Profile
             </p>
           </span>
         </button>
-        <button onClick={()=>router.push('/campaigns')}
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/campaigns')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
            "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -155,8 +154,9 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </button>
-        <button onClick={()=>router.push('/profile')}
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/profile')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -166,8 +166,9 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </button>
-        <button onClick={()=>router.push('/order')}
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/order')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -177,8 +178,9 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </button>
-        <button onClick={()=>router.push('/packages')}
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/packages')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -189,7 +191,8 @@ const numberOfActiveOrders = activeOrders.length;
           </span>
         </button>
         <div
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -199,8 +202,9 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </div>
-        <button onClick={()=>router.push('/')}
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -210,8 +214,9 @@ const numberOfActiveOrders = activeOrders.length;
             </p>
           </span>
         </button>
-        <button onClick={()=>router.push('/')}
-          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200  p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+        <button onClick={() => router.push('/')}
+          className="OtherDetails lg:w-1/5 w-full md:full border-2 border-gray-200 dark:border-grey-200 p-4 pt-6 pb-6 m-4 items-center justify-start p-1 dark:bg-dark-200 dark:text-brand-dark p-5 rounded-lg shadow-xl bg-white dark:bg-dark-200 
+             transition-transform duration-300 ease-in-out transform hover:scale-105 
           "
         >
           <span className=" flex flex-col items-center justify-center p-4 ">
@@ -223,7 +228,7 @@ const numberOfActiveOrders = activeOrders.length;
         </button>
       </div>
 
-      
+
     </div>
   );
 };
@@ -237,8 +242,8 @@ const DashboardPage: NextPageWithLayout = () => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes.dashboard}
       />
-        <Dashboard />
-      
+      <Dashboard />
+
     </>
   );
 };
@@ -255,7 +260,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   return {
     props: {
-      
+
       ...(await serverSideTranslations(locale!, ['common'])),
     },
     revalidate: 60, // In seconds
