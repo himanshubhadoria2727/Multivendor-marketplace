@@ -24,7 +24,6 @@ import { useAtom } from 'jotai';
 import { checkIsMaintenanceModeComing, RESPONSIVE_WIDTH } from '@/lib/constants';
 import { useSettings } from '@/data/settings';
 import { CheckMark } from '../icons/checkmark';
-import { useMe } from '@/data/user';
 
 interface TableProps {
   loading: boolean
@@ -56,7 +55,7 @@ export default function ProductTable() {
   const [underMaintenanceIsComing] = useAtom(checkIsMaintenanceModeComing);
   const { settings } = useSettings();
 
-  const { isAuthorized, isLoading, me } = useMe();
+
 
   const toggleVisible = () => {
     setVisible((v) => !v);
@@ -93,36 +92,18 @@ export default function ProductTable() {
   function handlePagination(current: any) {
     setPage(current);
   }
-
-  const handleClearAllFilters = () => {
-    clearAllFilters(
-      setPrice,
-      setDA,
-      setDR,
-      setOrganicTraffic,
-      setcountries,
-      setLinkType,
-      setCategory,
-      setLinkInsertion,
-      setProductType,
-      setStatus,
-      // Add any filter callback functions if needed
-    );
-  };
-
+  
   return (
     <>
         {/* {width >= RESPONSIVE_WIDTH && underMaintenanceIsComing? ( */}
-        {isAuthorized &&
-          (<div
-            className="flex flex-row m-3 p-2 pr-6 pl-4 bg-light border rounded-lg content-center shadow-sm mb-0 justify-between dark:bg-dark-300"
-          >
-            
-           <div className='text-base flex gap-2 text-brand font-semibold'><CheckMark/>You are good to go!</div>
-            <div className='text-blue-600 [&>p]:bg-blue-200 [&>p]:p-2 [&>p]:text-xs [&>p]:text-blue-600'>Adding 200+ websites every week !</div>
-          </div>
-        )
-        }
+        <div
+          className="flex flex-row m-3 p-2 pr-6 pl-4 bg-light border rounded-lg content-center shadow-sm mb-0 justify-between dark:bg-dark-300"
+        >
+          
+         <div className='text-base flex gap-2  max-sm:text-sm text-brand font-semibold'><CheckMark/>You are good to go!</div>
+          <div className='text-blue-600 [&>p]:bg-blue-200 max-sm:text-sm [&>p]:p-2 [&>p]:text-xs [&>p]:text-blue-600'>Adding 00+ websites every week !</div>
+        </div>
+      
       {/* <CategoryFilter
         onAllProductFilter={(status) => {
           setStatus(status);

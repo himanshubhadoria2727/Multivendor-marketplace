@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, JSXElementConstructor, ReactElement } from 'react';
 import Label from '@/components/ui/label';
 import Select from '@/components/ui/select/select';
 import { LinkType, ProductType } from '@/types';
@@ -6,10 +6,15 @@ import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { ActionMeta } from 'react-select';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+import Tooltip from "rc-tooltip"; // 5.1.1
+import "rc-tooltip/assets/bootstrap_white.css";
 import useCountries from './useCountry';
 import { domain_authority, isLinkInsertion, linkType, organic_traffic, price } from './options';
 import { useCategories } from '@/data/category';
 import Loader from '../ui/loaderAdmin/loader';
+import { debounce } from 'lodash';
 
 type Props = {
   onProductTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
@@ -17,8 +22,8 @@ type Props = {
   onLinkTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onTrafficFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onPriceFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
-  onDAFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
-  onDRFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onDAFilter?: (newValue: any) => void;
+  onDRFilter?: (newValue: any) => void;
   onNicheFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onLIFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onCategoryFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
@@ -69,8 +74,8 @@ export default function ProductFilter({
   ];
 
   const [selectedPrice, setSelectedPrice] = useState(null);
-  const [selectedDA, setSelectedDA] = useState(null);
-  const [selectedDR, setSelectedDR] = useState(null);
+  const [selectedDR, setSelectedDR] = useState<number[]>([0, 100]);
+  const [selectedDA, setSelectedDA] = useState<number[]>([0, 100]);
   const [selectedTraffic, setSelectedTraffic] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedLinkType, setSelectedLinkType] = useState(null);
@@ -80,8 +85,8 @@ export default function ProductFilter({
 
   const clearAllFilters = () => {
     setSelectedPrice(null);
-    setSelectedDA(null);
-    setSelectedDR(null);
+    setSelectedDA([0, 100]);
+    setSelectedDR([0, 100]);
     setSelectedTraffic(null);
     setSelectedCountry(null);
     setSelectedLinkType(null);
@@ -92,8 +97,8 @@ export default function ProductFilter({
     const defaultActionMeta = { action: 'clear' } as ActionMeta<unknown>;
 
     if (onPriceFilter) onPriceFilter(null, defaultActionMeta);
-    if (onDAFilter) onDAFilter(null, defaultActionMeta);
-    if (onDRFilter) onDRFilter(null, defaultActionMeta);
+    if (onDAFilter) onDAFilter(null);
+    if (onDRFilter) onDRFilter(null);
     if (onTrafficFilter) onTrafficFilter(null, defaultActionMeta);
     if (onCountryFilter) onCountryFilter(null, defaultActionMeta);
     if (onLinkTypeFilter) onLinkTypeFilter(null, defaultActionMeta);
@@ -122,6 +127,30 @@ export default function ProductFilter({
     }
   }, [isAnyFilterApplied]);
 
+  const debouncedDAFilter = useCallback(debounce((value) => {
+    if (onDAFilter) onDAFilter(value);
+  }, 1500), [onDAFilter]);
+
+  const debouncedDRFilter = useCallback(debounce((value) => {
+    if (onDRFilter) onDRFilter(value);
+  }, 1500), [onDRFilter]);
+
+  const handleRender = useCallback((node: ReactElement<any, string | JSXElementConstructor<any>>, { value }: any) => (
+    <Tooltip
+      overlayInnerStyle={{ minHeight: 'auto' }}
+      overlay={`score: ${value}`}
+      placement="bottom"
+    >
+      {node}
+    </Tooltip>
+  ), []);
+
+  // Inline styles
+  const tooltipStyle = { minHeight: 'auto' };
+
+  // Inline value
+  const min = 0;
+  const max = 100;
   return (
     <div className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mt-2 gap-4 w-full', className)}>
       {enablePrice && (
@@ -144,34 +173,42 @@ export default function ProductFilter({
       {enableDA && (
         <div className="w-full">
           <Label>{t('Domain Authority')}</Label>
-          <Select
-            options={domain_authority}
+          <Slider
+            range
+            handleRender={handleRender}
+            min={min}
+            max={max}
+            className='mt-5'
             value={selectedDA}
-            getOptionLabel={(option: any) => option.name}
-            getOptionValue={(option: any) => option.slug}
-            placeholder={t('Filter by DA')}
-            onChange={(newValue, actionMeta) => {
-              setSelectedDA(newValue);
-              if (onDAFilter) onDAFilter(newValue, actionMeta);
+            onChange={(newValue) => {
+              if (Array.isArray(newValue)) {
+                setSelectedDA(newValue);
+                const formattedValue = { name: `${newValue[0]}-${newValue[1]}`, slug: newValue };
+                debouncedDAFilter(formattedValue);
+                // if (onDAFilter) onDAFilter(formattedValue);
+              }
             }}
-            isClearable={true}
           />
         </div>
       )}
       {enableDR && (
         <div className="w-full">
           <Label>{t('Domain Rating')}</Label>
-          <Select
-            options={domain_authority}
+          <Slider
+            range
+            handleRender={handleRender}
+            min={min}
+            max={max}
+            className="mt-5"
             value={selectedDR}
-            getOptionLabel={(option: any) => option.name}
-            getOptionValue={(option: any) => option.slug}
-            placeholder={t('Filter by DR')}
-            onChange={(newValue, actionMeta) => {
-              setSelectedDR(newValue);
-              if (onDRFilter) onDRFilter(newValue, actionMeta);
+            onChange={(newValue) => {
+              if (Array.isArray(newValue)) {
+                setSelectedDR(newValue);
+                const formattedValue = { name: `${newValue[0]}-${newValue[1]}`, slug: newValue };
+                debouncedDAFilter(formattedValue);
+                // if (onDRFilter) onDRFilter(formattedValue);
+              }
             }}
-            isClearable={true}
           />
         </div>
       )}

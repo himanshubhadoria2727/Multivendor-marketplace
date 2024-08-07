@@ -44,7 +44,7 @@ export const siteSettings = {
       href: Routes.shop.create,
       labelTransKey: 'common:text-create-shop',
       icon: 'ShopIcon',
-      permission: adminAndOwnerOnly,
+      permission: adminOnly,
     },
 
     {
