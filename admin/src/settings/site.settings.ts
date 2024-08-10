@@ -40,12 +40,12 @@ export const siteSettings = {
       icon: 'UserIcon',
       permission: adminOwnerAndStaffOnly,
     },
-    {
-      href: Routes.shop.create,
-      labelTransKey: 'common:text-create-shop',
-      icon: 'ShopIcon',
-      permission: adminOnly,
-    },
+    // {
+    //   href: Routes.shop.create,
+    //   labelTransKey: 'common:text-create-shop',
+    //   icon: 'ShopIcon',
+    //   permission: adminOnly,
+    // },
 
     {
       href: Routes.settings,
