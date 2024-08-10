@@ -321,7 +321,7 @@ class UserController extends CoreController
 
         try {
             $data = $request->only($this->dataArray);
-            $data['slug'] = $user['name'];
+            $data['slug'] = $this->makeSlug($request);
             $data['owner_id'] = $user->id;
 
             Log::info('Creating shop', ['data' => $data]);
@@ -365,10 +365,10 @@ class UserController extends CoreController
         }
     }
 
-    // protected function makeSlug(Request $request)
-    // {
-    //     return Str::slug($request->name . '-' . uniqid());
-    // }
+    protected function makeSlug(Request $request)
+    {
+        return Str::slug($request->name . '-' . uniqid());
+    }
 
     public function banUser(Request $request)
     {
@@ -526,62 +526,90 @@ class UserController extends CoreController
         return $query->paginate($limit);
     }
 
+    /**
+     * Summary of socialLogin
+     * @param \Illuminate\Http\Request $request
+     * @throws \Marvel\Exceptions\MarvelException
+     * @return array
+     */
     public function socialLogin(Request $request)
-    {
-        $provider = $request->provider;
-        $token = $request->access_token;
-        $this->validateProvider($provider);
+{
+    $provider = $request->provider;
+    $token = $request->oauthAccessToken;
+    $this->validateProvider('google');
 
-        try {
+    Log::info('Social Login Request', [
+        'provider' => $provider,
+        'access_token' => $token
+    ]);
+
+    try {
             $user = Socialite::driver($provider)->userFromToken($token);
             $userExist = User::where('email',  $user->email)->exists();
+        Log::info('User Existence Check', ['userExist' => $userExist]);
 
-            $userCreated = User::firstOrCreate(
-                [
-                    'email' => $user->getEmail()
-                ],
-                [
-                    'email_verified_at' => now(),
-                    'name' => $user->getName(),
-                ]
-            );
+        $userCreated = User::firstOrCreate(
+            [
+                'email' => $user->getEmail()
+            ],
+            [
+                'email_verified_at' => now(),
+                'name' => $user->getName(),
+            ]
+        );
+        Log::info('User Created or Retrieved', ['userCreated' => $userCreated]);
 
-            $userCreated->providers()->updateOrCreate(
-                [
-                    'provider' => $provider,
-                    'provider_user_id' => $user->getId(),
-                ]
-            );
+        $userCreated->providers()->updateOrCreate(
+            [
+                'provider' => $provider,
+                'provider_user_id' => $user->getId(),
+            ]
+        );
+        Log::info('User Provider Updated or Created', [
+            'provider' => $provider,
+            'provider_user_id' => $user->getId()
+        ]);
 
-            $avatar = [
-                'thumbnail' => $user->getAvatar(),
-                'original' => $user->getAvatar(),
-            ];
+        $avatar = [
+            'thumbnail' => $user->getAvatar(),
+            'original' => $user->getAvatar(),
+        ];
 
-            $userCreated->profile()->updateOrCreate(
-                [
-                    'avatar' => $avatar
-                ]
-            );
+        $userCreated->profile()->updateOrCreate(
+            [
+                'avatar' => $avatar
+            ]
+        );
+        Log::info('User Profile Updated or Created', ['avatar' => $avatar]);
 
-            if (!$userCreated->hasPermissionTo(Permission::CUSTOMER)) {
-                $userCreated->givePermissionTo(Permission::CUSTOMER);
-                $userCreated->assignRole(Role::CUSTOMER);
-            }
-
-            if (empty($userExist)) {
-                $this->giveSignupPointsToCustomer($userCreated->id);
-            }
-            event(new ProcessUserData());
-            return [
-                "token" => $userCreated->createToken('auth_token')->plainTextToken,
-                "permissions" => $userCreated->getPermissionNames(),
-                "role" => $userCreated->getRoleNames()->first()
-            ];
-        } catch (\Exception $e) {
-            throw new MarvelException(INVALID_CREDENTIALS);
+        if (!$userCreated->hasPermissionTo(Permission::CUSTOMER)) {
+            $userCreated->givePermissionTo(Permission::CUSTOMER);
+            $userCreated->assignRole(Role::CUSTOMER);
+            Log::info('User Permission and Role Assigned', [
+                'permission' => Permission::CUSTOMER,
+                'role' => Role::CUSTOMER
+            ]);
         }
+
+        if (empty($userExist)) {
+            $this->giveSignupPointsToCustomer($userCreated->id);
+            Log::info('Signup Points Given to Customer', ['userId' => $userCreated->id]);
+        }
+
+        event(new ProcessUserData());
+        Log::info('ProcessUserData Event Triggered');
+
+        return [
+            "token" => $userCreated->createToken('auth_token')->plainTextToken,
+            "permissions" => $userCreated->getPermissionNames(),
+            "role" => $userCreated->getRoleNames()->first()
+        ];
+    } catch (\Exception $e) {
+        Log::error('Social Login Error', ['error' => $e->getMessage()]);
+        throw new MarvelException(INVALID_CREDENTIALS);
     }
+}
+
 
     protected function validateProvider($provider)
     {

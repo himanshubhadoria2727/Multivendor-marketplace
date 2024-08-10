@@ -7,18 +7,18 @@ import { useTranslation } from 'react-i18next';
 const VisitStore = () => {
   const { t } = useTranslation();
   const { pathname, query } = useRouter();
-  const slug = (pathname === '/[shop]' && `authors/${query?.shop}`) || '/';
+  const slug = (pathname === 'goodblogger.co' && `goodblogger.co`) || 'goodblogger.co';
 
   return (
     <>
       <Link
-        href={Routes.visitStore(slug as string)}
+        href={'https://goodblogger.co'}
         target="_blank"
         className="inline-flex h-9 flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none text-accent outline-none transition duration-300 ease-in-out hover:border-transparent hover:bg-accent-hover hover:text-white focus:shadow focus:outline-none"
         rel="noreferrer"
       >
         <HomeIcon />
-        {slug === '/' ? t('text-visit-site') : t('text-visit-store')}
+        {t('text-visit-site')}
       </Link>
     </>
   );

@@ -79,6 +79,7 @@ export default function ProductsPage() {
       enabled: Boolean(shopId),
     },
   );
+  console.log('shop products',products)
 
   function handleImportModal() {
     openModal('EXPORT_IMPORT_PRODUCT', shopId);

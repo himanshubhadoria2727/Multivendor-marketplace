@@ -69,7 +69,6 @@ export default function VendorProductInventoryPage() {
     product_type: productType,
     type,
   });
-
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
 

@@ -68,7 +68,7 @@ use Marvel\Http\Controllers\CampaignController;
 
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
-Route::post('razorpay-payment',[PaymentController::class,'store']);
+// Route::post('razorpay-payment',[PaymentController::class,'store']);
 
 Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
  //Custom route for CreateCampaigns

@@ -294,6 +294,11 @@ export interface LoginUserInput {
   password: string;
 }
 
+export interface SocialLoginInput{
+  oauthAccessToken:string;
+  provider:string;
+}
+
 export interface RegisterUserInput {
   name: string;
   email: string;

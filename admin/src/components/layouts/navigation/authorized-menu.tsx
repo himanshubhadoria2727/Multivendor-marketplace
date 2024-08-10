@@ -17,7 +17,7 @@ export default function AuthorizedMenu() {
   const { pathname, query } = useRouter();
   const slug = (pathname === '/[shop]' && query?.shop) || '';
   const { role, permissions } = getAuthCredentials();
-
+  console.log(role);
   // Again, we're using framer-motion for the transition effect
   return (
     <Menu
@@ -39,7 +39,11 @@ export default function AuthorizedMenu() {
             {data?.name}
           </span>
           <span className="w-full truncate text-xs capitalize text-gray-400">
-            {role ? role.split('_').join(' ') : data?.email}
+            {role=='store_owner' ? (
+            role ? "Publisher" : data?.email
+            ):
+            (role ? role.split('_').join(' ') : data?.email)
+          }
           </span>
         </div>
       </Menu.Button>

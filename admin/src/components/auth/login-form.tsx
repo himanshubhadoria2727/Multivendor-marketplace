@@ -30,6 +30,40 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { mutate: login, isLoading, error } = useLogin();
 
+   const { mutate: socialLogin, isLoading: socialLoginLoading } = useMutation(client.users.socail_login, {
+    onSuccess: (data) => {
+      if (!data.token) {
+        toast.error(<b>{t('text-wrong-user-name-and-pass')}</b>, {
+          className: '-mt-10 xs:mt-0',
+        });
+        return;
+      }
+      console.log('login data', data);
+      authorize(data.token);
+      setAuthCredentials(data.token, data.permissions);
+      closeModal();
+    },
+  });
+
+  const logGoogleUser = async () => {
+    try {
+      const response: UserCredential = await signInWithGooglePopup();
+      const token = await response.user.getIdToken(); // Extracting the ID token
+      console.log(response)
+      // Assuming SocialLoginInput requires access_token and provider
+      const socialLoginData: SocialLoginInput = {
+        access_token: "ya29.a0AcM612wDGj0FvcNrxh0qHLjFqEr8cpO71gL4J9K3SkXDecrDRpTBXovGO6d4toPeorujLjdDkyJNdteWG469WCSzuONvcAFJ7fgdPz_EpI1R9pxwWQmUd4QGs-flKYKbUKEp_Thp5RibWKEQFe5ekvx23cv3OKPY2fYaCgYKAb4SARISFQHGX2Mih_lY9mW0530je22SCln9sQ0170",
+        provider: 'google', // Ensure this matches the expected provider in your backend
+      };
+
+      // Perform social login using mutate function
+      socialLogin(socialLoginData);
+    } catch (error) {
+      console.error('Error during Google Sign-In', error);
+      toast.error(t('text-something-went-wrong'));
+    }
+  };
+
   function onSubmit({ email, password }: LoginInput) {
     login(
       {

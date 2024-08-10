@@ -101,7 +101,7 @@ export default function ProductTable() {
         >
           
          <div className='text-base flex gap-2  max-sm:text-sm text-brand font-semibold'><CheckMark/>You are good to go!</div>
-          <div className='text-blue-600 [&>p]:bg-blue-200 max-sm:text-sm [&>p]:p-2 [&>p]:text-xs [&>p]:text-blue-600'>Adding 00+ websites every week !</div>
+          <div className='text-blue-600 [&>p]:bg-blue-200 max-sm:text-sm [&>p]:p-2 [&>p]:text-xs [&>p]:text-blue-600'>Adding 200+ websites every week !</div>
         </div>
       
       {/* <CategoryFilter

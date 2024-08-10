@@ -776,7 +776,7 @@ export const siteSettings = {
           {
             href: (shop: string) => `/${shop}${Routes.staff.list}`,
             label: 'sidebar-nav-item-staffs',
-            icon: 'UsersIcon',
+            icon: 'UsersIcon', 
             permissions: adminAndOwnerOnly,
           },
         ],

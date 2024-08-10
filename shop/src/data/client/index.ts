@@ -46,6 +46,7 @@ import type {
   Shop,
   ShopPaginator,
   ShopQueryOptions,
+  SocialLoginInput,
   Tag,
   TagPaginator,
   TermsAndConditionsPaginator,
@@ -225,6 +226,8 @@ class Client {
       HttpClient.put<User>(`${API_ENDPOINTS.USERS}/${user.id}`, user),
     login: (input: LoginUserInput) =>
       HttpClient.post<AuthResponse>(API_ENDPOINTS.USERS_LOGIN, input),
+    socail_login: (input: SocialLoginInput) =>
+      HttpClient.post<AuthResponse>(API_ENDPOINTS.SOCIAL_LOGIN_TOKEN, input),
     register: (input: RegisterUserInput) =>
       HttpClient.post<AuthResponse>(API_ENDPOINTS.USERS_REGISTER, input),
     forgotPassword: (input: ForgetPasswordInput) =>

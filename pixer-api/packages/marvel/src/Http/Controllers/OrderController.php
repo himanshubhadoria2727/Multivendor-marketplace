@@ -80,8 +80,18 @@ class OrderController extends CoreController
 
         switch ($user) {
             case $user->hasPermissionTo(Permission::SUPER_ADMIN):
-                return $this->repository->with('children')->where('id', '!=', null)->where('parent_id', '=', null);
-                break;
+        if ($request->has('shop_id')) {
+            // If the admin is viewing a specific shop's dashboard
+            return $this->repository->with('children')
+                ->where('shop_id', '=', $request->shop_id)
+                ->where('parent_id', '!=', null);
+        } else {
+            // Admin is viewing all orders
+            return $this->repository->with('children')
+                ->where('id', '!=', null)
+                ->where('parent_id', '=', null);
+        }
+        break;
 
             case $user->hasPermissionTo(Permission::STORE_OWNER):
                 if ($this->repository->hasPermission($user, $request->shop_id)) {
