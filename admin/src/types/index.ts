@@ -193,6 +193,11 @@ export interface LoginInput {
   password: string;
 }
 
+export interface SocialLoginInput{
+  oauthAccessToken:string;
+  provider:string;
+  userName:string | null;
+}
 export interface AuthResponse {
   token: string;
   permissions: string[];
@@ -673,6 +678,7 @@ export interface ReadAllNotifyLogs {
 }
 
 export interface OrderProductPivot {
+  niche_price: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
   title:string;
   ancor:string;
   postUrl:string;
@@ -682,6 +688,7 @@ export interface OrderProductPivot {
   file:string;
   order_quantity?: number;
   unit_price?: number;
+  selectedNiche:string;
   subtotal?: number;
   variation_option_id?: string;
 }

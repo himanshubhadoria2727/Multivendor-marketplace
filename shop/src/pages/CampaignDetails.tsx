@@ -183,7 +183,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                 <th className="px-6 py-3 text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">
                   <div className="flex gap-1">
                     <BsCart4 />
-                    Place Order
+                    Action
                   </div>
                 </th>
                 <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider">

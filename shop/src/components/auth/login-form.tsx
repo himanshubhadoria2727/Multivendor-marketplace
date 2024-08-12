@@ -66,7 +66,7 @@ export default function LoginUserForm() {
       // Assuming SocialLoginInput requires access_token and provider
       const socialLoginData: SocialLoginInput = {
         oauthAccessToken: token,
-        provider: 'google', // Ensure this matches the expected provider in your backend
+        provider: 'google', // Ensure this matches the expected provider in your backenda
       };
 
       // Perform social login using mutate function
@@ -143,11 +143,14 @@ export default function LoginUserForm() {
                   >
                     {t('text-get-login')}
                   </Button>
-                  <Button
+                </>
+              )}
+            </Form>
+            <Button
                     onClick={logGoogleUser}
                     isLoading={socialLoginLoading}
                     disabled={socialLoginLoading}
-                    className="flex items-center justify-center w-full px-4 py-2 mt-5 text-sm font-medium text-brand/90 bg-white border border-gray-300 rounded shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-200 lg:!mt-7"
+                    className="flex items-center justify-center w-full px-4 py-2 mt-5 text-sm font-medium text-black bg-white border border-gray-300 rounded shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-200 lg:!mt-7"
                   >
                     <svg
                       className="w-4 h-4 mr-2"
@@ -174,12 +177,8 @@ export default function LoginUserForm() {
                       />
                       <path fill="none" d="M1.5 1.5h45v45h-45z" />
                     </svg>
-                    Sign in with Google
+                    <p className='text-black'>Sign in with Google</p>
                   </Button>
-
-                </>
-              )}
-            </Form>
           </div>
         </div>
       </div>

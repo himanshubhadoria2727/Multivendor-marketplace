@@ -498,7 +498,7 @@ const ProductInventoryList = ({
       render: (countries: number) => (
         <Tooltip title={'Verified by Ahref'}>
           <div className="flex items-center items-start text-dark-100 dark:text-light-400">
-            <div className="flex gap">
+            <div className="flex gap-1">
               <Image
                 src={`https://flagsapi.com/${countries}/shiny/64.png`}
                 width={16}

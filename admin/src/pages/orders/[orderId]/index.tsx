@@ -304,8 +304,10 @@ export default function OrderDetailsPage() {
                   <span>{sub_total}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm text-body">
-                  <span> {t('text-shipping-charge')}</span>
-                  <span>{shipping_charge}</span>
+                  <span> {t('Niche price')}</span>
+                  {order?.products[0]?.pivot?.selectedNiche? 
+                  (<span>${order?.products[0]?.niche_price}</span>):(0)  
+                }
                 </div>
                 <div className="flex items-center justify-between text-sm text-body">
                   <span> {t('text-tax')}</span>
@@ -320,7 +322,7 @@ export default function OrderDetailsPage() {
 
                 <div className="flex items-center justify-between text-base font-semibold text-heading">
                   <span> {t('text-total')}</span>
-                  <span>{total}</span>
+                  <span>${order?.products[0]?.pivot?.subtotal}</span>
                 </div>
 
                 {order?.wallet_point?.amount! && (

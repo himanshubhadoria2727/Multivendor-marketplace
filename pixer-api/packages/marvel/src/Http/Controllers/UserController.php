@@ -534,6 +534,7 @@ class UserController extends CoreController
      */
     public function socialLogin(Request $request)
 {
+    Log::info('info'.$request);
     $provider = $request->provider;
     $token = $request->oauthAccessToken;
     $this->validateProvider('google');
@@ -544,8 +545,8 @@ class UserController extends CoreController
     ]);
 
     try {
-            $user = Socialite::driver($provider)->userFromToken($token);
-            $userExist = User::where('email',  $user->email)->exists();
+        $user = Socialite::driver($provider)->userFromToken($token);
+        $userExist = User::where('email', $user->email)->exists();
         Log::info('User Existence Check', ['userExist' => $userExist]);
 
         $userCreated = User::firstOrCreate(
@@ -590,11 +591,52 @@ class UserController extends CoreController
                 'role' => Role::CUSTOMER
             ]);
         }
+        
+        if (!$userCreated->hasPermissionTo(Permission::STORE_OWNER)) {
+            $userCreated->givePermissionTo(Permission::STORE_OWNER);
+            $userCreated->assignRole(Role::STORE_OWNER);
+            Log::info('User Permission and Role Assigned', [
+                'permission' => Permission::STORE_OWNER,
+                'role' => Role::STORE_OWNER
+            ]);
+        }
 
         if (empty($userExist)) {
             $this->giveSignupPointsToCustomer($userCreated->id);
             Log::info('Signup Points Given to Customer', ['userId' => $userCreated->id]);
         }
+
+        // Shop creation logic
+        $data = $request->only($this->dataArray);
+        // $data['slug'] = $this->makeSlug($request);
+        $data['owner_id'] = $userCreated->id;
+
+        Log::info('Creating shop', ['data' => $data]);
+
+        $shopData = [
+            'name' => $request->name,
+            // 'email' => $request->email,
+            'slug' =>Str::slug($request->userName. '-' . uniqid()),
+            'is_active' => '1',
+            'owner_id' => $data['owner_id']
+        ];
+
+        $shop = Shop::create($shopData);
+        Log::info('Shop created', ['shop_id' => $shop->id]);
+
+        if (isset($request['categories'])) {
+            $shop->categories()->attach($request['categories']);
+            Log::info('Categories attached to shop', ['shop_id' => $shop->id, 'categories' => $request['categories']]);
+        }
+
+        if (isset($request['balance']['payment_info'])) {
+            $shop->balance()->create($request['balance']);
+            Log::info('Balance created for shop', ['shop_id' => $shop->id, 'balance' => $request['balance']]);
+        }
+
+        $shop->categories = $shop->categories;
+        $shop->staffs = $shop->staffs;
+        Log::info('Shop details updated', ['shop_id' => $shop->id]);
 
         event(new ProcessUserData());
         Log::info('ProcessUserData Event Triggered');
@@ -602,14 +644,14 @@ class UserController extends CoreController
         return [
             "token" => $userCreated->createToken('auth_token')->plainTextToken,
             "permissions" => $userCreated->getPermissionNames(),
-            "role" => $userCreated->getRoleNames()->first()
+            "role" => $userCreated->getRoleNames()->first(),
+            "shop" => $shop  // Return shop details
         ];
     } catch (\Exception $e) {
         Log::error('Social Login Error', ['error' => $e->getMessage()]);
         throw new MarvelException(INVALID_CREDENTIALS);
     }
 }
-
 
     protected function validateProvider($provider)
     {
