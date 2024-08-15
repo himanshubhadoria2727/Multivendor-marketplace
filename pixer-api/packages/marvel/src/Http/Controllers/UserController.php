@@ -606,23 +606,34 @@ class UserController extends CoreController
             Log::info('Signup Points Given to Customer', ['userId' => $userCreated->id]);
         }
 
-        // Shop creation logic
+        // Check if the shop already exists
+        $existingShop = Shop::where('owner_id', $userCreated->id)->first();
+        if ($existingShop) {
+            Log::info('Existing Shop Found', ['shop_id' => $existingShop->id]);
+
+            return [
+                "token" => $userCreated->createToken('auth_token')->plainTextToken,
+                "permissions" => $userCreated->getPermissionNames(),
+                "role" => $userCreated->getRoleNames()->first(),
+                "shop" => $existingShop  // Return existing shop details
+            ];
+        }
+
+        // Shop creation logic if no existing shop found
         $data = $request->only($this->dataArray);
-        // $data['slug'] = $this->makeSlug($request);
         $data['owner_id'] = $userCreated->id;
 
-        Log::info('Creating shop', ['data' => $data]);
+        Log::info('Creating new shop', ['data' => $data]);
 
         $shopData = [
             'name' => $request->name,
-            // 'email' => $request->email,
-            'slug' =>Str::slug($request->userName. '-' . uniqid()),
+            'slug' => Str::slug($request->userName. '-' . uniqid()),
             'is_active' => '1',
             'owner_id' => $data['owner_id']
         ];
 
         $shop = Shop::create($shopData);
-        Log::info('Shop created', ['shop_id' => $shop->id]);
+        Log::info('New Shop Created', ['shop_id' => $shop->id]);
 
         if (isset($request['categories'])) {
             $shop->categories()->attach($request['categories']);

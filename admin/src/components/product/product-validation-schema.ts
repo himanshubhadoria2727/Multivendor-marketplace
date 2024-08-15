@@ -17,6 +17,23 @@ export const productValidationSchema = yup.object().shape({
     .min(0)
     .max(100)
     .required('Domain authority is required'),
+  domain_rating: yup
+    .number()
+    .typeError('Domian Rating must be a number')
+    .min(0)
+    .max(100)
+    .required('Domain rating is required'),
+  spam_score: yup
+    .number()
+    .typeError('Spam score must be a number')
+    .min(0)
+    .max(100)
+    .required('Spam score is required'),
+  organic_traffic: yup
+    .number()
+    .typeError('Organic traffic must be a number')
+    .min(0)
+    .required('Organic traffic is required'),
   // quantity: yup.number().when('boundary', {
   //   is: (value: boolean) => value,
   //   then: (schema) => schema.notRequired(),
@@ -29,12 +46,10 @@ export const productValidationSchema = yup.object().shape({
   //       .required('form:error-quantity-required'),
   // }),
   domain_name: yup.string().required('form:error-domain-name-required'),
-  domain_rating: yup.number().required('Domain rating is a required'),
-  organic_traffic: yup.number().required('Organic traffic is a required'),
-  spam_score: yup.number().required('Spam score is a required'),
-  niche_price: yup.number().required('Niche price is a required'),
-  type: yup.object().nullable().required('form:error-type-required'),
-  status: yup.string().nullable().required('form:error-status-required'),
+  verify_domain: yup.string().nullable('form:error-domain-name-required'),
+  // niche_price: yup.number().required('Niche price is a required'),
+  type: yup.object().nullable('form:error-type-required'),
+  // status: yup.string().nullable().required('form:error-status-required'),
   variation_options: yup.array().of(
     yup.object().shape({
       price: yup
@@ -48,10 +63,11 @@ export const productValidationSchema = yup.object().shape({
         .lessThan(yup.ref('price'), 'Sale Price should be less than ${less}')
         .positive('form:error-sale-price-must-positive')
         .nullable(),
-      domain_authority:yup
+      domain_authority: yup
         .number()
         .typeError('Authority must be a number')
         .positive('must be positive')
+        .max(100)
         .required('Domain authority is required'),
       domain_rating: yup
         .number()
@@ -63,30 +79,30 @@ export const productValidationSchema = yup.object().shape({
         .number()
         .typeError('Niche price must be a number')
         .positive('must be positive')
-        .max(100)
         .required('Niche price is required'),
       organic_traffic: yup
         .number()
         .typeError('Organic Traffic must be a number')
         .positive('must be positive')
         .required('form:error-price-required'),
-      spam_score:yup
-      .number()
+      spam_score: yup
+        .number()
         .typeError('Spam score must be a number')
         .positive('must be positive')
+        .max(100)
         .required('Spam score is required'),
-        countries: yup.object().shape({
-          value: yup.string().required('Country value is required'),
-          label: yup.string().required('Country label is required'),
-        }).required('Country is required'),
-        languages: yup.object().shape({
-          value: yup.string().required('Language value is required'),
-          label: yup.string().required('Language label is required'),
-        }).required('Language is required'),
-        link_type: yup.object().shape({
-          value: yup.string().required('Language value is required'),
-          label: yup.string().required('Language label is required'),
-        }).required('Language is required'),
+      countries: yup.object().shape({
+        value: yup.string().required('Country value is required'),
+        label: yup.string().required('Country label is required'),
+      }).required('Country is required'),
+      languages: yup.object().shape({
+        value: yup.string().required('Language value is required'),
+        label: yup.string().required('Language label is required'),
+      }).required('Language is required'),
+      link_type: yup.object().shape({
+        value: yup.string().required('Language value is required'),
+        label: yup.string().required('Language label is required'),
+      }).required('Language is required'),
       // quantity: yup
       //   .number()
       //   .typeError('form:error-quantity-must-number')

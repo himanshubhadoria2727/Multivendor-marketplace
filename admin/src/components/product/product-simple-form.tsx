@@ -31,7 +31,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
 
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
-      <Description
+      {/* <Description
         title={t('form:form-title-simple-product-info')}
         details={`${
           initialValues
@@ -39,7 +39,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             : t('form:item-description-add')
         } ${t('form:form-description-simple-product-info')}`}
         className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-      />
+      /> */}
 
       <Card className="w-full sm:w-8/12 flex flex-wrap justify-start gap-3 md:w-full">
         <Input

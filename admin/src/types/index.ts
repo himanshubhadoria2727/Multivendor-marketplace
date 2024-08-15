@@ -778,6 +778,7 @@ export interface CreateProduct {
   domain_authority:number;
   domain_rating:number;
   organic_traffic:number;
+  verify_domain:boolean;
   spam_score:number;
   languages:string;
   countries:string;

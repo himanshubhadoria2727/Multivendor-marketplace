@@ -171,7 +171,7 @@ export default function ProductFilter({
         </div>
       )}
       {enableDA && (
-        <div className="w-full">
+        <div className="w-full z-0">
           <Label>{t('Domain Authority')}</Label>
           <Slider
             range
@@ -192,14 +192,14 @@ export default function ProductFilter({
         </div>
       )}
       {enableDR && (
-        <div className="w-full">
+        <div className="w-full z-0">
           <Label>{t('Domain Rating')}</Label>
           <Slider
             range
             handleRender={handleRender}
             min={min}
             max={max}
-            className="mt-5"
+            className="mt-5 w-20"
             value={selectedDR}
             onChange={(newValue) => {
               if (Array.isArray(newValue)) {

@@ -22,7 +22,7 @@ import { cartesian } from '@/utils/cartesian';
 export type ProductFormValues = Omit<
   CreateProduct,
   | 'author_id'
-  | 'type_id'
+  // | 'type_id'
   | 'manufacturer_id'
   | 'shop_id'
   | 'categories'
@@ -39,7 +39,9 @@ export type ProductFormValues = Omit<
   in_flash_sale: boolean;
   variations?: AttributeValue[];
   variation_options?: Variation[];
+  verify_domain:boolean;
   image: AttachmentInput;
+  type_id:string;
 };
 
 export type ProductTypeOption = {
