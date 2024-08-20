@@ -91,6 +91,7 @@ class UserController extends CoreController
      */
     public function sendVerificationEmail(Request $request): JsonResponse
     {
+        
         $user = $request->user();
         $user->sendEmailVerificationNotification();
         return response()->json(['message' => 'Email verification link sent on your email id', 'success' => true]);

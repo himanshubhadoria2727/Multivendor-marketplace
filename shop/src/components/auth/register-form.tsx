@@ -44,26 +44,29 @@ export default function RegisterUserForm() {
     },
   });
 
-  const { mutate: socialLogin, isLoading: socialLoginLoading } = useMutation(client.users.socail_login, {
-    onSuccess: (data) => {
-      if (!data.token) {
-        toast.error(<b>{t('text-wrong-user-name-and-pass')}</b>, {
-          className: '-mt-10 xs:mt-0',
-        });
-        return;
-      }
-      console.log('login data', data);
-      authorize(data.token);
-      setAuthCredentials(data.token, data.permissions);
-      closeModal();
+  const { mutate: socialLogin, isLoading: socialLoginLoading } = useMutation(
+    client.users.socail_login,
+    {
+      onSuccess: (data) => {
+        if (!data.token) {
+          toast.error(<b>{t('text-wrong-user-name-and-pass')}</b>, {
+            className: '-mt-10 xs:mt-0',
+          });
+          return;
+        }
+        console.log('login data', data);
+        authorize(data.token);
+        setAuthCredentials(data.token, data.permissions);
+        closeModal();
+      },
     },
-  });
+  );
 
   const logGoogleUser = async () => {
     try {
       const response: UserCredential = await signInWithGooglePopup();
       const token = await response._tokenResponse.oauthAccessToken; // Extracting the ID token
-      console.log(response)
+      console.log(response);
       // Assuming SocialLoginInput requires access_token and provider
       const socialLoginData: SocialLoginInput = {
         oauthAccessToken: token,
@@ -72,7 +75,7 @@ export default function RegisterUserForm() {
 
       // Perform social login using mutate function
       socialLogin(socialLoginData);
-      console.log('socialLoginData', socialLoginData)
+      console.log('socialLoginData', socialLoginData);
     } catch (error) {
       console.error('Error during Google Sign-In', error);
       toast.error(t('text-something-went-wrong'));
@@ -138,13 +141,11 @@ export default function RegisterUserForm() {
               </>
             )}
           </Form>
-        </div>
-      </div>
-      <Button
+          <Button
         onClick={logGoogleUser}
         isLoading={socialLoginLoading}
         disabled={socialLoginLoading}
-        className="flex items-center justify-center w-full px-4 py-2 mt-5 text-sm font-medium text-black-900 bg-white border border-gray-300 rounded shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-200 lg:!mt-7"
+        className="flex items-center justify-center w-full px-4 py-2 mt-5 text-sm font-medium text-black bg-white border border-gray-300 rounded shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-200 lg:!mt-7"
       >
         <svg
           className="w-4 h-4 mr-2"
@@ -171,9 +172,10 @@ export default function RegisterUserForm() {
           />
           <path fill="none" d="M1.5 1.5h45v45h-45z" />
         </svg>
-        Sign up with Google
+        <p className="text-black">Sign in with Google</p>
       </Button>
-
+        </div>
+      </div>
     </div>
   );
 }

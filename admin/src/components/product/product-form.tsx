@@ -321,11 +321,15 @@ export default function CreateOrUpdateProductForm({
 
   const [siteName, setProductName] = useState('');
   const [productUrl, setProductUrl] = useState('');
-  const [verificationResult, setVerificationResult] = useState(null);
+  const [verificationResult, setVerificationResult] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState('');
 
   const handleVerificationComplete = (isVerified: any, message: any) => {
-    setVerificationResult(isVerified);
+
+    if (isVerified) {
+      setVerificationResult(true);
+    }
+    console.log('verification', verificationResult)
     setVerificationMessage(message);
   };
 
@@ -351,7 +355,7 @@ export default function CreateOrUpdateProductForm({
             {...register('name')}
             placeholder='eg-google.com'
             error={t(errors.name?.message!)}
-            // onChange={(e) => setProductUrl(e.target.value)}
+            onChange={(e) => setProductUrl(e.target.value)}
             variant="outline"
             className="mb-5 w-60 max-md:w-full" />
 
@@ -545,33 +549,20 @@ export default function CreateOrUpdateProductForm({
       component: (
         <Card>
           {
-            verificationResult == null ? (
+            verificationResult == false ? (
               <Alert className='w-full mb-5' message={undefined}>Your website will be in draft until its verified</Alert>
-            ) : (
-              null
-            )
+            ) : (null)
           }
-          <Input
-            label={`Site domain`}
-            // {...register('name')}
-            placeholder='eg-google.com'
-            error={t(errors.verify_domain?.message!)}
-            onChange={(e) => setProductUrl(e.target.value)}
-            variant="outline"
-            className="mb-5 w-60 max-md:w-full"
-            name={''} />
           {
-            verificationResult == null ? (
+            verificationResult == false ? (
               <div className='w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative' >
                 <span className='flex sm:inline max-sm:text-sm max-sm:text-xs'>Add this text anywhere in your website landing/home page to get verified: a8!$kB2*^gW@xQ#9z^L1&d7*Fm%rU4V6yP@8h!</span>
               </div>
-            ):(
-              null
-            )
+            ) : (null)
           }
           <WebsiteVerification
-            websiteUrl={productUrl}
-            searchString="google" // Replace with the actual string you want to search
+            websiteUrl={productUrl || initialValues?.name}
+            searchString="a8!$kB2*^gW@xQ#9z^L1&d7*Fm%rU4V6yP@8h!" // Replace with the actual string you want to search
             onVerificationComplete={handleVerificationComplete}
           />
           {

@@ -194,7 +194,7 @@ const Navbar = () => {
                   </LinkButton>
                 </div> */}
 
-                <div className="px-6 py-5 2xl:block">
+                <div className="px-6 py-5 max-sm:hidden 2xl:block">
                   <VisitStore />
                 </div>
 

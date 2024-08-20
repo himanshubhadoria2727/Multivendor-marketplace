@@ -10,10 +10,12 @@ import Label from '@/components/ui/label';
 import SelectInput from '@/components/ui/select-input';
 import StickyFooterPanel from '@/components/ui/sticky-footer-panel';
 import SwitchInput from '@/components/ui/switch-input';
+import { Config } from '@/config';
 import { useUpdateSettingsMutation } from '@/data/settings';
 import { siteSettings } from '@/settings/site.settings';
 import { ServerInfo, Settings, Shipping, Tax } from '@/types';
 import { useConfirmRedirectIfDirty } from '@/utils/confirmed-redirect-if-dirty';
+import { formatEventAPIData, formatEventOptions } from '@/utils/format-event-options';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -34,6 +36,8 @@ type FormValues = {
   maximumQuestionLimit: number;
   currencyToWalletRatio: number;
   server_info: ServerInfo;
+  smsEvent: any;
+  emailEvent: any;
   isUnderMaintenance: boolean;
   maintenance: {
     image: any;
@@ -82,12 +86,20 @@ export default function GeneralSettingsForm({ settings, taxClasses }: IProps) {
       taxClass: !!taxClasses?.length
         ? taxClasses?.find((tax: Tax) => tax.id == options?.taxClass)
         : '',
+      smsEvent: options?.smsEvent
+        ? formatEventAPIData(options?.smsEvent)
+        : null,
+      emailEvent: options?.emailEvent
+        ? formatEventAPIData(options?.emailEvent)
+        : null,
     },
   });
 
-  // const isNotDefaultSettingsPage = Config.defaultLanguage !== locale;
+  const isNotDefaultSettingsPage = Config.defaultLanguage !== locale;
 
   async function onSubmit(values: FormValues) {
+    const smsEvent = formatEventOptions(values.smsEvent);
+    const emailEvent = formatEventOptions(values.emailEvent);
     updateSettingsMutation({
       language: locale,
       // @ts-ignore //
@@ -99,6 +111,8 @@ export default function GeneralSettingsForm({ settings, taxClasses }: IProps) {
         currencyToWalletRatio: Number(values.currencyToWalletRatio),
         minimumOrderAmount: Number(values.minimumOrderAmount),
         defaultAi: values?.defaultAi?.value,
+        smsEvent,
+        emailEvent,
         taxClass: values?.taxClass?.id,
         logo: values?.logo,
         //@ts-ignore
@@ -263,6 +277,19 @@ export default function GeneralSettingsForm({ settings, taxClasses }: IProps) {
             className="mb-5"
             // disabled={isNotDefaultSettingsPage}
           />
+
+          <div className="mb-5">
+            <div className="flex items-center gap-x-4">
+              <SwitchInput
+                name="useMustVerifyEmail"
+                control={control}
+                disabled={isNotDefaultSettingsPage}
+              />
+              <Label className="mb-0">
+                {t('form:input-label-use-must-verify-email')}
+              </Label>
+            </div>
+          </div>
 
           <div className="mb-5">
             <SelectInput
