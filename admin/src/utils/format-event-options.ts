@@ -12,7 +12,12 @@ type EventOptionsType = 'admin' | 'vendor' | 'customer' | 'all';
  *
  * @param data
  */
-export function formatEventOptions(data: EventOptions[]) {
+export function formatEventOptions(data: EventOptions[] = []) {
+  // Ensure data is an array before proceeding
+  if (!Array.isArray(data)) {
+    throw new TypeError("Expected an array for 'data'");
+  }
+
   const formattedOptions = {
     admin: {},
     vendor: {},
@@ -36,6 +41,7 @@ export function formatEventOptions(data: EventOptions[]) {
 
   return formattedOptions;
 }
+
 
 /**
  * Format data from API to form data

@@ -106,7 +106,7 @@ class SettingsSeeder extends Seeder
                 "useCashOnDelivery" => true,
                 "freeShippingAmount" => 0,
                 "minimumOrderAmount" => 0,
-                "useMustVerifyEmail" => true,
+                "useMustVerifyEmail" => false,
                 "maximumQuestionLimit" => 5,
                 "currencyToWalletRatio" => 3,
                 "StripeCardOnly" => false,
