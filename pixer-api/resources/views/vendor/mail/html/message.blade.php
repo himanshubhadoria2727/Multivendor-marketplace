@@ -2,7 +2,7 @@
 {{-- Header --}}
 <x-slot:header>
 <x-mail::header :url="config('app.url')">
-{{ config('app.name') }}
+<img src="https://drive.google.com/uc?id=16DvrkycOeYX3RnF7e6XbbTXDiwUmt2sk" style="max-width: 200px;">
 </x-mail::header>
 </x-slot:header>
 
