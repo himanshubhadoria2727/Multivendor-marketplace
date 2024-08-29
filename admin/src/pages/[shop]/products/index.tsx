@@ -50,6 +50,7 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [type, setType] = useState('');
   const [category, setCategory] = useState('');
+  const [status, setStatus] = useState('');
   const [productType, setProductType] = useState('');
   const [page, setPage] = useState(1);
   const [orderBy, setOrder] = useState('created_at');
@@ -69,6 +70,7 @@ export default function ProductsPage() {
       limit: 20,
       shop_id: shopId,
       type,
+      status:status,
       categories: category,
       product_type: productType,
       orderBy,
@@ -164,7 +166,7 @@ export default function ProductsPage() {
         </div>
 
         <div
-          className={cn('flex w-full transition', {
+          className={cn('flex w-full transition', { 
             'visible h-auto': visible,
             'invisible h-0': !visible,
           })}
@@ -181,10 +183,11 @@ export default function ProductsPage() {
                 setType(type?.slug!);
                 setPage(1);
               }}
-              onProductTypeFilter={(productType: ProductTypeOptions) => {
-                setProductType(productType?.slug!);
+              onStatusFilter={(status: ProductTypeOptions) => {
+                setStatus(status?.slug!);
                 setPage(1);
               }}
+              enableStatus
               enableCategory
               enableType
               enableProductType

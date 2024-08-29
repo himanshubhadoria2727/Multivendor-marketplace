@@ -92,7 +92,7 @@ const ShopList = ({
           </div>
           {/* <Link href={`/${slug}`}> */}
             <span className="truncate whitespace-nowrap font-medium">
-              {owner.email}
+              {owner?.email}
             </span>
           {/* </Link> */}
         </div>

@@ -34,12 +34,12 @@ export const siteSettings = {
   },
   headerLinks: [],
   authorizedLinks: [
-    {
-      href: Routes.profileUpdate,
-      labelTransKey: 'authorized-nav-item-profile',
-      icon: 'UserIcon',
-      permission: adminOwnerAndStaffOnly,
-    },
+    // {
+    //   href: Routes.profileUpdate,
+    //   labelTransKey: 'authorized-nav-item-profile',
+    //   icon: 'UserIcon',
+    //   permission: adminOwnerAndStaffOnly,
+    // },
     // {
     //   href: Routes.shop.create,
     //   labelTransKey: 'common:text-create-shop',

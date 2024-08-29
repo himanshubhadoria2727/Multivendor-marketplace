@@ -16,12 +16,9 @@ const useCountries = () => {
                 }));
                 countries.sort((a:any, b:any) => a.name.localeCompare(b.name));
                 setCountries(countries);
-                console.log('country res', response.data)
             } catch (err) {
-                console.log("error")
                 setError(err);
             } finally {
-                console.log("finally")
                 setLoading(false);
             }
         };

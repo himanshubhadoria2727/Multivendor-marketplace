@@ -419,8 +419,8 @@ class OrderRepository extends BaseRepository
             $balance = Balance::where('shop_id', '=', $order->shop_id)->first();
             $adminCommissionRate = $balance->admin_commission_rate;
             $shop_earnings = ($order->total * (100 - $adminCommissionRate)) / 100;
-            $balance->total_earnings = $balance->total_earnings + $shop_earnings;
-            $balance->current_balance = $balance->current_balance + $shop_earnings;
+            $balance->total_earnings = +$balance->total_earnings + $shop_earnings;
+            $balance->current_balance = +$balance->current_balance + $shop_earnings;
             $balance->save();
         }
     }

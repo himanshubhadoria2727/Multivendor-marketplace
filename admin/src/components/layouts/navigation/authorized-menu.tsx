@@ -10,6 +10,7 @@ import { getIcon } from '@/utils/get-icon';
 import * as sidebarIcons from '@/components/icons/sidebar';
 import { useRouter } from 'next/router';
 import { getAuthCredentials, hasAccess } from '@/utils/auth-utils';
+import { AvatarIcon } from '@/components/icons/avatar-icon';
 
 export default function AuthorizedMenu() {
   const { data } = useMeQuery();
@@ -18,6 +19,7 @@ export default function AuthorizedMenu() {
   const slug = (pathname === '/[shop]' && query?.shop) || '';
   const { role, permissions } = getAuthCredentials();
   console.log(role);
+  console.log('data', data);
   // Again, we're using framer-motion for the transition effect
   return (
     <Menu
@@ -39,11 +41,13 @@ export default function AuthorizedMenu() {
             {data?.name}
           </span>
           <span className="w-full truncate text-xs capitalize text-gray-400">
-            {role=='store_owner' ? (
-            role ? "Publisher" : data?.email
-            ):
-            (role ? role.split('_').join(' ') : data?.email)
-          }
+            {role == 'store_owner'
+              ? role
+                ? 'Publisher'
+                : data?.email
+              : role
+              ? role.split('_').join(' ')
+              : data?.email}
           </span>
         </div>
       </Menu.Button>
@@ -84,6 +88,14 @@ export default function AuthorizedMenu() {
             </li>
           </Menu.Item>
           <div className="space-y-0.5 py-2">
+            <Link
+              href={`/${data?.shops[0]?.slug}/edit`}
+              className={cn(
+                'group flex items-center gap-2 rounded-md py-2.5 px-3 text-sm capitalize transition duration-200 hover:text-accent',
+              )}
+            >
+             <AvatarIcon className='w-5 ml-2'/>Profile
+            </Link>
             {siteSettings?.authorizedLinks?.map(
               ({ href, labelTransKey, icon, permission }, index) => {
                 const hasPermission = permission?.includes(role!);
@@ -95,7 +107,7 @@ export default function AuthorizedMenu() {
                           <>
                             <li
                               className={cn(
-                                'cursor-pointer border-dashed border-gray-200 px-2 last:!mt-2.5 last:border-t last:pt-2'
+                                'cursor-pointer border-dashed border-gray-200 px-2 last:!mt-2.5 last:border-t last:pt-2',
                               )}
                             >
                               <Link
@@ -104,7 +116,7 @@ export default function AuthorizedMenu() {
                                   'group flex items-center gap-2 rounded-md py-2.5 px-3 text-sm capitalize transition duration-200 hover:text-accent',
                                   active
                                     ? 'border-transparent bg-gray-100 text-accent'
-                                    : 'text-heading'
+                                    : 'text-heading',
                                 )}
                               >
                                 <span className="text-gray-600 group-hover:text-accent">
@@ -123,7 +135,7 @@ export default function AuthorizedMenu() {
                     )}
                   </Fragment>
                 );
-              }
+              },
             )}
           </div>
         </Menu.Items>

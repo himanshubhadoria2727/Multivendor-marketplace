@@ -56,7 +56,7 @@ import { UpdateIcon } from '../icons/update';
 import { ProductDescriptionSuggestion } from '@/components/product/product-ai-prompt';
 import RichTextEditor from '@/components/ui/wysiwyg-editor/editor';
 import TooltipLabel from '@/components/ui/tooltip-label';
-import Select from "react-select";
+import Select from 'react-select';
 import SelectInput from '../ui/select-input';
 // import { ValidationError } from 'yup';
 import { useCountriesQuery } from '@/data/countries';
@@ -65,7 +65,6 @@ import WebsiteVerification from './verifyWebsite';
 import { toast } from 'react-toastify';
 import ValidationError from '@/components/ui/form-validation-error';
 import { Dialog } from '@headlessui/react';
-
 
 type ProductFormProps = {
   initialValues?: Product | null;
@@ -82,22 +81,6 @@ export default function CreateOrUpdateProductForm({
   } = useSettingsQuery({
     language: locale!,
   });
-
-  // const [countries, setCountries] = useState([]);
-  // const [selectedCountry, setSelectedCountry] = useState({});
-
-  // useEffect(() => {
-  //   fetch(
-  //     "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("api response   "+ JSON.stringify(data))
-  //       setCountries(data.countries);
-  //       setSelectedCountry(data.userSelectValue.label.toString());
-  //     });
-  // }, []);
-
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useTranslation();
@@ -150,29 +133,29 @@ export default function CreateOrUpdateProductForm({
 
   const upload_max_filesize = options?.server_info?.upload_max_filesize / 1024;
 
-  const { mutate: createProduct, isLoading: creating } = useCreateProductMutation();
-  const { mutate: updateProduct, isLoading: updating } = useUpdateProductMutation();
-  console.log('updating', updating)
+  const { mutate: createProduct, isLoading: creating } =
+    useCreateProductMutation();
+  const { mutate: updateProduct, isLoading: updating } =
+    useUpdateProductMutation();
   const onSubmit = async (values: ProductFormValues) => {
     // event.preventDefault();
-    values.languages = values.languages.label;
-    values.countries = values.countries.value;
-    values.link_type = values.link_type.label;
+    values.languages = values.languages?.label;
+    values.countries = values.countries?.value;
+    values.link_type = values.link_type?.label;
     try {
       if (verificationResult == true) {
-        values.status = 'publish'
-      }
-      else {
-        values.status = 'draft'
+        values.status = 'publish';
+      } else {
+        values.status = 'draft';
       }
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error('Something went wrong');
     }
     const inputValues = {
       language: router.locale,
       ...getProductInputValues(values, initialValues, isNewTranslation),
       type_id: values.type_id || '1',
-      description: values.description || 'none'
+      description: values.description || 'none',
     };
 
     try {
@@ -184,7 +167,9 @@ export default function CreateOrUpdateProductForm({
         createProduct({
           ...inputValues,
           ...(initialValues?.slug && { slug: initialValues.slug }),
-          shop_id: shopId || initialValues?.shop_id, quantity: 100, sku: "samplesku",
+          shop_id: shopId || initialValues?.shop_id,
+          quantity: 100,
+          sku: 'samplesku',
           type_id: values.type_id || '1',
         });
       } else {
@@ -228,7 +213,6 @@ export default function CreateOrUpdateProductForm({
       suggestion: autoSuggestionList as ItemProps[],
     });
   }, [productName]);
-
 
   const { data: allCountries, error, isLoading } = useCountriesQuery();
   const slugAutoSuggest = formatSlug(watch('name'));
@@ -319,33 +303,67 @@ export default function CreateOrUpdateProductForm({
   //   </span>
   // );
 
-  const [siteName, setProductName] = useState('');
   const [productUrl, setProductUrl] = useState('');
   const [verificationResult, setVerificationResult] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState('');
+  const [isInputLocked, setIsInputLocked] = useState(false);
 
   const handleVerificationComplete = (isVerified: any, message: any) => {
-
     if (isVerified) {
       setVerificationResult(true);
+      setIsInputLocked(true);
+    } else {
+      setIsInputLocked(false);
     }
-    console.log('verification', verificationResult)
+  
+    // Use a callback to log the updated state
     setVerificationMessage(message);
+    console.log('verification', isVerified ? true : verificationResult);
   };
 
-  const handleAddProduct = () => {
-    if (verificationResult) {
-      // Proceed with adding the product
-      console.log('Product added:', siteName, productUrl);
-    } else {
-      console.log('Product verification failed.');
-    }
-  };
+  useEffect(() => {
+    console.log('isInputLocked changed:', isInputLocked);
+  }, [isInputLocked]);
+  
+
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
-
+  function generateMetaContent(storageType = 'local') {
+    const metaName = 'goodblogger-verification';
+    const storage = storageType === 'local' ? localStorage : sessionStorage;
+  
+    // Check if content is already stored
+    let storedContent = storage.getItem(metaName);
+  
+    if (!storedContent) {
+      // Generate random UUID-like content
+      storedContent = generateRandomUUID();
+  
+      // Store the generated content in the specified storage
+      storage.setItem(metaName, storedContent);
+  
+      // Create or update the meta tag with the new content
+      let metaTag = document.querySelector(`meta[name="${metaName}"]`);
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.setAttribute('name', metaName);
+        document.head.appendChild(metaTag);
+      }
+      metaTag.setAttribute('content', storedContent);
+    }
+    
+    return storedContent;
+  }
+  
+  function generateRandomUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0,
+            v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+    
   const steps = [
-
     {
       title: 'Website Information',
       component: (
@@ -353,11 +371,13 @@ export default function CreateOrUpdateProductForm({
           <Input
             label={`Site domain`}
             {...register('name')}
-            placeholder='eg-google.com'
+            placeholder="eg-google.com"
             error={t(errors.name?.message!)}
             onChange={(e) => setProductUrl(e.target.value)}
+            disabled={isInputLocked}
             variant="outline"
-            className="mb-5 w-60 max-md:w-full" />
+            className="mb-5 w-60 max-md:w-full"
+          />
 
           {isSlugEditable ? (
             <div className="relative mb-5">
@@ -366,7 +386,8 @@ export default function CreateOrUpdateProductForm({
                 {...register('slug')}
                 error={t(errors.slug?.message!)}
                 variant="outline"
-                disabled={isSlugDisable} />
+                disabled={isSlugDisable}
+              />
               <button
                 className="absolute top-[27px] right-px z-10 flex h-[46px] w-11 items-center justify-center rounded-tr rounded-br border-l border-solid border-border-base bg-white px-2 text-body transition duration-200 hover:text-heading focus:outline-none"
                 type="button"
@@ -383,53 +404,59 @@ export default function CreateOrUpdateProductForm({
               value={slugAutoSuggest}
               variant="outline"
               className="mb-5 w-60 max-md:w-full"
-              disabled />
+              disabled
+            />
           )}
           <Input
             label={`Site name`}
             {...register('domain_name')}
             error={t(errors.domain_name?.message!)}
-            placeholder='eg-google'
+            placeholder="eg-google"
             variant="outline"
-            className="mb-5 w-60 max-md:w-full" />
+            className="mb-5 w-60 max-md:w-full"
+          />
           <Input
-            label={"Domain Authority"}
+            label={'Domain Authority'}
             type="number"
             {...register('domain_authority')}
-            placeholder='From 1 to 100'
+            placeholder="From 1 to 100"
             error={t(errors.domain_authority?.message!)}
             variant="outline"
-            className="mb-5 w-60 max-md:w-full" />
+            className="mb-5 w-60 max-md:w-full"
+          />
           <Input
-            label={"Domain rating"}
-            type='number'
+            label={'Domain rating'}
+            type="number"
             {...register('domain_rating')}
-            placeholder='From 1 to 100'
+            placeholder="From 1 to 100"
             error={t(errors.domain_rating?.message!)}
             variant="outline"
-            className="mb-5 w-60 max-md:w-full" />
+            className="mb-5 w-60 max-md:w-full"
+          />
           <Input
-            label={"Organic traffic"}
-            type='number'
+            label={'Organic traffic'}
+            type="number"
             {...register('organic_traffic')}
-            placeholder='Enter organic traffic'
+            placeholder="Enter organic traffic"
             error={t(errors.organic_traffic?.message!)}
             variant="outline"
-            className="mb-5 w-60 max-md:w-full" />
+            className="mb-5 w-60 max-md:w-full"
+          />
           <Input
-            label={"Spam score"}
-            type='number'
+            label={'Spam score'}
+            type="number"
             {...register('spam_score')}
-            placeholder='Enter spam score'
+            placeholder="Enter spam score"
             error={t(errors.spam_score?.message!)}
             variant="outline"
-            className="mb-5 w-60 max-md:w-full" />
+            className="mb-5 w-60 max-md:w-full"
+          />
 
           <div className="mb-5 w-60 max-md:w-full">
             <Label>{t('Language')}</Label>
             <SelectInput
               name="languages"
-              placeholder='Select Language'
+              placeholder="Select Language"
               control={control}
               options={[
                 { value: 'en', label: 'English' },
@@ -442,9 +469,10 @@ export default function CreateOrUpdateProductForm({
                 { value: 'ru', label: 'Russian' },
                 { value: 'zh', label: 'Chinese' },
                 { value: 'ar', label: 'Arabic' },
-                { value: 'pt', label: 'Portuguese' }
+                { value: 'pt', label: 'Portuguese' },
               ]}
-              error={t(errors.languages?.message!)} />
+              error={t(errors.languages?.message!)}
+            />
             <ValidationError message={t(error!)} />
           </div>
 
@@ -452,40 +480,43 @@ export default function CreateOrUpdateProductForm({
             <Label>{t('Link type')}</Label>
             <SelectInput
               name="link_type"
-              placeholder='Select link type'
+              placeholder="Select link type"
               control={control}
               options={[
                 { value: 'nofollow', label: 'Nofollow' },
                 { value: 'dofollow', label: 'Dofollow' },
               ]}
-              error={t(errors.link_type?.message!)} />
+              error={t(errors.link_type?.message!)}
+            />
             <ValidationError message={t(error!)} />
-
           </div>
           <div className="mb-5 w-60 max-md:w-full">
             <Label>{t('Select Country')}</Label>
             <SelectInput
               name="countries"
-              placeholder='Select country'
+              placeholder="Select country"
               control={control}
               options={allCountries?.map((country: any) => ({
                 label: country.name.common,
                 value: country.cca2,
               }))}
-              error={t(errors.countries?.message!)} />
+              error={t(errors.countries?.message!)}
+            />
             <ValidationError message={t(error!)} />
           </div>
           <div className="relative mb-5">
             {options?.useAi && (
               <OpenAIButton
                 title="Generate Description With AI"
-                onClick={handleGenerateDescription} />
+                onClick={handleGenerateDescription}
+              />
             )}
             <RichTextEditor
               title={t('form:input-label-description')}
               control={control}
               name="description"
-              error={t(errors?.description?.message)} />
+              error={t(errors?.description?.message)}
+            />
           </div>
           {/* <div>
             <Label>{t('form:input-label-status')}</Label>
@@ -512,7 +543,19 @@ export default function CreateOrUpdateProductForm({
           </div> */}
         </Card>
       ),
-      fields: ['name', 'slug', 'domain_name', 'domain_authority', 'domain_rating', 'organic_traffic', 'spam_score', 'languages', 'link_type', 'country', 'status'],
+      fields: [
+        'name',
+        'slug',
+        'domain_name',
+        'domain_authority',
+        'domain_rating',
+        'organic_traffic',
+        'spam_score',
+        'languages',
+        'link_type',
+        'country',
+        'status',
+      ],
     },
     {
       title: 'Set Price and niche options',
@@ -522,7 +565,15 @@ export default function CreateOrUpdateProductForm({
           <ProductNicheOptions initialValues={initialValues} />
         </Card>
       ),
-      fields: ['price', 'isLinkInsertion', 'preview_url', 'is_niche', 'is_gamble', 'is_cbd', 'is_crypto']
+      fields: [
+        'price',
+        'isLinkInsertion',
+        'preview_url',
+        'is_niche',
+        'is_gamble',
+        'is_cbd',
+        'is_crypto',
+      ],
     },
     {
       title: 'Set Type and Category',
@@ -542,38 +593,42 @@ export default function CreateOrUpdateProductForm({
           </div>
         </Card>
       ),
-      fields: ['product_type', 'categories', 'tags']
+      fields: ['product_type', 'categories', 'tags'],
     },
     {
       title: 'Verify and Add site',
       component: (
         <Card>
-          {
-            verificationResult == false ? (
-              <Alert className='w-full mb-5' message={undefined}>Your website will be in draft until its verified</Alert>
-            ) : (null)
-          }
-          {
-            verificationResult == false ? (
-              <div className='w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative' >
-                <span className='flex sm:inline max-sm:text-sm max-sm:text-xs'>Add this text anywhere in your website landing/home page to get verified: a8!$kB2*^gW@xQ#9z^L1&d7*Fm%rU4V6yP@8h!</span>
-              </div>
-            ) : (null)
-          }
+          {verificationResult == false ? (
+            <Alert className="w-full mb-5" message={undefined}>
+              Your website will be in draft until its verified
+            </Alert>
+          ) : null}
+          {verificationResult == false ? (
+            <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
+              <span className="flex sm:inline md:text-sm max-sm:text-xs">
+                Add this meta tag in your website to get verified: &lt;meta
+                name=&quot;goodblogger-verification&quot;
+                content=&quot;{generateMetaContent('local')}&quot;/&gt;
+              </span>
+            </div>
+          ) : null}
           <WebsiteVerification
             websiteUrl={productUrl || initialValues?.name}
-            searchString="a8!$kB2*^gW@xQ#9z^L1&d7*Fm%rU4V6yP@8h!" // Replace with the actual string you want to search
+            metaName="goodblogger-verification"
+            metaContent=  {generateMetaContent('local')}  // Use 'session' for sessionStorage
+
             onVerificationComplete={handleVerificationComplete}
           />
-          {
-            verificationResult == true && (
-              <Alert className='mt-5 w-1/3' message={undefined}>You are Verified, proceed to publish</Alert>
-            )
-          }
+          {verificationResult == true && (
+            <Alert className="mt-5 w-1/3" message={undefined}>
+              You are Verified, proceed to publish
+            </Alert>
+          )}
           {/* <button onClick={handleAddProduct} disabled={!verificationResult}>
                 Add Product
               </button> */}
-          <div>{verificationMessage}</div>
+          {/* <div>{verificationMessage}</div> */}
           <StickyFooterPanel>
             <div className="flex items-center justify-between mt-5">
               {initialValues && (
@@ -610,7 +665,6 @@ export default function CreateOrUpdateProductForm({
       ),
     },
   ];
-
   const handleNextStep = async () => {
     let isValid = true;
 
@@ -625,7 +679,7 @@ export default function CreateOrUpdateProductForm({
     }
 
     if (isValid) {
-      console.log("is valid");
+      console.log('is valid');
       window.scrollTo({ top: 0, behavior: 'auto' });
       if (currentStep < steps.length) {
         setCurrentStep(currentStep + 1);
@@ -635,9 +689,8 @@ export default function CreateOrUpdateProductForm({
     }
   };
 
-
   const handlePreviousStep = () => {
-    window.scrollTo({ top: 0, behavior: 'auto' });    // Add your existing logic to handle the previous step
+    window.scrollTo({ top: 0, behavior: 'auto' }); // Add your existing logic to handle the previous step
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
@@ -688,7 +741,10 @@ export default function CreateOrUpdateProductForm({
             {/* Step Content */}
             <div className="flex-grow">
               {steps.map((step, index) => (
-                <div key={index} className={currentStep === index + 1 ? 'block' : 'hidden'}>
+                <div
+                  key={index}
+                  className={currentStep === index + 1 ? 'block' : 'hidden'}
+                >
                   <Controller
                     name={`step${index + 1}`}
                     control={control}
@@ -696,7 +752,11 @@ export default function CreateOrUpdateProductForm({
                     render={({ field }) => (
                       <div>
                         {step.component}
-                        {errors[`step${index + 1}`] && <span className="text-red-500 text-xs">This field is required</span>}
+                        {errors[`step${index + 1}`] && (
+                          <span className="text-red-500 text-xs">
+                            This field is required
+                          </span>
+                        )}
                       </div>
                     )}
                     rules={{ required: true }} // Adjust validation rules as needed
@@ -714,7 +774,6 @@ export default function CreateOrUpdateProductForm({
                 >
                   Previous Step
                 </div>
-
               )}
               {currentStep < steps.length && (
                 <div
@@ -723,7 +782,6 @@ export default function CreateOrUpdateProductForm({
                 >
                   Next Step
                 </div>
-
               )}
             </div>
           </div>

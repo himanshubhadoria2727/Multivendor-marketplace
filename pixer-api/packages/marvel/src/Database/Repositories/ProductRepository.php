@@ -36,7 +36,6 @@ class ProductRepository extends BaseRepository
     protected $fieldSearchable = [
         'name'        => 'like',
         'shop_id',
-        'status',
         'is_rental',
         'type.slug',
         'dropoff_locations.slug' => 'in',
