@@ -22,6 +22,7 @@ export default class CustomDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=optional"
             rel="stylesheet"
           /> */}
+          {/* <meta property="og:title" content="GuestLink"></meta> */}
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"

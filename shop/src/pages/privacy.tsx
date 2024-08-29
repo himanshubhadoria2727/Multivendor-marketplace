@@ -20,10 +20,10 @@ const PrivacyPage: NextPageWithLayout = () => {
       <div className="mx-auto flex h-full w-full max-w-screen-xl flex-col p-4 sm:p-5">
         <PageHeading
           title={t('text-privacy-page-title')}
-          subtitle={t('text-privacy-page-subtitle')}
+          // subtitle={t('text-privacy-page-subtitle')}
         />
         <GeneralContainer>
-          {privacyPolicy?.map((item) => (
+          {/* {privacyPolicy?.map((item) => (
             <div
               key={item.id}
               className="order-list-enable mb-8 last:mb-0 lg:mb-10"
@@ -38,7 +38,7 @@ const PrivacyPage: NextPageWithLayout = () => {
                 }}
               />
             </div>
-          ))}
+          ))} */}
         </GeneralContainer>
       </div>
     </>

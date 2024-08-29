@@ -111,7 +111,7 @@ class StoreNoticeRepository extends BaseRepository
                             'created_by' => $request->user()->managed_shop->owner_id ?? 0,
                         ])->whereRelation('shops', 'id', $shop_id);
                 } else {
-                    /* Block for Store owner notices */
+                    /* Block for Publisher notices */
                     $storeNotices->where('created_by', $request->user()->id)
                         ->orWhereRelation('users', 'id', $request->user()->id);
                 }

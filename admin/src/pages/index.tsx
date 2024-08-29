@@ -30,7 +30,6 @@ Dashboard.Layout = AppLayout;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { locale } = ctx;
-  // TODO: Improve it
   const generateRedirectUrl =
     locale !== Config.defaultLanguage
       ? `/${locale}${Routes.login}`

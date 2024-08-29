@@ -8,9 +8,9 @@ import { useTranslation } from 'next-i18next';
 import { useCart } from '@/components/cart/lib/cart.context';
 
 interface Props {
-  productId: string;
-  productSlug: string;
-  productName: string;
+  productId?: string;
+  productSlug?: string;
+  productName?: string;
   className?: string;
 }
 

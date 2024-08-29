@@ -7,6 +7,7 @@ import usePrice from '@/lib/hooks/use-price';
 import Button from '@/components/ui/button';
 import { useCart } from '@/components/cart/lib/cart.context';
 import {
+  Item,
   calculatePaidTotal,
   calculateTotal,
 } from '@/components/cart/lib/cart.utils';
@@ -25,6 +26,8 @@ import { PaymentGateway } from '@/types';
 import { useSettings } from '@/data/settings';
 import { REVIEW_POPUP_MODAL_KEY } from '@/lib/constants';
 import Cookies from 'js-cookie';
+import StripePayment from './payment/stripe';
+import RazorpayPayment from './payment/paymentButton';
 
 export default function CartCheckout() {
   const { settings } = useSettings();
@@ -54,6 +57,7 @@ export default function CartCheckout() {
     },
 
     onError: (err: any) => {
+      console.error('Error creating order:', err);
       toast.error(<b>{t('text-profile-page-error-toast')}</b>);
     },
   });
@@ -66,17 +70,23 @@ export default function CartCheckout() {
 
   const available_items = items.filter(
     (item) =>
-      !verifiedResponse?.unavailable_products?.includes(item.id.toString()),
+      !verifiedResponse?.unavailable_products?.includes(item?.id?.toString()),
   );
-
   // Calculate price
   const { price: tax } = usePrice(
     verifiedResponse && {
       amount: verifiedResponse.total_tax ?? 0,
     },
   );
+  console.log('available items', available_items)
+
+
+  const calculateTotal = (items: Item[]): number => {
+    return items.reduce((acc, item) => acc + item.formData.totalPrice, 0);
+  };
 
   const base_amount = calculateTotal(available_items);
+  console.log('Base Amount:', base_amount);
 
   const { price: sub_total } = usePrice(
     verifiedResponse && {
@@ -86,13 +96,13 @@ export default function CartCheckout() {
 
   const totalPrice = verifiedResponse
     ? calculatePaidTotal(
-        {
-          totalAmount: base_amount,
-          tax: verifiedResponse.total_tax,
-          shipping_charge: verifiedResponse.shipping_charge,
-        },
-        0,
-      )
+      {
+        totalAmount: base_amount,
+        tax: verifiedResponse.total_tax,
+        shipping_charge: verifiedResponse.shipping_charge,
+      },
+      0,
+    )
     : 0;
 
   const { price: total } = usePrice(
@@ -100,7 +110,6 @@ export default function CartCheckout() {
       amount: totalPrice,
     },
   );
-
   // phone number field
   const { phoneNumber } = usePhoneInput();
   function createOrder() {
@@ -139,10 +148,19 @@ export default function CartCheckout() {
       total: totalPrice,
       paid_total: totalPrice,
       products: available_items.map((item) => ({
+        title: item.formData.title,
+        ancor: item.formData.ancor,
+        link_url: item.formData.link_url,
+        postUrl: item.formData.postUrl,
+        instructions: item.formData.instructions,
+        content: item.formData.content,
+        file: item.formData.file?.original,
+        selectedForm: item.formData.selectedForm,
+        selectedNiche: item.formData.selectedNiche,
         product_id: item.id,
         order_quantity: item.quantity,
         unit_price: item.price,
-        subtotal: item.price * item.quantity,
+        subtotal: (item.formData.totalPrice),
       })),
       payment_gateway: gateWay,
       use_wallet_points,
@@ -182,7 +200,6 @@ export default function CartCheckout() {
       {/* {use_wallet_points && !Boolean(payableAmount) ? null : <StripePayment />} */}
 
       {use_wallet_points && !Boolean(payableAmount) ? null : <PaymentGrid />}
-
       <Button
         disabled={isLoading}
         isLoading={isLoading}
@@ -191,6 +208,8 @@ export default function CartCheckout() {
       >
         {t('text-submit-order')}
       </Button>
+      {/* <RazorpayPayment amount={totalPrice}   /> */}
+
     </div>
   );
 }

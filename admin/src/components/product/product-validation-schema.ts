@@ -2,27 +2,54 @@ import * as yup from 'yup';
 import { MAXIMUM_WORD_COUNT_FOR_RICH_TEXT_EDITOR } from '@/utils/constants';
 
 export const productValidationSchema = yup.object().shape({
-  name: yup.string().required('form:error-name-required'),
-  sku: yup.string().nullable().required('form:error-sku-required'),
+  name: yup
+    .string().required('Website name is required'),
+  // sku: yup.string().nullable().required('form:error-sku-required'),
   price: yup
     .number()
     .typeError('form:error-price-must-number')
     .min(0)
+    .max(9999)
     .required('form:error-price-required'),
-  quantity: yup.number().when('boundary', {
-    is: (value: boolean) => value,
-    then: (schema) => schema.notRequired(),
-    otherwise: (schema) =>
-      schema
-        .transform((value) => (isNaN(value) ? undefined : value))
-        .typeError('form:error-quantity-must-number')
-        .positive('form:error-quantity-must-positive')
-        .integer('form:error-quantity-must-integer')
-        .required('form:error-quantity-required'),
-  }),
+  domain_authority: yup
+    .number()
+    .typeError('Domian authority must be a number')
+    .min(0)
+    .max(100)
+    .required('Domain authority is required'),
+  domain_rating: yup
+    .number()
+    .typeError('Domian Rating must be a number')
+    .min(0)
+    .max(100)
+    .required('Domain rating is required'),
+  spam_score: yup
+    .number()
+    .typeError('Spam score must be a number')
+    .min(0)
+    .max(100)
+    .required('Spam score is required'),
+  organic_traffic: yup
+    .number()
+    .typeError('Organic traffic must be a number')
+    .min(0)
+    .required('Organic traffic is required'),
+  // quantity: yup.number().when('boundary', {
+  //   is: (value: boolean) => value,
+  //   then: (schema) => schema.notRequired(),
+  //   otherwise: (schema) =>
+  //     schema
+  //       .transform((value) => (isNaN(value) ? undefined : value))
+  //       .typeError('form:error-quantity-must-number')
+  //       .positive('form:error-quantity-must-positive')
+  //       .integer('form:error-quantity-must-integer')
+  //       .required('form:error-quantity-required'),
+  // }),
   domain_name: yup.string().required('form:error-domain-name-required'),
-  type: yup.object().nullable().required('form:error-type-required'),
-  status: yup.string().nullable().required('form:error-status-required'),
+  verify_domain: yup.string().nullable('form:error-domain-name-required'),
+  // niche_price: yup.number().required('Niche price is a required'),
+  type: yup.object().nullable('form:error-type-required'),
+  // status: yup.string().nullable().required('form:error-status-required'),
   variation_options: yup.array().of(
     yup.object().shape({
       price: yup
@@ -36,13 +63,53 @@ export const productValidationSchema = yup.object().shape({
         .lessThan(yup.ref('price'), 'Sale Price should be less than ${less}')
         .positive('form:error-sale-price-must-positive')
         .nullable(),
-      quantity: yup
+      domain_authority: yup
         .number()
-        .typeError('form:error-quantity-must-number')
-        .positive('form:error-quantity-must-positive')
-        .integer('form:error-quantity-must-integer')
-        .required('form:error-quantity-required'),
-      sku: yup.string().required('form:error-sku-required'),
+        .typeError('Authority must be a number')
+        .positive('must be positive')
+        .max(100)
+        .required('Domain authority is required'),
+      domain_rating: yup
+        .number()
+        .typeError('Domain rating must be a number')
+        .positive('must be positive')
+        .max(100)
+        .required('Domain rating is required'),
+      niche_price: yup
+        .number()
+        .typeError('Niche price must be a number')
+        .positive('must be positive')
+        .required('Niche price is required'),
+      organic_traffic: yup
+        .number()
+        .typeError('Organic Traffic must be a number')
+        .positive('must be positive')
+        .required('form:error-price-required'),
+      spam_score: yup
+        .number()
+        .typeError('Spam score must be a number')
+        .positive('must be positive')
+        .max(100)
+        .required('Spam score is required'),
+      countries: yup.object().shape({
+        value: yup.string().required('Country value is required'),
+        label: yup.string().required('Country label is required'),
+      }).required('Country is required'),
+      languages: yup.object().shape({
+        value: yup.string().required('Language value is required'),
+        label: yup.string().required('Language label is required'),
+      }).required('Language is required'),
+      link_type: yup.object().shape({
+        value: yup.string().required('Language value is required'),
+        label: yup.string().required('Language label is required'),
+      }).required('Language is required'),
+      // quantity: yup
+      //   .number()
+      //   .typeError('form:error-quantity-must-number')
+      //   .positive('form:error-quantity-must-positive')
+      //   .integer('form:error-quantity-must-integer')
+      //   .required('form:error-quantity-required'),
+      // sku: yup.string().required('form:error-sku-required'),
       is_digital: yup.boolean(),
       digital_file_input: yup.object().when('is_digital', {
         is: true,

@@ -29,6 +29,7 @@ use Marvel\Enums\ProductType;
 use Marvel\Enums\PaymentGatewayType;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Events\OrderCreated;
+use Illuminate\Support\Facades\Log; 
 use Marvel\Events\OrderProcessed;
 use Marvel\Events\OrderReceived;
 use Marvel\Exceptions\MarvelBadRequestException;
@@ -39,6 +40,7 @@ use Marvel\Traits\PaymentTrait;
 use Marvel\Traits\WalletsTrait;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
+use Marvel\Repositories\CampaignRepository;
 
 class OrderRepository extends BaseRepository
 {
@@ -82,6 +84,15 @@ class OrderRepository extends BaseRepository
         'customer_contact',
         'customer_name',
         'note',
+        'title',
+        'ancor',
+        'postUrl',
+        'link_url',
+        'instructions',
+        'content',
+        'file',
+        'selectedForm',
+        'selectedNiche'
     ];
 
     public function boot()
@@ -153,15 +164,20 @@ class OrderRepository extends BaseRepository
         $useWalletPoints = isset($request->use_wallet_points) ? $request->use_wallet_points : false;
         if ($request->user() && $request->user()->hasPermissionTo(Permission::SUPER_ADMIN) && isset($request['customer_id'])) {
             $request['customer_id'] =  $request['customer_id'];
+            LOG::info("customer inside if". $request['customer_id']);
         } else {
             $request['customer_id'] = $request->user()->id ?? null;
+            LOG::info("customer inside else". $request['customer_id']);
         }
         try {
             $user = User::findOrFail($request['customer_id']);
             if ($user) {
                 $request['customer_name'] = $user->name;
+
             }
         } catch (Exception $e) {
+            Log::info("catch error "+ $e->getMessage());
+
             $user = null;
         }
 
@@ -211,6 +227,8 @@ class OrderRepository extends BaseRepository
 
         $order = $this->createOrder($request);
 
+
+
         if (($useWalletPoints || $request->isFullWalletPayment) && $user) {
             $this->storeOrderWalletPoint(round($request['paid_total'], 2) - $amount, $order->id);
             $this->manageWalletAmount(round($request['paid_total'], 2), $user->id);
@@ -225,6 +243,7 @@ class OrderRepository extends BaseRepository
         if (!in_array($order->payment_gateway, [
             PaymentGatewayType::CASH, PaymentGatewayType::CASH_ON_DELIVERY, PaymentGatewayType::FULL_WALLET_PAYMENT
         ])) {
+
             $order['payment_intent'] = $this->processPaymentIntent($request, $settings);
         }
 
@@ -233,7 +252,7 @@ class OrderRepository extends BaseRepository
         } else {
             $this->orderStatusManagementOnPayment($order, OrderStatus::PENDING, PaymentStatus::PENDING);
         }
-
+        
         event(new OrderProcessed($order));
 
         return $order;
@@ -308,21 +327,56 @@ class OrderRepository extends BaseRepository
      */
     protected function createOrder($request)
     {
+        LOG::info("create order");
+
         try {
             $orderInput = $request->only($this->dataArray);
+            Log::info("1");
             $order = $this->create($orderInput);
+            Log::info("2");
             $products = $this->processProducts($request['products'], $request['customer_id'], $order);
+            Log::info("3");
             $order->products()->attach($products);
+            $this->createOrUpdateCampaign($order,$request->products);
+            Log::info("4",$products);
+            Log::info("4".$order);
             $this->createChildOrder($order->id, $request);
+            Log::info("5");
             //  $this->calculateShopIncome($order);
             $invoiceData = $this->createInvoiceDataForEmail($request, $order);
+            Log::info("6");
             $customer = $request->user() ?? null;
+            Log::info("7");
             event(new OrderCreated($order, $invoiceData, $customer));
+            Log::info("8");
+
+           
+
             return $order;
         } catch (Exception $e) {
+            Log::info("create order exception ". $e->getMessage());
+
             throw $e;
         }
     }
+
+    private function createOrUpdateCampaign($order, $products)
+{
+    $campaignRepository = app(CampaignRepository::class);
+
+    foreach ($products as $productData) {
+        $product = Product::find($productData['product_id']);
+        
+        log::info("pdfsddfs".$product);
+        if ($product) {
+            $link_url = $productData['link_url'];
+            $price = $productData['unit_price'];
+            $userId = $order->customer_id;
+
+            $campaignRepository->createOrUpdateCampaign($link_url, $product->id, $price, $order->id,$userId);
+        }
+    }
+}
     /**
      * This function creates an array of data for an email invoice, including order information,
      * settings, translated text, and URL.
@@ -365,8 +419,8 @@ class OrderRepository extends BaseRepository
             $balance = Balance::where('shop_id', '=', $order->shop_id)->first();
             $adminCommissionRate = $balance->admin_commission_rate;
             $shop_earnings = ($order->total * (100 - $adminCommissionRate)) / 100;
-            $balance->total_earnings = $balance->total_earnings + $shop_earnings;
-            $balance->current_balance = $balance->current_balance + $shop_earnings;
+            $balance->total_earnings = +$balance->total_earnings + $shop_earnings;
+            $balance->current_balance = +$balance->current_balance + $shop_earnings;
             $balance->save();
         }
     }
@@ -381,6 +435,8 @@ class OrderRepository extends BaseRepository
      */
     protected function processProducts($products, $customer_id, $order)
     {
+        LOG::info("Process products");
+
         foreach ($products as $key => $product) {
             if (!isset($product['variation_option_id'])) {
                 $product['variation_option_id'] = null;
@@ -390,6 +446,7 @@ class OrderRepository extends BaseRepository
                 if ($order->parent_id === null) {
                     $productData = Product::with('digital_file')->findOrFail($product['product_id']);
 
+                    Log::info("product data with digital file: " . $productData->toJson());
                     // if rental product
                     $isRentalProduct = $productData->is_rental;
                     if ($isRentalProduct) {
@@ -427,7 +484,7 @@ class OrderRepository extends BaseRepository
             for ($i = 0; $i < $order_quantity; $i++) {
                 OrderedFile::create([
                     'purchase_key'    => Str::random(16),
-                    'digital_file_id' => $digital_file->id,
+                    'digital_file_id' => 1,
                     'customer_id'     => $customer_id,
                     'tracking_number'  => $order_tracking_number
                 ]);

@@ -21,10 +21,10 @@ const LicensingPage: NextPageWithLayout = () => {
       <div className="mx-auto flex h-full w-full max-w-screen-xl flex-col p-4 sm:p-5">
         <PageHeading
           title={t('text-license-page-title')}
-          subtitle={t('text-license-page-subtitle')}
+          // subtitle={t('text-license-page-subtitle')}
         />
         <GeneralContainer>
-          {licensingData?.map((item) => (
+          {/* {licensingData?.map((item) => (
             <div
               key={item.id}
               className="order-list-enable mb-8 last:mb-0 lg:mb-10"
@@ -39,7 +39,7 @@ const LicensingPage: NextPageWithLayout = () => {
                 }}
               />
             </div>
-          ))}
+          ))} */}
         </GeneralContainer>
       </div>
     </>

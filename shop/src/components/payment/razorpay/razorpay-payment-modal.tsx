@@ -5,7 +5,7 @@ import { PaymentGateway, PaymentIntentInfo } from '@/types';
 import { useTranslation } from 'next-i18next';
 import { useModalAction } from '@/components/modal-views/context';
 import { useSettings } from '@/data/settings';
-import { useOrder, useOrderPayment } from '@/data/order';
+import { useOrder, useOrderPayment, useOrders } from '@/data/order';
 import Spinner from '@/components/ui/loader/spinner/spinner';
 
 interface Props {
@@ -18,6 +18,7 @@ const RazorpayPaymentModal: React.FC<Props> = ({
   trackingNumber,
   paymentIntentInfo,
 }) => {
+  
   const { t } = useTranslation();
   const { closeModal } = useModalAction();
   const { loadRazorpayScript, checkScriptLoaded } = useRazorpay();
@@ -25,8 +26,8 @@ const RazorpayPaymentModal: React.FC<Props> = ({
   const { order, isLoading, refetch } = useOrder({
     tracking_number: trackingNumber,
   });
-  const { createOrderPayment } = useOrderPayment();
-
+  const {createOrderPayment}=useOrderPayment()
+console.log("create order [ayment",createOrderPayment.toString)
   // @ts-ignore
   const { customer_name, customer_contact, customer, billing_address } =
     order ?? {};

@@ -42,6 +42,8 @@ use Marvel\Otp\Gateways\OtpGateway;
 use Marvel\Traits\UsersTrait;
 use Marvel\Traits\WalletsTrait;
 use Spatie\Newsletter\Facades\Newsletter;
+use Illuminate\Support\Facades\Log;
+
 
 class UserController extends CoreController
 {
@@ -65,6 +67,15 @@ class UserController extends CoreController
     public function verifyEmail($id, $hash): RedirectResponse
     {
         $user = User::findOrFail($id);
+        if ($user->social_login) {
+            // If the user logged in via social media, skip email verification
+            if ($user->hasPermissionTo(Permission::SUPER_ADMIN) || $user->hasPermissionTo(Permission::STORE_OWNER)) {
+                return Redirect::away(config('shop.dashboard_url'));
+            } else {
+                return Redirect::away(config('shop.shop_url'));
+            }
+        }
+
         if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
             abort(403);
         }
@@ -89,6 +100,7 @@ class UserController extends CoreController
      */
     public function sendVerificationEmail(Request $request): JsonResponse
     {
+
         $user = $request->user();
         $user->sendEmailVerificationNotification();
         return response()->json(['message' => 'Email verification link sent on your email id', 'success' => true]);
@@ -275,38 +287,97 @@ class UserController extends CoreController
         return $request->user()->currentAccessToken()->delete();
     }
 
+    protected $dataArray = ['name', 'email', 'password', 'slug', 'owner_id', 'categories', 'balance'];
+
     public function register(UserCreateRequest $request)
     {
+        Log::info('Register method called', ['request' => $request->all()]);
+
         $notAllowedPermissions = [Permission::SUPER_ADMIN];
         if ((isset($request->permission->value) && in_array($request->permission->value, $notAllowedPermissions)) || (isset($request->permission) && in_array($request->permission, $notAllowedPermissions))) {
+            Log::warning('Unauthorized permission attempted', ['permission' => $request->permission]);
             throw new AuthorizationException(NOT_AUTHORIZED);
         }
+
         $permissions = [Permission::CUSTOMER];
         $role = Role::CUSTOMER;
         if (isset($request->permission)) {
             $permissions[] = isset($request->permission->value) ? $request->permission->value : $request->permission;
             $role = Role::STORE_OWNER;
         }
+
+        Log::info('Creating user', ['name' => $request->name, 'email' => $request->email]);
+
         $user = $this->repository->create([
             'name'     => $request->name,
             'email'    => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
+        Log::info('User created', ['user_id' => $user->id]);
+
         $user->givePermissionTo($permissions);
         $user->assignRole($role);
         $this->giveSignupPointsToCustomer($user->id);
+
+        Log::info('Permissions and role assigned', ['user_id' => $user->id, 'permissions' => $permissions, 'role' => $role]);
+
         $setting = Settings::first();
         $useMustVerifyEmail = isset($setting->options['useMustVerifyEmail']) ? $setting->options['useMustVerifyEmail'] : false;
         if ($useMustVerifyEmail) {
             event(new Registered($user));
+            Log::info('User registered event triggered', ['user_id' => $user->id]);
         }
-        event(new ProcessUserData());
-        return [
-            "token" => $user->createToken('auth_token')->plainTextToken,
-            "permissions" => $user->getPermissionNames(),
-            "role" => $user->getRoleNames()->first()
-        ];
+
+        try {
+            $data = $request->only($this->dataArray);
+            $data['slug'] = $this->makeSlug($request);
+            $data['owner_id'] = $user->id;
+
+            Log::info('Creating shop', ['data' => $data]);
+
+            $shopData = [
+                'name' => $request->name,
+                // 'email' => $request->email,
+                'slug' => $data['slug'],
+                'is_active' => '1',
+                'owner_id' => $data['owner_id']
+            ];
+
+            $shop = Shop::create($shopData);
+
+            Log::info('Shop created', ['shop_id' => $shop->id]);
+
+            if (isset($request['categories'])) {
+                $shop->categories()->attach($request['categories']);
+                Log::info('Categories attached to shop', ['shop_id' => $shop->id, 'categories' => $request['categories']]);
+            }
+
+            if (isset($request['balance']['payment_info'])) {
+                $shop->balance()->create($request['balance']);
+                Log::info('Balance created for shop', ['shop_id' => $shop->id, 'balance' => $request['balance']]);
+            }
+
+            $shop->categories = $shop->categories;
+            $shop->staffs = $shop->staffs;
+
+            Log::info('Shop details updated', ['shop_id' => $shop->id]);
+
+            return [
+                "token" => $user->createToken('auth_token')->plainTextToken,
+                "permissions" => $user->getPermissionNames(),
+                "role" => $user->getRoleNames()->first(),
+                "shop" => $shop
+            ];
+        } catch (Exception $e) {
+            Log::error('Error creating shop', ['error' => $e->getMessage()]);
+            throw new HttpException(400, 'COULD_NOT_CREATE_THE_RESOURCE');
+        }
+    }
+
+    protected function makeSlug(Request $request)
+    {
+        return Str::slug($request->name . '-' . uniqid());
     }
 
     public function banUser(Request $request)
@@ -465,25 +536,42 @@ class UserController extends CoreController
         return $query->paginate($limit);
     }
 
+    /**
+     * Summary of socialLogin
+     * @param \Illuminate\Http\Request $request
+     * @throws \Marvel\Exceptions\MarvelException
+     * @return array
+     */
     public function socialLogin(Request $request)
     {
+        Log::info('info' . $request);
         $provider = $request->provider;
-        $token = $request->access_token;
-        $this->validateProvider($provider);
+        $token = $request->oauthAccessToken;
+        $this->validateProvider('google');
+
+        Log::info('Social Login Request', [
+            'provider' => $provider,
+            'access_token' => $token
+        ]);
 
         try {
             $user = Socialite::driver($provider)->userFromToken($token);
-            $userExist = User::where('email',  $user->email)->exists();
+            $userExist = User::where('email', $user->email)->exists();
+            Log::info('User Existence Check', ['userExist' => $userExist]);
 
             $userCreated = User::firstOrCreate(
                 [
                     'email' => $user->getEmail()
                 ],
                 [
-                    'email_verified_at' => now(),
                     'name' => $user->getName(),
+                    'social_login' => true
                 ]
             );
+            Log::info('User Created or Retrieved', ['userCreated' => $userCreated]);
+
+            $userCreated->markEmailAsVerified(); // Mark email as verified for social login users
+            Log::info('Email marked as verified for social login user');
 
             $userCreated->providers()->updateOrCreate(
                 [
@@ -491,6 +579,10 @@ class UserController extends CoreController
                     'provider_user_id' => $user->getId(),
                 ]
             );
+            Log::info('User Provider Updated or Created', [
+                'provider' => $provider,
+                'provider_user_id' => $user->getId()
+            ]);
 
             $avatar = [
                 'thumbnail' => $user->getAvatar(),
@@ -502,22 +594,85 @@ class UserController extends CoreController
                     'avatar' => $avatar
                 ]
             );
+            Log::info('User Profile Updated or Created', ['avatar' => $avatar]);
 
             if (!$userCreated->hasPermissionTo(Permission::CUSTOMER)) {
                 $userCreated->givePermissionTo(Permission::CUSTOMER);
                 $userCreated->assignRole(Role::CUSTOMER);
+                Log::info('User Permission and Role Assigned', [
+                    'permission' => Permission::CUSTOMER,
+                    'role' => Role::CUSTOMER
+                ]);
+            }
+
+            if (!$userCreated->hasPermissionTo(Permission::STORE_OWNER)) {
+                $userCreated->givePermissionTo(Permission::STORE_OWNER);
+                $userCreated->assignRole(Role::STORE_OWNER);
+                Log::info('User Permission and Role Assigned', [
+                    'permission' => Permission::STORE_OWNER,
+                    'role' => Role::STORE_OWNER
+                ]);
             }
 
             if (empty($userExist)) {
                 $this->giveSignupPointsToCustomer($userCreated->id);
+                Log::info('Signup Points Given to Customer', ['userId' => $userCreated->id]);
             }
+
+            // Check if the shop already exists
+            $existingShop = Shop::where('owner_id', $userCreated->id)->first();
+            if ($existingShop) {
+                Log::info('Existing Shop Found', ['shop_id' => $existingShop->id]);
+
+                return [
+                    "token" => $userCreated->createToken('auth_token')->plainTextToken,
+                    "permissions" => $userCreated->getPermissionNames(),
+                    "role" => $userCreated->getRoleNames()->first(),
+                    "shop" => $existingShop  // Return existing shop details
+                ];
+            }
+
+            // Shop creation logic if no existing shop found
+            $data = $request->only($this->dataArray);
+            $data['owner_id'] = $userCreated->id;
+
+            Log::info('Creating new shop', ['data' => $data]);
+
+            $shopData = [
+                'name' => $request->name,
+                'slug' => Str::slug($request->userName . '-' . uniqid()),
+                'is_active' => '1',
+                'owner_id' => $data['owner_id']
+            ];
+
+            $shop = Shop::create($shopData);
+            Log::info('New Shop Created', ['shop_id' => $shop->id]);
+
+            if (isset($request['categories'])) {
+                $shop->categories()->attach($request['categories']);
+                Log::info('Categories attached to shop', ['shop_id' => $shop->id, 'categories' => $request['categories']]);
+            }
+
+            if (isset($request['balance']['payment_info'])) {
+                $shop->balance()->create($request['balance']);
+                Log::info('Balance created for shop', ['shop_id' => $shop->id, 'balance' => $request['balance']]);
+            }
+
+            $shop->categories = $shop->categories;
+            $shop->staffs = $shop->staffs;
+            Log::info('Shop details updated', ['shop_id' => $shop->id]);
+
             event(new ProcessUserData());
+            Log::info('ProcessUserData Event Triggered');
+
             return [
                 "token" => $userCreated->createToken('auth_token')->plainTextToken,
                 "permissions" => $userCreated->getPermissionNames(),
-                "role" => $userCreated->getRoleNames()->first()
+                "role" => $userCreated->getRoleNames()->first(),
+                "shop" => $shop  // Return shop details
             ];
         } catch (\Exception $e) {
+            Log::error('Social Login Error', ['error' => $e->getMessage()]);
             throw new MarvelException(INVALID_CREDENTIALS);
         }
     }

@@ -32,6 +32,10 @@ export const AuthorizedMenuItems = [
     label: 'text-auth-profile',
     path: routes.profile,
   },
+  // {
+  //   label: 'text-auth-purchase',
+  //   path: routes.purchases,
+  // },
   {
     label: 'text-auth-purchase',
     path: routes.purchases,

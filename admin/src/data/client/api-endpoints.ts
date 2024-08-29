@@ -13,6 +13,7 @@ export const API_ENDPOINTS = {
   VERIFY_COUPONS: 'coupons/verify',
   // CUSTOMERS: 'customers',
   TAXES: 'taxes',
+  SOCIAL_LOGIN_TOKEN:'/social-login-token',
   SHIPPINGS: 'shippings',
   SETTINGS: 'settings',
   CATEGORIES: 'categories',

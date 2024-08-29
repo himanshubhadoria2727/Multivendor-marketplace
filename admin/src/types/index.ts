@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import { Url } from 'url';
 
 export type NextPageWithLayout<P = {}> = NextPage<P> & {
   authorization?: boolean;
@@ -192,6 +193,11 @@ export interface LoginInput {
   password: string;
 }
 
+export interface SocialLoginInput{
+  oauthAccessToken:string;
+  provider:string;
+  userName:string | null;
+}
 export interface AuthResponse {
   token: string;
   permissions: string[];
@@ -502,6 +508,7 @@ export interface CouponInput {
 }
 
 export interface StoreNotice {
+  slug: any;
   id: string;
   translated_languages: string[];
   priority: StoreNoticePriorityType;
@@ -671,8 +678,17 @@ export interface ReadAllNotifyLogs {
 }
 
 export interface OrderProductPivot {
+  niche_price: ReactI18NextChildren | Iterable<ReactI18NextChildren>;
+  title:string;
+  ancor:string;
+  postUrl:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file:string;
   order_quantity?: number;
   unit_price?: number;
+  selectedNiche:string;
   subtotal?: number;
   variation_option_id?: string;
 }
@@ -716,6 +732,11 @@ export interface Product {
   is_digital?: boolean;
   is_external?: boolean;
   is_taxable?: boolean;
+  isLinkInsertion:boolean;
+  is_niche:boolean;
+  is_gamble:boolean;
+  is_cbd:boolean;
+  is_crypto:boolean;
   sale_price?: number;
   video?: {
     url: string;
@@ -730,6 +751,14 @@ export interface Product {
   price: number;
   quantity?: number;
   domain_name?: string;
+  domain_authority?:number;
+  domain_rating?:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
+  link_type:string;
+  niche_price:string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -744,7 +773,17 @@ export interface CreateProduct {
   price: number;
   sale_price?: number;
   quantity?: number;
+  site_name:string;
   domain_name?: string;
+  domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  verify_domain:boolean;
+  spam_score:number;
+  languages:string;
+  countries:string;
+  link_type:string;
+  niche_price:string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];
@@ -755,6 +794,11 @@ export interface CreateProduct {
   external_product_button_text?: string;
   external_product_url?: string;
   is_external?: boolean;
+  isLinkInsertion:boolean;
+  is_niche:boolean;
+  is_gamble:boolean;
+  is_cbd:boolean;
+  is_crypto:boolean;
   manufacturer_id?: string;
   max_price?: number;
   min_price?: number;
@@ -929,6 +973,8 @@ export interface Manufacturer {
 }
 
 export interface ConnectProductOrderPivot {
+  title:string;
+  ancor:string;
   product_id: string;
   order_quantity?: number;
   unit_price?: number;
@@ -1778,6 +1824,7 @@ export interface ProductQueryOptions extends QueryOptions {
   status: string;
   is_active: string;
   shop_id: string;
+  link_type:string;
   min_price: string;
   max_price: string;
   rating: string;

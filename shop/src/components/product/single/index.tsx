@@ -24,7 +24,7 @@ import { useSanitizeContent } from '@/lib/sanitize-content';
 type SingleProps = {
   product: Product;
 };
-
+  
 export function getPreviews(gallery: any[], image: any) {
   if (!isEmpty(gallery) && Array.isArray(gallery)) return gallery;
   if (!isEmpty(image)) return [image, {}];
@@ -42,6 +42,7 @@ const Single: React.FC<SingleProps> = ({ product }) => {
     gallery,
     description,
     created_at,
+    domain_name,
     updated_at,
     ratings,
     rating_count,
@@ -68,6 +69,7 @@ const Single: React.FC<SingleProps> = ({ product }) => {
           variants={staggerTransition()}
           className="grid gap-4 sm:grid-cols-2 lg:gap-6"
         >
+          
           {previews?.map((img) => (
             <motion.div
               key={img.id}
@@ -128,6 +130,7 @@ const Single: React.FC<SingleProps> = ({ product }) => {
               </div>
               <ProductInformation
                 tags={tags}
+                domain_name={domain_name}
                 created_at={created_at}
                 updated_at={updated_at}
                 layoutType={type.name}
@@ -136,6 +139,7 @@ const Single: React.FC<SingleProps> = ({ product }) => {
                 className="flex-shrink-0 pb-6 pt-2.5 lg:min-w-[350px] lg:max-w-[470px] lg:pb-0"
               />
             </div>
+                
             <div className="mt-4 w-full md:mt-8 md:space-y-10 lg:mt-12 lg:flex lg:flex-col lg:space-y-12">
               <AverageRatings
                 ratingCount={rating_count}

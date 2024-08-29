@@ -1,5 +1,7 @@
 import type { NextPage } from 'next';
+import { Url } from 'next/dist/shared/lib/router/router';
 import type { ReactElement, ReactNode } from 'react';
+import { UrlWithParsedQuery } from 'url';
 
 export interface QueryOptions {
   page?: number;
@@ -28,6 +30,15 @@ export interface ProductQueryOptions extends QueryOptions {
   categories: string | string[];
   tags: string | string[];
   language?: string;
+  countries:string;
+  product_type:string;
+  domain_authority:string | string[];
+  domain_rating:string | string[];
+  isLinkInsertion:string | boolean;
+  organic_traffic:string | string[];
+  link_type:string;
+  type:string;
+  status:string;
 }
 
 export interface PopularProductsQueryOptions {
@@ -85,7 +96,42 @@ export type NextPageWithLayout<P = {}> = NextPage<P> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
-interface PaginatorInfo<T> {
+export interface MappedPaginatorInfo {
+  currentPage: number;
+  firstPageUrl: string;
+  from: number;
+  lastPage: number;
+  lastPageUrl: string;
+  links: any[];
+  nextPageUrl: string | null;
+  path: string;
+  perPage: number;
+  prevPageUrl: string | null;
+  to: number;
+  total: number;
+  hasMorePages: boolean;
+}
+
+export enum ProductType {
+  Simple = 'simple',
+  Variable = 'variable',
+}
+
+export enum LinkType {
+  DoFollow = 'dofollow',
+  NoFollow = 'nofollow'
+}
+export enum SiteType {
+  MultiCategory = 'multiCategory',
+  Niche = 'niche'
+}
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export interface PaginatorInfo<T> {
   current_page: number;
   data: T[];
   first_page_url: string;
@@ -248,6 +294,11 @@ export interface LoginUserInput {
   password: string;
 }
 
+export interface SocialLoginInput{
+  oauthAccessToken:string;
+  provider:string;
+}
+
 export interface RegisterUserInput {
   name: string;
   email: string;
@@ -284,6 +335,16 @@ export interface CreateContactUsInput {
   email: string;
   subject: string;
   description: string;
+}
+
+export interface CreateProductInput{
+  title:string;
+  postUrl: string;
+  ancor:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file: Attachment;
 }
 
 export interface CreateAbuseReportInput {
@@ -419,17 +480,34 @@ export interface RatingCount {
 }
 
 export interface Product {
+  pivot: any;
   id: string;
   name: string;
   slug: string;
   description: string;
   price: number;
+  is_niche:string;
+  niche_price:number;
+  is_gamble:boolean;
+  is_cbd:boolean;
+  is_crypto:boolean;
+  isLinkInsertion:string;
   sale_price: number;
   orders_count: number;
   total_downloads: number;
   image: Attachment;
+  service:string;
   gallery: Attachment[];
   shop: Shop;
+  domain_name:string;
+  domain_authority:number;
+  domain_rating:number;
+  organic_traffic:number;
+  spam_score:number;
+  languages:string;
+  countries:string;
+  link_type:string;
+  quantity:number;
   created_at: string;
   updated_at: string;
   preview_url: string;
@@ -449,6 +527,13 @@ export interface Product {
   external_product_url: string;
   external_product_button_text: string;
   video?: string[];
+  title:string;
+  postUrl: string;
+  ancor:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file: Attachment;
 }
 
 export interface ProductPaginator extends PaginatorInfo<Product> {}

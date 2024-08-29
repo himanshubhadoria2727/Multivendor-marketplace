@@ -12,7 +12,7 @@ INSERT INTO `users` (
     )
 VALUES (
         1,
-        'Store Owner',
+        'Publisher',
         'vendor@demo.com',
         NULL,
         '$2y$10$UVs.WftC2iIdLQsHz9Tbdu7OmUXG3P7wyjHvJqCunyJ7JE8ekyXr.',

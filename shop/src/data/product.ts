@@ -16,6 +16,7 @@ import { API_ENDPOINTS } from '@/data/client/endpoints';
 import client from '@/data/client';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
+import { mapPaginatorData } from './utils/data-mapper';
 
 export function useProducts(
   options?: Partial<ProductQueryOptions>,
@@ -77,6 +78,28 @@ export function useProduct(slug: string) {
     error,
   };
 }
+
+export const useProductsQuery = (
+  params: Partial<ProductQueryOptions>,
+  options: any = {},
+) => {
+  const { data, error, isLoading } = useQuery<ProductPaginator, Error>(
+    [API_ENDPOINTS.PRODUCTS, params],
+    ({ queryKey, pageParam }) =>
+      client.products.paginated(Object.assign({}, queryKey[1], pageParam)),
+    {
+      keepPreviousData: true,
+      ...options,
+    },
+  );
+
+  return {
+    products: data?.data ?? [],
+    paginatorInfo: mapPaginatorData(data),
+    error,
+    loading: isLoading,
+  };
+};
 
 export function usePopularProducts(
   options?: Partial<PopularProductsQueryOptions>

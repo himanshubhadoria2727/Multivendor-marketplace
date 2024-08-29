@@ -48,6 +48,10 @@ use Marvel\Http\Controllers\RefundPolicyController;
 use Marvel\Http\Controllers\RefundReasonController;
 use Marvel\Http\Controllers\StoreNoticeController;
 use Marvel\Http\Controllers\TermsAndConditionsController;
+// use App\Http\Controllers\PaymentController;
+use Marvel\Http\Controllers\CampaignController;
+
+
 
 // use Illuminate\Support\Facades\Auth;
 
@@ -57,9 +61,26 @@ use Marvel\Http\Controllers\TermsAndConditionsController;
  * ******************************************
  */
 
+
+
+    
+
+
 Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
+// Route::post('razorpay-payment',[PaymentController::class,'store']);
+
 Route::get('/email/verify/{id}/{hash}', [UserController::class, 'verifyEmail'])->name('verification.verify');
+ //Custom route for CreateCampaigns
+ 
+    Route::post('campaigns', [CampaignController::class, 'store']);
+    Route::get('campaigns', [CampaignController::class, 'index']);
+    Route::get('campaigns/{id}', [CampaignController::class, 'show']);
+    Route::post('campaigns/{id}/products', [CampaignController::class, 'addProducts']);
+    Route::get('campaigns/{id}/products', [CampaignController::class, 'getCampaignProducts']);
+    Route::delete('/campaigns/{campaignId}/products/{productId}', [CampaignController::class, 'removeProduct']);
+    
+    // Route::get('campaigns/products', [CampaignController::class, 'getAllCampaignProducts']);
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/token', [UserController::class, 'token']);
@@ -276,7 +297,7 @@ Route::group(['middleware' => ['can:' . Permission::CUSTOMER, 'auth:sanctum', 'e
 
 /**
  * ******************************************
- * Authorized Route for Staff & Store Owner
+ * Authorized Route for Staff & Publisher
  * ******************************************
  */
 
@@ -347,7 +368,7 @@ Route::group(
 
 /**
  * *****************************************
- * Authorized Route for Store owner Only
+ * Authorized Route for Publisher Only
  * *****************************************
  */
 

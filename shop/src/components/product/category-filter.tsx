@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import cn from 'classnames';
 import { ChevronLeft } from '@/components/icons/chevron-left';
@@ -23,7 +24,7 @@ function CategoryItem({
         {
           'border-dark-100 bg-dark-100 text-light-100 transition-opacity duration-200 hover:opacity-90 focus:opacity-90 dark:border-light dark:bg-light dark:text-dark-100':
             isActive,
-          'border-light-500 bg-light-400 text-dark-100 hover:bg-light-500 dark:border-dark-500 dark:bg-dark-400 dark:text-light-100 hover:dark:bg-dark-500 hover:dark:text-light':
+          'border-light-500 bg-light-200 text-dark-100 hover:bg-light-400 dark:border-dark-500 dark:bg-dark-400 dark:text-light-100 hover:dark:bg-dark-500 hover:dark:text-light':
             !isActive,
         }
       )}
@@ -33,11 +34,17 @@ function CategoryItem({
   );
 }
 
-export default function CategoryFilter({
-  defaultActivePath = '/',
-}: {
+type Props = {
+  onAllProductFilter?: (newValue: string) => void;
+  onCategoryFilter?: (newValue: string) => void;
   defaultActivePath?: string;
-}) {
+};
+
+export default function CategoryFilter({
+  onAllProductFilter,
+  onCategoryFilter,
+  defaultActivePath = '/',
+}: Props) {
   const router = useRouter();
   const { categories } = useCategories({
     limit: 100,
@@ -49,16 +56,28 @@ export default function CategoryFilter({
     scrollToTheRight,
     scrollToTheLeft,
   } = useScrollableSlider(defaultActivePath);
-  function handleClick(categorySlug: string) {
-    router.push({
-      pathname: router.pathname,
-      ...(categorySlug !== defaultActivePath && {
-        query: {
-          category: categorySlug,
-        },
-      }),
-    });
+
+  const [activeCategory, setActiveCategory] = useState('all');
+
+  useEffect(() => {
+    // Update active category based on router query when the component mounts
+    setActiveCategory('all');
+  }, []);
+
+  function handleClickOnAll() {
+    setActiveCategory('all');
+    if (onAllProductFilter) {
+      onAllProductFilter('publish');
+    }
   }
+
+  function handleClick(categorySlug: string) {
+    setActiveCategory(categorySlug);
+    if (onCategoryFilter) {
+      onCategoryFilter(categorySlug);
+    }
+  }
+
   function handleFree() {
     router.push({
       pathname: router.pathname,
@@ -67,9 +86,11 @@ export default function CategoryFilter({
       },
     });
   }
+
   const { t } = useTranslation('common');
+
   return (
-    <div className="app-category-filter-bar sticky top-16 z-20 flex min-h-[64px] w-full overflow-hidden border-b border-light-400 bg-light-100 px-4 py-4 dark:border-dark-300 dark:bg-dark-100 sm:top-[70px] sm:min-h-[70px] sm:px-5 sm:py-5 md:px-6 lg:px-7 3xl:px-8">
+    <div className="app-category-filter-bar sticky top-16 z-20 flex min-h-[64px] shadow-md w-full overflow-hidden border-b border-light-400 bg-light px-4 py-4 dark:border-dark-300 dark:bg-dark-100 sm:top-[70px] sm:min-h-[70px] sm:px-5 sm:py-5 md:px-6 lg:px-7 3xl:px-8">
       <button
         title={t('text-prev')}
         ref={sliderPrevBtn}
@@ -85,21 +106,21 @@ export default function CategoryFilter({
         >
           <CategoryItem
             categoryName={t('text-category-all')}
-            isActive={defaultActivePath === router.asPath}
-            onClick={() => handleClick(defaultActivePath)}
+            isActive={activeCategory === 'all'}
+            onClick={() => handleClickOnAll()}
           />
-          <CategoryItem
+          {/* <CategoryItem
             categoryName={t('text-free')}
             isActive={Boolean(router.query.price)}
             onClick={handleFree}
-          />
+          /> */}
           {categories
-            .filter((category) => category.slug.toLowerCase() !== 'free')
+            .filter((category) => category.slug.toLowerCase() !== 'all')
             .map((category) => (
               <CategoryItem
                 key={category.id}
                 categoryName={category.name}
-                isActive={category.slug === router.query.category}
+                isActive={category.slug === activeCategory}
                 onClick={() => handleClick(category.slug)}
               />
             ))}

@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import Alert from '@/components/ui/alert';
 
 type IProps = {
-  initialValues: any;
+  initialValues: any
 };
 
 export default function ProductSimpleForm({ initialValues }: IProps) {
@@ -27,10 +27,11 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
 
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
+  const isLinkInsertion = watch('isLinkInsertion');
 
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
-      <Description
+      {/* <Description
         title={t('form:form-title-simple-product-info')}
         details={`${
           initialValues
@@ -38,34 +39,44 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             : t('form:item-description-add')
         } ${t('form:form-description-simple-product-info')}`}
         className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-      />
+      /> */}
 
-      <Card className="w-full sm:w-8/12 md:w-2/3">
+      <Card className="w-full sm:w-8/12 flex flex-wrap justify-start gap-3 md:w-full">
         <Input
-          label={`${t('form:input-label-price')}*`}
+          label={`${t("Guest Link Price")}*`}
           {...register('price')}
+          placeholder='Enter price'
           type="number"
           error={t(errors.price?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 w-80 max-md:w-80"
         />
-        <Input
+        <Checkbox
+          {...register('isLinkInsertion')}
+          id="isLinkInsertion"
+          label={t('Allowing Link insertion')}
+          disabled={Boolean(isLinkInsertion)&&!isLinkInsertion}
+          className="mb-5 max-md:w-80 w-64"
+        />
+        {/* <Input
           label={t('form:input-label-sale-price')}
           type="number"
           {...register('sale_price')}
+          placeholder='Enter sale price'
           error={t(errors.sale_price?.message!)}
           variant="outline"
-          className="mb-5"
-        />
+          className="mb-5 max-md:w-80 w-80"
+        /> */}
 
-        {!is_external && (
+        {/* {!is_external && (
           <Input
             label={`${t('form:input-label-quantity')}*`}
             type="number"
             {...register('quantity')}
+            placeholder='Enter Quaniity'
             error={t(errors.quantity?.message!)}
             variant="outline"
-            className="mb-5"
+            className="mb-5 max-md:w-80 w-64"
             // Need discussion
             disabled={isTranslateProduct}
           />
@@ -81,27 +92,28 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           }
           error={t(errors.sku?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 max-md:w-80 w-64"
           disabled={isTranslateProduct}
-        />
+        /> */}
 
         <Input
           label={`${t('form:input-label-preview-url')}`}
           {...register('preview_url')}
+          placeholder='Enter example url'
           error={t(errors.preview_url?.message!)}
           variant="outline"
-          className="mb-5"
+          className="mb-5 max-md:w-80 w-80"
         />
 
-        <Checkbox
+        {/* <Checkbox
           {...register('is_external')}
           id="is_external"
           label={t('form:input-label-is-external')}
           disabled={Boolean(is_digital)}
-          className="mb-5"
-        />
+          className="mb-5 max-md:w-80 w-64"
+        /> */}
 
-        {is_digital ? (
+        {/* {true ? (
           <>
             <Label>{t('form:input-label-digital-file')}</Label>
             <FileInput
@@ -130,16 +142,16 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
               )
             }
           </>
-        ) : null}
+        ) : null} */}
 
-        {is_external ? (
+        {/* {is_external ? (
           <div>
             <Input
               label={t('form:input-label-external-product-url')}
               {...register('external_product_url')}
               error={t(errors.external_product_url?.message!)}
               variant="outline"
-              className="mb-5"
+              className="mb-5 max-md:w-80w-64"
               required
             />
             <Input
@@ -147,7 +159,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
               {...register('external_product_button_text')}
               error={t(errors.external_product_button_text?.message!)}
               variant="outline"
-              className="mb-5"
+              className="mb-5 max-md:w-80 w-64"
               required
             />
           </div>
@@ -168,7 +180,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
               </p>
             )}
           </>
-        )}
+        )} */}
       </Card>
     </div>
   );

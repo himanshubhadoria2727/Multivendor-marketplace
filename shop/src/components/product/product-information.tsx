@@ -10,11 +10,13 @@ import routes from '@/config/routes';
 import { useTranslation } from 'next-i18next';
 import { getIcon } from '@/lib/get-icon';
 import * as TypeIcons from '@/components/icons/type/index';
+import { LinkIcon } from '../icons/link-icon';
 
 interface Props {
   className?: string;
   updated_at: string;
   created_at: string;
+  domain_name:string,
   tags: Tag[];
   layoutType: string;
   icon?: any;
@@ -24,6 +26,7 @@ export default function ProductInformation({
   className,
   updated_at,
   created_at,
+  domain_name,
   tags,
   layoutType,
   icon,
@@ -42,6 +45,19 @@ export default function ProductInformation({
           {dayjs(updated_at).format('MMM D, YYYY')}
         </span>
       </div>
+
+      <div className="flex items-start text-dark dark:text-light">
+        <strong className="flex w-36 flex-shrink-0 items-center font-normal text-dark-600 dark:text-light-600">
+          <span className="w-8 flex-shrink-0 text-dark-900 dark:text-light-900">
+            <LinkIcon className="h-[18px] w-[18px]" />
+          </span>
+          {t('Domain name')}:
+        </strong>
+        <span className="font-medium">
+          {domain_name}
+        </span>
+      </div>
+
       <div className="flex items-start text-dark dark:text-light">
         <strong className="flex w-36 flex-shrink-0 items-center font-normal text-dark-600 dark:text-light-600">
           <span className="w-8 flex-shrink-0 text-dark-900 dark:text-light-900">
@@ -62,7 +78,7 @@ export default function ProductInformation({
               className: 'h-[18px] w-[18px]',
             })}
           </span>
-          {t('text-layout')}:
+          {t('text-layout')}: 
         </strong>
         <span className="font-medium">{layoutType}</span>
       </div>

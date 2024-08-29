@@ -46,6 +46,7 @@ import type {
   Shop,
   ShopPaginator,
   ShopQueryOptions,
+  SocialLoginInput,
   Tag,
   TagPaginator,
   TermsAndConditionsPaginator,
@@ -96,6 +97,44 @@ class Client {
         withCount: 'orders',
         ...params,
       }),
+      paginated: ({
+        type,
+        name,
+        categories,
+        shop_id,
+        price,
+        link_type,
+        countries,
+        domain_authority,
+        domain_rating,
+        isLinkInsertion,
+        organic_traffic,
+        product_type,
+        status,
+        ...params
+      }: Partial<ProductQueryOptions>) => {
+        return HttpClient.get<ProductPaginator>(API_ENDPOINTS.PRODUCTS, {
+          searchJoin: 'and',
+          with: 'shop;type;categories',
+          shop_id,
+          ...params,
+          search: HttpClient.formatSearchParams({
+            type,
+            name,
+            shop_id,
+            price,
+            organic_traffic,
+            domain_rating,
+            isLinkInsertion,
+            domain_authority,
+            countries,
+            link_type,
+            product_type,
+            status,
+            ...(status !== 'publish' && { categories }),
+          }),
+        });
+      },
     get: ({ slug, language }: GetParams) =>
       HttpClient.get<Product>(`${API_ENDPOINTS.PRODUCTS}/${slug}`, {
         language,
@@ -187,6 +226,8 @@ class Client {
       HttpClient.put<User>(`${API_ENDPOINTS.USERS}/${user.id}`, user),
     login: (input: LoginUserInput) =>
       HttpClient.post<AuthResponse>(API_ENDPOINTS.USERS_LOGIN, input),
+    socail_login: (input: SocialLoginInput) =>
+      HttpClient.post<AuthResponse>(API_ENDPOINTS.SOCIAL_LOGIN_TOKEN, input),
     register: (input: RegisterUserInput) =>
       HttpClient.post<AuthResponse>(API_ENDPOINTS.USERS_REGISTER, input),
     forgotPassword: (input: ForgetPasswordInput) =>

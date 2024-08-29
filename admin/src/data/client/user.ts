@@ -18,6 +18,7 @@ import {
   KeyInput,
   LicensedDomainPaginator,
   LicenseAdditionalData,
+  SocialLoginInput,
 } from '@/types';
 import { API_ENDPOINTS } from './api-endpoints';
 import { HttpClient } from './http-client';
@@ -29,6 +30,8 @@ export const userClient = {
   login: (variables: LoginInput) => {
     return HttpClient.post<AuthResponse>(API_ENDPOINTS.TOKEN, variables);
   },
+  socail_login: (variables: SocialLoginInput) =>
+    HttpClient.post<AuthResponse>(API_ENDPOINTS.SOCIAL_LOGIN_TOKEN, variables),
   logout: () => {
     return HttpClient.post<any>(API_ENDPOINTS.LOGOUT, {});
   },

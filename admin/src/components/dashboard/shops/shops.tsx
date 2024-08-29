@@ -15,6 +15,7 @@ const ShopList = () => {
 
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
+  
   return (
     <>
       {permission ? (
@@ -31,7 +32,7 @@ const ShopList = () => {
           {data?.shops?.map((myShop: any, idx: number) => (
             <ShopCard shop={myShop} key={idx} />
           ))}
-        </div>
+        </div>  
       ) : (
         ''
       )}

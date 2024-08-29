@@ -3,17 +3,18 @@ import {
   adminOnly,
   adminOwnerAndStaffOnly,
   ownerAndStaffOnly,
+  ownerOnly,
 } from '@/utils/auth-utils';
 import { Routes } from '@/config/routes';
 
 // TODO : this area need to be checked in Pixer
 
 export const siteSettings = {
-  name: 'Pixer',
+  name: 'Good Blogger',
   description: '',
   logo: {
     url: '/logo.svg',
-    alt: 'Pixer',
+    alt: 'Good Blogger',
     href: '/',
     width: 138,
     height: 34,
@@ -27,24 +28,24 @@ export const siteSettings = {
   },
   defaultLanguage: 'en',
   author: {
-    name: 'RedQ',
-    websiteUrl: 'https://redq.io',
+    name: 'Good blogger',
+    websiteUrl: 'https://goodblogger.co',
     address: '',
   },
   headerLinks: [],
   authorizedLinks: [
-    {
-      href: Routes.profileUpdate,
-      labelTransKey: 'authorized-nav-item-profile',
-      icon: 'UserIcon',
-      permission: adminOwnerAndStaffOnly,
-    },
-    {
-      href: Routes.shop.create,
-      labelTransKey: 'common:text-create-shop',
-      icon: 'ShopIcon',
-      permission: adminAndOwnerOnly,
-    },
+    // {
+    //   href: Routes.profileUpdate,
+    //   labelTransKey: 'authorized-nav-item-profile',
+    //   icon: 'UserIcon',
+    //   permission: adminOwnerAndStaffOnly,
+    // },
+    // {
+    //   href: Routes.shop.create,
+    //   labelTransKey: 'common:text-create-shop',
+    //   icon: 'ShopIcon',
+    //   permission: adminOnly,
+    // },
 
     {
       href: Routes.settings,
@@ -123,11 +124,8 @@ export const siteSettings = {
                 label: 'text-all-shops',
                 icon: 'MyShopIcon',
               },
-              {
-                href: Routes.shop.create,
-                label: 'text-add-all-shops',
-                icon: 'ShopIcon',
-              },
+              // 
+              
               {
                 href: Routes.newShops,
                 label: 'text-inactive-shops',
@@ -135,11 +133,11 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: Routes.adminMyShops,
-            label: 'sidebar-nav-item-my-shops',
-            icon: 'MyShopIcon',
-          },
+          // {
+          //   href: Routes.adminMyShops,
+          //   label: 'sidebar-nav-item-my-shops',
+          //   icon: 'MyShopIcon',
+          // },
         ],
       },
 
@@ -168,11 +166,11 @@ export const siteSettings = {
                 label: 'text-my-draft-products',
                 icon: 'ProductsIcon',
               },
-              {
-                href: Routes.outOfStockOrLowProducts,
-                label: 'text-all-out-of-stock',
-                icon: 'ProductsIcon',
-              },
+              // {
+              //   href: Routes.outOfStockOrLowProducts,
+              //   label: 'text-all-out-of-stock',
+              //   icon: 'ProductsIcon',
+              // },
             ],
           },
           {
@@ -180,11 +178,11 @@ export const siteSettings = {
             label: 'text-groups',
             icon: 'HomeIcon',
           },
-          {
-            href: Routes.productInventory,
-            label: 'text-inventory',
-            icon: 'InventoryIcon',
-          },
+          // {
+          //   href: Routes.productInventory,
+          //   label: 'text-inventory',
+          //   icon: 'InventoryIcon',
+          // },
           {
             href: Routes.category.list,
             label: 'sidebar-nav-item-categories',
@@ -380,23 +378,23 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: '',
-            label: 'sidebar-nav-item-staffs',
-            icon: 'StaffIcon',
-            childMenu: [
-              {
-                href: Routes.myStaffs,
-                label: 'sidebar-nav-item-my-staffs',
-                icon: 'UsersIcon',
-              },
-              {
-                href: Routes.vendorStaffs,
-                label: 'sidebar-nav-item-vendor-staffs',
-                icon: 'UsersIcon',
-              },
-            ],
-          },
+          // {
+          //   href: '',
+          //   label: 'sidebar-nav-item-staffs',
+          //   icon: 'StaffIcon',
+          //   childMenu: [
+          //     {
+          //       href: Routes.myStaffs,
+          //       label: 'sidebar-nav-item-my-staffs',
+          //       icon: 'UsersIcon',
+          //     },
+          //     {
+          //       href: Routes.vendorStaffs,
+          //       label: 'sidebar-nav-item-vendor-staffs',
+          //       icon: 'UsersIcon',
+          //     },
+          //   ],
+          // },
           {
             href: Routes.customerList,
             label: 'text-customers',
@@ -654,21 +652,21 @@ export const siteSettings = {
                 icon: 'ProductsIcon',
                 permissions: adminOwnerAndStaffOnly,
               },
-              {
-                href: (shop: string) =>
-                  `/${shop}${Routes.outOfStockOrLowProducts}`,
-                label: 'text-all-out-of-stock',
-                icon: 'ProductsIcon',
-                permissions: adminOwnerAndStaffOnly,
-              },
+              // {
+              //   href: (shop: string) =>
+              //     `/${shop}${Routes.outOfStockOrLowProducts}`,
+              //   label: 'text-all-out-of-stock',
+              //   icon: 'ProductsIcon',
+              //   permissions: adminOwnerAndStaffOnly,
+              // },
             ],
           },
-          {
-            href: (shop: string) => `/${shop}${Routes.productInventory}`,
-            label: 'text-inventory',
-            icon: 'InventoryIcon',
-            permissions: adminOwnerAndStaffOnly,
-          },
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.productInventory}`,
+          //   label: 'text-inventory',
+          //   icon: 'InventoryIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
           // {
           //   href: (shop: string) => `/${shop}${Routes.attribute.list}`,
           //   label: 'sidebar-nav-item-attributes',
@@ -778,7 +776,7 @@ export const siteSettings = {
           {
             href: (shop: string) => `/${shop}${Routes.staff.list}`,
             label: 'sidebar-nav-item-staffs',
-            icon: 'UsersIcon',
+            icon: 'UsersIcon', 
             permissions: adminAndOwnerOnly,
           },
         ],
@@ -932,12 +930,12 @@ export const siteSettings = {
               },
             ],
           },
-          {
-            href: (shop: string) => `/${shop}${Routes.productInventory}`,
-            label: 'text-inventory',
-            icon: 'InventoryIcon',
-            permissions: adminOwnerAndStaffOnly,
-          },
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.productInventory}`,
+          //   label: 'text-inventory',
+          //   icon: 'InventoryIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
           // {
           //   href: (shop: string) => `/${shop}${Routes.attribute.list}`,
           //   label: 'sidebar-nav-item-attributes',

@@ -18,6 +18,7 @@ use Marvel\Http\Requests\WithdrawRequest;
 use Prettus\Validator\Exceptions\ValidatorException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log;
 
 class WithdrawController extends CoreController
 {
@@ -73,29 +74,50 @@ class WithdrawController extends CoreController
      * @throws ValidatorException
      */
     public function store(WithdrawRequest $request)
-    {
-        try {
-            if ($request->user() && ($request->user()->hasPermissionTo(Permission::SUPER_ADMIN) || $request->user()->shops->contains('id', $request->shop_id))) {
-                $validatedData = $request->validated();
-                if (!isset($validatedData['shop_id'])) {
-                    throw new BadRequestHttpException(WITHDRAW_MUST_BE_ATTACHED_TO_SHOP);
-                }
-                $balance = Balance::where('shop_id', '=', $validatedData['shop_id'])->first();
-                if (isset($balance->current_balance) && $balance->current_balance <= $validatedData['amount']) {
-                    throw new BadRequestHttpException(INSUFFICIENT_BALANCE);
-                }
-                $withdraw = $this->repository->create($validatedData);
-                $balance->withdrawn_amount = $balance->withdrawn_amount + $validatedData['amount'];
-                $balance->current_balance = $balance->current_balance - $validatedData['amount'];
-                $balance->save();
-                $withdraw->status = WithdrawStatus::PENDING;
-                return $withdraw;
+{
+    try {
+        Log::info('Withdraw request initiated', ['user_id' => $request->user()->id, 'shop_id' => $request->shop_id]);
+
+        if ($request->user() && ($request->user()->hasPermissionTo(Permission::SUPER_ADMIN) || $request->user()->shops->contains('id', $request->shop_id))) {
+            $validatedData = $request->validated();
+            Log::info('Withdraw request validated', $validatedData);
+
+            if (!isset($validatedData['shop_id'])) {
+                Log::error('Withdraw must be attached to a shop', $validatedData);
+                throw new BadRequestHttpException(WITHDRAW_MUST_BE_ATTACHED_TO_SHOP);
             }
-            throw new AuthorizationException(NOT_AUTHORIZED);
-        } catch (MarvelException $e) {
-            throw new MarvelException(SOMETHING_WENT_WRONG);
+
+            $balance = Balance::where('shop_id', '=', $validatedData['shop_id'])->first();
+            if (isset($balance->current_balance) && $balance->current_balance <= $validatedData['amount']) {
+                Log::error('Insufficient balance', ['current_balance' => $balance->current_balance, 'withdraw_amount' => $validatedData['amount']]);
+                throw new BadRequestHttpException(INSUFFICIENT_BALANCE);
+            }
+
+            $withdraw = $this->repository->create($validatedData);
+            Log::info('Withdraw created', ['withdraw_id' => $withdraw->id, 'amount' => $validatedData['amount']]);
+
+            $balance->withdrawn_amount = $balance->withdrawn_amount + $validatedData['amount'];
+            $balance->current_balance = $balance->current_balance - $validatedData['amount'];
+            $balance->save();
+
+            Log::info('Balance updated', ['shop_id' => $validatedData['shop_id'], 'new_balance' => $balance->current_balance]);
+
+            $withdraw->status = WithdrawStatus::PENDING;
+            Log::info('Withdraw status set to pending', ['withdraw_id' => $withdraw->id]);
+
+            return $withdraw;
         }
+
+        Log::warning('Unauthorized withdraw attempt', ['user_id' => $request->user()->id]);
+        throw new AuthorizationException(NOT_AUTHORIZED);
+    } catch (MarvelException $e) {
+        Log::error('MarvelException occurred', ['exception' => $e->getMessage()]);
+        throw new MarvelException(SOMETHING_WENT_WRONG);
+    } catch (\Exception $e) {
+        Log::error('Exception occurred', ['exception' => $e->getMessage()]);
+        throw new \Exception(SOMETHING_WENT_WRONG);
     }
+}
 
     /**
      * Display the specified resource.

@@ -13,6 +13,8 @@ import Logo from '@/components/ui/logo';
 import Scrollbar from '@/components/ui/scrollbar';
 import routes from '@/config/routes';
 import Copyright from '@/layouts/_copyright';
+import { UserIconAlt } from '@/components/icons/user-icon-alt';
+import { PurchaseIcon } from '@/components/icons/purchase-icon';
 import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { useWindowSize } from 'react-use';
@@ -24,6 +26,7 @@ import {
 } from '@/lib/constants';
 import { useAtom } from 'jotai';
 import { twMerge } from 'tailwind-merge';
+import { BsMegaphoneFill } from 'react-icons/bs';
 
 interface NavLinkProps {
   href: string;
@@ -74,7 +77,7 @@ export function Sidebar({
     <aside
       className={twMerge(
         cn(
-          'h-full flex-col justify-between overflow-y-auto border-r border-light-400 bg-light-100 pt-[82px] text-dark-900 dark:border-0 dark:bg-dark-200',
+          'h-full flex-col justify-between overflow-y-auto border-r border-light-400 bg-light pt-[82px] text-dark-100 dark:text-light dark:text-dark-100 dark:text-light dark:border-0 dark:bg-dark-200',
           isCollapse ? 'sm:w-60 xl:w-[75px]' : 'sm:w-[75px] xl:w-60',
           width >= RESPONSIVE_WIDTH && underMaintenanceIsComing && !isScrolling
             ? 'pt-[9.625rem]'
@@ -87,43 +90,55 @@ export function Sidebar({
         <div className="flex h-full w-full flex-col">
           <nav className="flex flex-col">
             <NavLink
-              title={t('text-home')}
+              title={t('Website Catalogs')}
               href={routes.home}
               isCollapse={isCollapse}
-              icon={<HomeIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<HomeIcon className="h-[18px] w-[18px] text-[#d91E36] text-current" />}
             />
             <NavLink
-              title={t('text-explore')}
-              href={routes.explore}
+              title={t('Dashboard')}
+              href={routes.dashboard}
               isCollapse={isCollapse}
-              icon={<DiscoverIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<DiscoverIcon className="h-[18px] w-[18px] text-[#0582cA] text-current" />}
             />
             <NavLink
-              title={t('text-popular-products')}
-              href={routes.popularProducts}
+              title={t('Campaigns')}
+              href={routes.campaign}
               isCollapse={isCollapse}
-              icon={<ProductIcon className="h-4 w-4 text-current" />}
+              icon={<BsMegaphoneFill className="h-4 text-[#6B7fD7] w-4 text-current" />}
             />
             <NavLink
+              title={t('Profile')}
+              href={routes.profileh}
+              isCollapse={isCollapse}
+              icon={<UserIconAlt className="h-4 w-4 text-[#FF86c8] text-current" />}
+            />
+            <NavLink
+              title={t('Orders')}
+              href={routes.order}
+              isCollapse={isCollapse}
+              icon={<PurchaseIcon className="h-4 w-4 text-[#F2a541] text-current" />}
+            />
+            {/* <NavLink
               title={t('text-top-authors')}
               href={routes.authors}
               isCollapse={isCollapse}
               icon={<PeopleIcon className="h-[18px] w-[18px] text-current" />}
-            />
+            /> */}
 
-            <NavLink
+            {/* <NavLink
               title={t('text-feed')}
               href={routes.feed}
               isCollapse={isCollapse}
               icon={<FeedIcon className="h-[17px] w-[17px] text-current" />}
-            />
+            /> */}
 
             <NavLink
               title={t('text-contact')}
               href={routes.contact}
               isCollapse={isCollapse}
               icon={
-                <PaperPlaneIcon className="h-[18px] w-[18px] text-current" />
+                <PaperPlaneIcon className="h-[18px] w-[18px] text-[#7d53DE] text-current" />
               }
             />
           </nav>
@@ -133,13 +148,13 @@ export function Sidebar({
               title={t('text-settings')}
               href={routes.profile}
               isCollapse={isCollapse}
-              icon={<SettingIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<SettingIcon className="h-[18px] w-[18px] text-[#1a181B] dark:text-light text-current" />}
             />
             <NavLink
               title={t('text-help-page-title')}
               href={routes.help}
               isCollapse={isCollapse}
-              icon={<HelpIcon className="h-[18px] w-[18px] text-current" />}
+              icon={<HelpIcon className="h-[18px] w-[18px] text-[#91cB3E] text-current" />}
             />
           </nav>
         </div>
@@ -154,24 +169,24 @@ export function Sidebar({
         <nav className="flex items-center justify-center gap-5 pb-1.5 text-13px font-medium capitalize tracking-[0.2px]">
           <ActiveLink
             href={routes.terms}
-            className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
+            className="block py-2 text-dark-100 dark:text-light hover:text-dark-100 dark:hover:text-brand"
           >
             {t('text-terms')}
           </ActiveLink>
           <ActiveLink
             href={routes.privacy}
-            className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
+            className="block py-2 text-dark-100 dark:text-light hover:text-dark-100 dark:hover:text-brand"
           >
             {t('text-privacy')}
           </ActiveLink>
           <ActiveLink
             href={routes.help}
-            className="block py-2 text-dark-700 hover:text-dark-100 dark:hover:text-brand"
+            className="block py-2 text-dark-100 dark:text-light hover:text-dark-100 dark:hover:text-brand"
           >
             {t('text-help-page-title')}
           </ActiveLink>
         </nav>
-        <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-700" />
+        {/* <Copyright className="px-1 text-xs font-medium text-dark-800/80 dark:text-dark-100 dark:text-light" /> */}
       </footer>
     </aside>
   );

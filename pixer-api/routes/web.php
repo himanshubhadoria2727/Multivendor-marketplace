@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
 
+Route::get('product',[PaymentController::class,'index']);
+Route::post('razorpay-payment',[PaymentController::class,'store'])->name('razorpay.payment.store');
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +19,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+

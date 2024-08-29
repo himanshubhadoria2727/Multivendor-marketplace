@@ -1,3 +1,6 @@
+import { Attachment } from "@/types";
+import { Url } from "next/dist/shared/lib/router/router";
+
 export type Optional<T, K extends keyof T> = Partial<T> & Omit<T, K>;
 export interface Item {
   id: string | number;
@@ -13,6 +16,20 @@ export interface Item {
     name: string;
   };
   language: string;
+  formData:FormData;
+}
+
+export interface FormData{
+  title:string;
+  postUrl: string;
+  ancor:string;
+  link_url:string;
+  instructions:string;
+  content:string;
+  file: Attachment;
+  selectedForm:string;
+  selectedNiche:string;
+  totalPrice:number;
 }
 export interface VerifiedResponse {
   total_tax: number;
@@ -20,6 +37,7 @@ export interface VerifiedResponse {
   unavailable_products: string[];
   wallet_currency: number;
   wallet_amount: number;
+
 }
 export interface UpdateItemInput extends Partial<Omit<Item, 'id'>> {}
 

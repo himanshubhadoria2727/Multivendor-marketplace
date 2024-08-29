@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 use Illuminate\Support\Str;
 use Marvel\Database\Models\PaymentIntent;
+use Illuminate\Support\Facades\Log; 
+
 
 class Coinbase extends Base implements PaymentInterface
 {
@@ -177,6 +179,8 @@ class Coinbase extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+                Log::info("Coinbase");
+
         return [];
     }
 

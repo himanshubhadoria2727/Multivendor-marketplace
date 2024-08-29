@@ -7,8 +7,8 @@ import { ProductType } from '@/types';
 import { useTranslation } from 'next-i18next';
 
 const productType = [
-  { name: 'Simple Product', value: ProductType.Simple },
-  { name: 'Variable Product', value: ProductType.Variable },
+  { name: 'Guest Link', value: 'guest_link' },
+  { name: 'Link Insertion', value: 'link_insertion' },
 ];
 
 const ProductTypeInput = () => {
@@ -27,9 +27,11 @@ const ProductTypeInput = () => {
           control={control}
           getOptionLabel={(option: any) => option.name}
           getOptionValue={(option: any) => option.value}
+          isMulti
           options={productType}
         />
         <ValidationError message={t(errors.product_type?.message)} />
+        
       </div>
     </Card>
   );

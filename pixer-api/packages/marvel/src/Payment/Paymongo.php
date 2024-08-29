@@ -12,6 +12,8 @@ use Marvel\Enums\PaymentStatus;
 use Stripe\Exception\SignatureVerificationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use Illuminate\Support\Facades\Log; 
+
 
 class Paymongo extends Base implements PaymentInterface
 {
@@ -153,6 +155,8 @@ class Paymongo extends Base implements PaymentInterface
      */
     public function createCustomer($request): array
     {
+        Log::info("paymango");
+
         return [];
     }
 

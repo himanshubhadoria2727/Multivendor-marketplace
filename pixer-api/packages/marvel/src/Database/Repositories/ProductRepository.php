@@ -36,7 +36,6 @@ class ProductRepository extends BaseRepository
     protected $fieldSearchable = [
         'name'        => 'like',
         'shop_id',
-        'status',
         'is_rental',
         'type.slug',
         'dropoff_locations.slug' => 'in',
@@ -44,7 +43,14 @@ class ProductRepository extends BaseRepository
         'persons.slug' => 'in',
         'deposits.slug' => 'in',
         'features.slug' => 'in',
+        'countries'=>'like',
+        'organic_traffic'=>'between',
+        'domain_authority'=>'between',
+        'domain_rating'=>'between',
+        'isLinkInsertion',
+        'link_type'=>'like',
         'categories.slug' => 'in',
+        'status',
         'tags.slug' => 'in',
         'author.slug',
         'manufacturer.slug' => 'in',
@@ -71,7 +77,20 @@ class ProductRepository extends BaseRepository
         'product_type',
         'quantity',
         'domain_name',
+        'domain_authority',
+        'domain_rating',
+        'organic_traffic',
+        'spam_score',
+        'languages',
+        'countries',
+        'link_type',
         'is_digital',
+        'is_niche',
+        'niche_price',
+        'is_gamble',
+        'is_cbd',
+        'is_crypto',
+        'isLinkInsertion',
         'is_external',
         'external_product_url',
         'external_product_button_text',
@@ -454,6 +473,15 @@ class ProductRepository extends BaseRepository
             }
             $data = $request->only($this->dataArray);
             $data['sale_price'] = isset($request['sale_price']) ? $request['sale_price'] : null;
+            $data['domain_name'] = isset($request['domain_name']) ? $request['domain_name'] : null;
+            $data['languages'] = isset($request['languages']) ? $request['languages'] : null;
+            $data['link_type'] = isset($request['link_type']) ? $request['link_type'] : null;
+            $data['countries'] = isset($request['countries']) ? $request['countries'] : null;
+            $data['domain_authority'] = isset($request['domain_authority']) ? $request['domain_authority'] : null;
+            $data['niche_price'] = isset($request['niche_price']) ? $request['niche_price'] : null;
+            $data['domain_rating'] = isset($request['domain_rating']) ? $request['domain_rating'] : null;
+            $data['organic_traffic'] = isset($request['organic_traffic']) ? $request['organic_traffic'] : null;
+            $data['spam_score'] = isset($request['spam_score']) ? $request['spam_score'] : null;
 
             if ($setting->options["isProductReview"]) {
                 $data['status'] = $this->checkProductForPublish($request, $product);
@@ -494,6 +522,14 @@ class ProductRepository extends BaseRepository
                     'max_price' => $product->max_price,
                     'min_price' => $product->min_price,
                     'domain_name' => $product->domain_name,
+                    'domain_authority' => $product->domain_authority,
+                    'domain_rating' => $product->domain_rating,
+                    'organic_traffic'=> $product->organic_traffic,
+                    'spam_score'=> $product->spam_score,
+                    'languages'=> $product->languages,
+                    'countries'=> $product->countries,
+                    'link_type'=> $product->link_type,
+                    'niche_price'=>$product->niche_price,
                     'quantity' => $product->quantity,
                 ]);
             }

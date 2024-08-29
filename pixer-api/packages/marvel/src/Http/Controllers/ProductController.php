@@ -4,6 +4,8 @@ namespace Marvel\Http\Controllers;
 
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -52,10 +54,21 @@ class ProductController extends CoreController
      */
     public function index(Request $request)
     {
-        $limit = $request->limit ?   $request->limit : 15;
+        Log::info('Entering index method', ['request' => $request->all()]);
+
+        $limit = $request->limit ? $request->limit : 15;
+        Log::info('Pagination limit set', ['limit' => $limit]);
+
         $products = $this->fetchProducts($request)->paginate($limit)->withQueryString();
+        Log::info('Products fetched and paginated', ['products' => $products]);
+
         $data = ProductResource::collection($products)->response()->getData(true);
-        return formatAPIResourcePaginate($data);
+        Log::info('Products transformed to resource collection', ['data' => $data]);
+
+        $formattedData = formatAPIResourcePaginate($data);
+        Log::info('Formatted API resource pagination data', ['formattedData' => $formattedData]);
+
+        return $formattedData;
     }
 
 
@@ -67,23 +80,32 @@ class ProductController extends CoreController
      * @return object
      */
     public function fetchProducts(Request $request)
-    {
+    { Log::info('Entering fetchProducts method', ['request' => $request->all()]);
+
         $unavailableProducts = [];
         $language = $request->language ? $request->language : DEFAULT_LANGUAGE;
+        Log::info('Language set', ['language' => $language]);
 
         $products_query = $this->repository->where('language', $language);
+        Log::info('Initial product query created', ['query' => $products_query->toSql()]);
 
         if (isset($request->date_range)) {
             $dateRange = explode('//', $request->date_range);
             $unavailableProducts = $this->repository->getUnavailableProducts($dateRange[0], $dateRange[1]);
+            Log::info('Unavailable products fetched', ['dateRange' => $dateRange, 'unavailableProducts' => $unavailableProducts]);
         }
+
         if (in_array('variation_options.digital_files', explode(';', $request->with)) || in_array('digital_files', explode(';', $request->with))) {
+            Log::warning('Unauthorized access to digital files attempted');
             throw new AuthorizationException(NOT_AUTHORIZED);
         }
+
         $products_query = $products_query->whereNotIn('id', $unavailableProducts);
+        Log::info('Excluded unavailable products from query', ['query' => $products_query->toSql()]);
 
         if ($request->flash_sale_builder) {
             $products_query = $this->repository->processFlashSaleProducts($request, $products_query);
+            Log::info('Processed flash sale products', ['query' => $products_query->toSql()]);
         }
 
         return $products_query;

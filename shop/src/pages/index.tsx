@@ -8,6 +8,8 @@ import type { GetStaticProps } from 'next';
 import Layout from '@/layouts/_layout';
 import { useProducts } from '@/data/product';
 import Grid from '@/components/product/grid';
+import List from '@/components/product/list';
+import productTable from '@/components/product/table';
 import { useRouter } from 'next/router';
 import Seo from '@/layouts/_seo';
 import routes from '@/config/routes';
@@ -16,6 +18,13 @@ import { dehydrate, QueryClient } from 'react-query';
 import { API_ENDPOINTS } from '@/data/client/endpoints';
 import CategoryFilter from '@/components/product/category-filter';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Card from '@/components/product/card';
+import { useGridSwitcher } from '@/components/product/grid-switcher';
+import MyTable from '@/components/product/table';
+import Example from '@/components/product/table';
+import ProductFilter from '@/components/filters/product-filter';
+import ProductTable from '@/components/product/productTable';
+import ProductTable2 from '@/components/product/productTable2';
 
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const queryClient = new QueryClient();
@@ -54,6 +63,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
 
 function Products() {
   const { query } = useRouter();
+  const { isGridCompact } = useGridSwitcher();
   const { products, loadMore, hasNextPage, isLoadingMore, isLoading } =
     useProducts({
       ...(query.category && { categories: query.category }),
@@ -61,14 +71,25 @@ function Products() {
       sortedBy: 'DESC',
     });
   return (
-    <Grid
-      products={products}
-      limit={30}
-      onLoadMore={loadMore}
-      hasNextPage={hasNextPage}
-      isLoadingMore={isLoadingMore}
-      isLoading={isLoading}
-    />
+    <>
+      {!isGridCompact ?
+        (
+          <><CategoryFilter />
+            <List
+              products={products}
+              limit={30}
+              onLoadMore={loadMore}
+              hasNextPage={hasNextPage}
+              isLoadingMore={isLoadingMore}
+              isLoading={isLoading} /></>
+        ) : (
+          <>
+            <ProductTable2
+            />
+          </>
+        )
+      }
+    </>
   );
 }
 
@@ -81,7 +102,6 @@ const Home: NextPageWithLayout = () => {
         description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
         url={routes.home}
       />
-      <CategoryFilter />
       <Products />
     </>
   );

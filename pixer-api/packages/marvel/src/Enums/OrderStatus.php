@@ -14,6 +14,7 @@ final class OrderStatus extends Enum
     public const PENDING              = 'order-pending';
     public const PROCESSING           = 'order-processing';
     public const COMPLETED            = 'order-completed';
+    public const APPROVED            = 'order-approved';
     public const CANCELLED            = 'order-cancelled';
     public const REFUNDED             = 'order-refunded';
     public const FAILED               = 'order-failed';

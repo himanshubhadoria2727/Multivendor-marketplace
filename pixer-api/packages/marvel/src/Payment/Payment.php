@@ -1,6 +1,7 @@
 <?php
 
 namespace Marvel\Payments;
+use Illuminate\Support\Facades\Log; 
 
 
 class Payment
@@ -24,6 +25,19 @@ class Payment
   }
 
 
+  /**
+   * createOrder
+   *
+   * @param  object $request
+   * @return array
+   */
+  public function createOrder($request)
+  {
+    Log::info("create order inside payment class called");
+    return $this->payment->createOrder($request);
+  }
+
+  
   /**
    * attachPaymentMethodToCustomer
    *

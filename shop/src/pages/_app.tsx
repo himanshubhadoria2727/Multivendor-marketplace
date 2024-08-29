@@ -15,12 +15,16 @@ import DrawersContainer from '@/components/drawer-views/container';
 import SearchView from '@/components/search/search-view';
 import DefaultSeo from '@/layouts/_default-seo';
 import { SearchProvider } from '@/components/search/search.context';
+import { CampaignProvider } from '@/components/campaign/CampaignContext'; // Adjust the import path if necessary
 
 // base css file
 import '@/assets/css/scrollbar.css';
 import '@/assets/css/swiper-carousel.css';
 import '@/assets/css/pagination.css';
 import '@/assets/css/globals.css';
+//firebase
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
@@ -36,6 +40,13 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+// Import the functions you need from the SDKs you need
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Initialize Firebase
+
 function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   const { locale } = useRouter();
   const [queryClient] = useState(() => new QueryClient());
@@ -45,39 +56,35 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     document.documentElement.dir = dir;
   }, [dir]);
+
   const authenticationRequired = Component.authorization ?? false;
+  // const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
   return (
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-        >
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <SearchProvider>
             <CartProvider>
               <ModalProvider>
-                <AnimatePresence
-                  initial={false}
-                  onExitComplete={() => window.scrollTo(0, 0)}
-                >
-                  <>
-                    <DefaultSeo />
-                    <Maintenance>
-                      {authenticationRequired ? (
-                        <PrivateRoute>
-                          {getLayout(<Component {...pageProps} />)}
-                        </PrivateRoute>
-                      ) : (
-                        getLayout(<Component {...pageProps} />)
-                      )}
-                    </Maintenance>
-                    <SearchView />
-                    <ModalsContainer />
-                    <DrawersContainer />
-                    <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
-                  </>
-                </AnimatePresence>
+                <CampaignProvider> 
+                  <AnimatePresence initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
+                    <>
+                      <DefaultSeo />
+                      <Maintenance>
+                        {authenticationRequired ? (
+                          <PrivateRoute>{getLayout(<Component {...pageProps} />)}</PrivateRoute>
+                        ) : (
+                          getLayout(<Component {...pageProps} />)
+                        )}
+                      </Maintenance>
+                      <SearchView />
+                      <ModalsContainer />
+                      <DrawersContainer />
+                      <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
+                    </>
+                  </AnimatePresence>
+                </CampaignProvider>
               </ModalProvider>
             </CartProvider>
           </SearchProvider>

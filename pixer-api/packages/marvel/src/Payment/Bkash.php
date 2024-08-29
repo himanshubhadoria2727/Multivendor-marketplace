@@ -12,6 +12,8 @@ use Marvel\Database\Models\Order;
 use Marvel\Enums\PaymentStatus;
 use Marvel\Traits\PaymentTrait;
 use Marvel\Payments\Base;
+use Illuminate\Support\Facades\Log; 
+
 
 
 class Bkash extends Base implements PaymentInterface
@@ -109,6 +111,8 @@ class Bkash extends Base implements PaymentInterface
    */
   public function createCustomer($request): array
   {
+    Log::info("Bkash");
+
     return [];
   }
 

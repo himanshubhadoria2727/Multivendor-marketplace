@@ -1,15 +1,16 @@
 export function generateCartItem(item: any) {
   return {
-    id: item.id,
+    id: item?.id,
     name: item.name,
     slug: item.slug,
     unit: item.unit,
     image: item.image?.thumbnail,
     stock: item.quantity,
+    formData:item.formData,
     price: Number(item.sale_price ? item.sale_price : item.price),
     shop: {
-      slug: item.shop.slug,
-      name: item.shop.name,
+      slug: item.shop?.slug,
+      name: item.shop?.name,
     },
     language: item.language,
   };

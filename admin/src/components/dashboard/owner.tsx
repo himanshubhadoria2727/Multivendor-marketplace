@@ -24,6 +24,8 @@ import { BasketIcon } from '../icons/summary/basket';
 import Button from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import PageHeading from '@/components/common/page-heading';
+import { useProductsQuery } from '@/data/product';
+import { useShopQuery } from '@/data/shop';
 const ShopList = dynamic(() => import('@/components/dashboard/shops/shops'));
 
 // TODO : this vendor root page code portion need to be checked in pixer.
@@ -69,7 +71,21 @@ const OwnerShopLayout = () => {
   const [orderDataRange, setOrderDataRange] = useState(
     data?.todayTotalOrderByStatus,
   );
+  const {
+    query: { shop },
+  } = useRouter();
+  const { data: shopData, isLoading: fetchingShop } = useShopQuery({
+    slug: shop as string,
+  });
+  const shopId = shopData?.id!;
 
+  const { products } = useProductsQuery(
+    {
+      language: locale,
+      limit: 20,      
+      shop_id: shopId,
+    },
+  );
   const {
     data: productByCategory,
     isLoading: productByCategoryLoading,
@@ -112,6 +128,7 @@ const OwnerShopLayout = () => {
       item.total.toFixed(2),
     );
   }
+  console.log(salesByYear)
 
   const timeFrame = [
     { name: t('text-today'), day: 1 },
@@ -163,10 +180,10 @@ const OwnerShopLayout = () => {
             price={total_refund}
           />
           <StickerCard
-            titleTransKey="sticker-card-title-total-shops"
+            titleTransKey="sticker-card-title-total-sites"
             icon={<BasketIcon className="h-8 w-8" />}
             color="#E157A0"
-            price={data?.totalShops}
+            price={products.length}
           />
           <StickerCard
             titleTransKey="sticker-card-title-today-rev"
@@ -254,7 +271,7 @@ const OwnerDashboard = () => {
   const { permissions } = getAuthCredentials();
   let permission = hasAccess(adminOnly, permissions);
 
-  return permission ? <ShopList /> : <OwnerShopLayout />;
+  return permission ? null : <OwnerShopLayout />;
 };
 
 export default OwnerDashboard;

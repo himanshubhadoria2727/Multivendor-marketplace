@@ -29,9 +29,10 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useFormatPhoneNumber } from '@/utils/format-phone-number';
+import DetailsModal from '../orderDetails';
 
 type FormValues = {
   order_status: any;
@@ -42,7 +43,20 @@ export default function OrderDetailsPage() {
   const { alignLeft, alignRight, isRTL } = useIsRTL();
   const { resetCart } = useCart();
   const [, resetCheckout] = useAtom(clearCheckoutAtom);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalDetails, setModalDetails] = useState({});
 
+  const handleOpenModal = (item:any) => {
+    // Assume record.details contains the necessary details
+    setModalDetails(item.pivot);
+    setIsModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false);
+    setModalDetails({});
+  };
+  
   useEffect(() => {
     resetCart();
     // @ts-ignore
@@ -146,22 +160,6 @@ export default function OrderDetailsPage() {
 
   const columns = [
     {
-      dataIndex: 'image',
-      key: 'image',
-      width: 70,
-      render: (image: Attachment) => (
-        <div className="relative h-[50px] w-[50px]">
-          <Image
-            src={image?.thumbnail ?? siteSettings.product.placeholder}
-            alt="alt text"
-            fill
-            sizes="(max-width: 768px) 100vw"
-            className="object-fill"
-          />
-        </div>
-      ),
-    },
-    {
       title: t('table:table-item-products'),
       dataIndex: 'name',
       key: 'name',
@@ -177,15 +175,23 @@ export default function OrderDetailsPage() {
       ),
     },
     {
+      title: t('View details'),
+      key: 'action',
+      align: alignRight,
+      render: (text: any, pivot: any) => (
+        <Button onClick={() => handleOpenModal(pivot)}><p className='text-xs'>Details</p></Button>
+      ),
+    },
+    {
       title: t('table:table-item-total'),
       dataIndex: 'price',
       key: 'price',
       align: alignRight,
-      render: function Render(_: any, item: any) {
-        const { price } = usePrice({
-          amount: parseFloat(item.pivot.subtotal),
-        });
-        return <span>{price}</span>;
+      render: function Render(pivot: any, item: any) {
+        // const { price } = usePrice({
+        //   amount: parseFloat(item.pivot.subtotal),
+        // });
+        return <span>${item.pivot.unit_price}</span>;
       },
     },
   ];
@@ -254,7 +260,7 @@ export default function OrderDetailsPage() {
 
         <div className="mb-10">
           {order ? (
-            <Table
+            <><Table
               //@ts-ignore
               columns={columns}
               emptyText={() => (
@@ -270,8 +276,11 @@ export default function OrderDetailsPage() {
               )}
               data={order?.products!}
               rowKey="id"
-              scroll={{ x: 300 }}
-            />
+              scroll={{ x: 300 }} />
+              <DetailsModal
+                open={isModalVisible}
+                onClose={handleCloseModal}
+                details={modalDetails} /></> 
           ) : (
             <span>{t('common:no-order-found')}</span>
           )}
@@ -295,8 +304,10 @@ export default function OrderDetailsPage() {
                   <span>{sub_total}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm text-body">
-                  <span> {t('text-shipping-charge')}</span>
-                  <span>{shipping_charge}</span>
+                  <span> {t('Niche price')}</span>
+                  {order?.products[0]?.pivot?.selectedNiche? 
+                  (<span>${order?.products[0]?.niche_price}</span>):(0)  
+                }
                 </div>
                 <div className="flex items-center justify-between text-sm text-body">
                   <span> {t('text-tax')}</span>
@@ -311,7 +322,7 @@ export default function OrderDetailsPage() {
 
                 <div className="flex items-center justify-between text-base font-semibold text-heading">
                   <span> {t('text-total')}</span>
-                  <span>{total}</span>
+                  <span>${order?.products[0]?.pivot?.subtotal}</span>
                 </div>
 
                 {order?.wallet_point?.amount! && (

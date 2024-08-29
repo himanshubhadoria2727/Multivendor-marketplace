@@ -16,6 +16,7 @@ use Marvel\Enums\PaymentStatus;
 use Marvel\Events\PaymentMethods;
 use Marvel\Facades\Payment;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log; 
 
 trait PaymentTrait
 {
@@ -43,22 +44,29 @@ trait PaymentTrait
      * @throws Exception
      */
     public function processPaymentIntent($request, Settings $settings): object
-    {
+    {            Log::info("payemt intent");
+
+        
         try {
             $chosen_payment_gateway = '';
             $is_payment_intent_exists = false;
-
+            // Log::info("entered try");
             $order_tracking_number = $request['tracking_number'];
             $requested_payment_gateway = $request['payment_gateway'];
+            // Log::info("requested_payment_gateway");
             $order = $this->fetchOrderByTrackingNumber($order_tracking_number);
+            // Log::info("fetchOrderByTrackingNumber");
             $initial_payment_gateway = $order->payment_gateway;
 
             if ($requested_payment_gateway !== $initial_payment_gateway) {
+                // Log::info("requested payment gateway condition");
+
                 $chosen_payment_gateway = ucfirst(strtolower($request['payment_gateway']));
             } else {
                 if (isset($settings->options['paymentGateway'])) {
                     foreach ($settings->options['paymentGateway'] as $key => $available_gateway) {
                         if (strtoupper($available_gateway['name']) === $requested_payment_gateway) {
+                            // Log::info("nested 1st");
                             $chosen_payment_gateway = ucfirst($available_gateway['name']);
                         }
                     }
@@ -66,24 +74,31 @@ trait PaymentTrait
             }
 
             if (isset($chosen_payment_gateway) && !empty($chosen_payment_gateway)) {
+                // Log::info("chosen gateway");
                 $is_payment_intent_exists = $this->paymentIntentExists($order_tracking_number, $chosen_payment_gateway);
                 if (!$is_payment_intent_exists) {
-
+                    // Log::info("before save payment intent");
                     $newPaymentIntent = $this->savePaymentIntent($order, $chosen_payment_gateway, $request);
-
+                    // Log::info("save payment intent");
                     if ($request['recall_gateway'] && isset($newPaymentIntent)) {
+                        // Log::info("recall gateway");
                         $this->deleteOlderPaymentIntent($order_tracking_number, ucfirst(strtolower($order->payment_gateway)));
                         $this->updateOrderData($initial_payment_gateway, $chosen_payment_gateway, $order);
                     }
+                    // Log::info("new payment intent");
                     return $newPaymentIntent;
                 }
             }
+            // Log::info("before return");
 
             return PaymentIntent::where(function ($query) use ($order_tracking_number) {
+                // Log::info("inside return");
                 $query->where('tracking_number', '=', $order_tracking_number)
                     ->orWhere('order_id', '=', $order_tracking_number);
             })->where('payment_gateway', '=', ucfirst($chosen_payment_gateway))->first();
         } catch (\Throwable $e) {
+            Log::info( $e->getMessage());
+
             throw $e;
         }
     }
@@ -98,6 +113,7 @@ trait PaymentTrait
      */
     public function paymentIntentExists(string $order_tracking_number, string $payment_gateway): bool
     {
+        Log::info("payment intent exists");
         return PaymentIntent::where(function ($query) use ($order_tracking_number) {
             $query->where('tracking_number', '=', $order_tracking_number)
                 ->orWhere('order_id', '=', $order_tracking_number);
@@ -158,6 +174,10 @@ trait PaymentTrait
      */
     public function savePaymentIntent($order, $payment_gateway, $request)
     {
+        // Log::info("inside save payment function");
+        // Log::info("inside save payment function". $payment_gateway.$order.$request);
+
+        
         return PaymentIntent::create([
             'order_id'            => $order->id,
             "tracking_number"     => $order->tracking_number,
@@ -177,29 +197,52 @@ trait PaymentTrait
      * @throws Exception
      */
     public function createPaymentIntent(Order $order, Request $request, string $payment_gateway): array
-    {
+    {           Log::info("inside create payment intent");
+                $requestData = json_decode($request->getContent(), true);
+
+                // Access the 'amount' field from the parsed data
+                $amount = $requestData['amount'];
+            
         $created_intent = [
-            "amount"                => $order->paid_total - intval($order->wallet_point?->amount),
-            "order_tracking_number" => $order->tracking_number,
-        ];
-        if ($request->user() !== null) {
-            $created_intent["user_email"] = $order->customer->email;
-        }
+        "amount"                => $amount,
+        "order_tracking_number" => $order->tracking_number,
+    ];
+        try{    
+            if ($request->user() !== null) {
+                $created_intent["user_email"] = $order->customer->email;
+                $created_intent["user_id"] = $order->customer->id; // Ensure user_id is included
+            }
+    
+            if ($request->user() !== null && strtoupper($payment_gateway) === PaymentGatewayType::STRIPE) {
+                $customer = $this->createPaymentCustomer($request);
+                $created_intent["customer"] = $customer["customer_id"];
+            }
+            if (strtoupper($payment_gateway) === PaymentGatewayType::IYZICO) {
+                $created_intent["ip"] = $request->ip();
+            }
 
-        if ($request->user() !== null) {
-            $created_intent["user_email"] = $order->customer->email;
-        }
+            if (strtoupper($payment_gateway) === PaymentGatewayType::RAZORPAY) {
+                Log::info('inside razorpay intent');
+                // For Razorpay, you typically create an order instead of a customer
+                // Here, we assume that the Razorpay integration requires the order amount and details
+                // $razorpayOrder = $this->createRazorpayOrder($request);
+                // Log::info('razorpay order',$razorpayOrder );
+                $created_intent["order_id"] = $order["order_id"];
+                Log::info("order id in create intent".$order["order_id"]);
+                $created_intent["order_amount"] = $request["paid_total"];
+                // $created_intent["order_receipt"] = $order["order_receipt"];
+                // Include any other necessary parameters for Razorpay
+            }
+    
+            if (strtoupper($payment_gateway) === PaymentGatewayType::PAYMONGO) {
+                $created_intent['selected_payment_path'] = $request['payment_sub_gateway'];
+            }
 
-        if ($request->user() !== null && strtoupper($payment_gateway) === PaymentGatewayType::STRIPE) {
-            $customer = $this->createPaymentCustomer($request);
-            $created_intent["customer"] = $customer["customer_id"];
+    
+           
         }
-        if (strtoupper($payment_gateway) === PaymentGatewayType::IYZICO) {
-            $created_intent["ip"] = $request->ip();
-        }
-
-        if (strtoupper($payment_gateway) === PaymentGatewayType::PAYMONGO) {
-            $created_intent['selected_payment_path'] = $request['payment_sub_gateway'];
+        catch(Exception $e){
+            Log::info("vikash". $e);
         }
 
         return Payment::getIntent($created_intent);
@@ -286,8 +329,9 @@ trait PaymentTrait
     {
         try {
             $selected_payment_gateway = strtoupper($request->payment_gateway);
-
+            Log::info("selected_paymen". $selected_payment_gateway);
             if (!$this->customerAlreadyExists($request->user()->id, $selected_payment_gateway)) {
+                Log::info("user id".$request->user()->id);
                 $customer = Payment::createCustomer($request);
                 if (in_array($selected_payment_gateway, PaymentGatewayType::getValues())) {
                     PaymentGateway::create([
@@ -300,10 +344,62 @@ trait PaymentTrait
                 $customer = PaymentGateway::where('user_id', '=', $request->user()->id)->where('gateway_name', '=', $selected_payment_gateway)->first();
             }
             return $customer;
-        } catch (\Exception $e) {
-            throw new HttpException(400, SOMETHING_WENT_WRONG);
+        } catch (Exception $e) {
+            throw new HttpException(400, $e->getMessage());
         }
     }
+    
+ /**
+     * createRazorpayOrder
+     *
+     * @param  mixed $request
+     * @return array
+     */
+    public function createRazorpayOrder($request)
+    {
+        try {
+            Log::info('inside create razorpayorder function');
+    
+            // Extract necessary data from the request
+            $selected_payment_gateway = strtoupper($request->payment_gateway);
+            $user_id = $request->user()->id;
+            if (!$this->customerAlreadyExists($request->user()->id, $selected_payment_gateway)){
+                Log::info("user id in create order ".$request->user()->id);
+    
+                $order = Payment::createOrder($request);
+    
+                // Ensure $order is an array and access its elements as array keys
+                if (in_array($selected_payment_gateway, PaymentGatewayType::getValues())) {
+                    PaymentGateway::create([
+                        'user_id'  => $user_id,
+                        'id'       =>$order['id'],
+                        'amount'   => $order['amount'],
+                        'currency' => "USD", // Assuming the currency is INR, change if needed
+                        'receipt'  => $order['receipt'],
+                    ]);
+                }
+                else {
+                    $order = PaymentGateway::where('user_id', '=', $request->user()->id)->where('gateway_name', '=', $selected_payment_gateway)->first();
+                }
+    
+                // If order creation is successful, return order details
+                return [
+                    'order_id'     => $order['id'],     
+                    'order_amount' => $order['amount'],
+                    'order_receipt'=> $order['receipt'],
+                    // You can include more order details if required
+                ];
+            }
+        } catch (Exception $e) {
+            // Log any errors that occur during order creation
+            Log::error('Error while creating Razorpay order: ' . $e->getMessage());
+    
+            // Return an error message or handle the error as needed
+            return ['error' => 'Failed to create Razorpay order'];
+        }
+    }
+    
+
 
     /**
      * customerAlreadyExists

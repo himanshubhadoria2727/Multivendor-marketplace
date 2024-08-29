@@ -13,6 +13,8 @@ use Marvel\Traits\PaymentTrait;
 use Marvel\Payments\Base;
 use Xendit\Invoice;
 use Xendit\Xendit as XenditFacade;
+use Illuminate\Support\Facades\Log; 
+
 
 
 class Xendit extends Base implements PaymentInterface
@@ -127,6 +129,8 @@ class Xendit extends Base implements PaymentInterface
    */
   public function createCustomer($request): array
   {
+    Log::info("xendit");
+
     return [];
   }
 

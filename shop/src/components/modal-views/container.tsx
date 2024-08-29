@@ -7,8 +7,11 @@ import Modal from '@/components/modal-views/modal';
 import dynamic from 'next/dynamic';
 
 const LoginUserForm = dynamic(() => import('@/components/auth/login-form'));
-const ProductPopupDetails = dynamic(
-  () => import('@/components/product/product-popup'),
+// const ProductPopupDetails = dynamic(
+//   () => import('@/components/product/product-popup'),
+// );
+const ProductInputDisplay = dynamic(
+  () => import('@/components/product/product-input-main'),
 );
 const RegisterUserForm = dynamic(
   () => import('@/components/auth/register-form'),
@@ -69,8 +72,10 @@ function renderModalContent(view: MODAL_VIEWS) {
       return <LoginUserForm />;
     case 'FORGOT_PASSWORD_VIEW':
       return <ForgotUserPassword />;
-    case 'PRODUCT_DETAILS':
-      return <ProductPopupDetails />;
+    // case 'PRODUCT_DETAILS':
+    //   return <ProductPopupDetails />;
+    // case 'PRODUCT_INPUT_DISPLAY':
+    //   return <ProductInputDisplay />;
     case 'REVIEW_IMAGE_POPOVER':
       return <ReviewImageModal />;
     case 'REVIEW_RATING':

@@ -6,6 +6,7 @@ import { useManufacturersQuery } from '@/data/manufacturer';
 import { useTypesQuery } from '@/data/type';
 import { ProductType } from '@/types';
 import cn from 'classnames';
+import { link } from 'fs';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { ActionMeta } from 'react-select';
@@ -13,6 +14,7 @@ import { ActionMeta } from 'react-select';
 type Props = {
   onCategoryFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onTypeFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
+  onStatusFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onAuthorFilter?: (newValue: any, actionMeta: ActionMeta<unknown>) => void;
   onProductTypeFilter?: (
     newValue: any,
@@ -27,6 +29,7 @@ type Props = {
   enableType?: boolean;
   enableCategory?: boolean;
   enableAuthor?: boolean;
+  enableStatus?:boolean;
   enableProductType?: boolean;
   enableManufacturer?: boolean;
 };
@@ -36,12 +39,14 @@ export default function CategoryTypeFilter({
   onCategoryFilter,
   onAuthorFilter,
   onProductTypeFilter,
+  onStatusFilter,
   className,
   type,
   enableType,
   enableCategory,
   enableAuthor,
   enableProductType,
+  enableStatus,
   enableManufacturer,
   onManufactureFilter,
 }: Props) {
@@ -60,6 +65,7 @@ export default function CategoryTypeFilter({
     language: locale,
   });
 
+    console.log(authors)
   const { manufacturers, loading: manufactureLoading } = useManufacturersQuery({
     limit: 999,
     language: locale,
@@ -68,6 +74,14 @@ export default function CategoryTypeFilter({
   const productType = [
     { name: 'Simple product', slug: ProductType.Simple },
     { name: 'Variable product', slug: ProductType.Variable },
+  ];
+  const linktype = [
+    { name: 'DoFollow', slug: "DoFollow" },
+    { name: 'NoFollow', slug: "NoFollow" },
+  ];
+  const status = [
+    { name: 'Publish', slug: "publish" },
+    { name: 'Draft', slug: "draft" },
   ];
 
   return (
@@ -113,12 +127,12 @@ export default function CategoryTypeFilter({
 
       {enableAuthor ? (
         <div className="w-full">
-          <Label>{t('common:filter-by-author')}</Label>
+          <Label>{t('Filter by Link type')}</Label>
           <Select
-            options={authors}
+            options={linktype}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
-            placeholder={t('common:filter-by-author-placeholder')}
+            placeholder={t('Filter by link type')}
             isLoading={authorLoading}
             onChange={onAuthorFilter}
             isClearable={true}
@@ -128,16 +142,16 @@ export default function CategoryTypeFilter({
         ''
       )}
 
-      {enableProductType ? (
+      {enableStatus ? (
         <div className="w-full">
-          <Label>Filter by Product Type</Label>
+          <Label>Filter by Status</Label>
           <Select
-            options={productType}
+            options={status}
             getOptionLabel={(option: any) => option.name}
             getOptionValue={(option: any) => option.slug}
-            placeholder="Filter by product type"
-            // isLoading={authorLoading}
-            onChange={onProductTypeFilter}
+            placeholder="Filter by status"
+            isLoading={loading}
+            onChange={onStatusFilter}
             isClearable={true}
           />
         </div>

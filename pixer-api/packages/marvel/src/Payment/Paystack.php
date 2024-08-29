@@ -13,6 +13,7 @@ use Marvel\Payments\Base;
 use Razorpay\Api\Errors\SignatureVerificationError;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Unicodeveloper\Paystack\Facades\Paystack as PaystackFacade;
+use Illuminate\Support\Facades\Log; 
 
 
 class Paystack extends Base implements PaymentInterface
@@ -132,6 +133,8 @@ class Paystack extends Base implements PaymentInterface
    */
   public function createCustomer($request): array
   {
+    Log::info("paystack");
+
     return [];
   }
 

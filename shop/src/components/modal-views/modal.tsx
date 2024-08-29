@@ -56,7 +56,7 @@ const Modal = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 z-40 cursor-pointer bg-dark bg-opacity-60 backdrop-blur dark:bg-opacity-80" />
+            <Dialog.Title className="fixed inset-0 z-40 cursor-pointer bg-dark bg-opacity-60 backdrop-blur dark:bg-opacity-80" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
@@ -76,7 +76,7 @@ const Modal = ({
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-110"
           >
-            <div className="relative z-50 inline-block min-h-screen w-full transform overflow-hidden text-start align-middle transition-all xs:min-h-[auto] xs:w-auto">
+            <div className="relative z-50 inline-block min-h-screen w-full transform overflow-hidden text-start align-middle transition-all xs:min-h-[auto] xs:w-full sm:w-[200px] md:w-[600px] lg:w-[700px] xl:w-[900px] 2xl:w-[1000px] 3xl:w-[1200px]">
               <div className="relative flex min-h-screen items-center overflow-hidden xs:block xs:min-h-[auto] xs:rounded-md">
                 {showCloseIcon ? (
                   <button

@@ -20,7 +20,7 @@ export const getStaticPaths: GetStaticPaths<ParsedQueryParams> = async ({
   const { data } = await client.products.all({ limit: 100 });
   const paths = data?.flatMap((product) =>
     locales?.map((locale) => ({
-      params: { productSlug: product.slug },
+      params: { productSlug: product.slug},
       locale,
     }))
   );
@@ -38,7 +38,7 @@ export const getStaticProps: GetStaticProps<
   PageProps,
   ParsedQueryParams
 > = async ({ params, locale }) => {
-  const { productSlug } = params!; //* we know it's required because of getStaticPaths
+  const { productSlug} = params!; //* we know it's required because of getStaticPaths
   try {
     const product = await client.products.get({
       slug: productSlug,

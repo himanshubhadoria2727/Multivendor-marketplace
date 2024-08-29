@@ -8,7 +8,7 @@ export const SMS_GROUP_OPTION = [
     ],
   },
   {
-    label: 'Store Owner',
+    label: 'Publisher',
     options: [
       { value: 'vendor-statusChangeOrder', label: 'Status Change Order' },
       { value: 'vendor-refundOrder', label: 'Refund Order' },
@@ -35,7 +35,7 @@ export const EMAIL_GROUP_OPTION = [
     ],
   },
   {
-    label: 'Store Owner',
+    label: 'Publisher',
     options: [
       { value: 'vendor-statusChangeOrder', label: 'Status Change Order' },
       { value: 'vendor-refundOrder', label: 'Refund Order' },

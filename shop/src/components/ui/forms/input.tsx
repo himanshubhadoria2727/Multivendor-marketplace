@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div className={className}>
         <label className="block text-13px">
           {label && (
-            <span className="block cursor-pointer pb-2.5 font-normal text-dark/70 rtl:text-right dark:text-light/70">
+            <span style={{fontFamily:"sans-serif",fontSize:"large", fontWeight:'bolder'}} className="block cursor-pointer pb-2.5 font-normal text-brand/100 rtl:text-right dark:text-brand/100">
               {t(label)}
             </span>
           )}

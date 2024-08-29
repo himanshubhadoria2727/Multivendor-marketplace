@@ -7,8 +7,8 @@ import { useIsDarkMode } from '@/lib/hooks/use-is-dark-mode';
 import { siteSettings } from '@/data/static/site-settings';
 import { useSettings } from '@/data/settings';
 
-export default function Logo({
-  className = 'w-20',
+export default function   Logo({
+  className = 'w-50',
   ...props
 }: React.AnchorHTMLAttributes<{}>) {
   const isMounted = useIsMounted();
@@ -25,12 +25,13 @@ export default function Logo({
       {...props}
     >
       <span
-        className="relative overflow-hidden"
+        className="relative left-1  top-1.5 text-lg dark:text-white text-gray-800 font-serif font-semibold tracking-wider"
         style={{
           width: siteSettings?.width,
           height: siteSettings?.height,
         }}
       >
+        {/* GoodBlogger */}
         {isMounted && isDarkMode && (
           <Image
             src={settings?.dark_logo?.original ?? darkLogo}

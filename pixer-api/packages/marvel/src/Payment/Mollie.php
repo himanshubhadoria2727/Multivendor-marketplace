@@ -12,6 +12,8 @@ use Marvel\Traits\PaymentTrait;
 use Mollie\Laravel\Facades\Mollie as MollieFacade;
 use Razorpay\Api\Errors\SignatureVerificationError;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Support\Facades\Log; 
+
 
 class Mollie extends Base implements PaymentInterface
 {
@@ -78,6 +80,8 @@ class Mollie extends Base implements PaymentInterface
    */
   public function createCustomer($request): array
   {
+    Log::info("mollie");
+
     return [];
   }
 

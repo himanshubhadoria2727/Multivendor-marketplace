@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import isEmpty from 'lodash/isEmpty';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import ReactConfetti from 'react-confetti';
 import type { NextPageWithLayout } from '@/types';
 import GeneralLayout from '@/layouts/_general-layout';
@@ -28,10 +28,12 @@ import { PageLoader } from '@/components/ui/loader/spinner/spinner';
 import { Order } from '@/types';
 import ErrorMessage from '@/components/ui/error-message';
 import { getOrderPaymentSummery } from '@/lib/get-order-payment-summery';
+import { LongArrowIcon } from '@/components/icons/long-arrow-icon';
+import routes from '@/config/routes';
 
 type Props = {
   title: string;
-  details: string | undefined;
+  details: string | number | undefined;
 };
 
 const Card = ({ title, details }: Props) => {
@@ -70,6 +72,7 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
   useEffect(() => {
     resetCart();
   }, []);
+  console.log(order)
 
   const { price: total } = usePrice({ amount: order?.paid_total! });
   const { price: wallet_total } = usePrice({
@@ -81,11 +84,30 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
   const { is_payment_gateway_use, is_full_paid, amount_due, gateway_payment } =
     getOrderPaymentSummery(order!);
 
-  const { price: amountDue } = usePrice({ amount: amount_due });
+  const { price: amountDue } = usePrice({ amount: order?.products[0].pivot.amount });
   const { price: gatewayPayment } = usePrice({ amount: gateway_payment });
+
+  const subtotal = order?.products.length === 1
+  ? `$${order.products[0].pivot.subtotal.toFixed(2)}`
+  : `$${order?.products.reduce((total, product) => {
+      if (product.pivot && product.pivot.subtotal !== undefined) {
+          return total + product.pivot.subtotal;
+      } else {
+          return total;
+      }
+  }, 0).toFixed(2)}`;
 
   return (
     <div className="p-4 sm:p-8">
+      <div className="sticky top-0 z-20 -mx-4 mb-1 -mt-2 flex items-center bg-light-300 p-4 dark:bg-dark-100 sm:static sm:top-auto sm:z-0 sm:m-0 sm:mb-4 sm:bg-transparent sm:p-0 sm:dark:bg-transparent">
+          <button
+            onClick={() => router.push(routes?.home)}
+            className="group inline-flex items-center gap-1.5 font-medium text-dark/70 hover:text-dark rtl:flex-row-reverse dark:text-light/70 hover:dark:text-light lg:mb-6"
+          >
+            <LongArrowIcon className="h-4 w-4" />
+            {t('text-back')}
+          </button>
+        </div>
       <div className="mx-auto w-full max-w-screen-lg">
         <div className="relative overflow-hidden rounded">
           <OrderViewHeader
@@ -103,7 +125,7 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                 title={t('text-date')}
                 details={dayjs(order?.created_at).format('MMMM D, YYYY')}
               />
-              <Card title={t('text-total')} details={total} />
+              <Card title={t('text-total')} details={subtotal} />
               <Card
                 title={t('text-payment-method')}
                 details={order?.payment_gateway ?? 'N/A'}
@@ -136,16 +158,16 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                       t('text-item')
                     )}
                   />
-                  <Listitem title={t('text-sub-total')} details={sub_total} />
+                  <Listitem title={t('text-sub-total')} details={subtotal} />
                   <Listitem title={t('text-tax')} details={tax} />
                   <div className="w-1/2 border-b border-solid border-gray-200 py-1 dark:border-b-[#434343]" />
-                  <Listitem title={t('text-total')} details={total} />
-                  {wallet_total && (
+                  <Listitem title={t('text-total')} details={subtotal} />
+                  {/* {wallet_total && (
                     <Listitem
                       title={t('text-paid-from-wallet')}
                       details={wallet_total}
                     />
-                  )}
+                  )} */}
 
                   {is_payment_gateway_use && is_full_paid && (
                     <Listitem
@@ -154,18 +176,18 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                     />
                   )}
 
-                  <Listitem title={t('text-amount-due')} details={amountDue} />
+                  {/* <Listitem title={t('text-amount-due')} details={subtotal} /> */}
                 </div>
               </div>
               {/* end of total amount */}
             </div>
-            <div className="mt-12">
+            {/* <div className="mt-12">
               <OrderItems
                 products={order?.products}
                 orderId={order?.id}
                 status={order?.payment_status as PaymentStatus}
               />
-            </div>
+            </div> */}
             {/* {!isEmpty(order?.children) ? (
               <div className="mt-10">
                 <h2 className="mb-6 text-base font-medium dark:text-white">

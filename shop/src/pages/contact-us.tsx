@@ -65,22 +65,25 @@ const ContactUsPage: NextPageWithLayout = () => {
                 icon={<LocationIcon className="h-12 w-12" />}
                 title={t('contact-us-office-title')}
                 description={
-                  contactDetails?.location?.formattedAddress ??
-                  t('contact-us-office-message')
+                  // contactDetails?.location?.formattedAddress ??
+                  // t('contact-us-office-message')
+                  "Delhi, NCR"
                 }
               />
               <ContactInfo
                 icon={<PhoneIcon className="h-10 w-10" />}
                 title={t('contact-us-phone-title')}
                 description={
-                  contactDetails?.contact ?? t('contact-us-phone-message')
+                  // contactDetails?.contact ?? t('contact-us-phone-message')
+                  "90909787545"
                 }
               />
               <ContactInfo
                 icon={<MailIcon className="h-10 w-10" />}
                 title={t('contact-us-site-title')}
                 description={
-                  contactDetails?.website ?? t('contact-us-site-message')
+                  // contactDetails?.website ?? t('contact-us-site-message')
+                  "Not available"
                 }
               />
               {!isEmpty(contactDetails?.socials) ? (
