@@ -7,6 +7,7 @@ import { useModalAction } from '@/components/modal-views/context';
 import { useSettings } from '@/data/settings';
 import { useOrder, useOrderPayment, useOrders } from '@/data/order';
 import Spinner from '@/components/ui/loader/spinner/spinner';
+import Loader from '@/components/ui/loaderAdmin/loader';
 
 interface Props {
   paymentIntentInfo: PaymentIntentInfo;
@@ -79,7 +80,7 @@ console.log("create order [ayment",createOrderPayment.toString)
   }, [isLoading, isSettingsLoading]);
 
   if (isLoading || isSettingsLoading) {
-    return <Spinner showText={false} />;
+    return <Loader showText={false} />;
   }
 
   return null;

@@ -1,5 +1,5 @@
 export const CategoriesIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="teal" fill="none" {...props}>
     <path
       fill="currentColor"
       d="m5 5 3.125 9.375h-6.25L5 5Zm10.625.938a3.438 3.438 0 1 0-6.875 0 3.438 3.438 0 0 0 6.875 0Zm-5 5.937v4.375H17.5v-4.375h-6.875Z"

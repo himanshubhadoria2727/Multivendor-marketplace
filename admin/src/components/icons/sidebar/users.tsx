@@ -1,5 +1,5 @@
 export const UsersIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="darkorchid" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M13.125 11.25a3.125 3.125 0 1 1-6.25 0 3.125 3.125 0 0 1 6.25 0ZM5 4.375a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Zm10 0a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z"

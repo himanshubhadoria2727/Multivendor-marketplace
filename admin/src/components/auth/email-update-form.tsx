@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import pick from 'lodash/pick';
 import Description from "@/components/ui/description";
 import Card from "@/components/common/card";
+import { EmailIcon } from '../icons/email';
 type FormValues = {
     email: string;
 };
@@ -36,6 +37,7 @@ export default function EmailUpdateForm({ me }: any) {
             <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-8 sm:my-8">
                 <Description
                     title={t('common:text-email')}
+                    icon={EmailIcon}
                     details={t('form:email-change-helper-text')}
                     className="sm:pe-4 md:pe-5 w-full px-0 pb-5 sm:w-4/12 sm:py-8 md:w-1/3"
                 />

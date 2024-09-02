@@ -1,5 +1,5 @@
 export const WithdrawIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="darkgreen" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M17.5 4.375V16.25L15 15l-2.5 1.25L10 15l-2.5 1.25L5 15l-2.5 1.25V4.375a.625.625 0 0 1 .625-.625h13.75a.625.625 0 0 1 .625.625Z"

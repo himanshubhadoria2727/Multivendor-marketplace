@@ -57,7 +57,7 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
             height: siteSettings.logo.height,
           }}
         >
-          Good Blogger
+          <Image src={'/goodbloggerlogo.png'} alt={'Good blogger'} width={siteSettings.logo.width} height={siteSettings.logo.height}/>
           {/* <Image
             src={settings?.options?.logo?.original ?? siteSettings.logo.url}
             alt={settings?.options?.siteTitle ?? siteSettings.logo.alt}

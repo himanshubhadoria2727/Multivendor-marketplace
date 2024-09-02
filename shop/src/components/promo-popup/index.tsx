@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import Cookies from 'js-cookie';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
+import Loader from '../ui/loaderAdmin/loader';
 
 const PromoPopup = () => {
   const { closeModal } = useModalAction();
@@ -42,7 +43,7 @@ const PromoPopup = () => {
       <div className="w-full overflow-hidden text-dark dark:text-light max-w-4xl rounded-xl bg-light dark:bg-dark-250">
         {isLoading ? (
           <div className="p-6 md:p-12">
-            <Spinner className="!h-auto" />
+            <Loader className="!h-auto" />
           </div>
         ) : (
           <div className="grid grid-cols-2 items-center">

@@ -1,5 +1,5 @@
 export const TransactionsIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="darksalmon" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M16.875 3.75v8.125a.624.624 0 0 1-.625.625h-3.125v3.75a.624.624 0 0 1-.625.625H3.75a.625.625 0 0 1-.625-.625V8.125A.625.625 0 0 1 3.75 7.5h3.125V3.75a.625.625 0 0 1 .625-.625h8.75a.625.625 0 0 1 .625.625Z"

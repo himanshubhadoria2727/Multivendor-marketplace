@@ -6,6 +6,7 @@ import Spinner from '@/components/ui/loader/spinner/spinner';
 import Cookies from 'js-cookie';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 import Search from '@/components/common/search';
+import Loader from '@/components/ui/loaderAdmin/loader';
 
 type Product = {
   id: number;
@@ -144,7 +145,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
       {/* Products Table */}
       <div className="overflow-x-auto">
         {isLoading ? (
-          <Spinner />
+          <Loader />
         ) : (
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg overflow-hidden">
             <thead className="bg-gray-200 dark:bg-dark-400">

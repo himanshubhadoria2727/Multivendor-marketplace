@@ -8,6 +8,8 @@ import { useChangePasswordMutation } from '@/data/user';
 import { useTranslation } from 'next-i18next';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { UserIcon, UsersIcon } from '../icons/sidebar';
+import { FaBoxOpen, FaUser } from 'react-icons/fa';
 
 interface FormValues {
   oldPassword: string;
@@ -74,6 +76,7 @@ const ChangePasswordForm = () => {
       <div className="my-5 flex flex-wrap sm:my-8">
         <Description
           title={t('form:input-label-password')}
+          icon={FaUser}
           details={t('form:password-help-text')}
           className="sm:pe-4 md:pe-5 w-full px-0 pb-5 sm:w-4/12 sm:py-8 md:w-1/3"
         />

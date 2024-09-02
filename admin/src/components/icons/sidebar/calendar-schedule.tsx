@@ -5,6 +5,7 @@ export const CalendarScheduleIcon: React.FC<React.SVGAttributes<{}>> = (
     xmlns="http://www.w3.org/2000/svg"
     width="18.2"
     height="20.2"
+    color="darkblue"
     viewBox="0 0 18.2 20.2"
     {...props}
   >

@@ -1,5 +1,5 @@
 export const AdminListIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="darkmagenta" fill="none" {...props}>
     <g fill="currentColor" clipPath="url(#a)">
       <path
         d="M9.375 8.125a3.125 3.125 0 1 1-6.25 0 3.125 3.125 0 0 1 6.25 0Z"

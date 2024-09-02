@@ -41,6 +41,11 @@ import StickyFooterPanel from '@/components/ui/sticky-footer-panel';
 import { socialIcon } from '@/settings/site.settings';
 import { ShopDescriptionSuggestion } from '@/components/shop/shop-ai-prompt';
 import PhoneNumberInput from '@/components/ui/phone-input';
+import { BackIcon } from '../icons/back-icon';
+import { FaRegMoneyBillAlt } from 'react-icons/fa';
+import { HomeIcon } from '../icons/home-icon';
+import { EmailAtIcon } from '../icons/email';
+import { InstagramIcon } from '../icons/store-notice-social';
 
 // const socialIcon = [
 //   {
@@ -212,7 +217,7 @@ const ShopForm = ({ initialValues }: { initialValues?: any }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+        {/* <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
           <Description
             title={t('form:input-label-logo')}
             details={t('form:shop-logo-help-text')}
@@ -234,8 +239,8 @@ const ShopForm = ({ initialValues }: { initialValues?: any }) => {
           <Card className="w-full sm:w-8/12 md:w-2/3">
             <FileInput name="cover_image" control={control} multiple={false} />
           </Card>
-        </div>
-        <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+        </div> */}
+        {/* <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
           <Description
             title={t('form:shop-basic-info')}
             details={t('form:shop-basic-info-help-text')}
@@ -295,10 +300,38 @@ const ShopForm = ({ initialValues }: { initialValues?: any }) => {
               />
             </div>
           </Card>
-        </div>
+        </div> */}
+
+        {/* <div className="flex flex-wrap pb-8 my-5 border-b border-gray-300 border-dashed sm:my-8">
+          <Description
+            title={t('form:shop-settings')}
+            details={t('form:shop-settings-helper-text')}
+            className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
+          />
+
+          <Card className="w-full sm:w-8/12 md:w-2/3">
+            <PhoneNumberInput
+              label={t('form:input-label-contact')}
+              required
+              {...register('settings.contact')}
+              control={control}
+              error={t(errors.settings?.contact?.message!)}
+            />
+            <Input
+              label={t('form:input-label-website')}
+              {...register('settings.website')}
+              variant="outline"
+              className="mb-5"
+              error={t(errors.settings?.website?.message!)}
+              required
+            />
+          </Card>
+        </div> */}
+        
         <div className="flex flex-wrap pb-8 my-5 border-b border-gray-300 border-dashed sm:my-8">
           <Description
             title={t('form:shop-payment-info')}
+            icon={FaRegMoneyBillAlt}
             details={t('form:payment-info-helper-text')}
             className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
           />
@@ -340,6 +373,7 @@ const ShopForm = ({ initialValues }: { initialValues?: any }) => {
         <div className="flex flex-wrap pb-8 my-5 border-b border-gray-300 border-dashed sm:my-8">
           <Description
             title={t('form:shop-address')}
+            icon={HomeIcon}
             details={t('form:shop-address-helper-text')}
             className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
           />
@@ -413,6 +447,7 @@ const ShopForm = ({ initialValues }: { initialValues?: any }) => {
           <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
             <Description
               title={t('form:form-notification-title')}
+              icon={EmailAtIcon}
               details={t('form:form-notification-description')}
               className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
             />
@@ -442,35 +477,12 @@ const ShopForm = ({ initialValues }: { initialValues?: any }) => {
         ) : (
           ''
         )}
-        <div className="flex flex-wrap pb-8 my-5 border-b border-gray-300 border-dashed sm:my-8">
-          <Description
-            title={t('form:shop-settings')}
-            details={t('form:shop-settings-helper-text')}
-            className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-          />
-
-          <Card className="w-full sm:w-8/12 md:w-2/3">
-            <PhoneNumberInput
-              label={t('form:input-label-contact')}
-              required
-              {...register('settings.contact')}
-              control={control}
-              error={t(errors.settings?.contact?.message!)}
-            />
-            <Input
-              label={t('form:input-label-website')}
-              {...register('settings.website')}
-              variant="outline"
-              className="mb-5"
-              error={t(errors.settings?.website?.message!)}
-              required
-            />
-          </Card>
-        </div>
+        
 
         <div className="flex flex-wrap pb-8 my-5 border-b border-gray-300 border-dashed sm:my-8">
           <Description
             title={t('form:social-settings')}
+            icon={InstagramIcon}
             details={t('form:social-settings-helper-text')}
             className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
           />

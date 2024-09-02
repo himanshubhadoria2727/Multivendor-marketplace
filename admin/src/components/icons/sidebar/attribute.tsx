@@ -1,5 +1,5 @@
 export const AttributeIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="green" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M17.984 6.094 15.68 8.06a.398.398 0 0 0-.13.39l.69 2.927a.406.406 0 0 1-.606.435l-2.611-1.552a.413.413 0 0 0-.42 0L9.99 11.812a.407.407 0 0 1-.607-.435l.694-2.922a.399.399 0 0 0-.13-.391l-2.307-1.97a.4.4 0 0 1 .235-.704l3.037-.257a.407.407 0 0 0 .337-.245l1.188-2.768a.41.41 0 0 1 .75 0l1.187 2.768a.407.407 0 0 0 .34.244l3.037.258a.4.4 0 0 1 .232.704Z"

@@ -13,11 +13,10 @@ export const siteSettings = {
   name: 'Good Blogger',
   description: '',
   logo: {
-    url: '/logo.svg',
     alt: 'Good Blogger',
     href: '/',
-    width: 138,
-    height: 34,
+    width: 150,
+    height: 46,
   },
   collapseLogo: {
     url: '/collapse-logo.svg',

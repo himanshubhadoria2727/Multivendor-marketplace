@@ -1,5 +1,5 @@
 export const TermsIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="indigo" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M16.25 6.875h-4.375V2.5l4.375 4.375Z"

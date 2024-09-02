@@ -1,5 +1,5 @@
 export const MyShopIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="blue" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M17.5 4.375V6.25h-15V4.375a.625.625 0 0 1 .625-.625h13.75a.625.625 0 0 1 .625.625Z"

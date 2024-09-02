@@ -1,5 +1,5 @@
 export const TagIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="blueviolet" fill="none" {...props}>
     <path
       fill="currentColor"
       d="m18.567 11.953-6.614 6.614a.625.625 0 0 1-.883 0l-7.762-7.76a.625.625 0 0 1-.183-.44V3.124h7.241c.166 0 .325.066.442.183l7.76 7.76a.626.626 0 0 1 0 .885Z"

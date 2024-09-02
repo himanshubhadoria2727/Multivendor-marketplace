@@ -3,6 +3,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 @tailwind base;
 @tailwind components;
@@ -436,6 +439,17 @@ html.dark .react-tel-input .country-list .country:hover {
     transform: rotate(0);
   }
 }
+
+/* styles/custom-icons.css */
+.icon-home { color: #D91E36; }
+.icon-dashboard { color: #0582CA; }
+.icon-campaigns { color: #6B7FD7; }
+.icon-profile { color: #FF86C8; }
+.icon-orders { color: #F2A541; }
+.icon-contact { color: #7D53DE; }
+.icon-settings { color: #1A181B; }
+.icon-help { color: #91CB3E; }
+
 .info-button:hover .info-button-icon svg {
   animation: 2s ease-in-out 0s infinite normal none running shake;
 }

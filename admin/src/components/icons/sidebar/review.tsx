@@ -1,5 +1,5 @@
 export const ReviewIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="DarkOrange" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M14.385 11.539a.632.632 0 0 0-.198.616l1.056 4.574a.624.624 0 0 1-.929.679l-3.992-2.422a.62.62 0 0 0-.644 0l-3.992 2.422a.626.626 0 0 1-.929-.68l1.056-4.573a.631.631 0 0 0-.198-.616L2.09 8.465a.625.625 0 0 1 .354-1.1l4.646-.401a.625.625 0 0 0 .52-.381l1.816-4.325a.625.625 0 0 1 1.146 0l1.815 4.325a.624.624 0 0 0 .521.381l4.646.402a.625.625 0 0 1 .354 1.099l-3.524 3.074Z"

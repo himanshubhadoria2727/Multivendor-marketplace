@@ -1,5 +1,5 @@
 export const SettingsIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="Black" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M15.625 3.125v13.75H4.375V3.125h11.25Z"
