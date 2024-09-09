@@ -214,7 +214,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function loadLastOrder()
     {
         $data = $this->orders()->whereNull('parent_id')
-            ->where('order_status', OrderStatus::COMPLETED)
+            ->where('order_status', OrderStatus::WAITING)
             ->latest()->first();
         $this->setRelation('last_order', $data);
 

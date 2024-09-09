@@ -36,6 +36,7 @@ class OrderCreateRequest extends FormRequest
             'ancor'                => ['nullable', 'string'],
             'postUrl'                => ['nullable', 'string'],
             'link_url'                => ['nullable', 'string'],
+            'url'                => ['nullable', 'string'],
             'instructions'                => ['nullable', 'string'],
             'content'                => ['nullable', 'string'],
             'file'                     => ['nullable', 'string'],

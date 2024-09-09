@@ -44,14 +44,14 @@ trait OrderStatusManagerWithPaymentTrait
         if ($order->parent_id) {
             $parent_order = Order::find($order->parent_id);
             //check if parent order is mark completed then add vendor balance or continue
-            if ($parent_order->order_status === OrderStatus::COMPLETED)
+            if ($parent_order->order_status === OrderStatus::WAITING)
                 $this->updateBalanceShop($order, $type);
         } else {
             //this is a parent order and check if a child order is completed then add vendor balance or continue
             $child_orders = $order->children;
             if ($child_orders->count() > 0) {
                 foreach ($child_orders as $child_order) {
-                    if ($child_order->order_status === OrderStatus::COMPLETED)
+                    if ($child_order->order_status === OrderStatus::WAITING)
                         $this->updateBalanceShop($child_order, $type);
                 }
             }
@@ -279,7 +279,7 @@ trait OrderStatusManagerWithPaymentTrait
      */
     public function checkOrderStatusIsFinal(Order $order): bool
     {
-        $orderStatuses = [OrderStatus::COMPLETED, OrderStatus::CANCELLED, OrderStatus::REFUNDED];
+        $orderStatuses = [OrderStatus::WAITING, OrderStatus::COMPLETED, OrderStatus::CANCELLED, OrderStatus::REFUNDED];
         return in_array($order->order_status, $orderStatuses);
     }
 }

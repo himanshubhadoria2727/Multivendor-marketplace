@@ -39,6 +39,14 @@ const WidgetOrderByStatus: React.FC<IProps> = ({
       data: order?.processing!,
     },
     {
+      key: 'processing',
+      title: t('Waiting for approval'),
+      subtitle: `sticker-card-subtitle-last-${timeFrame}-days`,
+      icon: <CustomersIcon className="h-8 w-8" />,
+      color: '#28B7FF',
+      data: order?.waiting!,
+    },
+    {
       key: 'complete',
       title: t('text-completed-order'),
       subtitle: `sticker-card-subtitle-last-${timeFrame}-days`,

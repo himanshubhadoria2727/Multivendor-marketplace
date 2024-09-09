@@ -56,6 +56,7 @@ class OrderRepository extends BaseRepository
         'tracking_number' => 'like',
         'shop_id',
         'language',
+        'order_status' => 'like'
 
     ];
     /**
@@ -90,6 +91,7 @@ class OrderRepository extends BaseRepository
         'link_url',
         'instructions',
         'content',
+        'url',
         'file',
         'selectedForm',
         'selectedNiche'
@@ -137,7 +139,7 @@ class OrderRepository extends BaseRepository
 
 
                 // case PaymentGatewayType::CASH:
-                //     $request['order_status'] = OrderStatus::PROCESSING;
+                //     $request['order_status'] = 3::PROCESSING;
                 //     $request['payment_status'] = PaymentStatus::CASH;
                 //     break;
 
@@ -213,7 +215,7 @@ class OrderRepository extends BaseRepository
             }
 
             if ($amount !== null && $amount <= 0) {
-                $request['order_status'] = OrderStatus::COMPLETED;
+                $request['order_status'] = OrderStatus::WAITING;
                 $request['payment_gateway'] = PaymentGatewayType::FULL_WALLET_PAYMENT;
                 $request['payment_status'] = PaymentStatus::SUCCESS;
                 $order = $this->createOrder($request);
@@ -267,18 +269,54 @@ class OrderRepository extends BaseRepository
      */
     public function updateOrder($request)
     {
-        $order = Order::findOrFail($request->id);
-        $user = $request->user();
-        if (isset($order->shop_id)) {
-            if ($this->hasPermission($user, $order->shop_id)) {
-                return $this->changeOrderStatus($order, $request->order_status);
+        try {
+            // Retrieve the order by ID
+            $order = Order::findOrFail($request->id);
+            $user = $request->user();
+            $url = $request->input('url'); // Get the URL from the request payload
+    
+            // Log the received URL from the request
+            Log::info('Received URL in updateOrder', [
+                'order_id' => $order->id,
+                'url' => $url,
+            ]);
+    
+            // Check if the order has a shop_id and if the user has permission
+            if (isset($order->shop_id)) {
+                if ($this->hasPermission($user, $order->shop_id)) {
+                    return $this->changeOrderStatus($order, $request->order_status, $url); // Pass the URL to changeOrderStatus
+                } else {
+                    // Log permission failure
+                    Log::warning('User does not have permission to update order', [
+                        'user_id' => $user->id,
+                        'order_id' => $order->id,
+                        'shop_id' => $order->shop_id,
+                    ]);
+                    throw new AuthorizationException(NOT_AUTHORIZED);
+                }
+            } 
+            // Check if the user is a super admin
+            else if ($user->hasPermissionTo(Permission::SUPER_ADMIN)) {
+                return $this->changeOrderStatus($order, $request->order_status, $url); // Pass the URL to changeOrderStatus
+            } else {
+                // Log permission failure for non-super admin
+                Log::warning('User is not a super admin and does not have permission to update order', [
+                    'user_id' => $user->id,
+                    'order_id' => $order->id,
+                ]);
+                throw new AuthorizationException(NOT_AUTHORIZED);
             }
-        } else if ($user->hasPermissionTo(Permission::SUPER_ADMIN)) {
-            return $this->changeOrderStatus($order, $request->order_status);
-        } else {
-            throw new AuthorizationException(NOT_AUTHORIZED);
+        } catch (\Exception $e) {
+            // Log unexpected exceptions
+            Log::error('An error occurred while updating the order', [
+                'exception' => $e,
+                'request' => $request->all(),
+                'url' => $request->input('url') // Log the URL if it was part of the request
+            ]);
+            throw $e; // Re-throw the exception
         }
     }
+    
 
     /**
      * storeOrderWalletPoint

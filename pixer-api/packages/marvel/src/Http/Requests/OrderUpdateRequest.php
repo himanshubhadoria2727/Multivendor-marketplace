@@ -26,9 +26,15 @@ class OrderUpdateRequest extends FormRequest
             'amount'          => 'numeric',
             'paid_total'      => 'numeric',
             'total'           => 'numeric',
+            'url'             =>['nullable', 'string'],
             'order_status'    => ['required', Rule::in([
                 OrderStatus::PROCESSING,
+                OrderStatus::WAITING,
+                OrderStatus::ACCEPTED,
+                OrderStatus::SUBMITTED,
+                OrderStatus::IMPROVEMENT,
                 OrderStatus::COMPLETED,
+                OrderStatus::REJECTED,
                 OrderStatus::AT_LOCAL_FACILITY,
                 OrderStatus::OUT_FOR_DELIVERY,
                 OrderStatus::CANCELLED

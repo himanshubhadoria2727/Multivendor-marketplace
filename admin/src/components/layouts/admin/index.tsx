@@ -78,13 +78,13 @@ const SideBarGroup = () => {
             'flex flex-col px-5',
             miniSidebar && width >= RESPONSIVE_WIDTH
               ? 'border-b border-dashed border-gray-200 py-5'
-              : 'pt-6 pb-3'
+              : 'pt-3 pb-3'
           )}
           key={index}
         >
           <div
             className={cn(
-              'px-3 pb-5 text-xs font-semibold uppercase tracking-[0.05em] text-body/70',
+              'px-3 pb-3 text-xs font-semibold uppercase tracking-[0.05em] text-body/70',
               miniSidebar && width >= RESPONSIVE_WIDTH ? 'hidden' : ''
             )}
           >

@@ -18,6 +18,17 @@ import { Menu, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import { DownloadIcon } from '@/components/icons/download-icon';
 import PageHeading from '@/components/common/page-heading';
+import Select from '@/components/ui/select/select';
+import { ActionMeta } from 'react-select';
+
+const statusOptions = [
+  { value: '', label: 'All Statuses' }, // Option to show all orders
+  { value: 'order-waiting-approval', label: 'Waiting for Approval' },
+  { value: 'order-submitted', label: 'Submitted' },
+  { value: 'order-accepted', label: 'Accepted' },
+  { value: 'order-improvement', label: 'Improvement' },
+  { value: 'order-completed', label: 'Completed' },
+];
 
 export default function Orders() {
   const router = useRouter();
@@ -26,6 +37,7 @@ export default function Orders() {
     query: { shop },
   } = router;
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState(''); // Add state for status filter
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const [orderBy, setOrder] = useState('created_at');
@@ -39,6 +51,17 @@ export default function Orders() {
   function handlePagination(current: any) {
     setPage(current);
   }
+
+function handleStatusChange(newValue: unknown, actionMeta: ActionMeta<unknown>) {
+  // Check if newValue is an object and contains the statusFilter property
+  if (newValue && typeof newValue === 'object' && 'statusFilter' in newValue) {
+    const statusFilter = (newValue as { statusFilter: string }).statusFilter;
+
+    // Set the status filter and reset the page
+    setStatusFilter(statusFilter);
+    setPage(1);
+  }
+}
 
   const { data: shopData, isLoading: fetchingShop } = useShopQuery(
     {
@@ -56,6 +79,7 @@ export default function Orders() {
     orderBy,
     sortedBy,
     tracking_number: searchTerm,
+    order_status: statusFilter, // Add status filter to the query
   });
   const { refetch } = useExportOrderQuery(
     {
@@ -63,8 +87,6 @@ export default function Orders() {
     },
     { enabled: false }
   );
-
-  if (loading) return <Loader text={t('common:text-loading')} />;
 
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
@@ -80,7 +102,9 @@ export default function Orders() {
     }
   }
 
-  // TODO : this area need to be checked in Pixer
+  const filteredOrders = orders
+    ?.filter((order) => order.children && order.children.length > 0) // Filter orders that have children
+    ?.flatMap((order) => order.children) || []; // Flatten children into one array
 
   return (
     <>
@@ -89,58 +113,29 @@ export default function Orders() {
           <PageHeading title={t('form:input-label-orders')} />
         </div>
 
-        <div className="flex w-full flex-row items-center md:w-1/2">
+        <div className="flex w-full flex-row items-center md:w-1/2 space-x-4">
           <Search
             onSearch={handleSearch}
             className="w-full"
             placeholderText={t('form:input-placeholder-search-tracking-number')}
           />
-          <Menu
-            as="div"
-            className="relative inline-block ltr:text-left rtl:text-right"
+
+          <select
+            value={statusFilter}
+            onChange={()=>handleStatusChange}
+            className="form-select w-full md:w-auto"
           >
-            <Menu.Button className="group p-2">
-              <MoreIcon className="w-3.5 text-body" />
-            </Menu.Button>
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <Menu.Items
-                as="ul"
-                className={classNames(
-                  'shadow-700 absolute z-50 mt-2 w-52 overflow-hidden rounded border border-border-200 bg-light py-2 focus:outline-none ltr:right-0 ltr:origin-top-right rtl:left-0 rtl:origin-top-left'
-                )}
-              >
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={handleExportOrder}
-                      className={classNames(
-                        'flex w-full items-center space-x-3 px-5 py-2.5 text-sm font-semibold capitalize transition duration-200 hover:text-accent focus:outline-none rtl:space-x-reverse',
-                        active ? 'text-accent' : 'text-body'
-                      )}
-                    >
-                      <DownloadIcon className="w-5 shrink-0" />
-                      <span className="whitespace-nowrap">
-                        {t('common:text-export-orders')}
-                      </span>
-                    </button>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Transition>
-          </Menu>
+            {statusOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {t(`status:${option.label}`)} {/* Translate status labels */}
+              </option>
+            ))}
+          </select>
         </div>
       </Card>
 
       <OrderList
-        orders={orders}
+        orders={filteredOrders}
         paginatorInfo={paginatorInfo}
         onPagination={handlePagination}
         onOrder={setOrder}
@@ -157,6 +152,6 @@ Orders.Layout = Layout;
 
 export const getStaticProps = async ({ locale }: any) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['table', 'common', 'form'])),
+    ...(await serverSideTranslations(locale, ['table', 'common', 'form', 'status'])), // Include 'status' namespace for translations
   },
 });

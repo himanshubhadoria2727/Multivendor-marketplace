@@ -123,8 +123,8 @@ export const siteSettings = {
                 label: 'text-all-shops',
                 icon: 'MyShopIcon',
               },
-              // 
-              
+              //
+
               {
                 href: Routes.newShops,
                 label: 'text-inactive-shops',
@@ -165,6 +165,26 @@ export const siteSettings = {
                 label: 'text-my-draft-products',
                 icon: 'ProductsIcon',
               },
+              {
+                href: Routes.type.list,
+                label: 'text-groups',
+                icon: 'HomeIcon',
+              },
+              // {
+              //   href: Routes.productInventory,
+              //   label: 'text-inventory',
+              //   icon: 'InventoryIcon',
+              // },
+              {
+                href: Routes.category.list,
+                label: 'sidebar-nav-item-categories',
+                icon: 'CategoriesIcon',
+              },
+              {
+                href: Routes.tag.list,
+                label: 'sidebar-nav-item-tags',
+                icon: 'TagIcon',
+              },
               // {
               //   href: Routes.outOfStockOrLowProducts,
               //   label: 'text-all-out-of-stock',
@@ -172,26 +192,7 @@ export const siteSettings = {
               // },
             ],
           },
-          {
-            href: Routes.type.list,
-            label: 'text-groups',
-            icon: 'HomeIcon',
-          },
-          // {
-          //   href: Routes.productInventory,
-          //   label: 'text-inventory',
-          //   icon: 'InventoryIcon',
-          // },
-          {
-            href: Routes.category.list,
-            label: 'sidebar-nav-item-categories',
-            icon: 'CategoriesIcon',
-          },
-          {
-            href: Routes.tag.list,
-            label: 'sidebar-nav-item-tags',
-            icon: 'TagIcon',
-          },
+
           // {
           //   href: Routes.attribute.list,
           //   label: 'sidebar-nav-item-attributes',
@@ -348,77 +349,71 @@ export const siteSettings = {
       user: {
         href: '',
         label: 'text-user-control',
-        icon: 'SettingsIcon',
+        icon: 'UserIcon',
         childMenu: [
           {
-            href: Routes.user.list,
-            label: 'text-all-users',
-            icon: 'UsersIcon',
-          },
-          {
-            href: Routes.adminList,
-            label: 'text-admin-list',
-            icon: 'AdminListIcon',
-          },
-          {
             href: '',
-            label: 'text-vendors',
-            icon: 'VendorsIcon',
-            childMenu: [
-              {
-                href: Routes.vendorList,
-                label: 'text-all-vendors',
-                icon: 'UsersIcon',
-              },
-              {
-                href: Routes.pendingVendorList,
-                label: 'text-pending-vendors',
-                icon: 'UsersIcon',
+            label: 'text-user-control',
+            icon: 'SettingsIcon',
+                childMenu: [
+                  {
+                    href: Routes.user.list,
+                    label: 'text-all-users',
+                    icon: 'UsersIcon',
+                  },
+                  {
+                    href: Routes.adminList,
+                    label: 'text-admin-list',
+                    icon: 'AdminListIcon',
+                  },
+                  {
+                    href: Routes.vendorList,
+                    label: 'text-all-vendors',
+                    icon: 'UsersIcon',
+                  },
+                  // {
+                  //   href: '',
+                  //   label: 'sidebar-nav-item-staffs',
+                  //   icon: 'StaffIcon',
+                  //   childMenu: [
+                  //     {
+                  //       href: Routes.myStaffs,
+                  //       label: 'sidebar-nav-item-my-staffs',
+                  //       icon: 'UsersIcon',
+                  //     },
+                  //     {
+                  //       href: Routes.vendorStaffs,
+                  //       label: 'sidebar-nav-item-vendor-staffs',
+                  //       icon: 'UsersIcon',
+                  //     },
+                  //   ],
+                  // },
+                  {
+                    href: Routes.customerList,
+                    label: 'text-customers',
+                    icon: 'CustomersIcon',
+                  },
+                ],
               },
             ],
           },
-          // {
-          //   href: '',
-          //   label: 'sidebar-nav-item-staffs',
-          //   icon: 'StaffIcon',
-          //   childMenu: [
-          //     {
-          //       href: Routes.myStaffs,
-          //       label: 'sidebar-nav-item-my-staffs',
-          //       icon: 'UsersIcon',
-          //     },
-          //     {
-          //       href: Routes.vendorStaffs,
-          //       label: 'sidebar-nav-item-vendor-staffs',
-          //       icon: 'UsersIcon',
-          //     },
-          //   ],
-          // },
-          {
-            href: Routes.customerList,
-            label: 'text-customers',
-            icon: 'CustomersIcon',
-          },
-        ],
-      },
-
-      feedback: {
-        href: '',
-        label: 'text-feedback-control',
-        icon: 'SettingsIcon',
-        childMenu: [
-          {
-            href: Routes.reviews.list,
-            label: 'sidebar-nav-item-reviews',
-            icon: 'ReviewIcon',
-          },
-          {
-            href: Routes.question.list,
-            label: 'sidebar-nav-item-questions',
-            icon: 'QuestionIcon',
-          },
-        ],
-      },
+      // feedback: {
+      //   href: '',
+      //   label: 'text-feedback-control',
+      //   icon: 'SettingsIcon',
+      //   childMenu: [
+      //     {
+      //       href: Routes.reviews.list,
+      //       label: 'sidebar-nav-item-reviews',
+      //       icon: 'ReviewIcon',
+      //     },
+      //     {
+      //       href: Routes.question.list,
+      //       label: 'sidebar-nav-item-questions',
+      //       icon: 'QuestionIcon',
+      //     },
+      //   ],
+      // },
 
       // promotional: {
       //   href: '',
@@ -747,41 +742,41 @@ export const siteSettings = {
       //   ],
       // },
 
-      feedback: {
-        href: '',
-        label: 'text-feedback-control',
-        icon: 'SettingsIcon',
-        childMenu: [
-          {
-            href: (shop: string) => `/${shop}${Routes.reviews.list}`,
-            label: 'sidebar-nav-item-reviews',
-            icon: 'ReviewIcon',
-            permissions: adminAndOwnerOnly,
-          },
-          {
-            href: (shop: string) => `/${shop}${Routes.question.list}`,
-            label: 'sidebar-nav-item-questions',
-            icon: 'QuestionIcon',
-            permissions: adminAndOwnerOnly,
-          },
-        ],
-      },
+      // feedback: {
+      //   href: '',
+      //   label: 'text-feedback-control',
+      //   icon: 'SettingsIcon',
+      //   childMenu: [
+      //     {
+      //       href: (shop: string) => `/${shop}${Routes.reviews.list}`,
+      //       label: 'sidebar-nav-item-reviews',
+      //       icon: 'ReviewIcon',
+      //       permissions: adminAndOwnerOnly,
+      //     },
+      //     {
+      //       href: (shop: string) => `/${shop}${Routes.question.list}`,
+      //       label: 'sidebar-nav-item-questions',
+      //       icon: 'QuestionIcon',
+      //       permissions: adminAndOwnerOnly,
+      //     },
+      //   ],
+      // },
 
-      user: {
-        href: '',
-        label: 'text-user-control',
-        icon: 'SettingsIcon',
-        childMenu: [
-          {
-            href: (shop: string) => `/${shop}${Routes.staff.list}`,
-            label: 'sidebar-nav-item-staffs',
-            icon: 'UsersIcon', 
-            permissions: adminAndOwnerOnly,
-          },
-        ],
-      },
+      // user: {
+      //   href: '',
+      //   label: 'text-user-control',
+      //   icon: 'SettingsIcon',
+      //   childMenu: [
+      //     {
+      //       href: (shop: string) => `/${shop}${Routes.staff.list}`,
+      //       label: 'sidebar-nav-item-staffs',
+      //       icon: 'UsersIcon',
+      //       permissions: adminAndOwnerOnly,
+      //     },
+      //   ],
+      // },
 
-      // promotional: {
+      //promotional: {
       //   href: '',
       //   label: 'text-promotional-control',
       //   icon: 'SettingsIcon',
@@ -822,25 +817,38 @@ export const siteSettings = {
       //   ],
       // },
 
-      layout: {
+      // layout: {
+      //   href: '',
+      //   label: 'text-page-management',
+      //   icon: 'SettingsIcon',
+      //   childMenu: [
+      //     {
+      //       href: (shop: string) => `/${shop}${Routes.faqs.list}`,
+      //       label: 'text-faqs',
+      //       icon: 'TypesIcon',
+      //       permissions: adminOwnerAndStaffOnly,
+      //     },
+      //     {
+      //       href: (shop: string) => `/${shop}${Routes.termsAndCondition.list}`,
+      //       label: 'Terms And Conditions',
+      //       icon: 'TypesIcon',
+      //       permissions: adminAndOwnerOnly,
+      //     },
+      //   ],
+      // },
+      profileUpdate:{
         href: '',
-        label: 'text-page-management',
+        label: 'authorized-nav-item-profile',
         icon: 'SettingsIcon',
         childMenu: [
           {
-            href: (shop: string) => `/${shop}${Routes.faqs.list}`,
-            label: 'text-faqs',
-            icon: 'TypesIcon',
+            href: (shop: string) => `${shop}/edit`,
+            label: "Profile settings",
+            icon: 'SettingsIcon',
             permissions: adminOwnerAndStaffOnly,
           },
-          {
-            href: (shop: string) => `/${shop}${Routes.termsAndCondition.list}`,
-            label: 'Terms And Conditions',
-            icon: 'TypesIcon',
-            permissions: adminAndOwnerOnly,
-          },
-        ],
-      },
+        ]
+      }
     },
 
     staff: {
