@@ -25,30 +25,35 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
   return (
     <Link
       href={siteSettings?.logo?.href}
-      className={cn('inline-flex items-center gap-3 w-full', className)}
+      className={cn(
+        'inline-flex items-center justify-center   gap-3 w-full',
+        className,
+      )}
       // {...props}
     >
       {miniSidebar && width >= RESPONSIVE_WIDTH ? (
-        <span
-          className="relative font-bold overflow-hidden "
-          style={{
-            width: siteSettings.collapseLogo.width,
-            height: siteSettings.collapseLogo.height,
-          }}
-        >
-          G B
-          {/* <Image
-            src={
-              settings?.options?.collapseLogo?.original ??
-              siteSettings.collapseLogo.url
-            }
-            alt={settings?.options?.siteTitle ?? siteSettings.collapseLogo.alt}
-            fill
-            sizes="(max-width: 768px) 100vw"
-            className="object-contain"
-            loading="eager"
-          /> */}
-        </span>
+        <div
+        className="flex-row flex w-full font-serif text-lg tracking-wider font-semibold"
+        style={{
+          width: siteSettings.logo.width,
+          height: siteSettings.logo.height,
+        }}
+      >
+        <Image
+          src={'/goodbloggerlogo.png'}
+          alt={'Good blogger'}
+          width={siteSettings.logo.width}
+          height={siteSettings.logo.height}
+        />
+        {/* <Image
+          src={settings?.options?.logo?.original ?? siteSettings.logo.url}
+          alt={settings?.options?.siteTitle ?? siteSettings.logo.alt}
+          fill
+          sizes="(max-width: 768px) 100vw"
+          className="object-contain"
+          loading="eager"
+        /> */}
+      </div>
       ) : (
         <div
           className="flex-row flex w-full font-serif text-lg tracking-wider font-semibold"
@@ -57,7 +62,12 @@ const Logo: React.FC<React.AnchorHTMLAttributes<{}>> = ({
             height: siteSettings.logo.height,
           }}
         >
-          <Image src={'/goodbloggerlogo.png'} alt={'Good blogger'} width={siteSettings.logo.width} height={siteSettings.logo.height}/>
+          <Image
+            src={'/goodbloggerlogo.png'}
+            alt={'Good blogger'}
+            width={siteSettings.logo.width}
+            height={siteSettings.logo.height}
+          />
           {/* <Image
             src={settings?.options?.logo?.original ?? siteSettings.logo.url}
             alt={settings?.options?.siteTitle ?? siteSettings.logo.alt}

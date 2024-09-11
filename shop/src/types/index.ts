@@ -17,7 +17,7 @@ export interface GetParams {
 export interface SearchParamOptions {
   rating: string;
   question: string;
-
+  
   [key: string]: unknown;
 }
 

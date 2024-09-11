@@ -123,13 +123,13 @@ const OrderList = ({
         </div>
       ),
     },
-    {
-      title: t('table:table-item-products'),
-      dataIndex: 'products',
-      key: 'products',
-      align: 'center',
-      render: (products: Product) => <span>{products.length}</span>,
-    },
+    // {
+    //   title: t('table:table-item-products'),
+    //   dataIndex: 'products',
+    //   key: 'products',
+    //   align: 'center',
+    //   render: (products: Product) => <span>{products.length}</span>,
+    // },
     {
       // title: t('table:table-item-order-date'),
       title: (
@@ -158,19 +158,19 @@ const OrderList = ({
         );
       },
     },
-    {
-      title: t('table:table-item-delivery-fee'),
-      dataIndex: 'delivery_fee',
-      key: 'delivery_fee',
-      align: 'center',
-      render: function Render(value: any) {
-        const delivery_fee = value ? value : 0;
-        const { price } = usePrice({
-          amount: delivery_fee,
-        });
-        return <span>{price}</span>;
-      },
-    },
+    // {
+    //   title: t('table:table-item-delivery-fee'),
+    //   dataIndex: 'delivery_fee',
+    //   key: 'delivery_fee',
+    //   align: 'center',
+    //   render: function Render(value: any) {
+    //     const delivery_fee = value ? value : 0;
+    //     const { price } = usePrice({
+    //       amount: delivery_fee,
+    //     });
+    //     return <span>{price}</span>;
+    //   },
+    // },
     {
       title: (
         <TitleWithSort

@@ -71,7 +71,7 @@ export default function OrderDetailsPage() {
   const handleOpenModal = (item: any) => {
     console.log('item', item);
     // Assume record.details contains the necessary details
-    setModalDetails(item.pivot);
+    setModalDetails(item?.pivot);
     setIsModalVisible(true);
   };
 
@@ -273,7 +273,7 @@ export default function OrderDetailsPage() {
               )}
             </div>
             {/* Conditionally render input and button based on order_status */}
-            {order?.order_status === 'order-accepted' || order?.order_status === 'order-improvement' &&(
+            {order?.order_status === 'order-accepted' || order?.order_status === 'order-improvement' ?(
               <div className='mt-4'>
                 <span className='flex mt-4'>
                 <Label className='text-base text-green-700 underline'>
@@ -296,8 +296,8 @@ export default function OrderDetailsPage() {
                     Submit
                   </Button>
                 </div></div>
-            )}
-            {order?.order_status === 'order-completed' || order?.order_status === 'order-submitted' || order?.order_status === 'order-submitted'   && (
+            ):('')}
+            {order?.order_status === 'order-completed' || order?.order_status === 'order-submitted' || order?.order_status === 'order-submitted'? (
               <div className='mt-4'>
                 <span className='flex mt-4'>
                 <Label className='text-base text-green-700 underline'>
@@ -320,7 +320,7 @@ export default function OrderDetailsPage() {
                     Submit
                   </Button> */}
                 </div></div>
-            )}
+            ):('')}
           </div>
         </div>
       </Card>

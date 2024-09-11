@@ -64,6 +64,7 @@ interface SearchParamOptions {
   faq_title: string;
   is_active: boolean;
   title: string;
+  order_status:string;
   status: string;
   user_id: string;
   target: string;

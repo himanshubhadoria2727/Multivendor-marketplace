@@ -18,11 +18,11 @@ export const orderClient = {
       language,
     });
   },
-  paginated: ({ tracking_number, ...params }: Partial<OrderQueryOptions>) => {
+  paginated: ({ tracking_number,order_status, ...params }: Partial<OrderQueryOptions>) => {
     return HttpClient.get<OrderPaginator>(API_ENDPOINTS.ORDERS, {
       searchJoin: 'and',
       ...params,
-      search: HttpClient.formatSearchParams({ tracking_number }),
+      search: HttpClient.formatSearchParams({ tracking_number,order_status}),
     });
   },
   downloadInvoice: (input: GenerateInvoiceDownloadUrlInput) => {

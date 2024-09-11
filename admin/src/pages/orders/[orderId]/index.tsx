@@ -1,75 +1,56 @@
 import Card from '@/components/common/card';
-import Image from 'next/image';
-import { Table } from '@/components/ui/table';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
+import { DownloadIcon } from '@/components/icons/download-icon';
+import Layout from '@/components/layouts/admin';
+import OrderStatusProgressBox from '@/components/order/order-status-progress-box';
+import OrderViewHeader from '@/components/order/order-view-header';
 import Button from '@/components/ui/button';
 import ErrorMessage from '@/components/ui/error-message';
-import { siteSettings } from '@/settings/site.settings';
-import usePrice from '@/utils/use-price';
-import { formatAddress } from '@/utils/format-address';
-import Loader from '@/components/ui/loader/loader';
 import ValidationError from '@/components/ui/form-validation-error';
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Loader from '@/components/ui/loader/loader';
 import SelectInput from '@/components/ui/select-input';
-import ShopLayout from '@/components/layouts/shop';
-import { NoDataFound } from '@/components/icons/no-data-found';
-import { useIsRTL } from '@/utils/locals';
-import {
-  adminOnly,
-  adminOwnerAndStaffOnly,
-  getAuthCredentials,
-  hasAccess,
-} from '@/utils/auth-utils';
+import { Table } from '@/components/ui/table';
+import { clearCheckoutAtom } from '@/contexts/checkout';
+import { useCart } from '@/contexts/quick-cart/cart.context';
 import {
   useDownloadInvoiceMutation,
+  useOrderQuery,
   useUpdateOrderMutation,
 } from '@/data/order';
-import { useOrderQuery } from '@/data/order';
+import { NoDataFound } from '@/components/icons/no-data-found';
+import { siteSettings } from '@/settings/site.settings';
 import { Attachment, OrderStatus, PaymentStatus } from '@/types';
-import { DownloadIcon } from '@/components/icons/download-icon';
-import OrderViewHeader from '@/components/order/order-view-header';
+import { formatAddress } from '@/utils/format-address';
+import { formatString } from '@/utils/format-string';
+import { useIsRTL } from '@/utils/locals';
 import { ORDER_STATUS } from '@/utils/order-status';
-import OrderStatusProgressBox from '@/components/order/order-status-progress-box';
-import { Routes } from '@/config/routes';
-import { useShopQuery } from '@/data/shop';
-import { useMeQuery } from '@/data/user';
-import { useFormatPhoneNumber } from '@/utils/format-phone-number';
-import { useState } from 'react';
-import DetailsModal from '../orderDetails';
-import Input from '@/components/ui/input';
-import Label from '@/components/ui/label';
+import usePrice from '@/utils/use-price';
+import { useAtom } from 'jotai';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { ArrowDown } from '@/components/icons/arrow-down';
-import { url } from 'inspector';
+import { useFormatPhoneNumber } from '@/utils/format-phone-number';
+import DetailsModal from '../orderDetails';
+import Label from '@/components/ui/label';
+import Input from '@/components/ui/input';
+import AdminLayout from '@/components/layouts/admin';
 
 type FormValues = {
   order_status: any;
 };
 export default function OrderDetailsPage() {
   const { t } = useTranslation();
-  const { locale, query } = useRouter();
-  const router = useRouter();
-  const { permissions } = getAuthCredentials();
-  const { data: me } = useMeQuery();
-  const { data: shopData } = useShopQuery({
-    slug: query?.shop as string,
-  });
-  const shopId = shopData?.id!;
+  const { query, locale } = useRouter();
   const { alignLeft, alignRight, isRTL } = useIsRTL();
-  const { mutate: updateOrder, isLoading: updating } = useUpdateOrderMutation();
-  const {
-    order,
-    isLoading: loading,
-    error,
-  } = useOrderQuery({ id: query.orderId as string, language: locale! });
-  console.log('order is amdmin', order);
-
+  const { resetCart } = useCart();
+  const [, resetCheckout] = useAtom(clearCheckoutAtom);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalDetails, setModalDetails] = useState({});
 
-  const handleOpenModal = (item: any) => {
-    console.log('item', item);
+  const handleOpenModal = (item:any) => {
     // Assume record.details contains the necessary details
     setModalDetails(item.pivot);
     setIsModalVisible(true);
@@ -78,41 +59,6 @@ export default function OrderDetailsPage() {
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setModalDetails({});
-  };
-  const { refetch } = useDownloadInvoiceMutation(
-    {
-      order_id: query.orderId as string,
-      language: locale!,
-      isRTL,
-    },
-    { enabled: false },
-  );
-
-  const {
-    handleSubmit,
-    control,
-
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: { order_status: order?.order_status ?? '' },
-  });
-
-  async function handleDownloadInvoice() {
-    const { data } = await refetch();
-
-    if (data) {
-      const a = document.createElement('a');
-      a.href = data;
-      a.setAttribute('download', 'order-invoice');
-      a.click();
-    }
-  }
-
-  const ChangeStatus = ({ order_status }: FormValues) => {
-    updateOrder({
-      id: order?.id as string,
-      order_status: order_status?.status as string,
-    });
   };
   const handleUpdateStatus = (updated_status: string) => {
     updateOrder({
@@ -128,32 +74,90 @@ export default function OrderDetailsPage() {
       url:url,
     });
   };
+
   const [liveLink,setLiveLink]= useState('');
 
+  useEffect(() => {
+    resetCart();
+    // @ts-ignore
+    resetCheckout();
+  }, [resetCart, resetCheckout]);
+
+  const { mutate: updateOrder, isLoading: updating } = useUpdateOrderMutation();
+  const {
+    order,
+    isLoading: loading,
+    error,
+  } = useOrderQuery({ id: query.orderId as string, language: locale! });
+  const { refetch } = useDownloadInvoiceMutation(
+    {
+      order_id: query.orderId as string,
+      isRTL,
+      language: locale!,
+    },
+    { enabled: false }
+  );
+
+  const {
+    handleSubmit,
+    control,
+
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: { order_status: order?.order_status ?? '' },
+  });
+
+  const ChangeStatus = ({ order_status }: FormValues) => {
+    updateOrder({
+      id: order?.id as string,
+      order_status: order_status?.status as string,
+    });
+  };
   const { price: subtotal } = usePrice(
     order && {
       amount: order?.amount!,
-    },
+    }
   );
+
   const { price: total } = usePrice(
     order && {
       amount: order?.paid_total!,
-    },
+    }
   );
   const { price: discount } = usePrice(
     order && {
-      amount: order?.discount!,
-    },
+      amount: order?.discount! ?? 0,
+    }
   );
   const { price: delivery_fee } = usePrice(
     order && {
       amount: order?.delivery_fee!,
-    },
+    }
   );
   const { price: sales_tax } = usePrice(
     order && {
       amount: order?.sales_tax!,
-    },
+    }
+  );
+  const { price: sub_total } = usePrice({ amount: order?.amount! });
+  const { price: shipping_charge } = usePrice({
+    amount: order?.delivery_fee ?? 0,
+  });
+  const { price: wallet_total } = usePrice({
+    amount: order?.wallet_point?.amount!,
+  });
+
+  const amountPayable: number =
+    order?.payment_status !== PaymentStatus.SUCCESS
+      ? order?.paid_total! - order?.wallet_point?.amount!
+      : 0;
+
+  const { price: amountDue } = usePrice({ amount: amountPayable });
+
+  const totalItem = order?.products.reduce(
+    // @ts-ignore
+    (initial = 0, p) => initial + parseInt(p?.pivot?.order_quantity!),
+    0
   );
 
   const phoneNumber = useFormatPhoneNumber({
@@ -162,6 +166,17 @@ export default function OrderDetailsPage() {
 
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
+
+  async function handleDownloadInvoice() {
+    const { data } = await refetch();
+
+    if (data) {
+      const a = document.createElement('a');
+      a.href = data;
+      a.setAttribute('download', 'order-invoice');
+      a.click();
+    }
+  }
 
   const columns = [
     {
@@ -184,31 +199,25 @@ export default function OrderDetailsPage() {
       key: 'action',
       align: alignRight,
       render: (text: any, pivot: any) => (
-        <Button onClick={() => handleOpenModal(pivot)}>View Details</Button>
+        <Button onClick={() => handleOpenModal(pivot)}><p className='text-xs'>Details</p></Button>
       ),
     },
     {
       title: t('table:table-item-total'),
-      dataIndex: 'pivot',
-      key: 'pivot',
+      dataIndex: 'price',
+      key: 'price',
       align: alignRight,
-      render: function Render(pivot: any) {
-        const { price } = usePrice({
-          amount: Number(pivot?.subtotal),
-        });
-        return <span>{price}</span>;
+      render: function Render(pivot: any, item: any) {
+        // const { price } = usePrice({
+        //   amount: parseFloat(item.pivot.subtotal),
+        // });
+        return <span>${item.pivot.unit_price}</span>;
       },
     },
   ];
 
-  if (
-    !hasAccess(adminOnly, permissions) &&
-    !me?.shops?.map((shop) => shop.id).includes(shopId) &&
-    me?.managed_shop?.id != shopId
-  ) {
-    router.replace(Routes.dashboard);
-  }
-  
+  // TODO : this area need to be checked in Pixer
+
   return (
     <div>
       <Card>
@@ -273,7 +282,7 @@ export default function OrderDetailsPage() {
               )}
             </div>
             {/* Conditionally render input and button based on order_status */}
-            {order?.order_status === 'order-accepted' || order?.order_status === 'order-improvement' &&(
+            {order?.order_status === 'order-accepted' || order?.order_status === 'order-improvement' ?(
               <div className='mt-4'>
                 <span className='flex mt-4'>
                 <Label className='text-base text-green-700 underline'>
@@ -296,8 +305,8 @@ export default function OrderDetailsPage() {
                     Submit
                   </Button>
                 </div></div>
-            )}
-            {order?.order_status === 'order-completed' || order?.order_status === 'order-submitted' || order?.order_status === 'order-submitted'   && (
+            ):('')}
+            {order?.order_status === 'order-completed' || order?.order_status === 'order-submitted' || order?.order_status === 'order-submitted'? (
               <div className='mt-4'>
                 <span className='flex mt-4'>
                 <Label className='text-base text-green-700 underline'>
@@ -320,17 +329,14 @@ export default function OrderDetailsPage() {
                     Submit
                   </Button> */}
                 </div></div>
-            )}
+            ):('')}
           </div>
         </div>
       </Card>
     </div>
   );
 }
-OrderDetailsPage.authenticate = {
-  permissions: adminOwnerAndStaffOnly,
-};
-OrderDetailsPage.Layout = ShopLayout;
+OrderDetailsPage.Layout = AdminLayout;
 
 export const getServerSideProps = async ({ locale }: any) => ({
   props: {

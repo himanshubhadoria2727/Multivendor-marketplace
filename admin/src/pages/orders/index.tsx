@@ -1,28 +1,31 @@
 import Card from '@/components/common/card';
-import Layout from '@/components/layouts/admin';
 import Search from '@/components/common/search';
 import OrderList from '@/components/order/order-list';
-import { Fragment, useState } from 'react';
+import { LIMIT } from '@/utils/constants';
+import { useState } from 'react';
 import ErrorMessage from '@/components/ui/error-message';
 import Loader from '@/components/ui/loader/loader';
-import { useOrdersQuery } from '@/data/order';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { SortOrder } from '@/types';
-import { adminOnly } from '@/utils/auth-utils';
-import { MoreIcon } from '@/components/icons/more-icon';
-import { useExportOrderQuery } from '@/data/export';
+import ShopLayout from '@/components/layouts/shop';
 import { useRouter } from 'next/router';
+import {
+  adminOnly,
+  adminOwnerAndStaffOnly,
+  getAuthCredentials,
+  hasAccess,
+} from '@/utils/auth-utils';
+import { useOrdersQuery } from '@/data/order';
+import { SortOrder } from '@/types';
 import { useShopQuery } from '@/data/shop';
-import { Menu, Transition } from '@headlessui/react';
-import classNames from 'classnames';
-import { DownloadIcon } from '@/components/icons/download-icon';
+import { useExportOrderQuery } from '@/data/export';
+import { useMeQuery } from '@/data/user';
+import { Routes } from '@/config/routes';
 import PageHeading from '@/components/common/page-heading';
-import Select from '@/components/ui/select/select';
-import { ActionMeta } from 'react-select';
+import { Checkbox } from 'antd';
+import AdminLayout from '@/components/layouts/admin';
 
 const statusOptions = [
-  { value: '', label: 'All Statuses' }, // Option to show all orders
   { value: 'order-waiting-approval', label: 'Waiting for Approval' },
   { value: 'order-submitted', label: 'Submitted' },
   { value: 'order-accepted', label: 'Accepted' },
@@ -32,79 +35,56 @@ const statusOptions = [
 
 export default function Orders() {
   const router = useRouter();
+  const { permissions } = getAuthCredentials();
+  const { data: me } = useMeQuery();
   const { locale } = useRouter();
-  const {
-    query: { shop },
-  } = router;
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState(''); // Add state for status filter
-  const [page, setPage] = useState(1);
   const { t } = useTranslation();
   const [orderBy, setOrder] = useState('created_at');
   const [sortedBy, setColumn] = useState<SortOrder>(SortOrder.Desc);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string[]>([]); // Only one status filter
+  const [page, setPage] = useState(1);
+
+  const { orders, loading, paginatorInfo, error } = useOrdersQuery(
+    {
+      language: locale,
+      limit: LIMIT,
+      page,
+      tracking_number: searchTerm,
+      orderBy,
+      sortedBy,
+      order_status: statusFilter.length > 0 ? statusFilter : undefined, // Pass the selected status or undefined to fetch all
+    },
+  );
 
   function handleSearch({ searchText }: { searchText: string }) {
     setSearchTerm(searchText);
-    setPage(1);
   }
 
   function handlePagination(current: any) {
     setPage(current);
   }
 
-function handleStatusChange(newValue: unknown, actionMeta: ActionMeta<unknown>) {
-  // Check if newValue is an object and contains the statusFilter property
-  if (newValue && typeof newValue === 'object' && 'statusFilter' in newValue) {
-    const statusFilter = (newValue as { statusFilter: string }).statusFilter;
-
-    // Set the status filter and reset the page
-    setStatusFilter(statusFilter);
-    setPage(1);
-  }
-}
-
-  const { data: shopData, isLoading: fetchingShop } = useShopQuery(
-    {
-      slug: shop as string,
-    },
-    {
-      enabled: !!shop,
+  // Handle status checkbox change, ensuring only one checkbox is selected at a time
+  function handleStatusChange(checkedValues: any) {
+    if (checkedValues.length > 1) {
+      // Only keep the most recently selected checkbox
+      const latestCheckedValue = checkedValues[checkedValues.length - 1];
+      setStatusFilter([latestCheckedValue]);
+    } else {
+      // If none or only one is selected, update the statusFilter as normal
+      setStatusFilter(checkedValues);
     }
-  );
-  const shopId = shopData?.id!;
-  const { orders, loading, paginatorInfo, error } = useOrdersQuery({
-    language: locale,
-    limit: 20,
-    page,
-    orderBy,
-    sortedBy,
-    tracking_number: searchTerm,
-    order_status: statusFilter, // Add status filter to the query
-  });
-  const { refetch } = useExportOrderQuery(
-    {
-      ...(shopId && { shop_id: shopId }),
-    },
-    { enabled: false }
-  );
-
-  if (loading) return <Loader text={t('common:text-loading')} />;
-  if (error) return <ErrorMessage message={error.message} />;
-
-  async function handleExportOrder() {
-    const { data } = await refetch();
-
-    if (data) {
-      const a = document.createElement('a');
-      a.href = data;
-      a.setAttribute('download', 'export-order');
-      a.click();
-    }
+    setPage(1); // Reset to page 1 on filter change
   }
 
-  const filteredOrders = orders
-    ?.filter((order) => order.children && order.children.length > 0) // Filter orders that have children
-    ?.flatMap((order) => order.children) || []; // Flatten children into one array
+  // if (
+  //   !hasAccess(adminOnly, permissions) &&
+  //   !me?.shops?.map((shop) => shop.id).includes(shopId) &&
+  //   me?.managed_shop?.id != shopId
+  // ) {
+  //   router.replace(Routes.dashboard);
+  // }
 
   return (
     <>
@@ -113,29 +93,27 @@ function handleStatusChange(newValue: unknown, actionMeta: ActionMeta<unknown>) 
           <PageHeading title={t('form:input-label-orders')} />
         </div>
 
-        <div className="flex w-full flex-row items-center md:w-1/2 space-x-4">
-          <Search
-            onSearch={handleSearch}
-            className="w-full"
-            placeholderText={t('form:input-placeholder-search-tracking-number')}
-          />
-
-          <select
-            value={statusFilter}
-            onChange={()=>handleStatusChange}
-            className="form-select w-full md:w-auto"
-          >
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {t(`status:${option.label}`)} {/* Translate status labels */}
-              </option>
-            ))}
-          </select>
+        <div className="flex w-full flex-col items-center md:w-3/4">
+          <div className="flex flex-col md:flex-row w-full space-y-4 md:space-y-0 md:space-x-4">
+            <Search
+              onSearch={handleSearch}
+              placeholderText={t('form:input-placeholder-search-tracking-number')}
+              className="w-full md:w-1/2"
+            />
+          </div>
+          <div className="flex flex-row mt-5 w-full ">
+            <h4 className="mb-2 text-semibold mr-3">{t('Select Status')}</h4>
+            <Checkbox.Group
+              options={statusOptions}
+              onChange={handleStatusChange}
+              value={statusFilter}
+              className="flex space-x-4"
+            />
+          </div>
         </div>
       </Card>
-
       <OrderList
-        orders={filteredOrders}
+        orders={orders}
         paginatorInfo={paginatorInfo}
         onPagination={handlePagination}
         onOrder={setOrder}
@@ -146,12 +124,12 @@ function handleStatusChange(newValue: unknown, actionMeta: ActionMeta<unknown>) 
 }
 
 Orders.authenticate = {
-  permissions: adminOnly,
+  permissions: adminOwnerAndStaffOnly,
 };
-Orders.Layout = Layout;
+Orders.Layout = AdminLayout;
 
-export const getStaticProps = async ({ locale }: any) => ({
+export const getServerSideProps = async ({ locale }: any) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['table', 'common', 'form', 'status'])), // Include 'status' namespace for translations
+    ...(await serverSideTranslations(locale, ['table', 'common', 'form'])),
   },
 });

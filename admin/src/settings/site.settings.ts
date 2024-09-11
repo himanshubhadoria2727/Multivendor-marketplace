@@ -842,7 +842,7 @@ export const siteSettings = {
         icon: 'SettingsIcon',
         childMenu: [
           {
-            href: (shop: string) => `${shop}/edit`,
+            href: (shop: string) => `/${shop}${Routes.edit}`,
             label: "Profile settings",
             icon: 'SettingsIcon',
             permissions: adminOwnerAndStaffOnly,

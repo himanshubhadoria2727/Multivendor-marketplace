@@ -136,39 +136,22 @@ const Navbar = () => {
               className="group flex h-5 w-5 shrink-0 cursor-pointer flex-col justify-center space-y-1 me-4 focus:text-accent focus:outline-none lg:hidden"
             >
               <span
-                className={cn(
-                  'h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent',
-                  miniSidebar ? 'w-full' : 'w-2/4',
-                )}
+                className="h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent w-full"
               />
               <span className="h-0.5 w-full rounded-full bg-gray-600 group-hover:bg-accent" />
               <span className="h-0.5 w-3/4 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent" />
             </motion.button>
-            <div
-              className={cn(
-                'flex h-16 shrink-0 transition-[width] duration-300 me-4 lg:h-[76px] lg:border-solid lg:border-gray-200/80 lg:me-8 lg:border-e',
-                miniSidebar ? 'lg:w-[65px]' : 'lg:w-[257px]',
-              )}
-            >
+            {/* Remove dynamic width change */}
+            <div className="flex h-16 shrink-0 me-4 lg:h-[76px] lg:border-solid lg:border-gray-200/80 lg:me-8 lg:border-e lg:w-[257px]">
               <Logo />
             </div>
             <button
               className="group hidden h-5 w-5 shrink-0 cursor-pointer flex-col justify-center space-y-1 me-6 lg:flex"
               onClick={() => setMiniSidebar(!miniSidebar)}
             >
-              <span
-                className={cn(
-                  'h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent',
-                  miniSidebar ? 'w-full' : 'w-2/4',
-                )}
-              />
+              <span className="h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent w-full" />
               <span className="h-0.5 w-full rounded-full bg-gray-600 group-hover:bg-accent" />
-              <span
-                className={cn(
-                  'h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent',
-                  miniSidebar ? 'w-full' : 'w-3/4',
-                )}
-              />
+              <span className="h-0.5 w-3/4 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent" />
             </button>
           </div>
           <div
@@ -184,16 +167,6 @@ const Navbar = () => {
           <div className="flex shrink-0 grow-0 basis-auto items-center">
             {hasAccess(adminAndOwnerOnly, permissions) && (
               <>
-                {/* <div className="hidden border-gray-200/80 px-6 py-5 border-e 2xl:block">
-                  <LinkButton
-                    href={Routes.shop.create}
-                    size="small"
-                    className="px-3.5"
-                  >
-                    {t('common:text-create-shop')}
-                  </LinkButton>
-                </div> */}
-
                 <div className="px-6 py-5 max-sm:hidden 2xl:block">
                   <VisitStore />
                 </div>

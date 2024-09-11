@@ -54,9 +54,9 @@ class OrderRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'tracking_number' => 'like',
+        'order_status' => 'like',
         'shop_id',
         'language',
-        'order_status' => 'like'
 
     ];
     /**

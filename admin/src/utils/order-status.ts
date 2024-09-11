@@ -1,11 +1,11 @@
 import { PaymentStatus } from '@/types';
 
 export const ORDER_STATUS = [
-  { name: 'text-order-pending', status: 'order-pending', serial: 1   },
+  { name: 'text-order-pending ', status: 'order-pending', serial: 1   },
   // { name: 'text-order-processing', status: 'order-processing', serial: 2 },
-  { name: 'Waiting for approval', status: 'order-waiting-approval', serial: 2 },
-  { name: 'Accepted', status: 'order-accepted', serial: 3 },
-  { name: 'Submitted', status: 'order-submitted', serial: 4 },
+  { name: 'text-order-waiting-approval', status: 'order-waiting-approval', serial: 2 },
+  { name: 'text-order-accepted', status: 'order-accepted', serial: 3 },
+  { name: 'text-order-submitted', status: 'order-submitted', serial: 4 },
   { name: 'Improvement', status: 'order-improvement', serial: 4 },
   { name: 'Completed', status: 'order-completed', serial: 5 },
   { name: 'Rejected', status: 'order-rejected', serial:5 },
