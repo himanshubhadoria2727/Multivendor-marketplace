@@ -53,8 +53,7 @@ export default function Orders() {
       tracking_number: searchTerm,
       orderBy,
       sortedBy,
-      order_status: statusFilter.length > 0 ? statusFilter : undefined, // Pass the selected status or undefined to fetch all
-    },
+    }
   );
 
   function handleSearch({ searchText }: { searchText: string }) {
@@ -65,26 +64,21 @@ export default function Orders() {
     setPage(current);
   }
 
-  // Handle status checkbox change, ensuring only one checkbox is selected at a time
+  // Handle status checkbox change
   function handleStatusChange(checkedValues: any) {
     if (checkedValues.length > 1) {
-      // Only keep the most recently selected checkbox
       const latestCheckedValue = checkedValues[checkedValues.length - 1];
       setStatusFilter([latestCheckedValue]);
     } else {
-      // If none or only one is selected, update the statusFilter as normal
       setStatusFilter(checkedValues);
     }
     setPage(1); // Reset to page 1 on filter change
   }
 
-  // if (
-  //   !hasAccess(adminOnly, permissions) &&
-  //   !me?.shops?.map((shop) => shop.id).includes(shopId) &&
-  //   me?.managed_shop?.id != shopId
-  // ) {
-  //   router.replace(Routes.dashboard);
-  // }
+  // Filter orders that have children and only include children that match the status filter
+  const filteredOrders = orders
+    ?.flatMap((order) => order.children || []) // Flatten children orders
+    ?.filter((child) => !statusFilter.length || statusFilter.includes(child.order_status)) || []; // Filter by child status
 
   return (
     <>
@@ -101,8 +95,7 @@ export default function Orders() {
               className="w-full md:w-1/2"
             />
           </div>
-          <div className="flex flex-row mt-5 w-full ">
-            <h4 className="mb-2 text-semibold mr-3">{t('Select Status')}</h4>
+          <div className="flex flex-row mt-5 w-full">
             <Checkbox.Group
               options={statusOptions}
               onChange={handleStatusChange}
@@ -113,7 +106,7 @@ export default function Orders() {
         </div>
       </Card>
       <OrderList
-        orders={orders}
+        orders={filteredOrders}
         paginatorInfo={paginatorInfo}
         onPagination={handlePagination}
         onOrder={setOrder}
@@ -122,6 +115,7 @@ export default function Orders() {
     </>
   );
 }
+
 
 Orders.authenticate = {
   permissions: adminOwnerAndStaffOnly,

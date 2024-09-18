@@ -1066,6 +1066,9 @@ export interface Withdraw {
   created_at?: string;
   updated_at?: string;
 }
+export interface Withdraws {
+data:[];
+}
 
 export interface Review {
   id: number;
@@ -1976,6 +1979,7 @@ export interface ItemProps {
 export interface ShopPaginator extends PaginatorInfo<Shop> {}
 
 export interface WithdrawPaginator extends PaginatorInfo<Withdraw> {}
+export interface WithdrawsPaginator extends PaginatorInfo<Withdraws> {}
 
 export interface UserPaginator extends PaginatorInfo<User> {}
 

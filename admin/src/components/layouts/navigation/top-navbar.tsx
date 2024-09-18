@@ -21,6 +21,7 @@ import {
   adminOnly,
   getAuthCredentials,
   hasAccess,
+  ownerOnly,
 } from '@/utils/auth-utils';
 import {
   RESPONSIVE_WIDTH,
@@ -34,10 +35,15 @@ import { eachDayOfInterval, isTomorrow } from 'date-fns';
 import { motion } from 'framer-motion';
 import { useAtom } from 'jotai';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useWindowSize } from 'react-use';
 import AuthorizedMenu from './authorized-menu';
+import Link from 'next/link';
+import { HomeIcon } from '@/components/icons/home-icon';
+import { useShopQuery } from '@/data/shop';
+import usePrice from '@/utils/use-price';
+import { useWithdrawsQuery } from '@/data/withdraw';
 
 export const isInArray = (array: Date[], value: Date) => {
   return !!array?.find((item) => {
@@ -63,7 +69,36 @@ const Navbar = () => {
   );
   const { width } = useWindowSize();
   const { settings, loading } = useSettingsQuery({ language: locale! });
+  const {
+    query: { shop },
+  } = router;
+  const { data: shopData } = useShopQuery({
+    slug: shop as string,
+  });
+  console.log(shopData)
+  const shopId = shopData?.id!;
+  const { price: shopBalance } = usePrice({
+    amount: shopData?.balance?.current_balance!,
+  });
+  const { withdraws, paginatorInfo, error } = useWithdrawsQuery(
+    {
+      shop_id: shopId,
+    },
+    {
+      enabled: Boolean(shopId),
+    }
+  );
+  console.log('withdraws',withdraws)
+  const totalOnHoldAmount = Array.isArray(withdraws)
+  ? withdraws
+      .filter(withdraw => withdraw.status === 'on_hold' && typeof withdraw.amount === 'number') // Filter and ensure amount is a number
+      .reduce((sum, withdraw) => sum + withdraw.amount, 0) // Sum up the amount
+  : 0; // Default to 0 if withdraws is not an array
 
+console.log('Total amount on hold:', totalOnHoldAmount);
+const { price: onHoldAmount } = usePrice({
+  amount: totalOnHoldAmount,
+});
   useEffect(() => {
     if (
       settings?.options?.maintenance?.start &&
@@ -135,9 +170,7 @@ const Navbar = () => {
               onClick={toggleSidebar}
               className="group flex h-5 w-5 shrink-0 cursor-pointer flex-col justify-center space-y-1 me-4 focus:text-accent focus:outline-none lg:hidden"
             >
-              <span
-                className="h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent w-full"
-              />
+              <span className="h-0.5 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent w-full" />
               <span className="h-0.5 w-full rounded-full bg-gray-600 group-hover:bg-accent" />
               <span className="h-0.5 w-3/4 rounded-full bg-gray-600 transition-[width] group-hover:bg-accent" />
             </motion.button>
@@ -161,14 +194,26 @@ const Navbar = () => {
             <SearchIcon className="h-4 w-4" />
           </div>
           <div className="relative hidden w-full max-w-[710px] py-4 me-6 lg:block 2xl:me-auto">
-            <SearchBar />
+            {/* <SearchBar /> */}
           </div>
 
-          <div className="flex shrink-0 grow-0 basis-auto items-center">
-            {hasAccess(adminAndOwnerOnly, permissions) && (
-              <>
+          <div className="flex shrink-0 grow-0 basis-auto gap-3 items-center">
+            {hasAccess(ownerOnly, permissions) && (
+              <> 
                 <div className="px-6 py-5 max-sm:hidden 2xl:block">
-                  <VisitStore />
+                  {/* <VisitStore /> */}
+                  <div
+                    className="inline-flex h-9 mr-4 flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none text-accent outline-none transition duration-300 ease-in-out hover:border-transparent hover:bg-accent-hover hover:text-white focus:shadow focus:outline-none"
+                    rel="noreferrer"
+                  >
+                   On hold: {onHoldAmount}
+                  </div>
+                  <div
+                    className="inline-flex h-9 flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none text-accent outline-none transition duration-300 ease-in-out hover:border-transparent hover:bg-accent-hover hover:text-white focus:shadow focus:outline-none"
+                    rel="noreferrer"
+                  >
+                   Balance: {shopBalance}
+                  </div>
                 </div>
 
                 {options?.pushNotification?.all?.order ||

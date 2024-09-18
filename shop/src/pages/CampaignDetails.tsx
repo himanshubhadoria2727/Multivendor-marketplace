@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import router, { useRouter } from 'next/router';
 import { BsArrowLeftCircle, BsArrowRightCircle, BsCalendar, BsCart4, BsCash, BsInfo, BsTagFill, BsTrash } from 'react-icons/bs'; // Import trash icon for deletion
-import { SortOrder } from '@/types';
+import { Order, SortOrder } from '@/types';
 import Spinner from '@/components/ui/loader/spinner/spinner';
 import Cookies from 'js-cookie';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
@@ -14,6 +14,7 @@ type Product = {
   created_at: string;
   price: number;
   status: string;
+  orders:Array;
   pivot: {
     product_id: any;
     order_id: number | null;
@@ -155,7 +156,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                   onClick={() => onHeaderClick('name').onClick()}
                   className="cursor-pointer px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-white uppercase tracking-wider"
                 >
-                  Product Name <span className="ml-1">{sortingObj.column === 'name' && sortingObj.sort === SortOrder.Asc ? '⇅' : '⇵'}</span>
+                  Site Name <span className="ml-1">{sortingObj.column === 'name' && sortingObj.sort === SortOrder.Asc ? '⇅' : '⇵'}</span>
                 </th>
                 <th
                   onClick={() => onHeaderClick('createdAt').onClick()}
@@ -205,7 +206,7 @@ const CampaignDetails: React.FC<CampaignDetailsProps> = ({ id, name, onBack }) =
                     <td className="px-6 py-2 whitespace-nowrap">{product.name}</td>
                     <td className="px-9 py-2 whitespace-nowrap ">{new Date(product.created_at).toLocaleDateString()}</td>
                     <td className="px-8 py-2 whitespace-nowrap">{product.price}</td>
-                    <td className="px-8 py-2 whitespace-nowrap">{product.status}</td>
+                    <td className="px-8 py-2 whitespace-nowrap">{product?.orders[1].order_status}</td>
                     {product.pivot.order_id ? (
                       <td className="px-10 py-2 whitespace-nowrap">
                         <div className='flex gap-2 cursor-pointer transition-transform transform hover:scale-105' onClick={() => orderNavigation(product.pivot.order_id)}>

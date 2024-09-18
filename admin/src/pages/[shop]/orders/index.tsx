@@ -132,7 +132,7 @@ export default function Orders() {
             />
           </div>
           <div className="flex flex-row mt-5 w-full ">
-            <h4 className="mb-2 text-semibold mr-3">{t('Select Status')}</h4>
+            {/* <h4 className="mb-2 text-semibold mr-3">{t('Select Status')}</h4> */}
             <Checkbox.Group
               options={statusOptions}
               onChange={handleStatusChange}

@@ -221,7 +221,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                                 >
                                     <div className="flex items-center gap-1">
                                         <BsBox />
-                                        Total Products
+                                        Total Sites
                                         <span className="ml-1">
                                             {sortingObj.column === 'totalProducts' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}
                                         </span>
