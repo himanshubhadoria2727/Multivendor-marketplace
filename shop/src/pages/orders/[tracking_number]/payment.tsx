@@ -2,7 +2,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import isEmpty from 'lodash/isEmpty';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import router, { useRouter } from 'next/router';
 import ReactConfetti from 'react-confetti';
 import type { NextPageWithLayout } from '@/types';
@@ -22,7 +22,7 @@ import { formatString } from '@/lib/format-string';
 import { OrderItems } from '@/components/orders/order-items';
 import { CheckMark } from '@/components/icons/checkmark';
 import SuborderItems from '@/components/orders/suborder-items';
-import { useOrder } from '@/data/order';
+import { useOrder, useUpdateOrderMutation } from '@/data/order';
 import { useModalAction } from '@/components/modal-views/context';
 import { PageLoader } from '@/components/ui/loader/spinner/spinner';
 import { Order } from '@/types';
@@ -30,6 +30,10 @@ import ErrorMessage from '@/components/ui/error-message';
 import { getOrderPaymentSummery } from '@/lib/get-order-payment-summery';
 import { LongArrowIcon } from '@/components/icons/long-arrow-icon';
 import routes from '@/config/routes';
+import Input from '@/components/ui/forms/input';
+import { Span } from 'next/dist/trace';
+import Button from '@/components/ui/button';
+import { BsClock, BsTicket } from 'react-icons/bs';
 
 type Props = {
   title: string;
@@ -96,6 +100,14 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
           return total;
       }
   }, 0).toFixed(2)}`;
+  // const [liveLink,setLiveLink] = useState()
+  const { mutate: updateOrder, isLoading: updating } = useUpdateOrderMutation();
+  const handleUpdateStatus = (updated_status: string) => {
+    updateOrder({
+      id: order?.id as string,
+      order_status: updated_status as string,
+    });
+  };
 
   return (
     <div className="p-4 sm:p-8">
@@ -143,6 +155,42 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
                     paymentStatus={order?.payment_status as PaymentStatus}
                   />
                 </div>
+                {
+                  order && order.order_status === OrderStatus.SUBMITTED?(
+                    <><div className='mt-10 mb-4 text-lg'>
+                      Live Link
+                      </div>
+                      <Input
+                        className='w-full '
+                        value={order.url}
+                        disabled label={''} />
+                        <div className='flex flex-row w-full mt-3 justify-evenly'>
+                        <Button className='w-1/2 text-base mr-5' isLoading={updating} onClick={() => handleUpdateStatus('order-completed')}
+                        >Approve <CheckMark/></Button>
+                        <Button className='ml-5 text-base w-1/2' isLoading={updating} onClick={() => handleUpdateStatus('order-improvement')}>
+                        Improvement <BsClock/></Button>
+                        </div>
+                        </>
+                  ):('')
+                }
+                {
+                  order && order.order_status === OrderStatus.COMPLETED?(
+                    <><div className='mt-10 mb-4 text-lg'>
+                      Live Link
+                      </div>
+                      <Input
+                        className='w-full '
+                        value={order.url}
+                        disabled label={''} />
+                        <div className='flex flex-row w-full mt-3 justify-start'>
+                        {/* <Button className='w-1/2 text-base mr-5' isLoading={updating} onClick={() => handleUpdateStatus('order-completed')}
+                        >Approve <CheckMark/></Button> */}
+                        <Button className='text-base w-1/2' isLoading={updating} onClick={() => handleUpdateStatus('order-improvement')}>
+                        Improvement <BsClock/></Button>
+                        </div>
+                        </>
+                  ):('')
+                }
               </div>
               {/* end of order details */}
 
@@ -212,7 +260,7 @@ const OrderView = ({ order, loadingStatus }: OrderViewProps) => {
           </div>
         </div>
       </div>
-      {order && order.payment_status === PaymentStatus.SUCCESS ? (
+      {order && order.order_status === OrderStatus.COMPLETED ? (
         <ReactConfetti
           width={width - 10}
           height={height}
@@ -280,3 +328,5 @@ export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
     },
   };
 };
+
+

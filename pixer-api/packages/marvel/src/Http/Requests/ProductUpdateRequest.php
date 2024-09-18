@@ -59,6 +59,7 @@ class ProductUpdateRequest extends FormRequest
             'domain_name'                  => ['nullable','string'],
             'languages'                  => ['nullable','string'],
             'link_type'                  => ['nullable','string'],
+            'url'                  => ['nullable','string'],
             'countries'                  => ['nullable','string'], 
             'domain_authority'             => ['nullable', 'numeric'],
             'niche_price'             => ['nullable', 'numeric'],

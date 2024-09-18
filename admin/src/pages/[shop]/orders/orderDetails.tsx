@@ -18,23 +18,24 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ open, onClose, details }) =
     centered
     width={800} // Adjust the width of the modal
   >
+
     <div className="p-6">
       <div className="max-h-96 overflow-y-auto">
         <table className="w-full table-auto border-collapse">
           <tbody>
-            {details.title && (
+            {details?.title && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Title:</td>
                 <td className="p-3">{details.title}</td>
               </tr>
             )}
-            {details.ancor && (
+            {details?.ancor && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Ancor:</td>
                 <td className="p-3">{details.ancor}</td>
               </tr>
             )}
-            {details.postUrl && (
+            {details?.postUrl && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Post URL:</td>
                 <td className="p-3">
@@ -44,7 +45,7 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ open, onClose, details }) =
                 </td>
               </tr>
             )}
-            {details.link_url && (
+            {details?.link_url && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Link URL:</td>
                 <td className="p-3">
@@ -54,31 +55,31 @@ const DetailsModal: React.FC<DetailsModalProps> = ({ open, onClose, details }) =
                 </td>
               </tr>
             )}
-            {details.selectedNiche && details.selectedNiche !== 'none' && (
+            {details?.selectedNiche && details.selectedNiche !== 'none' && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Selected Niche:</td>
                 <td className="p-3">{details.selectedNiche}</td>
               </tr>
             )}
-            {details.selectedForm && (
+            {details?.selectedForm && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Selected Form:</td>
                 <td className="p-3">{details.selectedForm}</td>
               </tr>
             )}
-            {details.instructions && (
+            {details?.instructions && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Instructions:</td>
                 <td className="p-3">{details.instructions}</td>
               </tr>
             )}
-            {details.content && (
+            {details?.content && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">Content:</td>
                 <td className="p-3">{details.content}</td>
               </tr>
             )}
-            {details.file && (
+            {details?.file && (
               <tr className="border-b">
                 <td className="p-3 font-semibold bg-gray-100">File:</td>
                 <td className="p-3">

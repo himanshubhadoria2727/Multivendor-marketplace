@@ -1,4 +1,5 @@
 export const Routes = {
+  edit:'/edit',
   dashboard: '/',
   login: '/login',
   logout: '/logout',

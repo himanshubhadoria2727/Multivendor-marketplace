@@ -71,21 +71,21 @@ class CampaignController extends CoreController
     }
 
     public function getCampaignProducts($id)
-    {
-        Log::info('Inside getCampaignProducts method with campaign ID: ' . $id);
+{
+    Log::info('Inside getCampaignProducts method with campaign ID: ' . $id);
 
-        $campaign = $this->campaignRepository->getCampaignById($id);
+    $campaign = $this->campaignRepository->getCampaignById($id);
 
-        if ($campaign->user_id !== Auth::id()) {
-            Log::warning('Unauthorized access attempt for campaign ID: ' . $id);
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $products = $campaign->products;
-
-        return response()->json(['products' => $products], 200);
+    if ($campaign->user_id !== Auth::id()) {
+        Log::warning('Unauthorized access attempt for campaign ID: ' . $id);
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
 
+    // Eager load the products with their order details
+    $products = $campaign->products()->with('orders')->get();
+
+    return response()->json(['products' => $products], 200);
+    }
     public function removeProduct(Request $request, $campaignId, $productId)
     {
         Log::info('Inside removeProduct method with campaign ID: ' . $campaignId . ' and product ID: ' . $productId);

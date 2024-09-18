@@ -1,5 +1,5 @@
 export const QuestionIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="Gold" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M17.5 10a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"

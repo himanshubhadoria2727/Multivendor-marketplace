@@ -14,37 +14,37 @@
 		/*
     * primary color
     */
-		--color-accent: 13, 153, 101;
+    --color-accent: 34, 140, 219;
 
-		/*
-    * Hover state color of primary color
-    */
-		--color-accent-hover: 9, 130, 85;
-
-		/*
-    * shade of primary color
-    */
-		--color-accent-300: 133, 214, 177;
-
-		/*
-    * shade of primary color
-    */
-		--color-accent-400: 84, 173, 140;
-
-		/*
-    * shade of primary color
-    */
-		--color-accent-500: 0, 159, 127;
-
-		/*
-    * shade of primary color
-    */
-		--color-accent-600: 0, 143, 114;
-
-		/*
-    * shade of primary color
-    */
-		--color-accent-700: 0, 119, 95;
+    /* 
+     * Hover state color of primary color
+     */
+    --color-accent-hover: 27, 113, 175;
+    
+    /* 
+     * Shade of primary color 
+     */
+    --color-accent-300: 102, 176, 232;
+    
+    /* 
+     * Shade of primary color 
+     */
+    --color-accent-400: 68, 157, 225;
+    
+    /* 
+     * Shade of primary color 
+     */
+    --color-accent-500: 34, 140, 219;
+    
+    /* 
+     * Shade of primary color 
+     */
+    --color-accent-600: 31, 126, 197;
+    
+    /* 
+     * Shade of primary color 
+     */
+    --color-accent-700: 24, 100, 157;    
 
 		/*
     * light color

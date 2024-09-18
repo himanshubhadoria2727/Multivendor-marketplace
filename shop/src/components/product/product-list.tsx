@@ -194,6 +194,11 @@ const ProductInventoryList = ({
     fetchCampaigns();
   };
 
+   const handleNavigate = async (slug:any) => {
+    setLoading(true); // Show the loader
+    await router.push(`/products/product_page/${slug}`);
+    setLoading(false); // Hide the loader after navigation
+  };
 
   const handleCampaignNameChange = (e: { target: { value: SetStateAction<string> } }) => {
     setNewCampaignName(e.target.value);
@@ -545,7 +550,7 @@ const ProductInventoryList = ({
       render: (price: number, { slug ,id }: { slug: any,id:any }) => (
         <div className="flex items-center justify-center text-dark-100 dark:text-light-400">
           <div className="flex flex-col items-center gap-1 justify-center">
-            <button onClick={() => router.push(`/products/product_page/${slug}`)} className="border items-start text-dark-100 dark:text-light-400 w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>
+            <button onClick={() => handleNavigate(slug)} className="border items-start text-dark-100 dark:text-light-400 w-[5rem] rounded-lg text-brand font-medium transition duration-300 bg-brand text-light border-brand py-1">Buy ${price}</button>
             <p className='flex gap-1 text-dark-600 dark:text-light-400 bg-purple-100  dark:bg-dark-400 text-[11px] max-sm:text-[10px] px-2 border rounded-lg hover:underline' onClick={() => handleClick(id)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" className="bi mt-[3px] bi-bookmark-plus-fill" viewBox="0 0 16 16">
               <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5m6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5z" />

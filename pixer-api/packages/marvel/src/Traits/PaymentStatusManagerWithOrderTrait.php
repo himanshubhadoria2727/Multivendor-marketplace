@@ -555,7 +555,7 @@ trait PaymentStatusManagerWithOrderTrait
      */
     protected function paymentSuccess($order): void
     {
-        $order->order_status = OrderStatus::COMPLETED;
+        $order->order_status = OrderStatus::WAITING;
         $order->payment_status = PaymentStatus::SUCCESS;
         $order->save();
         try {
@@ -565,7 +565,7 @@ trait PaymentStatusManagerWithOrderTrait
         }
         if (is_array($children) && count($children)) {
             foreach ($order->children as $child_order) {
-                $child_order->order_status = OrderStatus::COMPLETED;
+                $child_order->order_status = OrderStatus::WAITING;
                 $child_order->payment_status = PaymentStatus::SUCCESS;
                 $child_order->save();
             }

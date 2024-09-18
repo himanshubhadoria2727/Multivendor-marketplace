@@ -107,6 +107,7 @@ export type QueryOptionsType = {
 export enum OrderStatus {
   PENDING = 'order-pending',
   PROCESSING = 'order-processing',
+  WAITING = 'order-waiting-approval',
   COMPLETED = 'order-completed',
   CANCELLED = 'order-cancelled',
   REFUNDED = 'order-refunded',
@@ -125,6 +126,7 @@ export enum FlashSaleType {
 
 export interface TodayTotalOrderByStatus {
   pending: number;
+  waiting: number;
   processing: number;
   complete: number;
   cancelled: number;
@@ -639,6 +641,7 @@ export interface Order {
   customer?: User;
   amount: number;
   sales_tax: number;
+  url:string;
   total: number;
   paid_total: number;
   payment_id?: string;
@@ -652,6 +655,8 @@ export interface Order {
   products: Product[];
   created_at: string;
   updated_at: string;
+  data:[];
+  children:[];
   billing_address?: UserAddress;
   shipping_address?: UserAddress;
   translated_languages: string[];
@@ -736,6 +741,7 @@ export interface Product {
   is_niche:boolean;
   is_gamble:boolean;
   is_cbd:boolean;
+  selectedForm:string;
   is_crypto:boolean;
   sale_price?: number;
   video?: {
@@ -1014,6 +1020,7 @@ export interface CreateOrderInput {
   total: number;
   paid_total: number;
   payment_id?: string;
+  url:string;
   payment_gateway: string;
   coupon_id?: number;
   discount?: number;
@@ -1058,6 +1065,9 @@ export interface Withdraw {
   note?: string;
   created_at?: string;
   updated_at?: string;
+}
+export interface Withdraws {
+data:[];
 }
 
 export interface Review {
@@ -1866,6 +1876,7 @@ export interface OrderQueryOptions extends QueryOptions {
   type: string;
   name: string;
   shop_id: string;
+  order_status:string;
   tracking_number: string;
   refund_reason: string;
   with: string;
@@ -1968,6 +1979,7 @@ export interface ItemProps {
 export interface ShopPaginator extends PaginatorInfo<Shop> {}
 
 export interface WithdrawPaginator extends PaginatorInfo<Withdraw> {}
+export interface WithdrawsPaginator extends PaginatorInfo<Withdraws> {}
 
 export interface UserPaginator extends PaginatorInfo<User> {}
 

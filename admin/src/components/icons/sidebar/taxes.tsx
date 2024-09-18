@@ -1,5 +1,5 @@
 export const TaxesIcon: React.FC<React.SVGAttributes<{}>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+  <svg xmlns="http://www.w3.org/2000/svg" color="crimson" fill="none" {...props}>
     <path
       fill="currentColor"
       d="M7.484 4.39a2.187 2.187 0 1 1-3.093 3.094 2.187 2.187 0 0 1 3.093-3.093Zm8.125 8.126a2.188 2.188 0 1 0-3.093 3.094 2.188 2.188 0 0 0 3.093-3.094Z"

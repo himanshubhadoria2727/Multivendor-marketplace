@@ -12,9 +12,13 @@ use BenSampo\Enum\Enum;
 final class OrderStatus extends Enum
 {
     public const PENDING              = 'order-pending';
+    public const WAITING              = 'order-waiting-approval';
+    public const REJECTED             = 'order-rejected';         // Added
+    public const SUBMITTED            = 'order-submitted';        // Added
+    public const IMPROVEMENT          = 'order-improvement';  
     public const PROCESSING           = 'order-processing';
     public const COMPLETED            = 'order-completed';
-    public const APPROVED            = 'order-approved';
+    public const ACCEPTED            = 'order-accepted';
     public const CANCELLED            = 'order-cancelled';
     public const REFUNDED             = 'order-refunded';
     public const FAILED               = 'order-failed';

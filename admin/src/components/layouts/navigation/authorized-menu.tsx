@@ -91,10 +91,10 @@ export default function AuthorizedMenu() {
             <Link
               href={`/${data?.shops[0]?.slug}/edit`}
               className={cn(
-                'group flex items-center gap-2 rounded-md py-2.5 px-3 text-sm capitalize transition duration-200 hover:text-accent',
+                'group flex items-center gap-2 rounded-md px-3 text-sm capitalize transition duration-200 hover:text-accent',
               )}
             >
-             <AvatarIcon className='w-5 ml-2'/>Profile
+             <AvatarIcon className='w-5 ml-2'/>Profile Update
             </Link>
             {siteSettings?.authorizedLinks?.map(
               ({ href, labelTransKey, icon, permission }, index) => {

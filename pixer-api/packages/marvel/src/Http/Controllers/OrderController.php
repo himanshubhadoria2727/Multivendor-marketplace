@@ -19,7 +19,7 @@ use Marvel\Database\Models\Order;
 use Marvel\Database\Models\Settings;
 use Marvel\Database\Repositories\OrderRepository;
 use Marvel\Enums\PaymentGatewayType;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 use Marvel\Enums\Permission;
 use Marvel\Exceptions\MarvelException;
 use Marvel\Exports\OrderExport;
@@ -80,18 +80,18 @@ class OrderController extends CoreController
 
         switch ($user) {
             case $user->hasPermissionTo(Permission::SUPER_ADMIN):
-        if ($request->has('shop_id')) {
-            // If the admin is viewing a specific shop's dashboard
-            return $this->repository->with('children')
-                ->where('shop_id', '=', $request->shop_id)
-                ->where('parent_id', '!=', null);
-        } else {
-            // Admin is viewing all orders
-            return $this->repository->with('children')
-                ->where('id', '!=', null)
-                ->where('parent_id', '=', null);
-        }
-        break;
+                if ($request->has('shop_id')) {
+                    // If the admin is viewing a specific shop's dashboard
+                    return $this->repository->with('children')
+                        ->where('shop_id', '=', $request->shop_id)
+                        ->where('parent_id', '!=', null);
+                } else {
+                    // Admin is viewing all orders
+                    return $this->repository->with('children')
+                        ->where('id', '!=', null)
+                        ->where('parent_id', '=', null);
+                }
+                break;
 
             case $user->hasPermissionTo(Permission::STORE_OWNER):
                 if ($this->repository->hasPermission($user, $request->shop_id)) {
@@ -142,16 +142,29 @@ class OrderController extends CoreController
     public function store(OrderCreateRequest $request)
     {
         try {
-            // decision need
-            if(!($this->settings->options['useCashOnDelivery'] && $this->settings->options['useEnableGateway'])){
+            // Check if payment options are enabled
+            if (!($this->settings->options['useCashOnDelivery'] && $this->settings->options['useEnableGateway'])) {
                 throw new HttpException(400, PLEASE_ENABLE_PAYMENT_OPTION_FROM_THE_SETTINGS);
             }
 
-            return DB::transaction(fn () => $this->repository->storeOrder($request, $this->settings));
+            // Log the incoming request data before storing it
+            Log::info('Order data being stored: ', $request->all());
+
+            // Use transaction to store the order
+            return DB::transaction(function () use ($request) {
+                // Log the settings used during order creation
+                Log::info('Settings being used: ', $this->settings->toArray());
+
+                return $this->repository->storeOrder($request, $this->settings);
+            });
         } catch (MarvelException $th) {
+            // Log the exception before throwing it
+            Log::error('MarvelException occurred: ', ['message' => $th->getMessage()]);
+
             throw new MarvelException(SOMETHING_WENT_WRONG, $th->getMessage());
         }
     }
+
 
     /**
      * Display the specified resource.
@@ -196,7 +209,9 @@ class OrderController extends CoreController
 
         // Create Intent
         if (!in_array($order->payment_gateway, [
-            PaymentGatewayType::CASH, PaymentGatewayType::CASH_ON_DELIVERY, PaymentGatewayType::FULL_WALLET_PAYMENT
+            PaymentGatewayType::CASH,
+            PaymentGatewayType::CASH_ON_DELIVERY,
+            PaymentGatewayType::FULL_WALLET_PAYMENT
         ])) {
             // $order['payment_intent'] = $this->processPaymentIntent($request, $this->settings);
             $order['payment_intent'] = $this->attachPaymentIntent($orderParam);
@@ -258,6 +273,13 @@ class OrderController extends CoreController
             $request["id"] = $id;
             return $this->updateOrder($request);
         } catch (MarvelException $e) {
+            // Log the exception details
+            Log::error('Could not update the resource', [
+                'exception' => $e,
+                'request' => $request->all(),
+                'id' => $id
+            ]);
+
             throw new MarvelException(COULD_NOT_UPDATE_THE_RESOURCE, $e->getMessage());
         }
     }
@@ -266,7 +288,6 @@ class OrderController extends CoreController
     {
         return $this->repository->updateOrder($request);
     }
-
     /**
      * Remove the specified resource from storage.
      *

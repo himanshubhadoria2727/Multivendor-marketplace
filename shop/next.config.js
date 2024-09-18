@@ -23,6 +23,7 @@ module.exports = {
       'flagsapi.com',
       'pixarlaravel.s3.ap-southeast-1.amazonaws.com',
       'pickbazarlaravel.s3.ap-southeast-1.amazonaws.com',
+      'https://lottie.host/478742ae-d70e-4468-a246-658cb826320f/14zXmhMJjV.json',
       'lh3.googleusercontent.com'
     ],
   },

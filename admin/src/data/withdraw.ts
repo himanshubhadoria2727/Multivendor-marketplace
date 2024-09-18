@@ -9,6 +9,7 @@ import {
   GetParams,
   WithdrawPaginator,
   Withdraw,
+  WithdrawsPaginator,
 } from '@/types';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import { withdrawClient } from './client/withdraw';
@@ -58,7 +59,7 @@ export const useWithdrawsQuery = (
   params: Partial<WithdrawQueryOptions>,
   options: any = {}
 ) => {
-  const { data, error, isLoading } = useQuery<WithdrawPaginator, Error>(
+  const { data, error, isLoading } = useQuery<WithdrawsPaginator, Error>(
     [API_ENDPOINTS.WITHDRAWS, params],
     ({ queryKey, pageParam }) =>
       withdrawClient.paginated(Object.assign({}, queryKey[1], pageParam)),

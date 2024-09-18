@@ -93,31 +93,31 @@ export function Sidebar({
               title={t('Website Catalogs')}
               href={routes.home}
               isCollapse={isCollapse}
-              icon={<HomeIcon className="h-[18px] w-[18px] text-[#d91E36] text-current" />}
+              icon={<HomeIcon className="h-[18px] w-[18px] icon-home" />}
             />
             <NavLink
               title={t('Dashboard')}
               href={routes.dashboard}
               isCollapse={isCollapse}
-              icon={<DiscoverIcon className="h-[18px] w-[18px] text-[#0582cA] text-current" />}
+              icon={<DiscoverIcon className="h-[18px] w-[18px] icon-dashboard" />}
             />
             <NavLink
               title={t('Campaigns')}
               href={routes.campaign}
               isCollapse={isCollapse}
-              icon={<BsMegaphoneFill className="h-4 text-[#6B7fD7] w-4 text-current" />}
+              icon={<BsMegaphoneFill className="h-4 icon-campaigns w-4" />}
             />
             <NavLink
               title={t('Profile')}
               href={routes.profileh}
               isCollapse={isCollapse}
-              icon={<UserIconAlt className="h-4 w-4 text-[#FF86c8] text-current" />}
+              icon={<UserIconAlt className="h-4 w-4 icon-profile" />}
             />
             <NavLink
               title={t('Orders')}
               href={routes.order}
               isCollapse={isCollapse}
-              icon={<PurchaseIcon className="h-4 w-4 text-[#F2a541] text-current" />}
+              icon={<PurchaseIcon className="h-4 w-4 icon-orders" />}
             />
             {/* <NavLink
               title={t('text-top-authors')}
@@ -125,41 +125,39 @@ export function Sidebar({
               isCollapse={isCollapse}
               icon={<PeopleIcon className="h-[18px] w-[18px] text-current" />}
             /> */}
-
+  
             {/* <NavLink
               title={t('text-feed')}
               href={routes.feed}
               isCollapse={isCollapse}
               icon={<FeedIcon className="h-[17px] w-[17px] text-current" />}
             /> */}
-
+  
             <NavLink
               title={t('text-contact')}
               href={routes.contact}
               isCollapse={isCollapse}
-              icon={
-                <PaperPlaneIcon className="h-[18px] w-[18px] text-[#7d53DE] text-current" />
-              }
+              icon={<PaperPlaneIcon className="h-[18px] w-[18px] icon-contact" />}
             />
           </nav>
-
+  
           <nav className="mt-auto flex flex-col pb-4">
             <NavLink
               title={t('text-settings')}
               href={routes.profile}
               isCollapse={isCollapse}
-              icon={<SettingIcon className="h-[18px] w-[18px] text-[#1a181B] dark:text-light text-current" />}
+              icon={<SettingIcon className="h-[18px] w-[18px] icon-settings" />}
             />
             <NavLink
               title={t('text-help-page-title')}
               href={routes.help}
               isCollapse={isCollapse}
-              icon={<HelpIcon className="h-[18px] w-[18px] text-[#91cB3E] text-current" />}
+              icon={<HelpIcon className="h-[18px] w-[18px] icon-help" />}
             />
           </nav>
         </div>
       </Scrollbar>
-
+  
       <footer
         className={cn(
           'flex-col border-t border-light-400 pt-3 pb-4 text-center dark:border-dark-400',
@@ -190,6 +188,7 @@ export function Sidebar({
       </footer>
     </aside>
   );
+  
 }
 
 export default function SidebarDrawerView() {

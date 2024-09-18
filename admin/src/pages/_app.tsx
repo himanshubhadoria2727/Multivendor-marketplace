@@ -20,6 +20,7 @@ import type { NextPageWithLayout } from '@/types';
 import { useRouter } from 'next/router';
 import PrivateRoute from '@/utils/private-route';
 import { Config } from '@/config';
+import Loader from '@/components/ui/loader/loader';
 const Noop: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
   <>{children}</>
 );
@@ -27,7 +28,7 @@ const Noop: React.FC<{ children?: React.ReactNode }> = ({ children }) => (
 const AppSettings: React.FC<{ children?: React.ReactNode }> = (props) => {
   const { query, locale } = useRouter();
   const { settings, loading, error } = useSettingsQuery({ language: locale! });
-  if (loading) return <PageLoader />;
+  if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error.message} />;
   // TODO: fix it
   // @ts-ignore

@@ -29,6 +29,7 @@ import { CreditCardIcon } from '@/components/icons/credit-card-icon';
 import Layout from '@/layouts/_layout';
 import { CheckIconWithBg } from '@/components/icons/check-icon-with-bg';
 import router from 'next/router';
+import Loader from '@/components/ui/loaderAdmin/loader';
 
 function OrderedItem({ item }: { item:Order}) {
   const { id } = router.query;
@@ -238,7 +239,7 @@ const Purchases: NextPageWithLayout = () => {
 
       {isLoading &&
         !orders.length &&
-        rangeMap(LIMIT, (i) => <OrderItemLoader key={`order-loader-${i}`} />)}
+        rangeMap(LIMIT, (i) => <Loader key={`order-loader-${i}`} />)}
 
       {!isLoading && !orders.length ? (
         <CartEmpty

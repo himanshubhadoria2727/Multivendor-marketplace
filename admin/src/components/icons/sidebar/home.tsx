@@ -1,6 +1,6 @@
 export const HomeIcon: React.FC<React.SVGAttributes<{}>> = (props) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" {...props}>
+    <svg xmlns="http://www.w3.org/2000/svg" color="purple" fill="none" {...props}>
       <path
         fill="currentColor"
         d="M16.875 9.026v7.849h-5V12.5a.624.624 0 0 0-.625-.625h-2.5a.625.625 0 0 0-.625.625v4.375h-5V9.026a.625.625 0 0 1 .205-.462l6.25-5.902a.625.625 0 0 1 .841 0l6.25 5.902a.625.625 0 0 1 .204.462Z"

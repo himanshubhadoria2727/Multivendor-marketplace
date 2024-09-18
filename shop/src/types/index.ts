@@ -6,7 +6,7 @@ import { UrlWithParsedQuery } from 'url';
 export interface QueryOptions {
   page?: number;
   limit?: number;
-  language?: string;
+  language:string;
 }
 
 export interface GetParams {
@@ -17,7 +17,7 @@ export interface GetParams {
 export interface SearchParamOptions {
   rating: string;
   question: string;
-
+  
   [key: string]: unknown;
 }
 
@@ -397,6 +397,7 @@ export interface CreateOrderInput {
   customer_contact: string | null;
   products: ConnectProductOrderPivot[];
   sales_tax: number;
+  order_status:string;
   payment_gateway: PaymentGateway;
   use_wallet_points: boolean;
   payment_id?: string;
@@ -419,6 +420,10 @@ export enum PaymentGateway {
 export enum OrderStatus {
   PENDING = 'order-pending',
   // PROCESSING = 'order-processing',
+  WAITING = 'order-waiting-approval',
+  ACCEPTED = 'order-accepted',
+  SUBMITTED = 'order-submitted',
+  IMPROVEMENT = 'order-improvement',
   COMPLETED = 'order-completed',
   CANCELLED = 'order-cancelled',
   REFUNDED = 'order-refunded',
@@ -572,6 +577,7 @@ export interface Order {
   total: number;
   paid_total: number;
   payment_gateway: string;
+  url:string;
   products: Product[];
   created_at: Date;
   updated_at: Date;

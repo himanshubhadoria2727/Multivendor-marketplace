@@ -31,8 +31,12 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ArrowDown } from '@/components/icons/arrow-down';
 import { useFormatPhoneNumber } from '@/utils/format-phone-number';
 import DetailsModal from '../orderDetails';
+import Label from '@/components/ui/label';
+import Input from '@/components/ui/input';
+import AdminLayout from '@/components/layouts/admin';
 
 type FormValues = {
   order_status: any;
@@ -56,7 +60,23 @@ export default function OrderDetailsPage() {
     setIsModalVisible(false);
     setModalDetails({});
   };
-  
+  const handleUpdateStatus = (updated_status: string) => {
+    updateOrder({
+      id: order?.id as string,
+      order_status: updated_status as string,
+    });
+  };
+
+  const handleSubmittedLink = (updated_status: string,url:string) => {
+    updateOrder({
+      id: order?.id as string,
+      order_status: updated_status as string,
+      url:url,
+    });
+  };
+
+  const [liveLink,setLiveLink]= useState('');
+
   useEffect(() => {
     resetCart();
     // @ts-ignore
@@ -199,15 +219,16 @@ export default function OrderDetailsPage() {
   // TODO : this area need to be checked in Pixer
 
   return (
-    <>
-      <Card className="relative overflow-hidden">
+    <div>
+      <Card>
         <div className="mb-6 -mt-5 -ml-5 -mr-5 md:-mr-8 md:-ml-8 md:-mt-8">
           <OrderViewHeader order={order} wrapperClassName="px-8 py-4" />
         </div>
-        <div className="flex w-full">
+
+        <div className="flex w-full mb-5">
           <Button
             onClick={handleDownloadInvoice}
-            className="mb-5 bg-blue-500 ltr:ml-auto rtl:mr-auto"
+            className="bg-blue-500 ltr:ml-auto rtl:mr-auto"
           >
             <DownloadIcon className="h-4 w-4 me-3" />
             {t('common:text-download')} {t('common:text-invoice')}
@@ -218,36 +239,24 @@ export default function OrderDetailsPage() {
           <h3 className="mb-8 w-full whitespace-nowrap text-center text-2xl font-semibold text-heading lg:mb-0 lg:w-1/3 lg:text-start">
             {t('form:input-label-order-id')} - {order?.tracking_number}
           </h3>
-          {![
-            OrderStatus.FAILED,
-            OrderStatus.CANCELLED,
-            OrderStatus.REFUNDED,
-          ].includes(order?.order_status! as OrderStatus) && (
-            <form
-              onSubmit={handleSubmit(ChangeStatus)}
-              className="flex w-full items-start ms-auto lg:w-2/4"
+          <Button
+            className="h-8 w-25"
+            onClick={() => handleOpenModal(order?.products[0])}
+          >
+            View Details
+          </Button>
+          <DetailsModal
+            open={isModalVisible}
+            onClose={handleCloseModal}
+            details={modalDetails}
+          />
+          {order?.order_status === OrderStatus.WAITING && (
+            <Button
+              onClick={() => handleUpdateStatus('order-accepted')}
+              className="mb-5 bg-blue-500 ltr:ml-auto rtl:mr-auto"
             >
-              <div className="z-20 w-full me-5">
-                <SelectInput
-                  name="order_status"
-                  control={control}
-                  getOptionLabel={(option: any) => t(option.name)}
-                  getOptionValue={(option: any) => option.status}
-                  options={ORDER_STATUS.slice(0, 6)}
-                  placeholder={t(`text-${order?.order_status}`) ?? t('form:input-placeholder-order-status')}
-                />
-
-                <ValidationError message={t(errors?.order_status?.message)} />
-              </div>
-              <Button loading={updating}>
-                <span className="hidden sm:block">
-                  {t('form:button-label-change-status')}
-                </span>
-                <span className="block sm:hidden">
-                  {t('form:form:button-label-change')}
-                </span>
-              </Button>
-            </form>
+              {t('Approve')}
+            </Button>
           )}
         </div>
 
@@ -259,152 +268,75 @@ export default function OrderDetailsPage() {
         </div>
 
         <div className="mb-10">
-          {order ? (
-            <><Table
-              //@ts-ignore
-              columns={columns}
-              emptyText={() => (
-                <div className="flex flex-col items-center py-7">
-                  <NoDataFound className="w-52" />
-                  <div className="mb-1 pt-6 text-base font-semibold text-heading">
-                    {t('table:empty-table-data')}
-                  </div>
-                  <p className="text-[13px]">
-                    {t('table:empty-table-sorry-text')}
-                  </p>
-                </div>
+          <div className="flex flex-col space-y-2 border-t-4 border-double border-border-200 px-4 py-4">
+            <div className="flex items-center justify-between font-semibold text-black">
+              <span>{t('Site name')}</span>
+              <span>{order?.products[0]?.name}</span>
+            </div>
+            <div className="flex items-center justify-between font-semibold text-black">
+              <span>{t('Service type')}</span>
+              {order?.products[0]?.isLinkInsertion==true?(
+                <span>Link Insertion</span>
+              ) : (
+                <span>Guest Posting</span>
               )}
-              data={order?.products!}
-              rowKey="id"
-              scroll={{ x: 300 }} />
-              <DetailsModal
-                open={isModalVisible}
-                onClose={handleCloseModal}
-                details={modalDetails} /></> 
-          ) : (
-            <span>{t('common:no-order-found')}</span>
-          )}
-
-          {order?.parent_id! ? (
-            <div className="flex w-full flex-col space-y-2 border-t-4 border-double border-border-200 px-4 py-4 ms-auto sm:w-1/2 md:w-1/3">
-              <div className="flex items-center justify-between text-sm text-body">
-                <span>{t('common:order-sub-total')}</span>
-                <span>{subtotal}</span>
-              </div>
-              <div className="flex items-center justify-between text-base font-semibold text-heading">
-                <span>{t('common:order-total')}</span>
-                <span>{total}</span>
-              </div>
             </div>
-          ) : (
-            <>
-              <div className="flex w-full flex-col space-y-2 border-t-4 border-double border-border-200 px-4 py-4 ms-auto sm:w-1/2 md:w-1/3">
-                <div className="flex items-center justify-between text-sm text-body">
-                  <span>{t('common:order-sub-total')}</span>
-                  <span>{sub_total}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm text-body">
-                  <span> {t('Niche price')}</span>
-                  {order?.products[0]?.pivot?.selectedNiche? 
-                  (<span>${order?.products[0]?.niche_price}</span>):(0)  
-                }
-                </div>
-                <div className="flex items-center justify-between text-sm text-body">
-                  <span> {t('text-tax')}</span>
-                  <span>{sales_tax}</span>
-                </div>
-                {order?.discount! > 0 && (
-                  <div className="flex items-center justify-between text-sm text-body">
-                    <span>{t('text-discount')}</span>
-                    <span>{discount}</span>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between text-base font-semibold text-heading">
-                  <span> {t('text-total')}</span>
-                  <span>${order?.products[0]?.pivot?.subtotal}</span>
-                </div>
-
-                {order?.wallet_point?.amount! && (
-                  <>
-                    <div className="flex items-center justify-between text-sm text-body">
-                      <span> {t('text-paid-from-wallet')}</span>
-                      <span>{wallet_total}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-base font-semibold text-heading">
-                      <span> {t('text-amount-due')}</span>
-                      <span>{amountDue}</span>
-                    </div>
-                  </>
-                )}
-              </div>
-            </>
-          )}
-        </div>
-
-        {order?.note ? (
-          <div>
-            <h2 className="mt-12 mb-5 text-xl font-bold text-heading">
-              Purchase Note
-            </h2>
-            <div className="mb-12 flex items-start rounded border border-gray-700 bg-gray-100 p-4">
-              {order?.note}
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
-
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
-          <div className="mb-10 w-full sm:mb-0 sm:w-1/2 sm:pe-8">
-            <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading">
-              {t('text-order-details')}
-            </h3>
-
-            <div className="flex flex-col items-start space-y-1 text-sm text-body">
-              <span>
-                {formatString(order?.products?.length, t('text-item'))}
-              </span>
-              <span>{order?.delivery_time}</span>
-              <span>
-                {`${t('text-payment-method')}:  ${order?.payment_gateway}`}
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-10 w-full sm:mb-0 sm:w-1/2 sm:pe-8">
-            <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading">
-              {t('common:billing-address')}
-            </h3>
-
-            <div className="flex flex-col items-start space-y-1 text-sm text-body">
-              <span>{order?.customer_name}</span>
-              {order?.billing_address && (
-                <span>{formatAddress(order.billing_address)}</span>
-              )}
-              {order?.customer_contact && <span>{phoneNumber}</span>}
-            </div>
-          </div>
-
-          <div className="w-full sm:w-1/2 sm:ps-8">
-            <h3 className="mb-3 border-b border-border-200 pb-2 font-semibold text-heading text-start sm:text-end">
-              {t('common:shipping-address')}
-            </h3>
-
-            <div className="flex flex-col items-start space-y-1 text-sm text-body text-start sm:items-end sm:text-end">
-              <span>{order?.customer_name}</span>
-              {order?.shipping_address && (
-                <span>{formatAddress(order.shipping_address)}</span>
-              )}
-              {order?.customer_contact && <span>{phoneNumber}</span>}
-            </div>
+            {/* Conditionally render input and button based on order_status */}
+            {order?.order_status === 'order-accepted' || order?.order_status === 'order-improvement' ?(
+              <div className='mt-4'>
+                <span className='flex mt-4'>
+                <Label className='text-base text-green-700 underline'>
+                Please submit the live link below
+              </Label>
+              <span className='ml-2 mt-1'><ArrowDown/></span>
+                </span>
+              <div className="flex w-full content-baseline items-center gap-4">
+                  <Input
+                    name='url'
+                    className="w-full"
+                    value={liveLink}
+                    onChange={(event) => setLiveLink(event.target.value)}
+                    // label="Provide the submission"
+                    />
+                  <Button
+                    className="w-30 mt-2 bg-blue-500"
+                    onClick={() => handleSubmittedLink('order-submitted',liveLink)}
+                  >
+                    Submit
+                  </Button>
+                </div></div>
+            ):('')}
+            {order?.order_status === 'order-completed' || order?.order_status === 'order-submitted' || order?.order_status === 'order-submitted'? (
+              <div className='mt-4'>
+                <span className='flex mt-4'>
+                <Label className='text-base text-green-700 underline'>
+                Live link
+              </Label>
+              <span className='ml-2 mt-1'><ArrowDown/></span>
+                </span>
+              <div className="flex w-full content-baseline items-center gap-4">
+                  <Input
+                    name='url'
+                    className="w-80"
+                    value={order?.url}
+                    // onChange={(event) => setLiveLink(event.target.value)}
+                    // label="Provide the submission"
+                    />
+                  {/* <Button
+                    className="w-30 mt-2 bg-blue-500"
+                    onClick={() => handleSubmittedLink('order-submitted',liveLink)}
+                  >
+                    Submit
+                  </Button> */}
+                </div></div>
+            ):('')}
           </div>
         </div>
       </Card>
-    </>
+    </div>
   );
 }
-OrderDetailsPage.Layout = Layout;
+OrderDetailsPage.Layout = AdminLayout;
 
 export const getServerSideProps = async ({ locale }: any) => ({
   props: {

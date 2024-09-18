@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 import { AUTH_TOKEN_KEY } from '@/data/client/token.utils';
 import Search from '@/components/common/search';
 import { useTranslation } from 'react-i18next';
+import Loader from '@/components/ui/loaderAdmin/loader';
 
 type Campaign = {
     id: string;
@@ -188,7 +189,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
             {/* Campaign Table */}
             <div className="overflow-x-auto">
                 {isLoading ? (
-                    <Spinner />
+                    <Loader />
                 ) : (
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 rounded-lg overflow-hidden">
                         <thead className="bg-gray-200 dark:bg-dark-400 ">
@@ -220,7 +221,7 @@ const CampaignManager: React.FC<CampaignManagerProps> = ({ onCampaignClick }) =>
                                 >
                                     <div className="flex items-center gap-1">
                                         <BsBox />
-                                        Total Products
+                                        Total Sites
                                         <span className="ml-1">
                                             {sortingObj.column === 'totalProducts' && sortingObj.sort === SortOrder.Asc ? "⇅" : "⇵"}
                                         </span>

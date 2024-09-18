@@ -20,6 +20,7 @@ import { useAtom } from 'jotai';
 import Cookies from 'js-cookie';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
+import Loader from '../ui/loaderAdmin/loader';
 
 type MaintenanceProps = {
   children: React.ReactNode;
@@ -148,7 +149,7 @@ const Maintenance = ({ children }: MaintenanceProps) => {
   }, [handleReviewPopup]);
 
   if (settingLoading) {
-    return <Spinner />;
+    return <Loader />;
   }
 
   if (error) return <ErrorMessage message={error.message} />;

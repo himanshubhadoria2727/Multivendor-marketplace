@@ -14,6 +14,10 @@ import { adminOnly, getAuthCredentials, hasAccess } from '@/utils/auth-utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { profileValidationSchema } from './profile-validation-schema';
 import PhoneNumberInput from '@/components/ui/phone-input';
+import { EmailAtIcon, EmailIcon } from '../icons/email';
+import { NotificationIcon } from '../icons/sidebar/notification';
+import { InformationIcon } from '../icons/sidebar';
+import { InfoIcon } from '../icons/info-icon';
 
 type FormValues = {
   name: string;
@@ -86,7 +90,7 @@ export default function ProfileUpdate({ me }: any) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
+      {/* <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
         <Description
           title={t('form:input-label-avatar')}
           details={t('form:avatar-help-text')}
@@ -96,11 +100,12 @@ export default function ProfileUpdate({ me }: any) {
         <Card className="w-full sm:w-8/12 md:w-2/3">
           <FileInput name="profile.avatar" control={control} multiple={false} />
         </Card>
-      </div>
+      </div> */}
       {permission ? (
         <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
           <Description
             title={t('form:form-notification-title')}
+            icon={EmailAtIcon}
             details={t('form:form-notification-description')}
             className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
           />
@@ -131,6 +136,7 @@ export default function ProfileUpdate({ me }: any) {
       <div className="flex flex-wrap pb-8 my-5 border-b border-dashed border-border-base sm:my-8">
         <Description
           title={t('form:form-title-information')}
+          icon={InfoIcon}
           details={t('form:profile-info-help-text')}
           className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
         />

@@ -18,6 +18,8 @@ import { useRouter } from 'next/router';
 import { useModalAction } from '@/components/modal-views/context';
 import toast from 'react-hot-toast';
 import { isArray, isEmpty, isObject } from 'lodash';
+import { useTranslation } from 'react-i18next';
+import { orderClient } from './client/order';
 
 export function useOrders(options?: OrderQueryOptions) {
   const {
@@ -86,6 +88,20 @@ export function useDownloadableProductOrders(options?: OrderQueryOptions) {
     loadMore: handleLoadMore,
   };
 }
+
+export const useUpdateOrderMutation = () => {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  return useMutation(orderClient.update, {
+    onSuccess: () => {
+      toast.success(t('common:successfully-updated'));
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries(API_ENDPOINTS.ORDERS);
+    },
+  });
+};
 
 export function   useOrder({ tracking_number }: { tracking_number: string }) {
   const { data, isLoading, error, isFetching, refetch } = useQuery<
