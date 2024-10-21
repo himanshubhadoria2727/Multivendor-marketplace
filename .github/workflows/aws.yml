@@ -20,4 +20,4 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no root@93.127.195.116 'cd Multivendor-marketplace/admin  && git pull && npm install && npm run dev'
+          ssh -o StrictHostKeyChecking=no root@93.127.195.116 'cd Multivendor-marketplace/admin  && git pull && npm install --legacy-peer-deps && npm run dev'
