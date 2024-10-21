@@ -765,6 +765,12 @@ export interface Product {
   countries:string;
   link_type:string;
   niche_price:string;
+  link_validity:string;
+  link_counts:number;
+  word_count:number;
+  tat:string;
+  sponsored_marked:string
+  other_guidelines:string;
   external_product_url?: string;
   external_product_button_text?: string;
   created_at: string;
@@ -790,6 +796,12 @@ export interface CreateProduct {
   countries:string;
   link_type:string;
   niche_price:string;
+  link_validity:string;
+  link_counts:number;
+  word_count:number;
+  tat:string;
+  sponsored_marked:string
+  other_guidelines:string;
   description?: string;
   categories?: string[];
   variations?: AttributeProductPivot[];

@@ -19,7 +19,7 @@ const ProductGroupInput = ({ control, error }: Props) => {
     language: locale,
   });
   return (
-    <div className="mb-5">
+    <div className="mb-5 w-full">
       <Label>{t('form:input-label-group')}*</Label>
       <SelectInput
         name="type"

@@ -29,8 +29,7 @@ else if(userPermissions?.includes(STORE_OWNER)){
   const router = useRouter();
   const { data, isLoading, error} = useMeQuery();
     if (!isLoading && !error) {
-      router.push(`/${data?.shops[0]?.slug}`);
-      console.log("user logged in", data); 
+      router.push(`/${data?.shops[0]?.id}`);
     }
   if (isLoading) {
     return <Loader />; // Display a loading message or spinner
