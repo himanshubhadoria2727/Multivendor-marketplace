@@ -12,4 +12,5 @@ export function formatAddress(address: Address) {
   );
   const formattedAddress = removeFalsy(temp);
   return Object.values(formattedAddress).join(', ');
+  
 }
