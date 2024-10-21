@@ -315,7 +315,7 @@ export default function CreateOrUpdateProductForm({
     } else {
       setIsInputLocked(false);
     }
-  
+
     // Use a callback to log the updated state
     setVerificationMessage(message);
     console.log('verification', isVerified ? true : verificationResult);
@@ -324,24 +324,23 @@ export default function CreateOrUpdateProductForm({
   useEffect(() => {
     console.log('isInputLocked changed:', isInputLocked);
   }, [isInputLocked]);
-  
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({});
   function generateMetaContent(storageType = 'local') {
     const metaName = 'goodblogger-verification';
     const storage = storageType === 'local' ? localStorage : sessionStorage;
-  
+
     // Check if content is already stored
     let storedContent = storage.getItem(metaName);
-  
+
     if (!storedContent) {
       // Generate random UUID-like content
       storedContent = generateRandomUUID();
-  
+
       // Store the generated content in the specified storage
       storage.setItem(metaName, storedContent);
-  
+
       // Create or update the meta tag with the new content
       let metaTag = document.querySelector(`meta[name="${metaName}"]`);
       if (!metaTag) {
@@ -351,249 +350,308 @@ export default function CreateOrUpdateProductForm({
       }
       metaTag.setAttribute('content', storedContent);
     }
-    
+
     return storedContent;
   }
-  
+
   function generateRandomUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0,
-            v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0,
+          v = c === 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
   }
-    
+
   const steps = [
     {
-      title: 'Website Information',
+      title: 'Add domain',
       component: (
-        <Card className="w-full flex justify-start gap-3 flex-wrap sm:justtify-center sm:w-8/12 md:w-full">
+        <Card className="w-full flex justify-start gap-3 flex-wrap sm:justtify-center sm:w-1/3 md:w-full">
           <Input
-            label={`Site domain`}
+            label={`Website URL`}
             {...register('name')}
             placeholder="eg-google.com"
             error={t(errors.name?.message!)}
             onChange={(e) => setProductUrl(e.target.value)}
             disabled={isInputLocked}
             variant="outline"
-            className="mb-5 w-60 max-md:w-full"
+            className="mb-5 w-full max-md:w-full"
           />
-
-          {isSlugEditable ? (
-            <div className="relative mb-5">
+          <ProductGroupInput
+            control={control}
+            error={t(errors?.type?.message)}
+          />
+        </Card>
+      ),
+      fields: ['name', 'product_type'],
+    },
+    {
+      title: 'Add details',
+      component: (
+        <Card className="w-full flex flex-col gap-5">
+          {/* First Row: Metrics */}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-3">Metrics</h3>
+            <div className="flex flex-wrap gap-3 justify-start md:justify-between">
               <Input
-                label={`Site slug`}
+                label="Site slug"
                 {...register('slug')}
-                error={t(errors.slug?.message!)}
+                value={slugAutoSuggest}
                 variant="outline"
-                disabled={isSlugDisable}
+                className="mb-5 w-60 max-md:w-full"
+                disabled
               />
-              <button
-                className="absolute top-[27px] right-px z-10 flex h-[46px] w-11 items-center justify-center rounded-tr rounded-br border-l border-solid border-border-base bg-white px-2 text-body transition duration-200 hover:text-heading focus:outline-none"
-                type="button"
-                title={t('common:text-edit')}
-                onClick={() => setIsSlugDisable(false)}
-              >
-                <EditIcon width={14} />
-              </button>
+              <Input
+                label="Site name"
+                {...register('domain_name')}
+                error={t(errors.domain_name?.message!)}
+                placeholder="e.g. google"
+                variant="outline"
+                className="mb-5 w-60 max-md:w-full"
+              />
+              <Input
+                label="Moz DA"
+                type="number"
+                {...register('domain_authority')}
+                placeholder="From 1 to 100"
+                error={t(errors.domain_authority?.message!)}
+                variant="outline"
+                className="mb-5 w-60 max-md:w-full"
+              />
+              <Input
+                label="Ahref DR"
+                type="number"
+                {...register('domain_rating')}
+                placeholder="From 1 to 100"
+                error={t(errors.domain_rating?.message!)}
+                variant="outline"
+                className="mb-5 w-60 max-md:w-full"
+              />
+              <Input
+                label="Ahref Traffic"
+                type="number"
+                {...register('organic_traffic')}
+                placeholder="Enter organic traffic"
+                error={t(errors.organic_traffic?.message!)}
+                variant="outline"
+                className="mb-5 w-60 max-md:w-full"
+              />
             </div>
-          ) : (
-            <Input
-              label={`Site slug`}
-              {...register('slug')}
-              value={slugAutoSuggest}
-              variant="outline"
-              className="mb-5 w-60 max-md:w-full"
-              disabled
-            />
-          )}
-          <Input
-            label={`Site name`}
-            {...register('domain_name')}
-            error={t(errors.domain_name?.message!)}
-            placeholder="eg-google"
-            variant="outline"
-            className="mb-5 w-60 max-md:w-full"
-          />
-          <Input
-            label={'Domain Authority'}
-            type="number"
-            {...register('domain_authority')}
-            placeholder="From 1 to 100"
-            error={t(errors.domain_authority?.message!)}
-            variant="outline"
-            className="mb-5 w-60 max-md:w-full"
-          />
-          <Input
-            label={'Domain rating'}
-            type="number"
-            {...register('domain_rating')}
-            placeholder="From 1 to 100"
-            error={t(errors.domain_rating?.message!)}
-            variant="outline"
-            className="mb-5 w-60 max-md:w-full"
-          />
-          <Input
-            label={'Organic traffic'}
-            type="number"
-            {...register('organic_traffic')}
-            placeholder="Enter organic traffic"
-            error={t(errors.organic_traffic?.message!)}
-            variant="outline"
-            className="mb-5 w-60 max-md:w-full"
-          />
-          <Input
-            label={'Spam score'}
-            type="number"
-            {...register('spam_score')}
-            placeholder="Enter spam score"
-            error={t(errors.spam_score?.message!)}
-            variant="outline"
-            className="mb-5 w-60 max-md:w-full"
-          />
-
-          <div className="mb-5 w-60 max-md:w-full">
-            <Label>{t('Language')}</Label>
-            <SelectInput
-              name="languages"
-              placeholder="Select Language"
-              control={control}
-              options={[
-                { value: 'en', label: 'English' },
-                { value: 'hi', label: 'Hindi' },
-                { value: 'es', label: 'Spanish' },
-                { value: 'fr', label: 'French' },
-                { value: 'de', label: 'German' },
-                { value: 'it', label: 'Italian' },
-                { value: 'ja', label: 'Japanese' },
-                { value: 'ru', label: 'Russian' },
-                { value: 'zh', label: 'Chinese' },
-                { value: 'ar', label: 'Arabic' },
-                { value: 'pt', label: 'Portuguese' },
-              ]}
-              error={t(errors.languages?.message!)}
-            />
-            <ValidationError message={t(error!)} />
           </div>
 
-          <div className="mb-5 w-60 max-md:w-full">
-            <Label>{t('Link type')}</Label>
-            <SelectInput
-              name="link_type"
-              placeholder="Select link type"
-              control={control}
-              options={[
-                { value: 'nofollow', label: 'Nofollow' },
-                { value: 'dofollow', label: 'Dofollow' },
-              ]}
-              error={t(errors.link_type?.message!)}
-            />
-            <ValidationError message={t(error!)} />
+          {/* Second Row: Site Info */}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-3">Site Info</h3>
+            <div className="flex flex-wrap gap-3 justify-start md:justify-between">
+              <div className="w-full md:w-[30%] mb-5">
+                <Label>{t('Language')}</Label>
+                <SelectInput
+                  name="languages"
+                  placeholder="Select Language"
+                  control={control}
+                  options={[
+                    { value: 'en', label: 'English' },
+                    { value: 'hi', label: 'Hindi' },
+                    { value: 'es', label: 'Spanish' },
+                    { value: 'fr', label: 'French' },
+                    { value: 'de', label: 'German' },
+                    { value: 'it', label: 'Italian' },
+                    { value: 'ja', label: 'Japanese' },
+                    { value: 'ru', label: 'Russian' },
+                    { value: 'zh', label: 'Chinese' },
+                    { value: 'ar', label: 'Arabic' },
+                    { value: 'pt', label: 'Portuguese' },
+                  ]}
+                  error={t(errors.languages?.message!)}
+                />
+                <ValidationError message={t(error!)} />
+              </div>
+
+              <div className="w-full md:w-[30%] mb-5">
+                <Label>{t('Select Country')}</Label>
+                <SelectInput
+                  name="countries"
+                  placeholder="Select country"
+                  control={control}
+                  options={allCountries?.map((country: any) => ({
+                    label: country.name.common,
+                    value: country.cca2,
+                  }))}
+                  error={t(errors.countries?.message!)}
+                />
+                <ValidationError message={t(error!)} />
+              </div>
+
+              {/* Product Category Input */}
+              <div className="w-full md:w-[30%] mb-5">
+                <ProductCategoryInput control={control} setValue={setValue} />
+              </div>
+            </div>
           </div>
-          <div className="mb-5 w-60 max-md:w-full">
-            <Label>{t('Select Country')}</Label>
-            <SelectInput
-              name="countries"
-              placeholder="Select country"
-              control={control}
-              options={allCountries?.map((country: any) => ({
-                label: country.name.common,
-                value: country.cca2,
-              }))}
-              error={t(errors.countries?.message!)}
-            />
-            <ValidationError message={t(error!)} />
+
+          {/* Third Row: Link Info */}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-3">Link Info</h3>
+            <div className="flex flex-wrap gap-3 justify-start md:justify-between">
+              <div className="w-full md:w-[30%] mb-5">
+                <Label>{t('Link Type')}</Label>
+                <SelectInput
+                  name="link_type"
+                  placeholder="Select Link Type"
+                  control={control}
+                  options={[
+                    { value: 'dofollow', label: 'DoFollow' },
+                    { value: 'nofollow', label: 'NoFollow' },
+                  ]}
+                  error={t(errors.link_type?.message!)}
+                />
+              </div>
+
+              <div className="w-full md:w-[30%] mb-5">
+                <Label>{t('Link Validity')}</Label>
+                <SelectInput
+                  name="link_validity"
+                  placeholder="Select Link Validity"
+                  control={control}
+                  options={[
+                    { value: '1year', label: '1 Year' },
+                    { value: '2year', label: '2 Years' },
+                    { value: 'permanent', label: 'Permanent' },
+                  ]}
+                  error={t(errors.link_validity?.message!)}
+                />
+              </div>
+
+              <div className="w-full md:w-[30%] mb-5">
+                <Label>{t('Link Counts')}</Label>
+                <SelectInput
+                  name="link_counts"
+                  placeholder="Select Link Count"
+                  control={control}
+                  options={[
+                    { value: '1', label: '1' },
+                    { value: '2', label: '2' },
+                    { value: '3', label: '3' },
+                    { value: '4', label: '4' },
+                    { value: '5', label: '5' },
+                  ]}
+                  error={t(errors.link_counts?.message!)}
+                />
+              </div>
+            </div>
           </div>
-          <div className="relative mb-5">
-            {options?.useAi && (
-              <OpenAIButton
-                title="Generate Description With AI"
-                onClick={handleGenerateDescription}
+          <div className="w-full">
+            <h3 className="text-lg font-semibold mb-3">
+              Publication Guidelines
+            </h3>
+            <div className="flex flex-wrap gap-3 justify-start md:justify-between">
+              {/* Word Count */}
+              <Input
+                label="Word count"
+                {...register('word_count')}
+                placeholder="e.g. 600 Words"
+                variant="outline"
+                className="mb-5 w-60 md:w-[30%]"
               />
-            )}
-            <RichTextEditor
-              title={t('form:input-label-description')}
-              control={control}
-              name="description"
-              error={t(errors?.description?.message)}
-            />
+
+              {/* TAT */}
+              <Input
+                label="TAT"
+                {...register('tat')}
+                placeholder="e.g. 2 Days"
+                variant="outline"
+                className="mb-5 w-60 md:w-[30%]"
+              />
+
+              {/* Sponsored Marked */}
+              <div className="w-full md:w-[30%] mb-5">
+                <Label>{t('Sponsored Marked')}</Label>
+                <SelectInput
+                  name="sponsored_marked"
+                  placeholder="Yes/No"
+                  control={control}
+                  options={[
+                    { value: 'yes', label: 'Yes' },
+                    { value: 'no', label: 'No' },
+                  ]}
+                  error={t(errors.sponsored_marked?.message!)}
+                />
+              </div>
+            </div>
+
+            {/* Other Guidelines */}
+            <div className="w-full">
+              <TextArea
+                placeholder="Enter other guidelines"
+                label={t('Other Guidelines')}
+                {...register('other_guidelines')}
+                variant="outline"
+                className="mb-5"
+              />
+            </div>
           </div>
-          {/* <div>
-            <Label>{t('form:input-label-status')}</Label>
-            {!isEmpty(statusList)
-              ? statusList?.map((status: any, index: number) => (
-                <Radio
-                  key={index}
-                  {...register('status')}
-                  label={t(status?.label)}
-                  id={status?.id}
-                  value={status?.value}
-                  className="mb-2"
-                  disabled={permission &&
-                    initialValues?.status === ProductStatus?.Draft
-                    ? true
-                    : false} />
-              ))
-              : ''}
-            {errors.status?.message && (
-              <p className="my-2 text-xs text-red-500">
-                {t(errors?.status?.message!)}
-              </p>
-            )}
-          </div> */}
+
+          {/* Additional Fields: Tags, Description */}
+          <div className="w-full mb-6">
+            {/* Added bottom margin for spacing */}
+            <h3 className="text-lg font-semibold mb-4">
+              {/* Increased bottom margin for better spacing */}
+              Pricing
+            </h3>
+            <div className="mb-4">
+              {/* Added bottom margin to separate from other components */}
+              <ProductTagInput control={control} setValue={setValue} />
+            </div>
+            <div className="mb-4">
+              {/* Added bottom margin for spacing */}
+              <ProductSimpleForm initialValues={initialValues} />
+            </div>
+            <div className="mb-4">
+              {/* Added bottom margin for spacing */}
+              <ProductNicheOptions initialValues={initialValues} />
+            </div>
+            {/* AI and Rich Text Editor */}
+            <div className="relative mb-5">
+              {options?.useAi && (
+                <OpenAIButton
+                  title="Generate Description With AI"
+                  onClick={handleGenerateDescription}
+                  className="mb-3" // Added margin bottom for spacing
+                />
+              )}
+
+              <RichTextEditor
+                title={t('form:input-label-description')}
+                control={control}
+                name="description"
+                error={t(errors?.description?.message)}
+              />
+            </div>
+          </div>
         </Card>
       ),
       fields: [
-        'name',
         'slug',
         'domain_name',
         'domain_authority',
         'domain_rating',
         'organic_traffic',
-        'spam_score',
         'languages',
+        'countries',
+        'categories',
         'link_type',
-        'country',
-        'status',
+        'link_validity',
+        'link_counts',
+        'word_count',
+        'tat',
+        'sponsored_marked',
+        'other_guidelines',
+        'tags',
+        'description',
       ],
-    },
-    {
-      title: 'Set Price and niche options',
-      component: (
-        <Card>
-          <ProductSimpleForm initialValues={initialValues} />
-          <ProductNicheOptions initialValues={initialValues} />
-        </Card>
-      ),
-      fields: [
-        'price',
-        'isLinkInsertion',
-        'preview_url',
-        'is_niche',
-        'is_gamble',
-        'is_cbd',
-        'is_crypto',
-      ],
-    },
-    {
-      title: 'Set Type and Category',
-      component: (
-        <Card>
-          <div className="my-5 flex flex-wrap border-b border-dashed border-border-base pb-0 sm:my-8">
-            <Card className="w-full sm:w-8/12 md:w-2/3">
-              <ProductGroupInput
-                control={control}
-                error={t(errors?.type?.message)}
-              />
-              <ProductCategoryInput control={control} setValue={setValue} />
-              {/* <ProductAuthorInput control={control} /> */}
-              {/* <ProductManufacturerInput control={control} setValue={setValue} /> */}
-              <ProductTagInput control={control} setValue={setValue} />
-            </Card>
-          </div>
-        </Card>
-      ),
-      fields: ['product_type', 'categories', 'tags'],
     },
     {
       title: 'Verify and Add site',
@@ -608,16 +666,15 @@ export default function CreateOrUpdateProductForm({
             <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
               <span className="flex sm:inline md:text-sm max-sm:text-xs">
                 Add this meta tag in your website to get verified: &lt;meta
-                name=&quot;goodblogger-verification&quot;
-                content=&quot;{generateMetaContent('local')}&quot;/&gt;
+                name=&quot;goodblogger-verification&quot; content=&quot;
+                {generateMetaContent('local')}&quot;/&gt;
               </span>
             </div>
           ) : null}
           <WebsiteVerification
             websiteUrl={productUrl || initialValues?.name}
             metaName="goodblogger-verification"
-            metaContent=  {generateMetaContent('local')}  // Use 'session' for sessionStorage
-
+            metaContent={generateMetaContent('local')} // Use 'session' for sessionStorage
             onVerificationComplete={handleVerificationComplete}
           />
           {verificationResult == true && (
@@ -665,6 +722,7 @@ export default function CreateOrUpdateProductForm({
       ),
     },
   ];
+
   const handleNextStep = async () => {
     let isValid = true;
 
@@ -739,7 +797,7 @@ export default function CreateOrUpdateProductForm({
             </div>
 
             {/* Step Content */}
-            <div className="flex-grow">
+            <div className="flex-box">
               {steps.map((step, index) => (
                 <div
                   key={index}
@@ -766,7 +824,7 @@ export default function CreateOrUpdateProductForm({
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between relative top-5">
               {currentStep > 1 && (
                 <div
                   onClick={handlePreviousStep}

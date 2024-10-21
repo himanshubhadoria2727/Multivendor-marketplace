@@ -41,7 +41,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
         className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
       /> */}
 
-      <Card className="w-full sm:w-8/12 flex flex-wrap justify-start gap-3 md:w-full">
+      <div className="w-full sm:w-8/12 flex flex-wrap justify-start gap-3 md:w-full">
         <Input
           label={`${t("Guest Link Price")}*`}
           {...register('price')}
@@ -181,7 +181,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             )}
           </>
         )} */}
-      </Card>
+      </div>
     </div>
   );
 }
