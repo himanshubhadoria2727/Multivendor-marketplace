@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main # Change this to your default branch
-    paths:
-      - 'admin/**'  
+    # paths:
+    #   - 'admin/**'  
 
 jobs:
   deploy:
@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no root@93.127.195.116 'cd Multivendor-marketplace/admin  && git pull && npm run dev'
+          ssh -o StrictHostKeyChecking=no root@93.127.195.116 'cd Multivendor-marketplace/admin  && git pull && pm2 start npm -- dev'
