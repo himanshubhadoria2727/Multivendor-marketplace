@@ -6,4 +6,5 @@ type Props = {
 export const getIcon = ({ iconList, iconName, ...rest }: Props) => {
   const TagName = iconList[iconName];
   return !!TagName ? <TagName {...rest} /> : null;
+  
 };
