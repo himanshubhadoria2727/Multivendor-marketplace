@@ -91,7 +91,7 @@ export default function VendorTransactionsPage() {
     setPage(current);
   }
 
-  if (
+  if (  
     !hasAccess(adminOnly, permissions) &&
     !me?.shops?.map((shop) => shop.id).includes(shopId) &&
     me?.managed_shop?.id != shopId

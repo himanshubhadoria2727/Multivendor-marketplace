@@ -44,10 +44,17 @@ class ProductResource extends Resource
             'languages'          => $this->languages,
             'countries'          => $this->countries,
             'niche_price'          => $this->niche_price,
+            'link_validity'           => $this->link_validity,
+            'link_counts'             => $this->link_counts,
+            'word_count'              => $this->word_count,
+            'tat'                     => $this->tat,
+            'sponsored_marked'        => $this->sponsored_marked,
+            'other_guidelines'        => $this->other_guidelines,
             'sku'                  => $this->sku,
             'sold_quantity'        => $this->sold_quantity,
             'in_flash_sale'        => $this->in_flash_sale,
-            'total_downloads'      => $this->total_downloads
+            'total_downloads'      => $this->total_downloads,
+            'created_at'      => $this->created_at
         ];
     }
 }

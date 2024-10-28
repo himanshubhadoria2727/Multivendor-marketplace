@@ -83,6 +83,9 @@ export const Routes = {
   withdraw: {
     ...routesFactory('/withdraws'),
   },
+  payout: {
+    ...routesFactory('/payouts'),
+  },
   staff: {
     ...routesFactory('/staffs'),
   },

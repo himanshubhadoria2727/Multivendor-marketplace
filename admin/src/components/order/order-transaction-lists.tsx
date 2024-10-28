@@ -127,19 +127,19 @@ const OrderTransactionList = ({
         return <span>{price}</span>;
       },
     },
-    {
-      title: t('table:table-item-delivery-fee'),
-      dataIndex: 'delivery_fee',
-      key: 'delivery_fee',
-      align: 'center',
-      render: function Render(value: any) {
-        const delivery_fee = value ? value : 0;
-        const { price } = usePrice({
-          amount: delivery_fee,
-        });
-        return <span>{price}</span>;
-      },
-    },
+    // {
+    //   title: t('table:table-item-delivery-fee'),
+    //   dataIndex: 'delivery_fee',
+    //   key: 'delivery_fee',
+    //   align: 'center',
+    //   render: function Render(value: any) {
+    //     const delivery_fee = value ? value : 0;
+    //     const { price } = usePrice({
+    //       amount: delivery_fee,
+    //     });
+    //     return <span>{price}</span>;
+    //   },
+    // },
     {
       title: t('table:table-item-taxable-amount'),
       dataIndex: 'sales_tax',

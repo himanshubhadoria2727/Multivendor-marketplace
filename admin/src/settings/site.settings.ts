@@ -719,6 +719,12 @@ export const siteSettings = {
             icon: 'CalendarScheduleIcon',
             permissions: adminAndOwnerOnly,
           },
+          {
+            href: (shop: string) => `/${shop}${Routes.payout.list}`,
+            label: 'Payout',
+            icon: 'WithdrawIcon',
+            permissions: adminAndOwnerOnly,
+          },
         ],
       },
 

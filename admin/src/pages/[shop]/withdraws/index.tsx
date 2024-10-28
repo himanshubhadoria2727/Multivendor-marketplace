@@ -22,16 +22,23 @@ import { useMeQuery } from '@/data/user';
 import PageHeading from '@/components/common/page-heading';
 
 export default function WithdrawsPage() {
+  // Get the router, credentials, and user data from their respective hooks.
   const router = useRouter();
   const { permissions } = getAuthCredentials();
   const { data: me } = useMeQuery();
   const { t } = useTranslation();
+
+  // Initialize state variables for page, order by, and sort order.
   const [page, setPage] = useState(1);
   const [orderBy, setOrder] = useState('created_at');
   const [sortedBy, setColumn] = useState<SortOrder>(SortOrder.Desc);
+
+  // Get the shop slug from the URL.
   const {
     query: { shop },
   } = useRouter();
+
+  // Use the shop slug to query the shop data.
   const { data: shopData } = useShopQuery({
     slug: shop as string,
   });
@@ -90,6 +97,7 @@ export default function WithdrawsPage() {
     </>
   );
 }
+/******  5bd48bca-0f25-4d32-9808-156112d4c1a1  *******/
 WithdrawsPage.authenticate = {
   permissions: adminAndOwnerOnly,
 };

@@ -633,6 +633,7 @@ export interface WalletPoint {
 }
 
 export interface Order {
+  status: any;
   id: string;
   tracking_number: string;
   customer_contact: string;
@@ -689,6 +690,7 @@ export interface OrderProductPivot {
   postUrl:string;
   link_url:string;
   instructions:string;
+  selectedForm:string;
   content:string;
   file:string;
   order_quantity?: number;
@@ -766,9 +768,9 @@ export interface Product {
   link_type:string;
   niche_price:string;
   link_validity:string;
-  link_counts:number;
+  link_counts:string;
   word_count:number;
-  tat:string;
+  tat:number;
   sponsored_marked:string
   other_guidelines:string;
   external_product_url?: string;
@@ -797,10 +799,10 @@ export interface CreateProduct {
   link_type:string;
   niche_price:string;
   link_validity:string;
-  link_counts:number;
+  link_counts:string;
   word_count:number;
-  tat:string;
-  sponsored_marked:string
+  tat:number;
+  sponsored_marked:string;
   other_guidelines:string;
   description?: string;
   categories?: string[];
@@ -1847,6 +1849,7 @@ export interface ProductQueryOptions extends QueryOptions {
   is_active: string;
   shop_id: string;
   link_type:string;
+  created_at:string;
   min_price: string;
   max_price: string;
   rating: string;

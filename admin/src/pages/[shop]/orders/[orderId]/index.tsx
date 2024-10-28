@@ -42,6 +42,7 @@ import Input from '@/components/ui/input';
 import Label from '@/components/ui/label';
 import { ArrowDown } from '@/components/icons/arrow-down';
 import { url } from 'inspector';
+import TextArea from '@/components/ui/text-area';
 
 type FormValues = {
   order_status: any;
@@ -79,6 +80,7 @@ export default function OrderDetailsPage() {
     setIsModalVisible(false);
     setModalDetails({});
   };
+  console.log('query', query.orderId);
   const { refetch } = useDownloadInvoiceMutation(
     {
       order_id: query.orderId as string,
@@ -121,14 +123,14 @@ export default function OrderDetailsPage() {
     });
   };
 
-  const handleSubmittedLink = (updated_status: string,url:string) => {
+  const handleSubmittedLink = (updated_status: string, url: string) => {
     updateOrder({
       id: order?.id as string,
       order_status: updated_status as string,
-      url:url,
+      url: url,
     });
   };
-  const [liveLink,setLiveLink]= useState('');
+  const [liveLink, setLiveLink] = useState('');
 
   const { price: subtotal } = usePrice(
     order && {
@@ -208,7 +210,7 @@ export default function OrderDetailsPage() {
   ) {
     router.replace(Routes.dashboard);
   }
-  
+
   return (
     <div>
       <Card>
@@ -216,18 +218,97 @@ export default function OrderDetailsPage() {
           <OrderViewHeader order={order} wrapperClassName="px-8 py-4" />
         </div>
 
-        <div className="flex w-full mb-5">
-          <Button
-            onClick={handleDownloadInvoice}
-            className="bg-blue-500 ltr:ml-auto rtl:mr-auto"
-          >
-            <DownloadIcon className="h-4 w-4 me-3" />
-            {t('common:text-download')} {t('common:text-invoice')}
-          </Button>
+        <div className="flex max-md:flex-col">
+          <div className="flex w-full max-md:w-full">
+            {/* Conditionally render input and button based on order_status */}
+            {order?.order_status === 'order-accepted' ||
+            order?.order_status === 'order-improvement' ? (
+              <div className="flex flex-col w-full mt-4">
+                <span className="flex flex-row mt-4">
+                  <Label className="text-base text-green-700 underline">
+                    Please submit the live link below
+                  </Label>
+                  <span className="ml-2 mt-1">
+                    <ArrowDown />
+                  </span>
+                </span>
+                <div className="flex w-full content-baseline items-center gap-4">
+                  <Input
+                    name="url"
+                    className="w-full "
+                    value={liveLink}
+                    onChange={(event) => setLiveLink(event.target.value)}
+                    // label="Provide the submission"
+                  />
+                  <Button
+                    className="w-30 mt-2 bg-blue-500"
+                    onClick={() =>
+                      handleSubmittedLink('order-submitted', liveLink)
+                    }
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              ''
+            )}
+            {order?.order_status === 'order-completed' ||
+            order?.order_status === 'order-submitted' ||
+            order?.order_status === 'order-submitted' ? (
+              <div className="flex flex-col w-full mt-4">
+                <span className="flex flex-row mt-4">
+                  <Label className="text-base text-green-700 underline">
+                    Live link
+                  </Label>
+                  <span className="ml-2 mt-1">
+                    <ArrowDown />
+                  </span>
+                </span>
+                {/* <div className="flex w-[48%] content-baseline items-center gap-4"> */}
+                  <Input
+                    name="url"
+                    className="w-full md:w-200%"
+                    value={order?.url}
+                    // onChange={(event) => setLiveLink(event.target.value)}
+                    // label="Provide the submission"
+                  />
+                  {/* <Button
+                    className="w-30 mt-2 bg-blue-500"
+                    onClick={() => handleSubmittedLink('order-submitted',liveLink)}
+                  >
+                    Submit
+                  </Button> */}
+                {/* </div> */}
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
+          {order?.order_status === OrderStatus.WAITING && (
+            <Button
+              onClick={() => handleUpdateStatus('order-accepted')}
+              className="mb-5 bg-blue-500 ltr:ml-auto flex-start rtl:mr-auto"
+            >
+              {t('Approve')}
+            </Button>
+          )}
+          <div className="flex flex-col relative w-full mt-10 max-md:mt-5 mb-5">
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                handleDownloadInvoice();
+              }}
+              className="bg-blue-500 ltr:ml-auto rtl:mr-auto"
+            >
+              <DownloadIcon className="h-4 w-4 me-3" />
+              {t('common:text-download')} {t('common:text-invoice')}
+            </Button>
+          </div>
         </div>
 
         <div className="flex flex-col items-center lg:flex-row">
-          <h3 className="mb-8 w-full whitespace-nowrap text-center text-2xl font-semibold text-heading lg:mb-0 lg:w-1/3 lg:text-start">
+          {/* <h3 className="mb-8 w-full whitespace-nowrap text-center text-2xl font-semibold text-heading lg:mb-0 lg:w-1/3 lg:text-start">
             {t('form:input-label-order-id')} - {order?.tracking_number}
           </h3>
           <Button
@@ -240,15 +321,7 @@ export default function OrderDetailsPage() {
             open={isModalVisible}
             onClose={handleCloseModal}
             details={modalDetails}
-          />
-          {order?.order_status === OrderStatus.WAITING && (
-            <Button
-              onClick={() => handleUpdateStatus('order-accepted')}
-              className="mb-5 bg-blue-500 ltr:ml-auto rtl:mr-auto"
-            >
-              {t('Approve')}
-            </Button>
-          )}
+          /> */}
         </div>
 
         <div className="my-5 flex items-center justify-center lg:my-10">
@@ -260,7 +333,7 @@ export default function OrderDetailsPage() {
 
         <div className="mb-10">
           <div className="flex flex-col space-y-2 border-t-4 border-double border-border-200 px-4 py-4">
-            <div className="flex items-center justify-between font-semibold text-black">
+            {/* <div className="flex items-center justify-between font-semibold text-black">
               <span>{t('Site name')}</span>
               <span>{order?.products[0]?.name}</span>
             </div>
@@ -271,56 +344,120 @@ export default function OrderDetailsPage() {
               ) : (
                 <span>Guest Posting</span>
               )}
+            </div> */}
+            <div className="space-y-4">
+              {order?.products[0]?.pivot?.title && (
+                <div>
+                  <Label className="text-base text-accent-700">Title</Label>
+                  <Input
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.title}
+                    name={''}
+                  />
+                </div>
+              )}
+
+              {order?.products[0]?.pivot?.ancor && (
+                <div>
+                  <Label className="text-base text-accent-700">Anchor</Label>
+                  <Input
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.ancor}
+                    name={''}
+                  />
+                </div>
+              )}
+
+              {order?.products[0]?.pivot?.postUrl && (
+                <div>
+                  <Label className="text-base text-accent-700">Post URL</Label>
+                  <Input
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.postUrl}
+                    name={''}
+                  />
+                </div>
+              )}
+
+              {order?.products[0]?.pivot?.link_url && (
+                <div>
+                  <Label className="text-base text-accent-700">Link URL</Label>
+                  <Input
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.link_url}
+                    name={''}
+                  />
+                </div>
+              )}
+
+              {order?.products[0]?.pivot?.content && (
+                <div>
+                  <Label className="text-base text-accent-700">Content</Label>
+                  <TextArea
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.content}
+                    name={''}
+                  />
+                </div>
+              )}
+              {order?.products[0]?.pivot?.selectedNiche && (
+                <div>
+                  <Label className="text-base text-accent-700">
+                    Select Niche
+                  </Label>
+                  <Input
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.selectedNiche}
+                    name={''}
+                  />
+                </div>
+              )}
+
+              {order?.products[0]?.pivot?.selectedForm && (
+                <div>
+                  <Label className="text-base text-accent-700">
+                    Select Service
+                  </Label>
+                  <Input
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.selectedForm}
+                    name={''}
+                  />
+                </div>
+              )}
+              {order?.products[0]?.pivot?.instructions && (
+                <div>
+                  <Label className="text-base text-accent-700">
+                    Instructions
+                  </Label>
+                  <TextArea
+                    className="w-full mt-2"
+                    value={order?.products[0]?.pivot?.instructions}
+                    name={''}
+                  />
+                </div>
+              )}
+              {order?.products[0]?.pivot?.file && (
+                <div>
+                  <Label className="text-base text-accent-700">
+                    Attached File
+                  </Label>
+                  <div className="mt-2 flex items-center space-x-4">
+                    {/* Display file name */}
+                    <span>{order?.products[0]?.pivot?.file}</span>
+
+                    {/* Button to download file */}
+                    <a
+                      href={order?.products[0]?.pivot?.file} // URL of the file
+                      download={order?.products[0]?.pivot?.file} // Name of the file
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Download
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
-            {/* Conditionally render input and button based on order_status */}
-            {order?.order_status === 'order-accepted' || order?.order_status === 'order-improvement' ?(
-              <div className='mt-4'>
-                <span className='flex mt-4'>
-                <Label className='text-base text-green-700 underline'>
-                Please submit the live link below
-              </Label>
-              <span className='ml-2 mt-1'><ArrowDown/></span>
-                </span>
-              <div className="flex w-full content-baseline items-center gap-4">
-                  <Input
-                    name='url'
-                    className="w-full"
-                    value={liveLink}
-                    onChange={(event) => setLiveLink(event.target.value)}
-                    // label="Provide the submission"
-                    />
-                  <Button
-                    className="w-30 mt-2 bg-blue-500"
-                    onClick={() => handleSubmittedLink('order-submitted',liveLink)}
-                  >
-                    Submit
-                  </Button>
-                </div></div>
-            ):('')}
-            {order?.order_status === 'order-completed' || order?.order_status === 'order-submitted' || order?.order_status === 'order-submitted'? (
-              <div className='mt-4'>
-                <span className='flex mt-4'>
-                <Label className='text-base text-green-700 underline'>
-                Live link
-              </Label>
-              <span className='ml-2 mt-1'><ArrowDown/></span>
-                </span>
-              <div className="flex w-full content-baseline items-center gap-4">
-                  <Input
-                    name='url'
-                    className="w-80"
-                    value={order?.url}
-                    // onChange={(event) => setLiveLink(event.target.value)}
-                    // label="Provide the submission"
-                    />
-                  {/* <Button
-                    className="w-30 mt-2 bg-blue-500"
-                    onClick={() => handleSubmittedLink('order-submitted',liveLink)}
-                  >
-                    Submit
-                  </Button> */}
-                </div></div>
-            ):('')}
           </div>
         </div>
       </Card>

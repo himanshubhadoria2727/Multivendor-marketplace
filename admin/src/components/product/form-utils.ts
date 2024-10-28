@@ -237,8 +237,8 @@ export function getProductInputValues(
 
     type_id: type?.id,
     product_type: 'simple',
-    categories: categories.map((category) => category?.id),
-    tags: tags.map((tag) => tag?.id),
+    categories: categories?.map((category) => category?.id),
+    tags: tags?.map((tag) => tag?.id),
     image: omitTypename<any>(image),
     gallery: values.gallery?.map((gi: any) => omitTypename(gi)),
     quantity,

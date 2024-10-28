@@ -126,6 +126,8 @@ export default function CreateOrUpdateProductForm({
     control,
     trigger,
     setValue,
+    getFieldState,
+    getValues,
     setError,
     watch,
     formState: { errors },
@@ -138,19 +140,26 @@ export default function CreateOrUpdateProductForm({
   const { mutate: updateProduct, isLoading: updating } =
     useUpdateProductMutation();
   const onSubmit = async (values: ProductFormValues) => {
+    console.log('submittion started');
     // event.preventDefault();
     values.languages = values.languages?.label;
     values.countries = values.countries?.value;
     values.link_type = values.link_type?.label;
+    values.link_validity = values.link_validity?.label;
+    values.link_counts = values.link_counts?.value;
+    values.sponsored_marked = values.sponsored_marked?.label;
     try {
-      if (verificationResult == true) {
-        values.status = 'publish';
-      } else {
-        values.status = 'draft';
+      if (initialValues?.status !== 'publish') {
+        if (verificationResult === true) {
+          values.status = 'publish';
+        } else {
+          values.status = 'draft';
+        }
       }
     } catch (error) {
       toast.error('Something went wrong');
     }
+    
     const inputValues = {
       language: router.locale,
       ...getProductInputValues(values, initialValues, isNewTranslation),
@@ -159,10 +168,13 @@ export default function CreateOrUpdateProductForm({
     };
 
     try {
+      console.log('initial values', inputValues);
+
       if (
         !initialValues ||
         !initialValues.translated_languages.includes(router.locale!)
       ) {
+        console.log('initial values', inputValues);
         //@ts-ignore
         createProduct({
           ...inputValues,
@@ -182,6 +194,7 @@ export default function CreateOrUpdateProductForm({
         });
       }
     } catch (error) {
+      console.log('something went wrong');
       const serverErrors = getErrorMessage(error);
       Object.keys(serverErrors?.validation).forEach((field: any) => {
         setError(field.split('.')[1], {
@@ -401,7 +414,7 @@ export default function CreateOrUpdateProductForm({
                 {...register('slug')}
                 value={slugAutoSuggest}
                 variant="outline"
-                className="mb-5 w-60 max-md:w-full"
+                className="mb-5 w-[22%] max-md:w-full"
                 disabled
               />
               <Input
@@ -410,7 +423,7 @@ export default function CreateOrUpdateProductForm({
                 error={t(errors.domain_name?.message!)}
                 placeholder="e.g. google"
                 variant="outline"
-                className="mb-5 w-60 max-md:w-full"
+                className="mb-5 w-[22%] max-md:w-full"
               />
               <Input
                 label="Moz DA"
@@ -419,7 +432,7 @@ export default function CreateOrUpdateProductForm({
                 placeholder="From 1 to 100"
                 error={t(errors.domain_authority?.message!)}
                 variant="outline"
-                className="mb-5 w-60 max-md:w-full"
+                className="mb-5 w-[22%] max-md:w-full"
               />
               <Input
                 label="Ahref DR"
@@ -428,8 +441,10 @@ export default function CreateOrUpdateProductForm({
                 placeholder="From 1 to 100"
                 error={t(errors.domain_rating?.message!)}
                 variant="outline"
-                className="mb-5 w-60 max-md:w-full"
+                className="mb-5 w-[22%] max-md:w-full"
               />
+            </div>
+            <div className="flex flex-wrap gap-3 justify-start md:justify-start space-x-10">
               <Input
                 label="Ahref Traffic"
                 type="number"
@@ -437,7 +452,17 @@ export default function CreateOrUpdateProductForm({
                 placeholder="Enter organic traffic"
                 error={t(errors.organic_traffic?.message!)}
                 variant="outline"
-                className="mb-5 w-60 max-md:w-full"
+                className="mb-5 w-[22%] max-md:w-full"
+              />
+
+              <Input
+                label={'Spam score'}
+                type="number"
+                {...register('spam_score')}
+                placeholder="Enter spam score"
+                error={t(errors.spam_score?.message!)}
+                variant="outline"
+                className="mb-5 w-[22%] max-md:w-full"
               />
             </div>
           </div>
@@ -521,7 +546,7 @@ export default function CreateOrUpdateProductForm({
                     { value: '2year', label: '2 Years' },
                     { value: 'permanent', label: 'Permanent' },
                   ]}
-                  error={t(errors.link_validity?.message!)}
+                  error={t(errors?.link_validity?.message!)}
                 />
               </div>
 
@@ -538,7 +563,7 @@ export default function CreateOrUpdateProductForm({
                     { value: '4', label: '4' },
                     { value: '5', label: '5' },
                   ]}
-                  error={t(errors.link_counts?.message!)}
+                  error={t(errors?.link_counts?.message!)}
                 />
               </div>
             </div>
@@ -555,6 +580,7 @@ export default function CreateOrUpdateProductForm({
                 placeholder="e.g. 600 Words"
                 variant="outline"
                 className="mb-5 w-60 md:w-[30%]"
+                error={t(errors.word_count?.message!)}
               />
 
               {/* TAT */}
@@ -564,6 +590,7 @@ export default function CreateOrUpdateProductForm({
                 placeholder="e.g. 2 Days"
                 variant="outline"
                 className="mb-5 w-60 md:w-[30%]"
+                error={t(errors.tat?.message!)}
               />
 
               {/* Sponsored Marked */}
@@ -590,6 +617,7 @@ export default function CreateOrUpdateProductForm({
                 {...register('other_guidelines')}
                 variant="outline"
                 className="mb-5"
+                error={t(errors.other_guidelines?.message!)}
               />
             </div>
           </div>
@@ -650,6 +678,14 @@ export default function CreateOrUpdateProductForm({
         'sponsored_marked',
         'other_guidelines',
         'tags',
+        'price',
+        'isLinkInsertion',
+        'preview_url',
+        'is_niche',
+        'is_gamble',
+        'is_cbd',
+        'is_crypto',
+        'niche_price',
         'description',
       ],
     },
@@ -657,31 +693,40 @@ export default function CreateOrUpdateProductForm({
       title: 'Verify and Add site',
       component: (
         <Card>
-          {verificationResult == false ? (
-            <Alert className="w-full mb-5" message={undefined}>
-              Your website will be in draft until its verified
-            </Alert>
-          ) : null}
-          {verificationResult == false ? (
-            <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
-              <span className="flex sm:inline md:text-sm max-sm:text-xs">
-                Add this meta tag in your website to get verified: &lt;meta
-                name=&quot;goodblogger-verification&quot; content=&quot;
-                {generateMetaContent('local')}&quot;/&gt;
-              </span>
-            </div>
-          ) : null}
-          <WebsiteVerification
-            websiteUrl={productUrl || initialValues?.name}
-            metaName="goodblogger-verification"
-            metaContent={generateMetaContent('local')} // Use 'session' for sessionStorage
-            onVerificationComplete={handleVerificationComplete}
-          />
-          {verificationResult == true && (
-            <Alert className="mt-5 w-1/3" message={undefined}>
-              You are Verified, proceed to publish
+          {initialValues?.status !== 'publish' ? (
+            <>
+              {verificationResult === false ? (
+                <Alert className="w-full mb-5" message={undefined}>
+                  Your website will be in draft until it's verified
+                </Alert>
+              ) : null}
+              {verificationResult === false ? (
+                <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
+                  <span className="flex sm:inline md:text-sm max-sm:text-xs">
+                    Add this meta tag in your website to get verified: &lt;meta
+                    name=&quot;goodblogger-verification&quot; content=&quot;
+                    {generateMetaContent('local')}&quot;/&gt;
+                  </span>
+                </div>
+              ) : null}
+              <WebsiteVerification
+                websiteUrl={productUrl || initialValues?.name}
+                metaName="goodblogger-verification"
+                metaContent={generateMetaContent('local')} // Use 'session' for sessionStorage
+                onVerificationComplete={handleVerificationComplete}
+              />
+              {verificationResult === true && (
+                <Alert className="mt-5 w-1/3" message={undefined}>
+                  You are Verified, proceed to publish
+                </Alert>
+              )}
+            </>
+          ) : (
+            <Alert className="mt-5 w-full" message={undefined}>
+              You have reached the last step, update your site
             </Alert>
           )}
+
           {/* <button onClick={handleAddProduct} disabled={!verificationResult}>
                 Add Product
               </button> */}
@@ -725,24 +770,51 @@ export default function CreateOrUpdateProductForm({
 
   const handleNextStep = async () => {
     let isValid = true;
+    const invalidFields = []; // To store the names of invalid fields
 
     for (let i = 1; i <= currentStep; i++) {
       const stepFields = steps[i - 1].fields;
+
+      console.log(`Validating step ${i} with fields:`, stepFields); // Log fields for each step
+
+      // Get the values for the current step's fields
+      const stepValues = getValues(stepFields);
+      console.log(`Values for step ${i}:`, stepValues); // Log values for the current step
+
+      // Validate the current step
       const stepIsValid = await trigger(stepFields);
 
       if (!stepIsValid) {
+        // Collect names of invalid fields
+        stepFields.forEach((field) => {
+          const { invalid, error } = getFieldState(field);
+          if (invalid) {
+            invalidFields.push({
+              field,
+              message: error?.message || 'Invalid field',
+            });
+          }
+        });
+
+        console.log(`Step ${i} is not valid.`); // Log invalid step
         isValid = false;
         break;
+      } else {
+        console.log(`Step ${i} is valid.`); // Log valid step
       }
     }
 
     if (isValid) {
-      console.log('is valid');
+      console.log('Form is valid, proceeding to the next step.');
       window.scrollTo({ top: 0, behavior: 'auto' });
       if (currentStep < steps.length) {
         setCurrentStep(currentStep + 1);
       }
     } else {
+      console.log('Form is not valid, stopping progression.');
+      // Log all invalid fields and their messages
+      console.log('Invalid fields:', invalidFields);
+      // Optionally, set an error message to display to the user
       // setErrorMessage('Please complete the required fields before proceeding.');
     }
   };
@@ -765,7 +837,6 @@ export default function CreateOrUpdateProductForm({
           onClose={() => setErrorMessage(null)}
         />
       ) : null}
-
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="flex flex-col min-h-screen p-4">

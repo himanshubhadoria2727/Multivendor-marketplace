@@ -366,17 +366,35 @@ class OrderController extends CoreController
      */
     public function downloadInvoiceUrl(Request $request)
     {
-
         try {
             $user = $request->user();
+
+            // Log the incoming request data for debugging
+            Log::info('Download Invoice Request Data', [
+                'user' => $user,
+                'shop_id' => $request->shop_id,
+                'order_id' => $request->order_id,
+                'language' => $request->language,
+                'is_rtl' => $request->is_rtl,
+            ]);
+
+            // Check if user has permission to download the invoice
             if ($user && !$this->repository->hasPermission($user, $request->shop_id)) {
+                Log::warning('User not authorized', ['user_id' => $user->id, 'shop_id' => $request->shop_id]);
                 throw new AuthorizationException(NOT_AUTHORIZED);
             }
+
+            // Check if order_id is provided
             if (empty($request->order_id)) {
+                Log::error('Order ID not found');
                 throw new NotFoundHttpException(NOT_FOUND);
             }
+
             $language = $request->language ?? DEFAULT_LANGUAGE;
             $isRTL = $request->is_rtl ?? false;
+
+            // Log translation-related info
+            Log::info('Language and RTL Info', ['language' => $language, 'is_rtl' => $isRTL]);
 
             $translatedText = $this->formatInvoiceTranslateText($request->translated_text);
 
@@ -385,19 +403,28 @@ class OrderController extends CoreController
                 'order_id' => intval($request->order_id),
                 'language' => $language,
                 'translated_text' => $translatedText,
-                'is_rtl' => $isRTL
+                'is_rtl' => $isRTL,
             ];
 
             $data = [
                 'user_id' => $user->id,
                 'token' => Str::random(16),
-                'payload' => serialize($payload)
+                'payload' => serialize($payload),
             ];
 
-            $newToken = DownloadToken::create($data);
+            // Log payload and data being saved to DownloadToken
+            Log::info('Generated Invoice Payload', ['payload' => $payload]);
+            Log::info('Download Token Data', ['data' => $data]);
 
+            // Create and log the new token entry
+            $newToken = DownloadToken::create($data);
+            Log::info('Download Token Created', ['token' => $newToken->token]);
+
+            // Return the download route
             return route('download_invoice.token', ['token' => $newToken->token]);
         } catch (MarvelException $e) {
+            // Log the exception message
+            Log::error('MarvelException occurred', ['message' => $e->getMessage()]);
             throw new MarvelException($e->getMessage());
         }
     }
