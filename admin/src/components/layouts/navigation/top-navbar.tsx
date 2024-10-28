@@ -77,8 +77,10 @@ const Navbar = () => {
   });
   console.log(shopData)
   const shopId = shopData?.id!;
+  const { data:myData } = useMeQuery();
+
   const { price: shopBalance } = usePrice({
-    amount: shopData?.balance?.current_balance!,
+    amount: myData?.shops[0]?.balance?.current_balance!,
   });
   const { withdraws, paginatorInfo, error } = useWithdrawsQuery(
     {

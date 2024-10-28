@@ -61,7 +61,8 @@ const OrderList = ({
       shop_id,
       via: 'admin',
     });
-  };
+  };  
+  console.log("orders",orders)
 
   const onHeaderClick = (column: string | null) => ({
     onClick: () => {
@@ -79,50 +80,68 @@ const OrderList = ({
   });
 
   const columns = [
+    // {
+    //   title: t('table:table-item-tracking-number'),
+    //   dataIndex: 'tracking_number',
+    //   key: 'tracking_number',
+    //   align: alignLeft,
+    //   width: 200,
+    // },
     {
-      title: t('table:table-item-tracking-number'),
-      dataIndex: 'tracking_number',
-      key: 'tracking_number',
-      align: alignLeft,
-      width: 200,
-    },
-    {
-      title: (
-        <TitleWithSort
-          title={t('table:table-item-customer')}
-          ascending={
-            sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
-          }
-          isActive={sortingObj.column === 'name'}
-        />
-      ),
-      dataIndex: 'customer',
+      title: t('Site'),
+      dataIndex: 'name',
       key: 'name',
-      align: alignLeft,
-      width: 250,
-      onHeaderCell: () => onHeaderClick('name'),
-      // render: (logo: any, record: any) => (
-      //   <Image
-      //     src={logo?.thumbnail ?? siteSettings.product.placeholder}
-      //     alt={record?.name}
-      //     width={42}
-      //     height={42}
-      //     className="overflow-hidden rounded"
-      //   />
-      // ),
-      render: (customer: any) => (
-        <div className="flex items-center">
-          {/* <Avatar name={customer.name} src={customer?.profile.avatar.thumbnail} /> */}
-          <Avatar name={customer?.name} />
-          <div className="flex flex-col whitespace-nowrap font-medium ms-2">
-            {customer?.name ? customer?.name : t('common:text-guest')}
-            <span className="text-[13px] font-normal text-gray-500/80">
-              {customer?.email}
-            </span>
-          </div>
-        </div>
-      ),
+      align: 'left',
+      width:300,
+      render: ( products: any, item:any) => <span className='text-2sm'>{item?.products[0]?.name}</span>,
     },
+    {
+      title: t('Task type'),
+      dataIndex: 'selectedForm',
+      key: 'selectedForm',
+      align: 'center',
+      width:120,
+      render: ( products: any, item:any) => <span className='text-2sm'>
+        {item?.products[0]?.pivot?.selectedForm == "guest_post"?"GP":"LI"}
+      </span>,
+    },
+    // {
+    //   title: (
+    //     <TitleWithSort
+    //       title={t('table:table-item-customer')}
+    //       ascending={
+    //         sortingObj.sort === SortOrder.Asc && sortingObj.column === 'name'
+    //       }
+    //       isActive={sortingObj.column === 'name'}
+    //     />
+    //   ),
+    //   dataIndex: 'customer',
+    //   key: 'name',
+    //   align: alignLeft,
+    //   width: 250,
+    //   onHeaderCell: () => onHeaderClick('name'),
+    //   // render: (logo: any, record: any) => (
+    //   //   <Image
+    //   //     src={logo?.thumbnail ?? siteSettings.product.placeholder}
+    //   //     alt={record?.name}
+    //   //     width={42}
+    //   //     height={42}
+    //   //     className="overflow-hidden rounded"
+    //   //   />
+    //   // ),
+    //   render: (customer: any) => (
+    //     <div className="flex items-center">
+    //       {/* <Avatar name={customer.name} src={customer?.profile.avatar.thumbnail} /> */}
+    //       <Avatar name={customer?.name} />
+    //       <div className="flex flex-col whitespace-nowrap font-medium ms-2">
+    //         {customer?.name ? customer?.name : t('common:text-guest')}
+    //         <span className="text-[13px] font-normal text-gray-500/80">
+    //           {customer?.email}
+    //         </span>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
     // {
     //   title: t('table:table-item-products'),
     //   dataIndex: 'products',
@@ -130,6 +149,22 @@ const OrderList = ({
     //   align: 'center',
     //   render: (products: Product) => <span>{products.length}</span>,
     // },
+    {
+      title: t('Target Page'),
+      dataIndex: 'link_url',
+      key: 'link_url',
+      align: 'center',
+      width:200,
+      render: ( products: any, item:any) => <a className='text-blue' href={item?.products[0]?.pivot?.link_url}>{item?.products[0]?.pivot?.link_url}</a>,
+    },
+    {
+      title: t('Ancor'),
+      dataIndex: 'ancor',
+      key: 'ancor',
+      align: 'center',
+      width:160,
+      render: ( products: any, item:any) => <span>{item.products[0]?.pivot?.ancor}</span>,
+    },
     {
       // title: t('table:table-item-order-date'),
       title: (
@@ -146,6 +181,7 @@ const OrderList = ({
       dataIndex: 'created_at',
       key: 'created_at',
       align: 'center',
+      width:150,
       onHeaderCell: () => onHeaderClick('created_at'),
       render: (date: string) => {
         dayjs.extend(relativeTime);
@@ -186,7 +222,7 @@ const OrderList = ({
       dataIndex: 'total',
       key: 'total',
       align: 'center',
-      width: 120,
+      width:150,
       onHeaderCell: () => onHeaderClick('total'),
       render: function Render(value: any) {
         const { price } = usePrice({
@@ -203,6 +239,14 @@ const OrderList = ({
       render: (order_status: string) => (
         <Badge text={t(order_status)} color={StatusColor(order_status)} />
       ),
+    },
+    {
+      title: t('Live url'),
+      dataIndex: 'url',
+      key: 'url',
+      align: 'center',
+      width:200,
+      render: ( url:string) => <span>{url}</span>,
     },
     {
       title: t('table:table-item-actions'),
@@ -260,7 +304,7 @@ const OrderList = ({
           )}
           data={orders}
           rowKey="id"
-          scroll={{ x: 1000 }}
+          scroll={{ x: 1600 }}
           expandable={{
             expandedRowRender: () => '',
             rowExpandable: rowExpandable,

@@ -52,11 +52,13 @@ const ProductList = ({
     sort: SortOrder.Desc,
     column: null,
   });
-
+  console.log('products', products);
   const onHeaderClick = (column: string | null) => ({
     onClick: () => {
       onSort((currentSortDirection: SortOrder) =>
-        currentSortDirection === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc
+        currentSortDirection === SortOrder.Desc
+          ? SortOrder.Asc
+          : SortOrder.Desc,
       );
       onOrder(column!);
 
@@ -69,14 +71,14 @@ const ProductList = ({
   });
 
   let columns = [
-    {
-      title: t('table:table-item-id'),
-      dataIndex: 'id',
-      key: 'id',
-      align: alignLeft,
-      width: 130,
-      render: (id: number) => `#${t('table:table-item-id')}: ${id}`,
-    },
+    // {
+    //   title: t('table:table-item-id'),
+    //   dataIndex: 'id',
+    //   key: 'id',
+    //   align: alignLeft,
+    //   width: 130,
+    //   render: (id: number) => `#${t('table:table-item-id')}: ${id}`,
+    // },
     {
       title: (
         <TitleWithSort
@@ -91,7 +93,7 @@ const ProductList = ({
       dataIndex: 'name',
       key: 'name',
       align: alignLeft,
-      width: 180,
+      width: 280,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
       render: (name: string, { image, type }: { image: any; type: any }) => (
@@ -114,15 +116,115 @@ const ProductList = ({
         </div>
       ),
     },
+    // {
+    //   title: (
+    //     <TitleWithSort
+    //       title={t('Link type')}
+    //       ascending={
+    //         sortingObj.sort === SortOrder.Asc && sortingObj.column === 'link_type'
+    //       }
+    //       isActive={sortingObj.column === 'link_type'}
+    //     />
+    //   ),
+    //   dataIndex: 'link_type',
+    //   key: 'link_type',
+    //   width: 150,
+    //   align: alignLeft,
+    //   render: (link_type: string) => (
+    //     <span className="truncate whitespace-nowrap capitalize">
+    //       {link_type}
+    //     </span>
+    //   ),
+    // },
     {
-      title: t('Link Type'),
-      dataIndex: 'link_type',
-      key: 'link_type',
+      title: (
+        <TitleWithSort
+          title={t('DA')}
+          ascending={
+            sortingObj.sort === SortOrder.Asc &&
+            sortingObj.column === 'domain_authority'
+          }
+          isActive={sortingObj.column === 'domain_authority'}
+        />
+      ),
+      dataIndex: 'domain_authority',
+      key: 'domain_authority',
+      width: 100,
+      align: alignLeft,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('domain_authority'),
+      render: (domain_authority: string) => (
+        <span className="truncate whitespace-nowrap capitalize">
+          {domain_authority}
+        </span>
+      ),
+    },
+    {
+      title: (
+        <TitleWithSort
+          title={t('DR')}
+          ascending={
+            sortingObj.sort === SortOrder.Asc &&
+            sortingObj.column === 'domain_rating'
+          }
+          isActive={sortingObj.column === 'domain_rating'}
+        />
+      ),
+      dataIndex: 'domain_rating',
+      key: 'domain_rating',
+      width: 100,
+      align: alignLeft,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('domain_rating'),
+      render: (domain_rating: string) => (
+        <span className="truncate whitespace-nowrap capitalize">
+          {domain_rating}
+        </span>
+      ),
+    },
+    {
+      title: (
+        <TitleWithSort
+          title={t('Ahref traffic')}
+          ascending={
+            sortingObj.sort === SortOrder.Asc &&
+            sortingObj.column === 'organic_traffic'
+          }
+          isActive={sortingObj.column === 'organic_traffic'}
+        />
+      ),
+      dataIndex: 'organic_traffic',
+      key: 'organic_traffic',
+      width: 130,
+      align: alignLeft,
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('organic_traffic'),
+      render: (organic_traffic: string) => (
+        <span className="truncate whitespace-nowrap capitalize">
+          {organic_traffic}
+        </span>
+      ),
+    },
+    {
+      title: (
+        <TitleWithSort
+          title={t('Created at')}
+          ascending={
+            sortingObj.sort === SortOrder.Asc &&
+            sortingObj.column === 'created_at'
+          }
+          isActive={sortingObj.column === 'created_at'}
+        />
+      ),
+      dataIndex: 'created_at',
+      key: 'created_at',
       width: 150,
       align: alignLeft,
-      render: (link_type: string) => (
+      ellipsis: true,
+      onHeaderCell: () => onHeaderClick('created_at'),
+      render: (created_at: string) => (
         <span className="truncate whitespace-nowrap capitalize">
-          {link_type}
+          {new Date(created_at).toLocaleDateString()}
         </span>
       ),
     },
@@ -152,7 +254,7 @@ const ProductList = ({
     {
       title: (
         <TitleWithSort
-          title={t('table:table-item-unit')}
+          title={t('Price')}
           ascending={
             sortingObj.sort === SortOrder.Asc && sortingObj.column === 'price'
           }

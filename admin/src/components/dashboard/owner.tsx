@@ -25,7 +25,13 @@ import Button from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import PageHeading from '@/components/common/page-heading';
 import { useProductsQuery } from '@/data/product';
+import { useMeQuery } from '@/data/user';
 import { useShopQuery } from '@/data/shop';
+import { useWithdrawsQuery } from '@/data/withdraw';
+import { HandIcon } from '@heroicons/react/solid';
+import { FlutterwaveIcon } from '@/components/icons/payment-gateways/flutterwave';
+
+import Card from '../common/card';
 const ShopList = dynamic(() => import('@/components/dashboard/shops/shops'));
 
 // TODO : this vendor root page code portion need to be checked in pixer.
@@ -71,6 +77,7 @@ const OwnerShopLayout = () => {
   const [orderDataRange, setOrderDataRange] = useState(
     data?.todayTotalOrderByStatus,
   );
+  const { data: me } = useMeQuery();
   const {
     query: { shop },
   } = useRouter();
@@ -78,14 +85,11 @@ const OwnerShopLayout = () => {
     slug: shop as string,
   });
   const shopId = shopData?.id!;
-
-  const { products } = useProductsQuery(
-    {
-      language: locale,
-      limit: 20,      
-      shop_id: shopId,
-    },
-  );
+  const { products } = useProductsQuery({
+    language: locale,
+    limit: 20,
+    shop_id: shopId,
+  });
   const {
     data: productByCategory,
     isLoading: productByCategoryLoading,
@@ -103,6 +107,7 @@ const OwnerShopLayout = () => {
       amount: data?.totalRevenue!,
     },
   );
+  console.log('total_revenue', data?.totalRevenue);
   const { price: total_refund } = usePrice(
     data && {
       amount: data?.totalRefunds!,
@@ -128,7 +133,51 @@ const OwnerShopLayout = () => {
       item.total.toFixed(2),
     );
   }
-  console.log(salesByYear)
+  console.log(salesByYear);
+
+  // Get the current month index (0 for January, 11 for December)
+  const currentMonthIndex = new Date().getMonth();
+
+  // Extract the sales for the current month
+  const monthlyRevenue = salesByYear[currentMonthIndex] || 0; // Default to 0 if no sales data for the month
+
+  // Ensure monthlyRevenue is a number before using toFixed
+  const revenueAmount = Number(monthlyRevenue); // Convert to number and then format
+  revenueAmount.toFixed(0);
+  console.log('revenueAmount', revenueAmount);
+  const { price: monthly_revenue } = usePrice(
+    data && {
+      amount: revenueAmount!,
+    },
+  );
+
+  const { withdraws, paginatorInfo, error } = useWithdrawsQuery(
+    {
+      shop_id: shopId,
+    },
+    {
+      enabled: Boolean(shopId),
+    },
+  );
+  const { price: shopBalance } = usePrice({
+    amount: me?.shops[0]?.balance?.current_balance!,
+  });
+  const totalOnHoldAmount = Array.isArray(withdraws)
+    ? withdraws
+        .filter(
+          (withdraw) =>
+            withdraw.status === 'on_hold' &&
+            typeof withdraw.amount === 'number',
+        ) // Filter and ensure amount is a number
+        .reduce((sum, withdraw) => sum + withdraw.amount, 0) // Sum up the amount
+    : 0; // Default to 0 if withdraws is not an array
+
+  console.log('Total amount on hold:', totalOnHoldAmount);
+  const { price: onHoldAmount } = usePrice({
+    amount: totalOnHoldAmount,
+  });
+
+  console.log('monthly_revenue', monthly_revenue);
 
   const timeFrame = [
     { name: t('text-today'), day: 1 },
@@ -160,6 +209,28 @@ const OwnerShopLayout = () => {
 
   return (
     <>
+      <div className="flex mb-8 rounded-lg bg-light p-4 justify-space-between md:p-8">
+        <div className="flex text-heading font-semibold">
+          <span className="text-3xl max-md:text-sm mr-3">Hello</span>{' '}
+          <div className="flex max-md:text-sm flex-row text-3xl text-accent">
+            {me?.name}{' '}
+            <span
+              className="text-3xl max-md:text-sm ml-2 inline-block"
+              style={{ transform: 'rotate(20deg)' }}
+            >
+              👋
+            </span>{' '}
+          </div>
+        </div>
+        <div className="ml-auto">
+          <Button
+            onClick={() => router.push(`${shopId}/products/create`)}
+            size="medium"
+            className="text-sm md:text-base max-md:h-6"
+          >Add site +</Button>
+        </div>
+      </div>
+
       <div className="mb-8 rounded-lg bg-light p-5 md:p-8">
         <div className="mb-7 flex items-center justify-between">
           <PageHeading title={t('text-summary')} />
@@ -173,11 +244,11 @@ const OwnerShopLayout = () => {
             price={total_revenue}
           />
           <StickerCard
-            titleTransKey="sticker-card-title-today-refunds"
+            titleTransKey="sticker-card-title-onhold"
             // subtitleTransKey="sticker-card-subtitle-order"
             icon={<ShoppingIcon className="h-8 w-8" />}
             color="#865DFF"
-            price={total_refund}
+            price={onHoldAmount}
           />
           <StickerCard
             titleTransKey="sticker-card-title-total-sites"
@@ -186,10 +257,10 @@ const OwnerShopLayout = () => {
             price={products.length}
           />
           <StickerCard
-            titleTransKey="sticker-card-title-today-rev"
+            titleTransKey="sticker-card-title-month-rev"
             icon={<ChecklistIcon className="h-8 w-8" />}
             color="#D74EFF"
-            price={todays_revenue}
+            price={monthly_revenue}
           />
         </div>
       </div>

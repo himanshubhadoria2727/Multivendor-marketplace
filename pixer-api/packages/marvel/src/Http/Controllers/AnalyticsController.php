@@ -12,6 +12,7 @@ use Marvel\Database\Models\Product;
 use Marvel\Database\Models\Shop;
 use Marvel\Database\Models\Type;
 use Marvel\Database\Models\User;
+use Illuminate\Support\Facades\Log;
 use Marvel\Database\Repositories\AddressRepository;
 use Marvel\Enums\OrderStatus;
 use Marvel\Enums\Permission;
@@ -42,7 +43,7 @@ class AnalyticsController extends CoreController
                 ->whereDate('childOrder.created_at', '<=', Carbon::now())
                 ->where('childOrder.order_status', OrderStatus::COMPLETED)
                 ->whereNotNull('childOrder.parent_id')
-                ->join('orders as parentOrder', 'childOrder.parent_id', '=', 'parentOrder.id')
+                ->join('orders as parentOrder', 'childOrder.id', '=', 'parentOrder.id')
                 ->whereDate('parentOrder.created_at', '<=', Carbon::now())
                 ->where('parentOrder.order_status', OrderStatus::COMPLETED)
                 ->select(
@@ -64,8 +65,9 @@ class AnalyticsController extends CoreController
                 $totalRevenue = $totalRevenueQuery
                     ->whereIn('childOrder.shop_id', $shops)
                     ->get()
-                    ->sum('paid_total');
+                    ->sum(callback: 'paid_total');
             }
+            Log::info('Total Revenue:', ['total_revenue' => $totalRevenue]);
 
             // Today's revenue
             $todaysRevenueQuery =  DB::table('orders as A')

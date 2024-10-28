@@ -69,6 +69,12 @@ class GetSingleProductResource extends Resource
             'languages'                  => $this->languages,
             'countries'                  => $this->countries,
             'niche_price'                  => $this->niche_price,
+            'link_validity'           => $this->link_validity,
+            'link_counts'             => $this->link_counts,
+            'word_count'              => $this->word_count,
+            'tat'                     => $this->tat,
+            'sponsored_marked'        => $this->sponsored_marked,
+            'other_guidelines'        => $this->other_guidelines,
             'domain_authority'             => $this->domain_authority,
             'domain_rating'                => $this->domain_rating,
             'organic_traffic'              => $this->organic_traffic,
@@ -76,7 +82,8 @@ class GetSingleProductResource extends Resource
             'in_flash_sale'                => $this->in_flash_sale,
             'total_downloads'              => $this->total_downloads,
             'sold_quantity'                => $this->sold_quantity,
-            'orders_count'                 => $this->orders_count
+            'orders_count'                 => $this->orders_count,
+            'created_at'                 => $this->created_at
         ];
     }
 }

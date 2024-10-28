@@ -22,7 +22,6 @@ import { useExportOrderQuery } from '@/data/export';
 import { useMeQuery } from '@/data/user';
 import { Routes } from '@/config/routes';
 import PageHeading from '@/components/common/page-heading';
-import { Checkbox } from 'antd';
 
 const statusOptions = [
   { value: 'order-waiting-approval', label: 'Waiting for Approval' },
@@ -48,7 +47,7 @@ export default function Orders() {
   });
   const shopId = shopData?.id!;
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string[]>([]); // Only one status filter
+  const [statusFilter, setStatusFilter] = useState(''); // Only one status filter
   const [page, setPage] = useState(1);
 
   const { orders, loading, paginatorInfo, error } = useOrdersQuery(
@@ -60,7 +59,7 @@ export default function Orders() {
       orderBy,
       sortedBy,
       shop_id: shopId,
-      order_status: statusFilter.length > 0 ? statusFilter : undefined, // Pass the selected status or undefined to fetch all
+      order_status: statusFilter || undefined,
     },
     {
       enabled: Boolean(shopId),
@@ -74,7 +73,8 @@ export default function Orders() {
     { enabled: false },
   );
 
-  if (loading || fetchingShop) return <Loader text={t('common:text-loading')} />;
+  if (loading || fetchingShop)
+    return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error?.message} />;
 
   async function handleExportOrder() {
@@ -95,16 +95,8 @@ export default function Orders() {
     setPage(current);
   }
 
-  // Handle status checkbox change, ensuring only one checkbox is selected at a time
-  function handleStatusChange(checkedValues: any) {
-    if (checkedValues.length > 1) {
-      // Only keep the most recently selected checkbox
-      const latestCheckedValue = checkedValues[checkedValues.length - 1];
-      setStatusFilter([latestCheckedValue]);
-    } else {
-      // If none or only one is selected, update the statusFilter as normal
-      setStatusFilter(checkedValues);
-    }
+  function handleStatusChange(value: string) {
+    setStatusFilter((prev) => (prev === value ? '' : value)); // Toggle selection
     setPage(1); // Reset to page 1 on filter change
   }
 
@@ -118,7 +110,7 @@ export default function Orders() {
 
   return (
     <>
-      <Card className="mb-8 flex flex-col items-center justify-between md:flex-row">
+      <Card className="mb-4 flex flex-col items-center justify-between md:flex-row">
         <div className="mb-4 md:mb-0 md:w-1/4">
           <PageHeading title={t('form:input-label-orders')} />
         </div>
@@ -127,21 +119,32 @@ export default function Orders() {
           <div className="flex flex-col md:flex-row w-full space-y-4 md:space-y-0 md:space-x-4">
             <Search
               onSearch={handleSearch}
-              placeholderText={t('form:input-placeholder-search-tracking-number')}
+              placeholderText={t(
+                'form:input-placeholder-search-tracking-number',
+              )}
               className="w-full md:w-1/2"
-            />
-          </div>
-          <div className="flex flex-row mt-5 w-full ">
-            {/* <h4 className="mb-2 text-semibold mr-3">{t('Select Status')}</h4> */}
-            <Checkbox.Group
-              options={statusOptions}
-              onChange={handleStatusChange}
-              value={statusFilter}
-              className="flex space-x-4"
             />
           </div>
         </div>
       </Card>
+      <div className="flex mt-2 w-full bg-gray-100 pb-4 overflow-x-auto">
+        <div className="flex w-full space-x-2">
+          {statusOptions.map((option) => (
+            <div
+              key={option.value}
+              onClick={() => handleStatusChange(option.value)}
+              className={`flex-1 min-w-[120px] cursor-pointer p-2 m-1 text-center content-center py-3 rounded-md transition-colors ${
+                statusFilter === option.value
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-gray-700 border'
+              }`}
+            >
+              {option.label}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <OrderList
         orders={orders}
         paginatorInfo={paginatorInfo}

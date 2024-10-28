@@ -5,6 +5,7 @@ import Button from '@/components/ui/button';
 import cn from 'classnames';
 import StatusColor from '@/components/order/status-color';
 import Badge from '@/components/ui/badge/badge';
+import usePrice from '@/utils/use-price';
 
 interface OrderViewHeaderProps {
   order: any;
@@ -21,7 +22,9 @@ export default function OrderViewHeader({
   const isPaymentCOD = [PaymentGateway.COD, PaymentGateway.CASH].includes(order?.payment_gateway);
   const isOrderPending = ![OrderStatus.CANCELLED, OrderStatus.FAILED].includes(order?.order_status);
   const isPaymentActionPending = !isPaymentCOD && isOrderPending && order?.payment_status !== PaymentStatus.SUCCESS;
-
+  const { price: totalPrice } = usePrice({
+    amount: order.products[0].pivot.subtotal,
+  });
   return (
     <div className={cn(`bg-[#F7F8FA] ${wrapperClassName}`)}>
       <div className="mb-0 flex flex-col flex-wrap items-center justify-between gap-x-8 text-base font-bold text-heading sm:flex-row lg:flex-nowrap">
@@ -33,21 +36,33 @@ export default function OrderViewHeader({
           }`}
         >
           <div>
-            <span className="mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
-              {t('text-order-status')} :
+            <span className="text-3xl mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
+              {t('Order')} :
             </span>
-            <Badge
+            {order?.products[0]?.pivot?.selectedForm?(
+              <Badge
+              text={"Guest Posting"}
+              color={StatusColor(order?.order_status)}
+              className='text-2xl'
+            />
+            ):(<Badge
+              text={"Link Insertion"}
+              color={StatusColor(order?.order_status)}
+              className='text-2xl'
+            />)}
+            {/* <Badge
               text={t(order?.order_status)}
               color={StatusColor(order?.order_status)}
-            />
+            /> */}
           </div>
           <div>
-            <span className="mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
-              {t('text-payment-status')} :
+            <span className="text-lg mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
+              {t('Price')} :
             </span>
             <Badge
-              text={t(order?.payment_status)}
+              text={t(totalPrice)}
               color={StatusColor(order?.payment_status)}
+              className='text-lg'
             />
           </div>
         </div>

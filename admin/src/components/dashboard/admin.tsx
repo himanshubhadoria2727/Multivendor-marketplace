@@ -127,6 +127,19 @@ export default function Dashboard() {
       item.total.toFixed(2),
     );
   }
+  console.log('totalYearSaleByMonth', data?.totalYearSaleByMonth);
+  let salesByMonth: number[] = Array.from({ length: 12 }, () => 0); // Initialize array for 12 months with 0
+
+  if (data?.totalYearSaleByMonth?.length) {
+    // Assuming data.totalYearSaleByMonth is an array with monthly sales
+    data.totalYearSaleByMonth.forEach((item: any) => {
+      const monthIndex = new Date(item.month).getMonth(); // Extract month index from the date
+      salesByMonth[monthIndex] = item.total; // Assign total sales to the corresponding month index
+    });
+  }
+
+  // Now salesByMonth contains total sales for each month (0 for empty months)
+  console.log("salesByMonth",salesByMonth); // Display sales by month
 
   function handleSearch({ searchText }: { searchText: string }) {
     setSearchTerm(searchText);

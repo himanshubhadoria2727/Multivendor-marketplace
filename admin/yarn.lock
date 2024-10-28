@@ -1648,6 +1648,11 @@
   dependencies:
     client-only "^0.0.1"
 
+"@heroicons/react@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.npmjs.org/@heroicons/react/-/react-1.0.6.tgz"
+  integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
+
 "@hookform/resolvers@3.3.2":
   version "3.3.2"
   resolved "https://registry.npmjs.org/@hookform/resolvers/-/resolvers-3.3.2.tgz"

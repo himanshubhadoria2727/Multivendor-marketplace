@@ -18,8 +18,6 @@ export default function AuthorizedMenu() {
   const { pathname, query } = useRouter();
   const slug = (pathname === '/[shop]' && query?.shop) || '';
   const { role, permissions } = getAuthCredentials();
-  console.log(role);
-  console.log('data', data);
   // Again, we're using framer-motion for the transition effect
   return (
     <Menu
