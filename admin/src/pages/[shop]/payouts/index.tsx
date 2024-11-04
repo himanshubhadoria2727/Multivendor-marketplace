@@ -12,6 +12,7 @@ import { Order, SortOrder, Withdraw } from '@/types';
 import LinkButton from '@/components/ui/link-button';
 import { useOrdersQuery } from '@/data/order';
 import Loader from '@/components/ui/loader/loader';
+import Button from '@/components/ui/button';
 import ErrorMessage from '@/components/ui/error-message';
 import UnifiedTransactionList from '@/components/payout/payout-list';
 import Card from '@/components/common/card';
@@ -37,6 +38,9 @@ export default function PayoutPage() {
   const { t } = useTranslation();
   const { permissions } = getAuthCredentials();
   const { data: me } = useMeQuery();
+  const [filterType, setFilterType] = useState<'all' | 'credit' | 'debit'>(
+    'all',
+  );
   const {
     query: { shop },
   } = router;
@@ -60,12 +64,16 @@ export default function PayoutPage() {
     { shop_id: shopId, limit: 10, page, orderBy, sortedBy },
     { enabled: Boolean(shopId) },
   );
-  const totalWithdrawAmount = withdraws?.reduce((total: any, withdraw: { amount: any; }) => total + withdraw.amount, 0) || 0;
+  const totalWithdrawAmount =
+    withdraws?.reduce(
+      (total: any, withdraw: { amount: any }) => total + withdraw.amount,
+      0,
+    ) || 0;
 
-  const { price:  totalWithdraw} = usePrice({
+  const { price: totalWithdraw } = usePrice({
     amount: totalWithdrawAmount!,
   });
-  
+
   const {
     orders,
     paginatorInfo: paginatorOrder,
@@ -87,15 +95,19 @@ export default function PayoutPage() {
     amount: me?.shops[0]?.balance?.current_balance!,
   });
   const totalOnHoldAmount = Array.isArray(withdraws)
-  ? withdraws
-      .filter(withdraw => withdraw.status === 'on_hold' && typeof withdraw.amount === 'number') // Filter and ensure amount is a number
-      .reduce((sum, withdraw) => sum + withdraw.amount, 0) // Sum up the amount
-  : 0; // Default to 0 if withdraws is not an array
+    ? withdraws
+        .filter(
+          (withdraw) =>
+            withdraw.status === 'on_hold' &&
+            typeof withdraw.amount === 'number',
+        ) // Filter and ensure amount is a number
+        .reduce((sum, withdraw) => sum + withdraw.amount, 0) // Sum up the amount
+    : 0; // Default to 0 if withdraws is not an array
 
-console.log('Total amount on hold:', totalOnHoldAmount);
-const { price: onHoldAmount } = usePrice({
-  amount: totalOnHoldAmount,
-});
+  console.log('Total amount on hold:', totalOnHoldAmount);
+  const { price: onHoldAmount } = usePrice({
+    amount: totalOnHoldAmount,
+  });
   // Transform withdraws
   const transformedWithdraws: Withdraw[] =
     withdraws?.map(
@@ -125,12 +137,29 @@ const { price: onHoldAmount } = usePrice({
       status: order.order_status,
       created_at: order.created_at,
       payment_method: order.payment_gateway,
-
     })) || [];
 
   function handleSearch({ searchText }: { searchText: string }) {
     setSearchTerm(searchText);
   }
+
+  function handleFilterChange(type: 'all' | 'credit' | 'debit') {
+    setFilterType(type);
+  }
+
+  // const filteredWithdraws = transformedWithdraws.filter((withdraw) => {
+  //   if (filterType === 'credit') {
+  //     return withdraw.amount > 0; // Assuming positive amounts are credits
+  //   } else if (filterType === 'debit') {
+  //     return withdraw.amount < 0; // Assuming negative amounts are debits
+  //   }
+  //   return true; // Show all
+  // });
+
+  const filteredWithdraws =
+    filterType === 'debit' || filterType === 'all' ? transformedWithdraws : [];
+  const filteredOrders =
+    filterType === 'credit' || filterType === 'all' ? transformedOrders : [];
 
   function handlePagination(current: any) {
     setPage(current);
@@ -170,10 +199,6 @@ const { price: onHoldAmount } = usePrice({
           <PageHeading title={t('Payouts')} />
         </div>
 
-        <div className="flex w-full flex-col items-center ms-auto md:w-1/2 md:flex-row">
-          <Search onSearch={handleSearch} />
-        </div>
-
         <LinkButton
           href={`/${shop}/withdraws/create`}
           className="h-12 w-full md:w-auto md:ms-auto"
@@ -184,46 +209,81 @@ const { price: onHoldAmount } = usePrice({
 
       {/* New Metrics Cards */}
       <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-3">
-      <Card className="hover:shadow-lg transition-shadow duration-200">
-        <div className="flex items-center p-5">
-          <div className="rounded-full bg-orange-100 p-4 mr-6">
-            <FaClock className="h-7 w-7 text-orange-600" />
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <div className="flex items-center p-5">
+            <div className="rounded-full bg-orange-100 p-4 mr-6">
+              <FaClock className="h-7 w-7 text-orange-600" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-500">On Hold</p>
+              <p className="text-2xl font-bold text-gray-900">{onHoldAmount}</p>
+            </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500">On Hold</p>
-            <p className="text-2xl font-bold text-gray-900">{onHoldAmount}</p>
-          </div>
-        </div>
-      </Card>
+        </Card>
 
-      <Card className="hover:shadow-lg transition-shadow duration-200">
-        <div className="flex items-center p-5">
-          <div className="rounded-full bg-green-100 p-4 mr-6">
-            <FaWallet className="h-7 w-7 text-green-600" />
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <div className="flex items-center p-5">
+            <div className="rounded-full bg-green-100 p-4 mr-6">
+              <FaWallet className="h-7 w-7 text-green-600" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-500">
+                Available Balance
+              </p>
+              <p className="text-2xl font-bold text-gray-900">{shopBalance}</p>
+            </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500">Available Balance</p>
-            <p className="text-2xl font-bold text-gray-900">{shopBalance}</p>
-          </div>
-        </div>
-      </Card>
+        </Card>
 
-      <Card className="hover:shadow-lg transition-shadow duration-200">
-        <div className="flex items-center p-5">
-          <div className="rounded-full bg-blue-100 p-4 mr-6">
-            <FaPiggyBank className="h-7 w-7 text-blue-600" />
+        <Card className="hover:shadow-lg transition-shadow duration-200">
+          <div className="flex items-center p-5">
+            <div className="rounded-full bg-blue-100 p-4 mr-6">
+              <FaPiggyBank className="h-7 w-7 text-blue-600" />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-gray-500">
+                Total Withdrawals
+              </p>
+              <p className="text-2xl font-bold text-gray-900">
+                {totalWithdraw}
+              </p>
+            </div>
           </div>
-          <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500">Total Withdrawals</p>
-            <p className="text-2xl font-bold text-gray-900">{totalWithdraw}</p>
+        </Card>
+      </div>
+
+      <Card className="flex w-full hover:shadow-lg transition-shadow gap-5 duration-200 p-4">
+        <div className="flex w-full items-center justify-between mb-4">
+          <Search onSearch={handleSearch} />
+        </div>
+
+        <div className="flex flex-col md:flex-row md:justify-between w-full">
+          <div className="flex justify-around space-x-0 md:space-x-4 w-full">
+            <Button
+              onClick={() => handleFilterChange('all')}
+              className="btn flex-1 bg-blue-500 text-white text-center rounded-md px-2 py-2 hover:bg-blue-600 transition-colors"
+            >
+              All
+            </Button>
+            <Button
+              onClick={() => handleFilterChange('credit')}
+              className="btn flex-1 bg-green-500 text-white text-center rounded-md px-2 py-2 hover:bg-green-600 transition-colors"
+            >
+              Credits
+            </Button>
+            <Button
+              onClick={() => handleFilterChange('debit')}
+              className="btn flex-1 bg-red-500 text-white text-center rounded-md px-2 py-2   hover:bg-red-600 transition-colors"
+            >
+              Debits
+            </Button>
           </div>
         </div>
       </Card>
-    </div>
 
       <UnifiedTransactionList
-        withdraws={transformedWithdraws}
-        orders={transformedOrders}
+        withdraws={filteredWithdraws}
+        orders={filteredOrders}
         paginatorInfo={unifiedPaginatorInfo}
         onPagination={handlePagination}
       />

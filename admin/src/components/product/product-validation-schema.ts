@@ -23,6 +23,17 @@ export const productValidationSchema = yup.object().shape({
     .min(0)
     .max(100)
     .required('Domain rating is required'),
+  niche_price: yup
+    .number()
+    .typeError('Niche Price must be a number')
+    .min(0)
+    .max(200),
+  link_insertion_price: yup
+    .number()
+    .typeError('Link insertion price must be a number')
+    .min(0)
+    .max(200),
+    // .required('Niche Price is required'),
 
   word_count: yup
     .number()
@@ -61,7 +72,7 @@ export const productValidationSchema = yup.object().shape({
   //       .required('form:error-quantity-required'),
   // }),
   other_guidelines: yup.string().required('Other guidelines are required'),
-  domain_name: yup.string().required('form:error-domain-name-required'),
+  domain_name: yup.string().nullable('form:error-domain-name-required'),
   verify_domain: yup.string().nullable('form:error-domain-name-required'),
   // niche_price: yup.number().required('Niche price is a required'),
   type: yup.object().nullable('form:error-type-required'),
@@ -96,6 +107,11 @@ export const productValidationSchema = yup.object().shape({
         .typeError('Niche price must be a number')
         .positive('must be positive')
         .required('Niche price is required'),
+      link_insertion_price: yup
+        .number()
+        .typeError('Link insertion price must be a number')
+        .positive('must be positive')
+        .required('Link insertion price is required'),
       organic_traffic: yup
         .number()
         .typeError('Organic Traffic must be a number')

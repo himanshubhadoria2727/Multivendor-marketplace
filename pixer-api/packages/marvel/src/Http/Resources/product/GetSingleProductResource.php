@@ -69,6 +69,7 @@ class GetSingleProductResource extends Resource
             'languages'                  => $this->languages,
             'countries'                  => $this->countries,
             'niche_price'                  => $this->niche_price,
+            'link_insertion_price'                  => $this->link_insertion_price,
             'link_validity'           => $this->link_validity,
             'link_counts'             => $this->link_counts,
             'word_count'              => $this->word_count,

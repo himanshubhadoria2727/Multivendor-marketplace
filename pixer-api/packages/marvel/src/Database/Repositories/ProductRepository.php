@@ -95,6 +95,7 @@ class ProductRepository extends BaseRepository
         'is_digital',
         'is_niche',
         'niche_price',
+        'link_insertion_price',
         'is_gamble',
         'is_cbd',
         'is_crypto',
@@ -487,6 +488,7 @@ class ProductRepository extends BaseRepository
             $data['countries'] = isset($request['countries']) ? $request['countries'] : null;
             $data['domain_authority'] = isset($request['domain_authority']) ? $request['domain_authority'] : null;
             $data['niche_price'] = isset($request['niche_price']) ? $request['niche_price'] : null;
+            $data['link_insertion_price'] = isset($request['link_insertion_price']) ? $request['link_insertion_price'] : null;
             $data['domain_rating'] = isset($request['domain_rating']) ? $request['domain_rating'] : null;
             $data['organic_traffic'] = isset($request['organic_traffic']) ? $request['organic_traffic'] : null;
             $data['spam_score'] = isset($request['spam_score']) ? $request['spam_score'] : null;
@@ -538,6 +540,7 @@ class ProductRepository extends BaseRepository
                     'countries'=> $product->countries,
                     'link_type'=> $product->link_type,
                     'niche_price'=>$product->niche_price,
+                    'link_insertion_price'=>$product->link_insertion_price,
                     'quantity' => $product->quantity,
                 ]);
             }

@@ -51,7 +51,7 @@ export default function UpdateProductPage() {
   return (
     <>
       <div className="flex border-b border-dashed border-border-base pb-5 md:pb-7">
-        <h1 className="text-lg font-semibold text-heading">
+        <h1 className="text-2xl font-semibold text-heading">
           {t('form:form-title-edit-product')}
         </h1>
       </div>

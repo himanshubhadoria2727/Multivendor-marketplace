@@ -14,7 +14,7 @@ type UnifiedTransaction = {
   amount: number;
   selectedForm: string;
   status: string;
-  payment_method:string;  
+  payment_method: string;
   order_status: string;
   created_at: string;
 };
@@ -58,7 +58,22 @@ const UnifiedTransactionList = ({
     //     ),
     //   },
     {
-      title: t('Type'),
+      title: t('Txn ID'),
+      dataIndex: 'status',
+      key: 'status',
+      align: 'center',
+      width: 150,
+      render: (status: string, record: UnifiedTransaction) => (
+        <span className="text-ed-600">
+          {/* <Badge
+            text={record.type === 'withdraw' ? status : record.status}
+            color={StatusColor(record.status)}
+          /> */}
+        </span>
+      ),
+    },
+    {
+      title: t('Order#'),
       dataIndex: 'type',
       key: 'type',
       align: 'center',
@@ -100,6 +115,14 @@ const UnifiedTransactionList = ({
       ),
     },
     {
+      title: t('Txn Date'),
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'center',
+      width: 150,
+      render: (created_at: string) => dayjs(created_at).format('MMM D, YYYY'),
+    },
+    {
       title: t('Status'),
       dataIndex: 'status',
       key: 'status',
@@ -107,9 +130,12 @@ const UnifiedTransactionList = ({
       width: 150,
       render: (status: string, record: UnifiedTransaction) => (
         <span className="text-ed-600">
-           <Badge text={record.type === 'withdraw' ? status: record.status}color={StatusColor(record.status)} />
+          <Badge
+            text={record.type === 'withdraw' ? status : record.status}
+            color={StatusColor(record.status)}
+          />
         </span>
-      ),    
+      ),
     },
     {
       title: t('Payment method'),
@@ -119,17 +145,16 @@ const UnifiedTransactionList = ({
       width: 150,
       render: (payment_method: string, record: UnifiedTransaction) => (
         <span className="text-ed-600">
-           <Badge text={record.type === 'withdraw' ? payment_method: record.payment_method}color={StatusColor(record.payment_method)} />
+          <Badge
+            text={
+              record.type === 'withdraw'
+                ? payment_method
+                : record.payment_method
+            }
+            color={StatusColor(record.payment_method)}
+          />
         </span>
-      ),    
-    },
-    {
-      title: t('Date'),
-      dataIndex: 'created_at',
-      key: 'created_at',
-      align: 'center',
-      width: 150,
-      render: (created_at: string) => dayjs(created_at).format('MMM D, YYYY'),
+      ),
     },
   ];
 

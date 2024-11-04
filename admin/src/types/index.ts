@@ -108,6 +108,8 @@ export enum OrderStatus {
   PENDING = 'order-pending',
   PROCESSING = 'order-processing',
   WAITING = 'order-waiting-approval',
+  ACCPETED = 'order-accepted',
+  SUBMITTED = 'order-submitted',
   COMPLETED = 'order-completed',
   CANCELLED = 'order-cancelled',
   REFUNDED = 'order-refunded',
@@ -125,6 +127,9 @@ export enum FlashSaleType {
 }
 
 export interface TodayTotalOrderByStatus {
+  waiting:number;
+  accepted:number;
+  submitted:number;
   pending: number;
   waiting: number;
   processing: number;
@@ -767,6 +772,7 @@ export interface Product {
   countries:string;
   link_type:string;
   niche_price:string;
+  link_insertion_price:string;
   link_validity:string;
   link_counts:string;
   word_count:number;
@@ -798,6 +804,7 @@ export interface CreateProduct {
   countries:string;
   link_type:string;
   niche_price:string;
+  link_insertion_price:string;
   link_validity:string;
   link_counts:string;
   word_count:number;

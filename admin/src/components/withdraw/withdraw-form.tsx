@@ -22,7 +22,6 @@ import SelectInput from '../ui/select-input';
 import ValidationError from '@/components/ui/form-validation-error';
 import { useCountriesQuery } from '@/data/countries';
 
-
 type FormValues = {
   amount: number;
   payment_method: 'paypal' | 'bank';
@@ -81,11 +80,18 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
       details: values.details,
       payment_method: values.payment_method,
       note: values.note,
-      bank_name: values.payment_method === 'bank' ? values.bank_name : undefined,
-      ifsc_code: values.payment_method === 'bank' ? values.ifsc_code : undefined,
-      account_number: values.payment_method === 'bank' ? values.account_number : undefined,
-      account_holder_name: values.payment_method === 'bank' ? values.account_holder_name : undefined,
-      paypal_id: values.payment_method === 'paypal' ? values.paypal_id : undefined,
+      bank_name:
+        values.payment_method === 'bank' ? values.bank_name : undefined,
+      ifsc_code:
+        values.payment_method === 'bank' ? values.ifsc_code : undefined,
+      account_number:
+        values.payment_method === 'bank' ? values.account_number : undefined,
+      account_holder_name:
+        values.payment_method === 'bank'
+          ? values.account_holder_name
+          : undefined,
+      paypal_id:
+        values.payment_method === 'paypal' ? values.paypal_id : undefined,
       address: values.address,
       pincode: values.pincode,
     };
@@ -116,8 +122,8 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
         />
       ) : null}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex flex-wrap my-5 sm:my-8">
-          <Description
+        <div className="flex flex-wrap w-full my-5 sm:my-8">
+          {/* <Description
             title={t('form:input-label-description')}
             details={`${
               initialValues
@@ -125,11 +131,20 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
                 : t('form:item-description-add')
             } ${t('form:withdraw-description-helper-text')}`}
             className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
-          />
+          /> */}
 
-          <Card className="w-full sm:w-8/12 md:w-2/3">
-          <div className="w-full mb-5">
-          <Label>{t('Select Country')}</Label>
+          <Card className="w-full sm:w-8/12 md:w-full">
+            <Label>{t('Address')}</Label>
+            <Input
+              {...register('address')}
+              error={t(errors.address?.message!)}
+              variant="outline"
+              className="mb-5"
+            />
+
+            <div className="flex flex-row justify-between max-md:flex-wrap">
+              <div className="w-[45%] max-md:w-full mb-5">
+                <Label>{t('Select Country')}</Label>
                 <SelectInput
                   name="countries"
                   placeholder="Select country"
@@ -142,26 +157,17 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
                   // error={t(errors.countries?.message!)}
                 />
                 {/* <ValidationError message={t(error!)} /> */}
-                </div>
-
-            <Label>
-              {t('Address')}
-            </Label>
-            <Input
-              {...register('address')}
-              error={t(errors.address?.message!)}
-              variant="outline"
-              className="mb-5"
-            />
-            <Label>
-              {t('pincode')}
-            </Label>
-            <Input
-              {...register('pincode')}
-              error={t(errors.pincode?.message!)}
-              variant="outline"
-              className="mb-5"
-            />
+              </div>
+              <div className='flex flex-col max-md:w-full w-[45%]'>
+              <Label className=''>{t('pincode')}</Label>
+              <Input
+                {...register('pincode')}
+                error={t(errors.pincode?.message!)}
+                variant="outline"
+                className="mb-5 w-full"
+              />
+              </div>
+            </div>
             <Label>
               {t('form:input-label-amount')}
               <span className="ml-0.5 text-red-500">*</span>

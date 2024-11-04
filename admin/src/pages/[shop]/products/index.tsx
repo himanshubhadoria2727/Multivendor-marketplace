@@ -55,7 +55,7 @@ export default function ProductsPage() {
   const [page, setPage] = useState(1);
   const [orderBy, setOrder] = useState('created_at');
   const [sortedBy, setColumn] = useState<SortOrder>(SortOrder.Desc);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const { openModal } = useModalAction();
   const { locale } = useRouter();
 
@@ -70,7 +70,7 @@ export default function ProductsPage() {
       limit: 20,
       shop_id: shopId,
       type,
-      status:status,
+      status: status,
       categories: category,
       product_type: productType,
       orderBy,
@@ -81,7 +81,7 @@ export default function ProductsPage() {
       enabled: Boolean(shopId),
     },
   );
-  console.log('shop products',products)
+  console.log('shop products', products);
 
   function handleImportModal() {
     openModal('EXPORT_IMPORT_PRODUCT', shopId);
@@ -109,13 +109,24 @@ export default function ProductsPage() {
 
   return (
     <>
+      <div className="mb-8 flex justify-between items-center">
+        <div className="text-3xl font-bold tracking-tight text-gray-900">
+          My Websites
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-lg text-gray-600 font-medium">
+            Total Websites:
+          </span>
+          <span className="text-2xl font-semibold text-gray-900">{products.length}</span>
+        </div>
+      </div>
       <Card className="mb-8 flex flex-col">
         <div className="flex w-full flex-col items-center md:flex-row">
-          <div className="mb-4 md:mb-0 md:w-1/4">
+          {/* <div className="mb-4 md:mb-0 md:w-1/4">
             <PageHeading title={t('form:input-label-products')} />
-          </div>
+          </div> */}
 
-          <div className="flex w-full flex-col items-center md:w-3/4 md:flex-row">
+          <div className="flex w-full flex-col items-center md:flex-row">
             <div className="flex w-full items-center">
               <Search
                 onSearch={handleSearch}
@@ -125,7 +136,7 @@ export default function ProductsPage() {
               {locale === Config.defaultLanguage && (
                 <LinkButton
                   href={`/${shop}/products/create`}
-                  className="h-12 ms-4 md:ms-6"
+                  className="h-12 ms-4 md:ms-6 md:ml-10"
                 >
                   <span className="hidden md:block">
                     + {t('form:button-label-add-product')}
@@ -137,12 +148,12 @@ export default function ProductsPage() {
               )}
             </div>
 
-            <Button
+            {/* <Button
               onClick={handleImportModal}
               className="mt-5 w-full md:hidden"
             >
               {t('common:text-export-import')}
-            </Button>
+            </Button> */}
 
             <button
               className="mt-5 flex items-center whitespace-nowrap text-base font-semibold text-accent md:mt-0 md:ms-5"
@@ -156,17 +167,17 @@ export default function ProductsPage() {
               )}
             </button>
 
-            <button
+            {/* <button
               onClick={handleImportModal}
               className="hidden h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-50 transition duration-300 ms-5 hover:bg-gray-100 md:flex"
             >
               <MoreIcon className="w-3.5 text-body" />
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div
-          className={cn('flex w-full transition', { 
+          className={cn('flex w-full transition', {
             'visible h-auto': visible,
             'invisible h-0': !visible,
           })}
