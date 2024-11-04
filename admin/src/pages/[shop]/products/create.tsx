@@ -35,11 +35,11 @@ export default function CreateProductPage() {
 
   return (
     <>
-      {/* <div className="flex border-b border-dashed border-border-base pb-5 md:pb-7">
-        <h1 className="text-lg font-semibold text-heading">
-          {'List your website'}
+      <div className="flex border-b border-dashed border-border-base pb-5 md:pb-7">
+        <h1 className="text-2xl font-semibold text-heading">
+          {'Add new website'}
         </h1>
-      </div> */}
+      </div>
       <CreateOrUpdateProductForm />
     </>
   );

@@ -58,6 +58,17 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           disabled={Boolean(isLinkInsertion)&&!isLinkInsertion}
           className="mb-5 max-md:w-80 w-64"
         />
+        {isLinkInsertion&&
+        <Input
+        label={`${t("Link insertion Price")}*`}
+        {...register('link_insertion_price')}
+        placeholder='Enter price'
+        type="number"
+        error={t(errors.link_insertion_price?.message!)}
+        variant="outline"
+        className="mb-5 w-80 max-md:w-80"
+      />
+        }
         {/* <Input
           label={t('form:input-label-sale-price')}
           type="number"
@@ -96,14 +107,14 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           disabled={isTranslateProduct}
         /> */}
 
-        <Input
+        {/* <Input
           label={`${t('form:input-label-preview-url')}`}
           {...register('preview_url')}
           placeholder='Enter example url'
           error={t(errors.preview_url?.message!)}
           variant="outline"
           className="mb-5 max-md:w-80 w-80"
-        />
+        /> */}
 
         {/* <Checkbox
           {...register('is_external')}

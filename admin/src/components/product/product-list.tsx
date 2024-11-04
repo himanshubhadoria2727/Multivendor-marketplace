@@ -93,7 +93,7 @@ const ProductList = ({
       dataIndex: 'name',
       key: 'name',
       align: alignLeft,
-      width: 280,
+      width: 250,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
       render: (name: string, { image, type }: { image: any; type: any }) => (
@@ -150,11 +150,11 @@ const ProductList = ({
       dataIndex: 'domain_authority',
       key: 'domain_authority',
       width: 100,
-      align: alignLeft,
+      align: 'center',
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_authority'),
       render: (domain_authority: string) => (
-        <span className="truncate whitespace-nowrap capitalize">
+        <span className="truncate whitespace-nowrap text-green-600 capitalize bg-green-100 px-2 py-1 rounded">
           {domain_authority}
         </span>
       ),
@@ -173,11 +173,11 @@ const ProductList = ({
       dataIndex: 'domain_rating',
       key: 'domain_rating',
       width: 100,
-      align: alignLeft,
+      align: 'center',
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('domain_rating'),
       render: (domain_rating: string) => (
-        <span className="truncate whitespace-nowrap capitalize">
+        <span className="truncate whitespace-nowrap text-green-600 capitalize bg-green-100 px-2 py-1 rounded">
           {domain_rating}
         </span>
       ),
@@ -196,11 +196,11 @@ const ProductList = ({
       dataIndex: 'organic_traffic',
       key: 'organic_traffic',
       width: 130,
-      align: alignLeft,
+      align: 'center',
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('organic_traffic'),
       render: (organic_traffic: string) => (
-        <span className="truncate whitespace-nowrap capitalize">
+        <span className="truncate whitespace-nowrap text-green-600 capitalize bg-green-100 px-2 py-1 rounded">
           {organic_traffic}
         </span>
       ),

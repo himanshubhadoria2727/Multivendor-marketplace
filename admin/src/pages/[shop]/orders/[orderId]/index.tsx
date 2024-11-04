@@ -266,14 +266,14 @@ export default function OrderDetailsPage() {
                   </span>
                 </span>
                 {/* <div className="flex w-[48%] content-baseline items-center gap-4"> */}
-                  <Input
-                    name="url"
-                    className="w-full md:w-200%"
-                    value={order?.url}
-                    // onChange={(event) => setLiveLink(event.target.value)}
-                    // label="Provide the submission"
-                  />
-                  {/* <Button
+                <Input
+                  name="url"
+                  className="w-full md:w-200%"
+                  value={order?.url}
+                  // onChange={(event) => setLiveLink(event.target.value)}
+                  // label="Provide the submission"
+                />
+                {/* <Button
                     className="w-30 mt-2 bg-blue-500"
                     onClick={() => handleSubmittedLink('order-submitted',liveLink)}
                   >
@@ -346,74 +346,68 @@ export default function OrderDetailsPage() {
               )}
             </div> */}
             <div className="space-y-4">
-              {order?.products[0]?.pivot?.title && (
-                <div>
-                  <Label className="text-base text-accent-700">Title</Label>
-                  <Input
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.title}
-                    name={''}
-                  />
+              {/* Task Info Section */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium mb-4">Task Info:</h3>
+                <div className="border rounded-md p-4 space-y-4">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
+                      <Label>Site:</Label>
+                      <Input
+                        value={order?.products[0]?.name || ''}
+                        readOnly
+                        name={''}
+                      />
+                    </div>
+                    <div>
+                      <Label>Task Type:</Label>
+                      <Input
+                        value={
+                          order?.products[0]?.pivot?.selectedForm ===
+                          'guest_post'
+                            ? 'Guest Post'
+                            : 'Link Insertion'
+                        }
+                        readOnly
+                        name={''}
+                      />
+                    </div>
+                    <div>
+                      <Label>Title:</Label>
+                      <Input
+                        value={order?.products[0]?.pivot?.title || ''}
+                        readOnly
+                        name={''}
+                      />
+                    </div>
+                    <div>
+                      <Label>Anchor text:</Label>
+                      <Input
+                        value={order?.products[0]?.pivot?.ancor || ''}
+                        readOnly
+                        name={''}
+                      />
+                    </div>
+                    <div>
+                      <Label>Landing Page URL:</Label>
+                      <Input
+                        value={order?.products[0]?.pivot?.link_url || ''}
+                        readOnly
+                        name={''}
+                      />
+                    </div>
+                    <div>
+                      <Label>Existing Page URL:</Label>
+                      <Input
+                        value={order?.products[0]?.pivot?.postUrl || ''}
+                        readOnly
+                        name={''}
+                      />
+                    </div>
+                  </div>
                 </div>
-              )}
-
-              {order?.products[0]?.pivot?.ancor && (
-                <div>
-                  <Label className="text-base text-accent-700">Anchor</Label>
-                  <Input
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.ancor}
-                    name={''}
-                  />
-                </div>
-              )}
-
-              {order?.products[0]?.pivot?.postUrl && (
-                <div>
-                  <Label className="text-base text-accent-700">Post URL</Label>
-                  <Input
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.postUrl}
-                    name={''}
-                  />
-                </div>
-              )}
-
-              {order?.products[0]?.pivot?.link_url && (
-                <div>
-                  <Label className="text-base text-accent-700">Link URL</Label>
-                  <Input
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.link_url}
-                    name={''}
-                  />
-                </div>
-              )}
-
-              {order?.products[0]?.pivot?.content && (
-                <div>
-                  <Label className="text-base text-accent-700">Content</Label>
-                  <TextArea
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.content}
-                    name={''}
-                  />
-                </div>
-              )}
-              {order?.products[0]?.pivot?.selectedNiche && (
-                <div>
-                  <Label className="text-base text-accent-700">
-                    Select Niche
-                  </Label>
-                  <Input
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.selectedNiche}
-                    name={''}
-                  />
-                </div>
-              )}
-
-              {order?.products[0]?.pivot?.selectedForm && (
+              </div>{' '}
+              {/* {order?.products[0]?.pivot?.selectedForm && (
                 <div>
                   <Label className="text-base text-accent-700">
                     Select Service
@@ -424,39 +418,50 @@ export default function OrderDetailsPage() {
                     name={''}
                   />
                 </div>
-              )}
-              {order?.products[0]?.pivot?.instructions && (
-                <div>
-                  <Label className="text-base text-accent-700">
-                    Instructions
-                  </Label>
-                  <TextArea
-                    className="w-full mt-2"
-                    value={order?.products[0]?.pivot?.instructions}
-                    name={''}
-                  />
+              )} */}
+              {/* Article Attached Section */}
+              {order?.products[0]?.pivot?.file && (<div className="mb-6">
+                <h3 className="text-lg font-medium mb-4">Article Attached:</h3>
+                <div className="flex items-center gap-2 border rounded-md p-4">
+                  <span className="flex-1">
+                    {order?.products[0]?.pivot?.file?.split('/').pop()}
+                  </span>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      window.open(order?.products[0]?.pivot?.file, '_blank')
+                    }
+                  >
+                    Download
+                  </Button>
                 </div>
-              )}
-              {order?.products[0]?.pivot?.file && (
-                <div>
-                  <Label className="text-base text-accent-700">
-                    Attached File
-                  </Label>
-                  <div className="mt-2 flex items-center space-x-4">
-                    {/* Display file name */}
-                    <span>{order?.products[0]?.pivot?.file}</span>
-
-                    {/* Button to download file */}
-                    <a
-                      href={order?.products[0]?.pivot?.file} // URL of the file
-                      download={order?.products[0]?.pivot?.file} // Name of the file
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    >
-                      Download
-                    </a>
-                  </div>
+              </div>)}
+              
+              {/* Special Instructions Section */}
+              <div className="mb-6">
+                <h3 className="text-lg font-medium mb-4">
+                  Special Instructions:
+                </h3>
+                <TextArea
+                  className="w-full"
+                  value={order?.products[0]?.pivot?.instructions || ''}
+                  readOnly name={''}                />
+              </div>
+              {/* Transaction Detail Section */}
+              <div className="flex items-center justify-between border-t pt-4">
+                {/* <div className="text-sm text-gray-600">
+                  UUID or Tax ID: {order?.tracking_number}
+                </div> */}
+                <div className="text-sm text-gray-600">
+                  Transaction ID: {order?.tracking_number}
                 </div>
-              )}
+                {/* <Button
+                  variant="outline"
+                  onClick={() => handleOpenModal(order?.products[0])}
+                >
+                  View
+                </Button> */}
+              </div>
             </div>
           </div>
         </div>

@@ -142,6 +142,7 @@ export default function CreateOrUpdateProductForm({
   const onSubmit = async (values: ProductFormValues) => {
     console.log('submittion started');
     // event.preventDefault();
+    values.slug = slugAutoSuggest;
     values.languages = values.languages?.label;
     values.countries = values.countries?.value;
     values.link_type = values.link_type?.label;
@@ -159,7 +160,6 @@ export default function CreateOrUpdateProductForm({
     } catch (error) {
       toast.error('Something went wrong');
     }
-    
     const inputValues = {
       language: router.locale,
       ...getProductInputValues(values, initialValues, isNewTranslation),
@@ -380,9 +380,10 @@ export default function CreateOrUpdateProductForm({
 
   const steps = [
     {
-      title: 'Add domain',
+      title: '1. Add domain',
       component: (
         <Card className="w-full flex justify-start gap-3 flex-wrap sm:justtify-center sm:w-1/3 md:w-full">
+          <div className="text-2xl font-bold mb-6">Add domain</div>
           <Input
             label={`Website URL`}
             {...register('name')}
@@ -402,14 +403,14 @@ export default function CreateOrUpdateProductForm({
       fields: ['name', 'product_type'],
     },
     {
-      title: 'Add details',
+      title: '2. Add details',
       component: (
         <Card className="w-full flex flex-col gap-5">
           {/* First Row: Metrics */}
           <div className="w-full">
             <h3 className="text-lg font-semibold mb-3">Metrics</h3>
             <div className="flex flex-wrap gap-3 justify-start md:justify-between">
-              <Input
+              {/* <Input
                 label="Site slug"
                 {...register('slug')}
                 value={slugAutoSuggest}
@@ -424,7 +425,7 @@ export default function CreateOrUpdateProductForm({
                 placeholder="e.g. google"
                 variant="outline"
                 className="mb-5 w-[22%] max-md:w-full"
-              />
+              /> */}
               <Input
                 label="Moz DA"
                 type="number"
@@ -443,8 +444,6 @@ export default function CreateOrUpdateProductForm({
                 variant="outline"
                 className="mb-5 w-[22%] max-md:w-full"
               />
-            </div>
-            <div className="flex flex-wrap gap-3 justify-start md:justify-start space-x-10">
               <Input
                 label="Ahref Traffic"
                 type="number"
@@ -629,10 +628,9 @@ export default function CreateOrUpdateProductForm({
               {/* Increased bottom margin for better spacing */}
               Pricing
             </h3>
-            <div className="mb-4">
-              {/* Added bottom margin to separate from other components */}
+            {/* <div className="mb-4">
               <ProductTagInput control={control} setValue={setValue} />
-            </div>
+            </div> */}
             <div className="mb-4">
               {/* Added bottom margin for spacing */}
               <ProductSimpleForm initialValues={initialValues} />
@@ -652,7 +650,7 @@ export default function CreateOrUpdateProductForm({
               )}
 
               <RichTextEditor
-                title={t('form:input-label-description')}
+                title={t('Site description')}
                 control={control}
                 name="description"
                 error={t(errors?.description?.message)}
@@ -686,11 +684,12 @@ export default function CreateOrUpdateProductForm({
         'is_cbd',
         'is_crypto',
         'niche_price',
+        'link_insertion_price',
         'description',
       ],
     },
     {
-      title: 'Verify and Add site',
+      title: '3. Verify and Add site',
       component: (
         <Card>
           {initialValues?.status !== 'publish' ? (
@@ -839,30 +838,26 @@ export default function CreateOrUpdateProductForm({
       ) : null}
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          <div className="flex flex-col min-h-screen p-4">
-            {/* Step Titles and Progress Bar */}
-            <div className="mb-6">
-              {/* Step Titles */}
-              <div className="flex justify-between mb-2">
-                {steps.map((step, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 text-center text-gray-700 font-medium"
-                  >
-                    <span className="text-sm">{step.title}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Progress Bar */}
-              <div className="relative flex items-center">
-                <div className="flex-1 bg-gray-200 h-2 rounded-full overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-green-500 to-blue-500 h-2 rounded-full transition-all duration-500 ease-in-out"
-                    style={{
-                      width: `${(currentStep / steps.length) * 100}%`,
-                    }}
-                  />
+          <div className="flex flex-col justify-center p-4">
+            {/* Step Titles with Arrows */}
+            <div className="mb-6 flex justify-center">
+              <div className="w-[60%] max-w-lg bg-white pt-4 pb-4 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out dark:bg-dark-400 dark:text-white">
+                <div className="flex justify-between mb-2">
+                  {steps.map((step, index) => (
+                    <div
+                      key={index}
+                      className={`flex items-center text-center font-medium ${
+                        currentStep === index + 1
+                          ? 'text-blue-600'
+                          : 'text-gray-700'
+                      }`}
+                    >
+                      <span className="text-sm">{step.title}</span>
+                      {index < steps.length - 1 && (
+                        <span className="ml-2 text-gray-500">➡️</span> // Arrow indicating next step
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -909,7 +904,7 @@ export default function CreateOrUpdateProductForm({
                   onClick={handleNextStep}
                   className="flex-shrink-0 px-4 cursor-pointer py-2 border border-[#24b47e] rounded-lg bg-transparent hover:bg-[#24b47e] hover:text-white text-[#24b47e] transition duration-300 ease-in-out"
                 >
-                  Next Step
+                  Save and continue
                 </div>
               )}
             </div>
