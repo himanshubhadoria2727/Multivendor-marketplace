@@ -39,7 +39,7 @@ export type ProductFormValues = Omit<
   in_flash_sale: boolean;
   variations?: AttributeValue[];
   variation_options?: Variation[];
-  verify_domain:boolean;
+  // verify_domain:boolean;
   image: AttachmentInput;
   type_id:string;
 };

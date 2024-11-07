@@ -32,7 +32,7 @@ export const productValidationSchema = yup.object().shape({
     .number()
     .typeError('Link insertion price must be a number')
     .min(0)
-    .max(200),
+    .max(9999),
     // .required('Niche Price is required'),
 
   word_count: yup
@@ -73,7 +73,7 @@ export const productValidationSchema = yup.object().shape({
   // }),
   other_guidelines: yup.string().required('Other guidelines are required'),
   domain_name: yup.string().nullable('form:error-domain-name-required'),
-  verify_domain: yup.string().nullable('form:error-domain-name-required'),
+  // verify_domain: yup.string().nullable('form:error-domain-name-required'),
   // niche_price: yup.number().required('Niche price is a required'),
   type: yup.object().nullable('form:error-type-required'),
   // status: yup.string().nullable().required('form:error-status-required'),
@@ -95,13 +95,13 @@ export const productValidationSchema = yup.object().shape({
         .typeError('Authority must be a number')
         .positive('must be positive')
         .max(100)
-        .required('Domain authority is required'),
+        .nullable('Domain authority is required'),
       domain_rating: yup
         .number()
         .typeError('Domain rating must be a number')
         .positive('must be positive')
         .max(100)
-        .required('Domain rating is required'),
+        .nullable('Domain rating is required'),
       niche_price: yup
         .number()
         .typeError('Niche price must be a number')
@@ -127,13 +127,13 @@ export const productValidationSchema = yup.object().shape({
         .number()
         .typeError('Word count must be a number')
         .positive('must be positive')
-        .max(1000)
+        .max(2000)
         .required('Word count is required'),
       tat: yup
         .number()
         .typeError('Tat must be a number')
         .positive('must be positive')
-        .max(100)
+        .max(20)
         .required('Tat is required'),
       countries: yup
         .object()

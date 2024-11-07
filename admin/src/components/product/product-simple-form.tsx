@@ -3,9 +3,8 @@ import Description from '@/components/ui/description';
 import Card from '@/components/common/card';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'next-i18next';
-import Label from '@/components/ui/label';
-import FileInput from '@/components/ui/file-input';
 import Checkbox from '@/components/ui/checkbox/checkbox';
+import { useEffect } from 'react';
 import { Config } from '@/config';
 import { useRouter } from 'next/router';
 import Alert from '@/components/ui/alert';
@@ -19,16 +18,32 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
     register,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext();
   const { t } = useTranslation();
   const { locale } = useRouter();
   const isTranslateProduct = locale !== Config.defaultLanguage;
 
+  // Watch states of checkboxes
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
   const isLinkInsertion = watch('isLinkInsertion');
 
+  // Pre-fill values based on initialValues prop if available
+  useEffect(() => {
+    if (initialValues) {
+      setValue('is_digital', initialValues.is_digital === '1');
+      setValue('is_external', initialValues.is_external === '1');
+      setValue('isLinkInsertion', initialValues.isLinkInsertion === '1');
+      if (initialValues.price) {
+        setValue('price', initialValues.price);
+      }
+      if (initialValues.link_insertion_price) {
+        setValue('link_insertion_price', initialValues.link_insertion_price);
+      }
+    }
+  }, [initialValues, setValue]);
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
       {/* <Description
@@ -51,24 +66,26 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           variant="outline"
           className="mb-5 w-80 max-md:w-80"
         />
-        <Checkbox
+         <Checkbox
           {...register('isLinkInsertion')}
           id="isLinkInsertion"
-          label={t('Allowing Link insertion')}
-          disabled={Boolean(isLinkInsertion)&&!isLinkInsertion}
+          label={t('Allowing Link Insertion')}
+          checked={isLinkInsertion}
           className="mb-5 max-md:w-80 w-64"
         />
-        {isLinkInsertion&&
-        <Input
-        label={`${t("Link insertion Price")}*`}
-        {...register('link_insertion_price')}
-        placeholder='Enter price'
-        type="number"
-        error={t(errors.link_insertion_price?.message!)}
-        variant="outline"
-        className="mb-5 w-80 max-md:w-80"
-      />
-        }
+
+        {/* Conditionally render 'Link Insertion Price' input if 'isLinkInsertion' is checked */}
+        {isLinkInsertion && (
+          <Input
+            label={`${t("Link Insertion Price")}*`}
+            {...register('link_insertion_price', { required: isLinkInsertion })}
+            placeholder="Enter price"
+            type="number"
+            error={t(errors.link_insertion_price?.message!)}
+            variant="outline"
+            className="mb-5 w-80 max-md:w-80"
+          />
+        )}
         {/* <Input
           label={t('form:input-label-sale-price')}
           type="number"

@@ -20,19 +20,24 @@ export const useCreateProductMutation = () => {
   const { t } = useTranslation();
   return useMutation(
     productClient.create, {
-    onSuccess: async () => {
-      const generateRedirectUrl = router.query.shop
-        ? `/${router.query.shop}${Routes.product.list}`
-        : Routes.product.list;
-      await Router.push(generateRedirectUrl, undefined, {
-        locale: Config.defaultLanguage,
-      });
-      toast.success(t('common:successfully-created'));
+
+    onSuccess: async (res) => {
+      console.log('result',res)
+      localStorage.setItem('webId', res.id);
+      localStorage.setItem('shopId', res.shop_id);
+      // const generateRedirectUrl = router.query.shop
+      //   ? `/${router.query.shop}${Routes.product.list}`
+      //   : Routes.product.list;
+      // await Router.push(generateRedirectUrl, undefined, {
+      //   locale: Config.defaultLanguage,
+      // });
+      toast.success(t('Saved as draft'));
     },
     // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries(API_ENDPOINTS.PRODUCTS);
     },
+
     onError: (error: any) => {
       const { data, status } = error?.response;
       if (status === 422) {
@@ -53,16 +58,13 @@ export const useUpdateProductMutation = () => {
   const router = useRouter();
   return useMutation(productClient.update, {
     onSuccess: async (data) => {
+      
       const generateRedirectUrl = router.query.shop
         ? `/${router.query.shop}${Routes.product.list}`
         : Routes.product.list;
-      await router.push(
-        `${generateRedirectUrl}/${data?.slug}/edit`,
-        undefined,
-        {
-          locale: Config.defaultLanguage,
-        },
-      );
+      await Router.push(generateRedirectUrl, undefined, {
+        locale: Config.defaultLanguage,
+      });
       toast.success(t('common:successfully-updated'));
     },
     // Always refetch after error or success:
