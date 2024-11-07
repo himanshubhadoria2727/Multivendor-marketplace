@@ -160,6 +160,7 @@ export default function CreateOrUpdateProductForm({
     } catch (error) {
       toast.error('Something went wrong');
     }
+    // values.status = 'publish'
     const inputValues = {
       language: router.locale,
       ...getProductInputValues(values, initialValues, isNewTranslation),
@@ -170,29 +171,77 @@ export default function CreateOrUpdateProductForm({
     try {
       console.log('initial values', inputValues);
 
-      if (
-        !initialValues ||
-        !initialValues.translated_languages.includes(router.locale!)
-      ) {
+      // if (
+      //   !initialValues ||
+      //   !initialValues.translated_languages.includes(router.locale!)
+      // ) {
         console.log('initial values', inputValues);
         //@ts-ignore
-        createProduct({
-          ...inputValues,
-          ...(initialValues?.slug && { slug: initialValues.slug }),
-          shop_id: shopId || initialValues?.shop_id,
-          quantity: 100,
-          sku: 'samplesku',
-          type_id: values.type_id || '1',
-        });
-      } else {
+
+        //cretateProduct(
+          // {
+          //   "language": "en",
+          //   "description": "<p>askldklsa</p>",
+          //   "video": [],
+          //   "other_guidelines": "dkjanskldja",
+          //   "organic_traffic": 8,
+          //   "spam_score": 8,
+          //   "tat": 77,
+          //   "word_count": 77,
+          //   "domain_rating": 8,
+          //   "domain_authority": 88,
+          //   "price": 37,
+          //   "name": "https://sdkjas.com",
+          //   "step1": "",
+          //   "step2": "",
+          //   "languages": "English",
+          //   "countries": "GS",
+          //   "link_type": "DoFollow",
+          //   "link_validity": "1 Year",
+          //   "link_counts": "1",
+          //   "sponsored_marked": "Yes",
+          //   "isLinkInsertion": false,
+          //   "is_niche": false,
+          //   "step3": "",
+          //   "slug": "https://sdkjas.com",
+          //   "status": "draft",
+          //   "is_digital": true,
+          //   "type_id": "1",
+          //   "product_type": "simple",
+          //   "categories": [
+          //       1
+          //   ],
+          //   "quantity": 100,
+          //   "digital_file": {},
+          //   "variations": [],
+          //   "variation_options": {
+          //       "upsert": []
+          //   },
+          //   "min_price": null,
+          //   "max_price": null,
+          //   "shop_id": 54,
+          //   "sku": "samplesku"
+        // }
+//)
+      //   createProduct({
+      //     ...inputValues,
+      //     ...(initialValues?.slug && { slug: initialValues.slug }),
+      //     shop_id: shopId || initialValues?.shop_id,
+      //     quantity: 100,
+      //     sku: 'samplesku',
+      //     type_id: values.type_id || '1',
+      //   });
+      // } else {
+    var x=    localStorage.getItem('webId'); //setItem
+   var  y=   localStorage.getItem('shopId' )
         //@ts-ignore
         updateProduct({
           ...inputValues,
-          id: initialValues.id!,
-          shop_id: initialValues.shop_id!,
+          id: initialValues?.id! || x,
+          shop_id: initialValues?.shop_id! || y,
           description: 'none',
         });
-      }
+      // }
     } catch (error) {
       console.log('something went wrong');
       const serverErrors = getErrorMessage(error);
@@ -390,7 +439,7 @@ export default function CreateOrUpdateProductForm({
             placeholder="eg-google.com"
             error={t(errors.name?.message!)}
             onChange={(e) => setProductUrl(e.target.value)}
-            disabled={isInputLocked}
+            disabled={isInputLocked || !!initialValues}
             variant="outline"
             className="mb-5 w-full max-md:w-full"
           />
@@ -400,7 +449,7 @@ export default function CreateOrUpdateProductForm({
           />
         </Card>
       ),
-      fields: ['name', 'product_type'],
+      fields: ['name', 'type'],
     },
     {
       title: '2. Add details',
@@ -770,19 +819,19 @@ export default function CreateOrUpdateProductForm({
   const handleNextStep = async () => {
     let isValid = true;
     const invalidFields = []; // To store the names of invalid fields
-
+  
     for (let i = 1; i <= currentStep; i++) {
       const stepFields = steps[i - 1].fields;
-
+  
       console.log(`Validating step ${i} with fields:`, stepFields); // Log fields for each step
-
+  
       // Get the values for the current step's fields
       const stepValues = getValues(stepFields);
       console.log(`Values for step ${i}:`, stepValues); // Log values for the current step
-
+  
       // Validate the current step
       const stepIsValid = await trigger(stepFields);
-
+  
       if (!stepIsValid) {
         // Collect names of invalid fields
         stepFields.forEach((field) => {
@@ -794,7 +843,7 @@ export default function CreateOrUpdateProductForm({
             });
           }
         });
-
+  
         console.log(`Step ${i} is not valid.`); // Log invalid step
         isValid = false;
         break;
@@ -802,21 +851,112 @@ export default function CreateOrUpdateProductForm({
         console.log(`Step ${i} is valid.`); // Log valid step
       }
     }
-
+  
+    const newInputValues = {
+      video: [],
+      other_guidelines: ' a',
+      organic_traffic: 0,
+      spam_score: 0,
+      tat: 0,
+      languages: 'English',
+      word_count: 0,
+      domain_rating: 0,
+      domain_authority: 0,
+      price: 0,
+      slug: '',
+      site_name: 'a ',
+      domain_name: ' a',
+      sale_price: 0, // Optional, can be omitted if not needed
+      quantity: 0, // Optional, can be omitted if not needed
+      countries: ' a',
+      link_type: 'a ',
+      niche_price: '0',
+      link_insertion_price: '0',
+      link_validity: 'a ',
+      link_counts: 'a',
+      sponsored_marked: 'a',
+      description: 'none',
+      categories: [],
+      variations: [],
+      in_stock: true, // Default value
+      is_taxable: false, // Default value
+      author_id: '', // Optional if not required
+      digital_file: {},
+      product_type: product_type,
+      external_product_button_text: '',
+      external_product_url: '',
+      is_external: false,
+      isLinkInsertion: false,
+      is_niche: false,
+      is_gamble: false,
+      is_cbd: false,
+      is_crypto: false,
+      manufacturer_id: '',
+      max_price: null,
+      min_price: null,
+      variation_options: {
+        upsert: [],
+      },
+      gallery: [],
+      image: undefined, // Set to undefined or an object of AttachmentInput if available
+      status: 'draft', // Assuming 'draft' is a valid ProductStatus
+      height: '',
+      length: '',
+      width: '',
+      in_flash_sale: false,
+    };
+  
     if (isValid) {
-      console.log('Form is valid, proceeding to the next step.');
-      window.scrollTo({ top: 0, behavior: 'auto' });
-      if (currentStep < steps.length) {
-        setCurrentStep(currentStep + 1);
+      if (currentStep === 1) {
+        // Check if initialValues are available and translated_languages includes the current locale
+        if (!initialValues || !initialValues.translated_languages.includes(router.locale!)) {
+          // Create the product
+          try {
+           var rs= await createProduct({
+              ...newInputValues,
+              ...(initialValues?.slug && { slug: initialValues.slug }),
+              shop_id: shopId || initialValues?.shop_id,
+              quantity: 100,
+              sku: 'samplesku',
+              type_id: getValues('type').id || '1',
+              name: getValues('name'),
+              product_type: 'simple',
+            });
+  
+            console.log('Product created successfully.');
+  
+            // Proceed to the next step if the API call is successful
+            window.scrollTo({ top: 0, behavior: 'auto' });
+            if (currentStep < steps.length) {
+              setCurrentStep(currentStep + 1);
+            }
+          } catch (error) {
+            console.error('Failed to create product:', error);
+            // Optionally, display an error message to the user
+            // setErrorMessage('Failed to create product. Please try again.');
+          }
+        } else {
+          console.log('Initial values are valid, proceeding to the next step.');
+          window.scrollTo({ top: 0, behavior: 'auto' });
+          if (currentStep < steps.length) {
+            setCurrentStep(currentStep + 1);
+          }
+        }
+      } else {
+        console.log('Form is valid, proceeding to the next step.');
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        if (currentStep < steps.length) {
+          setCurrentStep(currentStep + 1);
+        }
       }
     } else {
       console.log('Form is not valid, stopping progression.');
-      // Log all invalid fields and their messages
       console.log('Invalid fields:', invalidFields);
       // Optionally, set an error message to display to the user
       // setErrorMessage('Please complete the required fields before proceeding.');
     }
   };
+  
 
   const handlePreviousStep = () => {
     window.scrollTo({ top: 0, behavior: 'auto' }); // Add your existing logic to handle the previous step

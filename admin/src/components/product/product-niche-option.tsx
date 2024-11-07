@@ -2,14 +2,11 @@ import Input from '@/components/ui/input';
 import Description from '@/components/ui/description';
 import Card from '@/components/common/card';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
-import Label from '@/components/ui/label';
-import FileInput from '@/components/ui/file-input';
 import Checkbox from '@/components/ui/checkbox/checkbox';
 import { Config } from '@/config';
 import { useRouter } from 'next/router';
-import Alert from '@/components/ui/alert';
-import Radio from '../ui/radio/radio';
 
 type IProps = {
   initialValues: any;
@@ -32,6 +29,24 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
   const is_cbd = watch('is_cbd');
   const is_crypto = watch('is_crypto');
 
+  // Pre-select checkboxes based on initialValues prop
+  useEffect(() => {
+    if (initialValues) {
+      // Set 'is_niche' value based on initialValues or default
+      setValue('is_niche', initialValues.is_niche === '1' ? true : false);
+
+      // Set 'is_gamble', 'is_cbd', 'is_crypto' values based on initialValues or default
+      setValue('is_gamble', initialValues.is_gamble === '1' ? true : false);
+      setValue('is_cbd', initialValues.is_cbd === '1' ? true : false);
+      setValue('is_crypto', initialValues.is_crypto === '1' ? true : false);
+
+      // Set niche_price if it exists
+      if (initialValues.niche_price) {
+        setValue('niche_price', initialValues.niche_price);
+      }
+    }
+  }, [initialValues, setValue]);
+
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
       <Description
@@ -44,6 +59,7 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
           {...register('is_niche')}
           id="is_niche"
           label={t('Grey Niche allowed?')}
+          checked={is_niche} // Controlled by watch
           className="mb-5 font-semibold text-black-900 max-md:w-80 w-64"
         />
 
@@ -53,21 +69,21 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
               {...register('is_gamble')}
               id="is_gamble"
               label={t('Casino/Betting/Gambling Link')}
-              disabled={!is_niche}
+              checked={is_gamble} // Controlled by watch
               className="mb-5 font-semibold max-md:w-80 w-64"
             />
             <Checkbox
               {...register('is_cbd')}
               id="is_cbd"
               label={t('CBD Link')}
-              disabled={!is_niche}
+              checked={is_cbd} // Controlled by watch
               className="mb-5 font-semibold text-black-900 max-md:w-80 w-64"
             />
             <Checkbox
               {...register('is_crypto')}
               id="is_crypto"
               label={t('Cryptocurrency Link')}
-              disabled={!is_niche}
+              checked={is_crypto} // Controlled by watch
               className="mb-5 font-semibold max-md:w-80 w-64"
             />
             <Input
