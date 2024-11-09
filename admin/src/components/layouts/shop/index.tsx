@@ -158,7 +158,7 @@ const SideBarGroup = () => {
       </div>
 
       {/* Fixed Footer */}
-      <div className="flex justify-evenly px-2 gap-10 py-4 border-t border-gray-200">
+      <div className="flex justify-evenly px-2 gap-20 py-4 border-t border-gray-200">
         <Link href="/#">
           <div className="text-sm text-accent hover:text-primary transition-colors">
             {t('Terms')}
@@ -195,7 +195,7 @@ const ShopLayout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       <div className="flex flex-1">
         <aside
           className={cn(
-            'fixed bottom-0 z-10 hidden h-full w-64 bg-white shadow transition-[width] duration-300 ltr:left-0 ltr:right-auto rtl:right-0 rtl:left-auto lg:block',
+            'fixed bottom-0 z-10 hidden h-full w-72 bg-white shadow transition-[width] duration-300 ltr:left-0 ltr:right-auto rtl:right-0 rtl:left-auto lg:block',
             width >= RESPONSIVE_WIDTH &&
               (underMaintenance || underMaintenanceStart)
               ? 'pt-[8.75rem]'
