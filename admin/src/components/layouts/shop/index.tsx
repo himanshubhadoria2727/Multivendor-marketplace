@@ -18,6 +18,7 @@ import {
   checkIsMaintenanceModeStart,
 } from '@/utils/constants';
 import { adminOnly } from '@/utils/auth-utils';
+import Link from '@/components/ui/link';
 
 interface MenuItemsProps {
   [key: string]: {
@@ -70,7 +71,7 @@ const SidebarItemMap = ({ menuItems }: any) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-1">
       {childMenu?.map(
         ({
           href,
@@ -110,47 +111,66 @@ const SidebarItemMap = ({ menuItems }: any) => {
 };
 
 const SideBarGroup = () => {
-  const [miniSidebar, _] = useAtom(miniSidebarInitialValue);
+  const [miniSidebar] = useAtom(miniSidebarInitialValue);
   const { role } = getAuthCredentials();
   const menuItems: MenuItemsProps =
     role === 'staff'
       ? siteSettings?.sidebarLinks?.staff
       : siteSettings?.sidebarLinks?.shop;
-      if (role === SUPER_ADMIN) {
-        console.log(menuItems.root)
-        delete menuItems.root
-        // menuItems?.map((val,ind)=>{
-        //   console.log(val)
-        // });
-      }
+  
+  if (role === SUPER_ADMIN) {
+    console.log(menuItems.root);
+    delete menuItems.root;
+  }
+  
   const menuKeys = Object.keys(menuItems);
   const { width } = useWindowSize();
   const { t } = useTranslation();
 
   return (
-    <>
-      {menuKeys?.map((menu, index) => (
-        <div
-          className={cn(
-            'flex flex-col px-5',
-            miniSidebar && width >= RESPONSIVE_WIDTH
-              ? 'border-b border-dashed border-gray-200 py-4'
-              : 'pt-0 pb-3',
-          )}
-          key={index}
-        >
+    <div className="flex flex-col h-full">
+      <div className="flex-grow overflow-y-auto"
+      style={{
+        scrollbarWidth: 'none', /* Firefox */
+        scrollbarColor: '#c0c0c0 transparent', /* Firefox */
+      }}>
+        {menuKeys?.map((menu, index) => (
           <div
             className={cn(
-              'px-3 pb-3 text-xs font-semibold uppercase tracking-[0.05em] text-body/60',
-              miniSidebar && width >= RESPONSIVE_WIDTH ? 'hidden' : '',
+              'flex flex-col px-5',
+              miniSidebar && width >= RESPONSIVE_WIDTH
+                ? 'border-b border-dashed border-gray-200 py-1'
+                : 'pt-0 pb-3'
             )}
+            key={index}
           >
-            {t(menuItems[menu]?.label)}
+            {/* <div
+              className={cn(
+                'px-3 pb-1 text-xs font-semibold uppercase tracking-[0.05em] text-body/60',
+                miniSidebar && width >= RESPONSIVE_WIDTH ? 'hidden' : ''
+              )}
+            >
+              {t(menuItems[menu]?.label)}
+            </div> */}
+            <SidebarItemMap menuItems={menuItems[menu]} />
           </div>
-          <SidebarItemMap menuItems={menuItems[menu]} />
-        </div>
-      ))}
-    </>
+        ))}
+      </div>
+
+      {/* Fixed Footer */}
+      <div className="flex justify-evenly px-2 gap-10 py-4 border-t border-gray-200">
+        <Link href="/#">
+          <div className="text-sm text-accent hover:text-primary transition-colors">
+            {t('Terms')}
+          </div>
+        </Link>
+        <Link href="/#">
+          <div className="text-sm text-accent hover:text-primary transition-colors">
+            {t('Privacy')}
+          </div>
+        </Link>
+      </div>
+    </div>
   );
 };
 
@@ -175,7 +195,7 @@ const ShopLayout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
       <div className="flex flex-1">
         <aside
           className={cn(
-            'fixed bottom-0 z-10 hidden h-full w-72 bg-white shadow transition-[width] duration-300 ltr:left-0 ltr:right-auto rtl:right-0 rtl:left-auto lg:block',
+            'fixed bottom-0 z-10 hidden h-full w-64 bg-white shadow transition-[width] duration-300 ltr:left-0 ltr:right-auto rtl:right-0 rtl:left-auto lg:block',
             width >= RESPONSIVE_WIDTH &&
               (underMaintenance || underMaintenanceStart)
               ? 'pt-[8.75rem]'
