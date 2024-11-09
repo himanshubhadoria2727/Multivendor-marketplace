@@ -70,7 +70,7 @@ const SidebarItemMap = ({ menuItems }: any) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {childMenu?.map(
         ({
           href,
@@ -134,14 +134,14 @@ const SideBarGroup = () => {
           className={cn(
             'flex flex-col px-5',
             miniSidebar && width >= RESPONSIVE_WIDTH
-              ? 'border-b border-dashed border-gray-200 py-5'
-              : 'pt-6 pb-3',
+              ? 'border-b border-dashed border-gray-200 py-4'
+              : 'pt-0 pb-3',
           )}
           key={index}
         >
           <div
             className={cn(
-              'px-3 pb-5 text-xs font-semibold uppercase tracking-[0.05em] text-body/60',
+              'px-3 pb-3 text-xs font-semibold uppercase tracking-[0.05em] text-body/60',
               miniSidebar && width >= RESPONSIVE_WIDTH ? 'hidden' : '',
             )}
           >
