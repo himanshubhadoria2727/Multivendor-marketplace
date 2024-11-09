@@ -48,3 +48,4 @@ export { StoreNoticeOwnerIcon } from '@/components/icons/sidebar/store-notice';
 export {AddWebsiteIcon} from '@/components/icons/sidebar/addWebsite';
 export {WebsiteIcon} from '@/components/icons/sidebar/websites';
 export {DraftWebsiteIcon} from '@/components/icons/sidebar/draftWebsite';
+export {HelpIcon} from '@/components/icons/sidebar/help';
