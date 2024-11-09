@@ -572,7 +572,7 @@ export const siteSettings = {
     shop: {
       root: {
         href: '',
-        label: 'text-main',
+        // label: 'text-main',
         icon: 'DashboardIcon',
         childMenu: [
           {
@@ -619,42 +619,40 @@ export const siteSettings = {
 
       product: {
         href: '',
-        label: 'text-product-management',
         icon: 'ProductsIcon',
         permissions: adminOwnerAndStaffOnly,
         childMenu: [
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.product.list}`,
+          //   label: 'sidebar-nav-item-products',
+          //   icon: 'ProductsIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
           {
             href: (shop: string) => `/${shop}${Routes.product.list}`,
-            label: 'sidebar-nav-item-products',
-            icon: 'ProductsIcon',
-            childMenu: [
-              {
-                href: (shop: string) => `/${shop}${Routes.product.list}`,
-                label: 'text-all-products',
-                icon: 'ProductsIcon',
-                permissions: adminOwnerAndStaffOnly,
-              },
-              {
-                href: (shop: string) => `/${shop}${Routes.product.create}`,
-                label: 'text-new-products',
-                icon: 'ProductsIcon',
-                permissions: adminOwnerAndStaffOnly,
-              },
-              {
-                href: (shop: string) => `/${shop}${Routes.draftProducts}`,
-                label: 'text-my-draft',
-                icon: 'ProductsIcon',
-                permissions: adminOwnerAndStaffOnly,
-              },
-              // {
-              //   href: (shop: string) =>
-              //     `/${shop}${Routes.outOfStockOrLowProducts}`,
-              //   label: 'text-all-out-of-stock',
-              //   icon: 'ProductsIcon',
-              //   permissions: adminOwnerAndStaffOnly,
-              // },
-            ],
+            label: 'text-all-products',
+            icon: 'WebsiteIcon',
+            permissions: adminOwnerAndStaffOnly,
           },
+          {
+            href: (shop: string) => `/${shop}${Routes.product.create}`,
+            label: 'text-new-products',
+            icon: 'AddWebsiteIcon',
+            permissions: adminOwnerAndStaffOnly,
+          },
+          {
+            href: (shop: string) => `/${shop}${Routes.draftProducts}`,
+            label: 'text-my-draft',
+            icon: 'DraftWebsiteIcon',
+            permissions: adminOwnerAndStaffOnly,
+          },
+          // {
+          //   href: (shop: string) =>
+          //     `/${shop}${Routes.outOfStockOrLowProducts}`,
+          //   label: 'text-all-out-of-stock',
+          //   icon: 'ProductsIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
           // {
           //   href: (shop: string) => `/${shop}${Routes.productInventory}`,
           //   label: 'text-inventory',
@@ -681,30 +679,10 @@ export const siteSettings = {
           // },
         ],
       },
-
-      financial: {
-        href: '',
-        label: 'text-financial-management',
-        icon: 'WithdrawIcon',
-        childMenu: [
-          {
-            href: (shop: string) => `/${shop}${Routes.withdraw.list}`,
-            label: 'sidebar-nav-item-withdraws',
-            icon: 'AttributeIcon',
-            permissions: adminAndOwnerOnly,
-          },
-          // {
-          //   href: (shop: string) => `/${shop}${Routes.refund.list}`,
-          //   label: 'sidebar-nav-item-refunds',
-          //   icon: 'RefundsIcon',
-          //   permissions: adminOwnerAndStaffOnly,
-          // },
-        ],
-      },
-
+      
       order: {
         href: '',
-        label: 'text-order-management',
+        // label: 'text-order-management',
         icon: 'OrdersIcon',
         childMenu: [
           {
@@ -721,10 +699,30 @@ export const siteSettings = {
           },
           {
             href: (shop: string) => `/${shop}${Routes.payout.list}`,
-            label: 'Payout',
+            label: 'Payouts',
             icon: 'WithdrawIcon',
             permissions: adminAndOwnerOnly,
           },
+        ],
+      },
+
+      financial: {
+        href: '',
+        // label: 'text-financial-management',
+        icon: 'WithdrawIcon',
+        childMenu: [
+          {
+            href: (shop: string) => `/${shop}${Routes.withdraw.list}`,
+            label: 'sidebar-nav-item-withdraws',
+            icon: 'AttributeIcon',
+            permissions: adminAndOwnerOnly,
+          },
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.refund.list}`,
+          //   label: 'sidebar-nav-item-refunds',
+          //   icon: 'RefundsIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
         ],
       },
 
@@ -844,7 +842,7 @@ export const siteSettings = {
       // },
       profileUpdate:{
         href: '',
-        label: 'authorized-nav-item-profile',
+        // label: 'authorized-nav-item-profile',
         icon: 'SettingsIcon',
         childMenu: [
           {

@@ -3,8 +3,12 @@ import { MAXIMUM_WORD_COUNT_FOR_RICH_TEXT_EDITOR } from '@/utils/constants';
 
 export const productValidationSchema = yup.object().shape({
   name: yup
-    .string().url('Please enter a valid URL').required('Website name is required'),
-  // sku: yup.string().nullable().required('form:error-sku-required'),
+  .string()
+  .matches(
+    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+    'Please enter a valid URL'
+  )
+  .required('Website name is required'),  // sku: yup.string().nullable().required('form:error-sku-required'),
   price: yup
     .number()
     .typeError('form:error-price-must-number')

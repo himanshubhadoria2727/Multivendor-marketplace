@@ -45,3 +45,6 @@ export { LogOutIcon } from '@/components/icons/logout';
 export { MyShopOwnerIcon } from '@/components/icons/sidebar/my-shop';
 export { ChatOwnerIcon } from '@/components/icons/sidebar/chat';
 export { StoreNoticeOwnerIcon } from '@/components/icons/sidebar/store-notice';
+export {AddWebsiteIcon} from '@/components/icons/sidebar/addWebsite';
+export {WebsiteIcon} from '@/components/icons/sidebar/websites';
+export {DraftWebsiteIcon} from '@/components/icons/sidebar/draftWebsite';
