@@ -19,12 +19,14 @@ export const useCreateWithdrawMutation = () => {
   const router = useRouter();
   return useMutation(withdrawClient.create, {
     onSuccess: () => {
+      toast.success(t('Withdrawl created successfully'));
       router.push(`/${router.query.shop}/withdraws`);
     },
     // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries(API_ENDPOINTS.WITHDRAWS);
     },
+    
   });
 };
 
@@ -76,3 +78,7 @@ export const useWithdrawsQuery = (
     loading: isLoading,
   };
 };
+function t(arg0: string): import("react-toastify").ToastContent<unknown> {
+  throw new Error('Function not implemented.');
+}
+

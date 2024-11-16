@@ -14,7 +14,7 @@ import { mapPaginatorData } from '@/utils/data-mappers';
 import { Routes } from '@/config/routes';
 import { Config } from '@/config';
 
-export const useCreateProductMutation = () => {
+export const useCreateProductMutation = (onSuccessCallback?: (data: any) => void) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { t } = useTranslation();
@@ -25,6 +25,7 @@ export const useCreateProductMutation = () => {
       console.log('result',res)
       localStorage.setItem('webId', res.id);
       localStorage.setItem('shopId', res.shop_id);
+      onSuccessCallback && onSuccessCallback(res);
       // const generateRedirectUrl = router.query.shop
       //   ? `/${router.query.shop}${Routes.product.list}`
       //   : Routes.product.list;
@@ -58,7 +59,6 @@ export const useUpdateProductMutation = () => {
   const router = useRouter();
   return useMutation(productClient.update, {
     onSuccess: async (data) => {
-      
       const generateRedirectUrl = router.query.shop
         ? `/${router.query.shop}${Routes.product.list}`
         : Routes.product.list;

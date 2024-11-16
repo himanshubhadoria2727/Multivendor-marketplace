@@ -80,7 +80,7 @@ const Navbar = () => {
   const { data:myData } = useMeQuery();
 
   const { price: shopBalance } = usePrice({
-    amount: myData?.shops[0]?.balance?.current_balance!,
+    amount: myData?.shops[0]?.balance?.current_balance! || 0,
   });
   const { withdraws, paginatorInfo, error } = useWithdrawsQuery(
     {

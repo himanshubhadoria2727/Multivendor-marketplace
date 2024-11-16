@@ -21,12 +21,16 @@ import { useMeQuery } from '@/data/user';
 import SelectInput from '../ui/select-input';
 import ValidationError from '@/components/ui/form-validation-error';
 import { useCountriesQuery } from '@/data/countries';
+import { Controller } from 'react-hook-form';
+import Select from '../ui/select/select';
+import { toast } from 'react-toastify';
 
 type FormValues = {
   amount: number;
   payment_method: 'paypal' | 'bank';
   details: string;
   note: string;
+  country: object[];
   bank_name: string;
   ifsc_code: string;
   account_number: string;
@@ -55,7 +59,7 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
   const { data: myData } = useMeQuery();
 
   const { price: shopBalance } = usePrice({
-    amount: myData?.shops[0]?.balance?.current_balance!,
+    amount: myData?.shops[0]?.balance?.current_balance! || 0,
   });
   const { data: allCountries, error, isLoading } = useCountriesQuery();
 
@@ -78,37 +82,49 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
       amount: +values.amount,
       shop_id: Number(shopId),
       details: values.details,
-      payment_method: values.payment_method,
+      payment_method: values.payment_method?.value,
+      country: values.country?.value,
       note: values.note,
       bank_name:
-        values.payment_method === 'bank' ? values.bank_name : undefined,
+        values.payment_method.value === 'bank' ? values.bank_name : undefined,
       ifsc_code:
-        values.payment_method === 'bank' ? values.ifsc_code : undefined,
+        values.payment_method.value === 'bank' ? values.ifsc_code : undefined,
       account_number:
-        values.payment_method === 'bank' ? values.account_number : undefined,
+        values.payment_method.value === 'bank'
+          ? values.account_number
+          : undefined,
       account_holder_name:
-        values.payment_method === 'bank'
+        values.payment_method.value === 'bank'
           ? values.account_holder_name
           : undefined,
       paypal_id:
-        values.payment_method === 'paypal' ? values.paypal_id : undefined,
+        values.payment_method.value === 'paypal' ? values.paypal_id : undefined,
       address: values.address,
       pincode: values.pincode,
     };
+    console.log('input data', input);
 
     createWithdraw(
       { ...input },
       {
         onError: (error: any) => {
-          setErrorMessage(error?.response?.data?.message);
-          animateScroll.scrollToTop();
+          const { data, status } = error?.response;
+          if (status === 500) {
+            setErrorMessage(error?.response?.data?.message);
+            animateScroll.scrollToTop();
+          } else if (status === 422) {
+            const errorMessage: any = Object.values(data).flat();
+            toast.error(errorMessage[0]);
+          } else {
+            toast.error(t(`common:${error?.response?.data.message}`));
+          }
         },
       },
     );
   };
 
   // Watch payment method to conditionally render fields
-  const paymentMethod = watch('payment_method');
+  const paymentMethod = watch('payment_method')?.value;
 
   return (
     <>
@@ -137,6 +153,7 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
             <Label>{t('Address')}</Label>
             <Input
               {...register('address')}
+              placeholder="Enter your address"
               error={t(errors.address?.message!)}
               variant="outline"
               className="mb-5"
@@ -145,27 +162,37 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
             <div className="flex flex-row justify-between max-md:flex-wrap">
               <div className="w-[45%] max-md:w-full mb-5">
                 <Label>{t('Select Country')}</Label>
-                <SelectInput
-                  name="countries"
-                  placeholder="Select country"
+
+                <Controller
+                  name="country"
                   control={control}
-                  className="mb-5"
-                  options={allCountries?.map((country: any) => ({
-                    label: country.name.common,
-                    value: country.cca2,
-                  }))}
-                  // error={t(errors.countries?.message!)}
+                  render={({ field }) => (
+                    <SelectInput
+                      {...field}
+                      placeholder="Select country"
+                      control={control}
+                      className="mb-5"
+                      options={allCountries?.map((country: any) => ({
+                        label: country.name.common,
+                        value: country.cca2,
+                      }))}
+                      error={t(errors.country?.values?.message!)} // Display the error message
+                    />
+                  )}
                 />
-                {/* <ValidationError message={t(error!)} /> */}
+                {errors.country && (
+                  <ValidationError message={t(errors.country?.message)} />
+                )}
               </div>
-              <div className='flex flex-col max-md:w-full w-[45%]'>
-              <Label className=''>{t('pincode')}</Label>
-              <Input
-                {...register('pincode')}
-                error={t(errors.pincode?.message!)}
-                variant="outline"
-                className="mb-5 w-full"
-              />
+              <div className="flex flex-col max-md:w-full w-[45%]">
+                <Label className="">{t('pincode')}</Label>
+                <Input
+                  {...register('pincode')}
+                  placeholder="Enter your pincode"
+                  error={t(errors.pincode?.message!)}
+                  variant="outline"
+                  className="mb-5 w-full"
+                />
               </div>
             </div>
             <Label>
@@ -179,31 +206,38 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
             <Input
               {...register('amount')}
               error={t(errors.amount?.message!)}
+              placeholder="Enter amount"
               variant="outline"
               className="mb-5"
             />
-            <Label>
-              {t('form:input-label-payment-method')}
-              <span className="ml-0.5 text-red-500">*</span>
-            </Label>
-            <select
-              {...register('payment_method')}
-              className="mb-5 border rounded-md p-2 w-full"
-            >
-              <option value="paypal">{t('Paypal')}</option>
-              <option value="bank">{t('Bank transfer')}</option>
-            </select>
-
+            <div className="w-[45%] max-md:w-full mb-5">
+              <Label>
+                {t('form:input-label-payment-method')}
+                <span className="ml-0.5 text-red-500">*</span>
+              </Label>
+              <SelectInput
+                name="payment_method"
+                placeholder="Select payment method"
+                control={control}
+                options={[
+                  { value: 'paypal', label: t('Paypal') },
+                  { value: 'bank', label: t('Bank transfer') },
+                ]}
+                error={t(errors.payment_method?.message!)} // Display errors correctly
+                className="mb-5 border rounded-md p-2 w-full"
+              />
+              {errors.payment_method && (
+                <ValidationError message={t(errors.payment_method?.message)} />
+              )}
+            </div>
             {/* Conditional rendering for PayPal */}
             {paymentMethod === 'paypal' && (
               <>
-                <Label>
-                  {t('Paypal id:')}
-                  <span className="ml-0.5 text-red-500">*</span>
-                </Label>
+                <Label>{t('Paypal id:')}</Label>
                 <Input
                   {...register('paypal_id')}
                   error={t(errors.paypal_id?.message!)}
+                  placeholder="Enter your paypal id"
                   variant="outline"
                   className="mb-5"
                   required
@@ -214,46 +248,38 @@ export default function CreateOrUpdateWithdrawForm({ initialValues }: IProps) {
             {/* Conditional rendering for Bank details */}
             {paymentMethod === 'bank' && (
               <>
-                <Label>
-                  {t('form:input-label-bank-name')}
-                  <span className="ml-0.5 text-red-500">*</span>
-                </Label>
+                <Label>{t('form:input-label-bank-name')}</Label>
                 <Input
                   {...register('bank_name')}
                   error={t(errors.bank_name?.message!)}
+                  placeholder="Enter your bank name"
                   variant="outline"
                   className="mb-5"
                   required
                 />
-                <Label>
-                  {t('IFSC code')}
-                  <span className="ml-0.5 text-red-500">*</span>
-                </Label>
+                <Label>{t('IFSC code')}</Label>
                 <Input
                   {...register('ifsc_code')}
                   error={t(errors.ifsc_code?.message!)}
+                  placeholder="Enter your IFSC code"
                   variant="outline"
                   className="mb-5"
                   required
                 />
-                <Label>
-                  {t('form:input-label-account-number')}
-                  <span className="ml-0.5 text-red-500">*</span>
-                </Label>
+                <Label>{t('form:input-label-account-number')}</Label>
                 <Input
                   {...register('account_number')}
                   error={t(errors.account_number?.message!)}
+                  placeholder="Enter your account number"
                   variant="outline"
                   className="mb-5"
                   required
                 />
-                <Label>
-                  {t('form:input-label-account-holder-name')}
-                  <span className="ml-0.5 text-red-500">*</span>
-                </Label>
+                <Label>{t('form:input-label-account-holder-name')}</Label>
                 <Input
                   {...register('account_holder_name')}
                   error={t(errors.account_holder_name?.message!)}
+                  placeholder="Enter your account holder name"
                   variant="outline"
                   className="mb-5"
                   required

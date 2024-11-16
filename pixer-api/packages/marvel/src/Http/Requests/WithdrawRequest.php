@@ -34,6 +34,14 @@ class WithdrawRequest extends FormRequest
             'payment_method' => ['nullable', 'string'],
             'details' => ['nullable', 'string'],
             'note' => ['nullable', 'string'],
+            'address'             => ['required', 'string', 'min:5'],
+            'pincode'             => ['required', 'string', 'regex:/^[0-9]{5,6}$/'],
+            'paypal_id'           => ['nullable', 'string', Rule::requiredIf($this->payment_method === 'paypal')],
+            'bank_name'           => ['nullable', 'string', Rule::requiredIf($this->payment_method === 'bank')],
+            'ifsc_code'           => ['nullable', 'string', Rule::requiredIf($this->payment_method === 'bank'), 'regex:/^[A-Za-z]{4}[0-9]{7}$/'],
+            'account_number'      => ['nullable', 'string', Rule::requiredIf($this->payment_method === 'bank')],
+            'account_holder_name' => ['nullable', 'string', Rule::requiredIf($this->payment_method === 'bank')],
+            'country'             => ['nullable', 'string'],
         ];
     }
 

@@ -136,7 +136,13 @@ export default function CreateOrUpdateProductForm({
   const upload_max_filesize = options?.server_info?.upload_max_filesize / 1024;
 
   const { mutate: createProduct, isLoading: creating } =
-    useCreateProductMutation();
+    useCreateProductMutation((res)=>{
+      console.log('Product created successfully.');
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      if (currentStep < steps.length) {
+        setCurrentStep(currentStep + 1);
+      }
+    });
   const { mutate: updateProduct, isLoading: updating } =
     useUpdateProductMutation();
   const onSubmit = async (values: ProductFormValues) => {
@@ -175,54 +181,54 @@ export default function CreateOrUpdateProductForm({
       //   !initialValues ||
       //   !initialValues.translated_languages.includes(router.locale!)
       // ) {
-        console.log('initial values', inputValues);
-        //@ts-ignore
+      console.log('initial values', inputValues);
+      //@ts-ignore
 
-        //cretateProduct(
-          // {
-          //   "language": "en",
-          //   "description": "<p>askldklsa</p>",
-          //   "video": [],
-          //   "other_guidelines": "dkjanskldja",
-          //   "organic_traffic": 8,
-          //   "spam_score": 8,
-          //   "tat": 77,
-          //   "word_count": 77,
-          //   "domain_rating": 8,
-          //   "domain_authority": 88,
-          //   "price": 37,
-          //   "name": "https://sdkjas.com",
-          //   "step1": "",
-          //   "step2": "",
-          //   "languages": "English",
-          //   "countries": "GS",
-          //   "link_type": "DoFollow",
-          //   "link_validity": "1 Year",
-          //   "link_counts": "1",
-          //   "sponsored_marked": "Yes",
-          //   "isLinkInsertion": false,
-          //   "is_niche": false,
-          //   "step3": "",
-          //   "slug": "https://sdkjas.com",
-          //   "status": "draft",
-          //   "is_digital": true,
-          //   "type_id": "1",
-          //   "product_type": "simple",
-          //   "categories": [
-          //       1
-          //   ],
-          //   "quantity": 100,
-          //   "digital_file": {},
-          //   "variations": [],
-          //   "variation_options": {
-          //       "upsert": []
-          //   },
-          //   "min_price": null,
-          //   "max_price": null,
-          //   "shop_id": 54,
-          //   "sku": "samplesku"
-        // }
-//)
+      //cretateProduct(
+      // {
+      //   "language": "en",
+      //   "description": "<p>askldklsa</p>",
+      //   "video": [],
+      //   "other_guidelines": "dkjanskldja",
+      //   "organic_traffic": 8,
+      //   "spam_score": 8,
+      //   "tat": 77,
+      //   "word_count": 77,
+      //   "domain_rating": 8,
+      //   "domain_authority": 88,
+      //   "price": 37,
+      //   "name": "https://sdkjas.com",
+      //   "step1": "",
+      //   "step2": "",
+      //   "languages": "English",
+      //   "countries": "GS",
+      //   "link_type": "DoFollow",
+      //   "link_validity": "1 Year",
+      //   "link_counts": "1",
+      //   "sponsored_marked": "Yes",
+      //   "isLinkInsertion": false,
+      //   "is_niche": false,
+      //   "step3": "",
+      //   "slug": "https://sdkjas.com",
+      //   "status": "draft",
+      //   "is_digital": true,
+      //   "type_id": "1",
+      //   "product_type": "simple",
+      //   "categories": [
+      //       1
+      //   ],
+      //   "quantity": 100,
+      //   "digital_file": {},
+      //   "variations": [],
+      //   "variation_options": {
+      //       "upsert": []
+      //   },
+      //   "min_price": null,
+      //   "max_price": null,
+      //   "shop_id": 54,
+      //   "sku": "samplesku"
+      // }
+      //)
       //   createProduct({
       //     ...inputValues,
       //     ...(initialValues?.slug && { slug: initialValues.slug }),
@@ -232,15 +238,15 @@ export default function CreateOrUpdateProductForm({
       //     type_id: values.type_id || '1',
       //   });
       // } else {
-    var x=    localStorage.getItem('webId'); //setItem
-   var  y=   localStorage.getItem('shopId' )
-        //@ts-ignore
-        updateProduct({
-          ...inputValues,
-          id: initialValues?.id! || x,
-          shop_id: initialValues?.shop_id! || y,
-          description: 'none',
-        });
+      var x = localStorage.getItem('webId'); //setItem
+      var y = localStorage.getItem('shopId');
+      //@ts-ignore
+      updateProduct({
+        ...inputValues,
+        id: initialValues?.id! || x,
+        shop_id: initialValues?.shop_id! || y,
+        description: 'none',
+      });
       // }
     } catch (error) {
       console.log('something went wrong');
@@ -426,7 +432,16 @@ export default function CreateOrUpdateProductForm({
       },
     );
   }
+  const sanitizeUrl = (url: any) => {
+    // Remove http:// or https:// from the beginning and any trailing slashes
+    return url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  };
+  const handleBlur = (e) => {
+    const sanitizedUrl = sanitizeUrl(e.target.value);
+    setValue('name', sanitizedUrl); // Update the value in React Hook Form
+  };
 
+  console.log('productUrl', productUrl);
   const steps = [
     {
       title: '1. Add domain',
@@ -434,11 +449,12 @@ export default function CreateOrUpdateProductForm({
         <Card className="w-full flex justify-start gap-3 flex-wrap sm:justtify-center sm:w-1/3 md:w-full">
           <div className="text-2xl font-bold mb-6">Add domain</div>
           <Input
-            label={`Website URL`}
+            label="Website URL"
             {...register('name')}
             placeholder="eg-google.com"
-            error={t(errors.name?.message!)}
-            onChange={(e) => setProductUrl(e.target.value)}
+            error={errors.name?.message}
+            onChange={(e) => setValue('name', e.target.value)} // Let React Hook Form handle the input value
+            onBlur={handleBlur} // Sanitize URL on blur
             disabled={isInputLocked || !!initialValues}
             variant="outline"
             className="mb-5 w-full max-md:w-full"
@@ -819,19 +835,19 @@ export default function CreateOrUpdateProductForm({
   const handleNextStep = async () => {
     let isValid = true;
     const invalidFields = []; // To store the names of invalid fields
-  
+
     for (let i = 1; i <= currentStep; i++) {
       const stepFields = steps[i - 1].fields;
-  
+
       console.log(`Validating step ${i} with fields:`, stepFields); // Log fields for each step
-  
+
       // Get the values for the current step's fields
       const stepValues = getValues(stepFields);
       console.log(`Values for step ${i}:`, stepValues); // Log values for the current step
-  
+
       // Validate the current step
       const stepIsValid = await trigger(stepFields);
-  
+
       if (!stepIsValid) {
         // Collect names of invalid fields
         stepFields.forEach((field) => {
@@ -843,7 +859,7 @@ export default function CreateOrUpdateProductForm({
             });
           }
         });
-  
+
         console.log(`Step ${i} is not valid.`); // Log invalid step
         isValid = false;
         break;
@@ -851,7 +867,7 @@ export default function CreateOrUpdateProductForm({
         console.log(`Step ${i} is valid.`); // Log valid step
       }
     }
-  
+
     const newInputValues = {
       video: [],
       other_guidelines: ' a',
@@ -905,14 +921,17 @@ export default function CreateOrUpdateProductForm({
       width: '',
       in_flash_sale: false,
     };
-  
+
     if (isValid) {
       if (currentStep === 1) {
         // Check if initialValues are available and translated_languages includes the current locale
-        if (!initialValues || !initialValues.translated_languages.includes(router.locale!)) {
+        if (
+          !initialValues ||
+          !initialValues.translated_languages.includes(router.locale!)
+        ) {
           // Create the product
           try {
-           var rs= await createProduct({
+            var rs = await createProduct({
               ...newInputValues,
               ...(initialValues?.slug && { slug: initialValues.slug }),
               shop_id: shopId || initialValues?.shop_id,
@@ -922,14 +941,9 @@ export default function CreateOrUpdateProductForm({
               name: getValues('name'),
               product_type: 'simple',
             });
-  
-            console.log('Product created successfully.');
-  
-            // Proceed to the next step if the API call is successful
-            window.scrollTo({ top: 0, behavior: 'auto' });
-            if (currentStep < steps.length) {
-              setCurrentStep(currentStep + 1);
-            }
+            console.log('Product created successfully outside',rs);
+
+          
           } catch (error) {
             console.error('Failed to create product:', error);
             // Optionally, display an error message to the user
@@ -956,7 +970,6 @@ export default function CreateOrUpdateProductForm({
       // setErrorMessage('Please complete the required fields before proceeding.');
     }
   };
-  
 
   const handlePreviousStep = () => {
     window.scrollTo({ top: 0, behavior: 'auto' }); // Add your existing logic to handle the previous step
@@ -1041,10 +1054,16 @@ export default function CreateOrUpdateProductForm({
               )}
               {currentStep < steps.length && (
                 <div
-                  onClick={handleNextStep}
-                  className="flex-shrink-0 px-4 cursor-pointer py-2 border border-[#24b47e] rounded-lg bg-transparent hover:bg-[#24b47e] hover:text-white text-[#24b47e] transition duration-300 ease-in-out"
+                  onClick={!creating ? handleNextStep : null}
+                  className={`flex-shrink-0 px-4 cursor-pointer py-2 border border-[#24b47e] rounded-lg 
+            ${
+              creating
+                ? 'bg-[#24b47e] text-white'
+                : 'bg-transparent text-[#24b47e] hover:bg-[#24b47e] hover:text-white'
+            } 
+            transition duration-300 ease-in-out`}
                 >
-                  Save and continue
+                  {creating ? 'Saving...' : 'Save and continue'}
                 </div>
               )}
             </div>
