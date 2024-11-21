@@ -61,13 +61,15 @@ const OrderList = ({
       shop_id,
       via: 'admin',
     });
-  };  
-  console.log("orders",orders)
+  };
+  console.log('orders', orders);
 
   const onHeaderClick = (column: string | null) => ({
     onClick: () => {
       onSort((currentSortDirection: SortOrder) =>
-        currentSortDirection === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc
+        currentSortDirection === SortOrder.Desc
+          ? SortOrder.Asc
+          : SortOrder.Desc,
       );
       onOrder(column!);
 
@@ -87,23 +89,64 @@ const OrderList = ({
     //   align: alignLeft,
     //   width: 200,
     // },
+
+    {
+      title: t('table:table-item-actions'),
+      dataIndex: 'id',
+      key: 'actions',
+      align: alignLeft,
+      render: (id: string, order: Order) => {
+        const currentButtonLoading = !!loading && loading === order?.shop_id;
+        return (
+          <>
+            {/* @ts-ignore */}
+            {order?.children?.length ? (
+              ''
+            ) : (
+              <>
+                {permissions?.includes(SUPER_ADMIN) && order?.shop_id ? (
+                  <button
+                    onClick={() => onSubmit(order?.shop_id)}
+                    disabled={currentButtonLoading}
+                    className="cursor-pointer text-accent transition-colors duration-300 me-1.5 hover:text-accent-hover"
+                  >
+                    {/* <ChatIcon width="19" height="20" /> */}
+                  </button>
+                ) : (
+                  ''
+                )}
+              </>
+            )}
+            <ActionButtons
+              id={id}
+              detailsUrl={`${router.asPath}/${id}`}
+              customLocale={order.language}
+            />
+          </>
+        );
+      },
+    },
     {
       title: t('Site'),
       dataIndex: 'name',
       key: 'name',
       align: 'left',
-      width:300,
-      render: ( products: any, item:any) => <span className='text-2sm'>{item?.products[0]?.name}</span>,
+      width: 190,
+      render: (products: any, item: any) => (
+        <span className="text-2sm">{item?.products[0]?.name}</span>
+      ),
     },
     {
       title: t('Task type'),
       dataIndex: 'selectedForm',
       key: 'selectedForm',
       align: 'center',
-      width:120,
-      render: ( products: any, item:any) => <span className='text-2sm'>
-        {item?.products[0]?.pivot?.selectedForm == "guest_post"?"GP":"LI"}
-      </span>,
+      width: 50,
+      render: (products: any, item: any) => (
+        <span className="text-2sm">
+          {item?.products[0]?.pivot?.selectedForm == 'guest_post' ? 'GP' : 'LI'}
+        </span>
+      ),
     },
     // {
     //   title: (
@@ -154,19 +197,29 @@ const OrderList = ({
       dataIndex: 'link_url',
       key: 'link_url',
       align: 'center',
-      width:200,
-      render: ( products: any, item:any) => <a className='text-blue' href={item?.products[0]?.pivot?.link_url}>{item?.products[0]?.pivot?.link_url}</a>,
+      width: 200,
+      render: (products: any, item: any) => (
+        <a className="text-blue" href={item?.products[0]?.pivot?.link_url}>
+          {item?.products[0]?.pivot?.link_url}
+        </a>
+      ),
     },
     {
       title: t('Ancor'),
       dataIndex: 'ancor',
       key: 'ancor',
       align: 'center',
-      width:160,
-      render: ( products: any, item:any) => <span>{item.products[0]?.pivot?.ancor}</span>,
+      width: 180,
+      render: (products: any, item: any) => (
+        <span
+          className="block text-ellipsis overflow-hidden whitespace-nowrap"
+          style={{ maxWidth: '180px' }}
+        >
+          {item.products[0]?.pivot?.ancor}
+        </span>
+      ),
     },
     {
-      // title: t('table:table-item-order-date'),
       title: (
         <TitleWithSort
           title={t('table:table-item-order-date')}
@@ -181,15 +234,14 @@ const OrderList = ({
       dataIndex: 'created_at',
       key: 'created_at',
       align: 'center',
-      width:150,
+      width: 150,
       onHeaderCell: () => onHeaderClick('created_at'),
       render: (date: string) => {
-        dayjs.extend(relativeTime);
         dayjs.extend(utc);
         dayjs.extend(timezone);
         return (
           <span className="whitespace-nowrap">
-            {dayjs.utc(date).tz(dayjs.tz.guess()).fromNow()}
+            {dayjs.utc(date).tz(dayjs.tz.guess()).format('DD-MM-YYYY')}
           </span>
         );
       },
@@ -222,7 +274,7 @@ const OrderList = ({
       dataIndex: 'total',
       key: 'total',
       align: 'center',
-      width:150,
+      width: 150,
       onHeaderCell: () => onHeaderClick('total'),
       render: function Render(value: any) {
         const { price } = usePrice({
@@ -245,45 +297,8 @@ const OrderList = ({
       dataIndex: 'url',
       key: 'url',
       align: 'center',
-      width:200,
-      render: ( url:string) => <span>{url}</span>,
-    },
-    {
-      title: t('table:table-item-actions'),
-      dataIndex: 'id',
-      key: 'actions',
-      align: alignRight,
-      width: 120,
-      render: (id: string, order: Order) => {
-        const currentButtonLoading = !!loading && loading === order?.shop_id;
-        return (
-          <>
-            {/* @ts-ignore */}
-            {order?.children?.length ? (
-              ''
-            ) : (
-              <>
-                {permissions?.includes(SUPER_ADMIN) && order?.shop_id ? (
-                  <button
-                    onClick={() => onSubmit(order?.shop_id)}
-                    disabled={currentButtonLoading}
-                    className="cursor-pointer text-accent transition-colors duration-300 me-1.5 hover:text-accent-hover"
-                  >
-                    {/* <ChatIcon width="19" height="20" /> */}
-                  </button>
-                ) : (
-                  ''
-                )}
-              </>
-            )}
-            <ActionButtons
-              id={id}
-              detailsUrl={`${router.asPath}/${id}`}
-              customLocale={order.language}
-            />
-          </>
-        );
-      },
+      width: 200,
+      render: (url: string) => <span>{url}</span>,
     },
   ];
 
@@ -304,7 +319,7 @@ const OrderList = ({
           )}
           data={orders}
           rowKey="id"
-          scroll={{ x: 1600 }}
+          scroll={{ x: 1500 }}
           expandable={{
             expandedRowRender: () => '',
             rowExpandable: rowExpandable,

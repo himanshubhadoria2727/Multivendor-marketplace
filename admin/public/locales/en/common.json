@@ -408,6 +408,7 @@
   "order-accepted": "Accepted",
   "order-improvement": "Improvement",
   "order-submitted": "Submitted",
+  "order-rejected": "Rejected",
   "order-waiting-approval": "Waiting for approval",
   "order-failed": "Failed",
   "order-refunded": "Refunded",

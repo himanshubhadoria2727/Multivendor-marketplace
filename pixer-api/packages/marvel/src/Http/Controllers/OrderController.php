@@ -63,7 +63,26 @@ class OrderController extends CoreController
         $limit = $request->limit ? $request->limit : 10;
         return $this->fetchOrders($request)->paginate($limit)->withQueryString();
     }
+    public function getOrderStatusCount(Request $request)
+    {
+        Log::info("im in count");
 
+        $orders = $this->fetchOrders($request)->get();  // Use get() to retrieve all orders
+    
+        $orderStatusCount = [];
+    
+        foreach ($orders as $order) {
+            $status = $order->order_status;  // Assuming `order_status` is the field for order status
+    
+            if (isset($orderStatusCount[$status])) {
+                $orderStatusCount[$status]++;
+            } else {
+                $orderStatusCount[$status] = 1;
+            }
+        }
+    
+        return $orderStatusCount;
+    }
     /**
      * fetchOrders
      *

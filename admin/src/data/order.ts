@@ -17,7 +17,7 @@ import { Routes } from '@/config/routes';
 
 export const useOrdersQuery = (
   params: Partial<OrderQueryOptions>,
-  options: any = {}
+  options: any = {},
 ) => {
   const { data, error, isLoading } = useQuery<OrderPaginator, Error>(
     [API_ENDPOINTS.ORDERS, params],
@@ -26,14 +26,37 @@ export const useOrdersQuery = (
     {
       keepPreviousData: true,
       ...options,
-    }
+    },
   );
   return {
     orders: data?.data ?? [],
     paginatorInfo: mapPaginatorData(data),
+    orderCount:data?.total,
     error,
     loading: isLoading,
   };
+};
+
+export const useOrderStatusCountQuery = ()=>{
+  return useQuery([API_ENDPOINTS.ORDERS_STATUS_COUNT], orderClient.orderStatusCount);
+};
+
+// Example transform function if needed
+const transformOrderToStatusCount = (
+  order: Order,
+): { [key: string]: number } => {
+  const statusCount: { [key: string]: number } = {};
+
+  // Ensure order.order_status is an array before calling forEach
+  const statuses = Array.isArray(order.order_status)
+    ? order.order_status
+    : [order.order_status];
+
+  statuses.forEach((status: string | number) => {
+    statusCount[status] = (statusCount[status] || 0) + 1;
+  });
+
+  return statusCount;
 };
 
 export const useOrderQuery = ({
@@ -48,7 +71,7 @@ export const useOrderQuery = ({
     () => orderClient.get({ id, language }),
     {
       enabled: Boolean(id), // Set to true to enable or false to disable
-    }
+    },
   );
 
   return {
@@ -127,7 +150,7 @@ export const useDownloadInvoiceMutation = (
     isRTL,
     language,
   }: { order_id: string; isRTL: boolean; language: string },
-  options: any = {}
+  options: any = {},
 ) => {
   const { t } = useTranslation();
   const formattedInput = {
@@ -154,7 +177,7 @@ export const useDownloadInvoiceMutation = (
     () => orderClient.downloadInvoice(formattedInput),
     {
       ...options,
-    }
+    },
   );
 };
 

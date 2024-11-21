@@ -27,7 +27,7 @@ import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageHeading from '@/components/common/page-heading';
 
 interface ProductTypeOptions {
@@ -63,7 +63,7 @@ export default function ProductsPage() {
     setVisible((v) => !v);
   };
 
-  const { products, paginatorInfo, loading, error } = useProductsQuery(
+  const { products, paginatorInfo, loading, error,productCount } = useProductsQuery(
     {
       language: locale,
       name: searchTerm,
@@ -81,6 +81,15 @@ export default function ProductsPage() {
       enabled: Boolean(shopId),
     },
   );
+
+  const [initialOrderCount, setInitialOrderCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Set initialOrderCount only once when orders are fetched
+    if (productCount && initialOrderCount === null) {
+      setInitialOrderCount(productCount);
+    }
+  }, [productCount, initialOrderCount]);
   console.log('shop products', products);
 
   function handleImportModal() {
@@ -117,7 +126,7 @@ export default function ProductsPage() {
           <span className="text-lg text-gray-600 font-medium">
             Total Websites:
           </span>
-          <span className="text-2xl font-semibold text-gray-900">{products.length}</span>
+          <span className="text-2xl font-semibold text-gray-900">{initialOrderCount}</span>
         </div>
       </div>
       <Card className="mb-8 flex flex-col">

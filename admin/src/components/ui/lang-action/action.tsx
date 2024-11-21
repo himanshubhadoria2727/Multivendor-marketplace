@@ -38,7 +38,7 @@ export default function LanguageSwitcher({
     query: { shop },
   } = useRouter();
 
-  const preview = `${process.env.NEXT_PUBLIC_SHOP_URL}/products/preview/${slug}`;
+  // const preview = `/products/view/${slug}`;
 
   return (
     <>
@@ -59,7 +59,7 @@ export default function LanguageSwitcher({
         <ActionButtons
           id={record?.id}
           editUrl={routes.editWithoutLang(slug, shop)}
-          previewUrl={preview}
+          previewUrl={routes.view(slug, shop)}
           enablePreviewMode={enablePreviewMode}
           deleteModalView={deleteModalView}
           couponApproveButton={couponApproveButton}

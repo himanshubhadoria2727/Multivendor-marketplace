@@ -8,6 +8,7 @@ export const Routes = {
   resetPassword: '/reset-password',
   adminMyShops: '/my-shops',
   profile: '/profile',
+  preview: '/products/view',
   verifyCoupons: '/coupons/verify',
   settings: '/settings',
   paymentSettings: '/settings/payment',
@@ -173,6 +174,11 @@ function routesFactory(endpoint: string) {
       return shop
         ? `/${shop}${endpoint}/${slug}/edit`
         : `${endpoint}/${slug}/edit`;
+    },
+    view: (slug: string, shop?: string) => {
+      return shop
+        ? `/${shop}${endpoint}/${slug}/view`
+        : `${endpoint}/${slug}/view`;
     },
     edit: (slug: string, language: string, shop?: string) => {
       return shop

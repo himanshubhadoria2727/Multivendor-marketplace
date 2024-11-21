@@ -110,6 +110,7 @@ export enum OrderStatus {
   WAITING = 'order-waiting-approval',
   ACCPETED = 'order-accepted',
   SUBMITTED = 'order-submitted',
+  REJECTED = 'order-rejected',
   COMPLETED = 'order-completed',
   CANCELLED = 'order-cancelled',
   REFUNDED = 'order-refunded',
@@ -131,7 +132,7 @@ export interface TodayTotalOrderByStatus {
   accepted:number;
   submitted:number;
   pending: number;
-  waiting: number;
+  rejected: number;
   processing: number;
   complete: number;
   cancelled: number;

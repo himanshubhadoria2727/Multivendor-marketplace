@@ -123,6 +123,7 @@ export const useProductsQuery = (
 
   return {
     products: data?.data ?? [],
+    productCount: data?.total,
     paginatorInfo: mapPaginatorData(data),
     error,
     loading: isLoading,

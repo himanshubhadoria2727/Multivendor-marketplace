@@ -436,7 +436,7 @@ export default function CreateOrUpdateProductForm({
     // Remove http:// or https:// from the beginning and any trailing slashes
     return url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
   };
-  const handleBlur = (e) => {
+  const handleBlur = (e:any) => {
     const sanitizedUrl = sanitizeUrl(e.target.value);
     setValue('name', sanitizedUrl); // Update the value in React Hook Form
   };

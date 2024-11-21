@@ -26,7 +26,7 @@ export default function OrderViewHeader({
     amount: order.products[0].pivot.subtotal,
   });
   return (
-    <div className={cn(`bg-[#F7F8FA] ${wrapperClassName}`)}>
+    <div className={cn(`${wrapperClassName}`)}>
       <div className="mb-0 flex flex-col flex-wrap items-center justify-between gap-x-8 text-base font-bold text-heading sm:flex-row lg:flex-nowrap">
         <div
           className={`order-2 flex  w-full gap-6 sm:order-1 ${
@@ -36,18 +36,21 @@ export default function OrderViewHeader({
           }`}
         >
           <div>
-            <span className="text-3xl mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
-              {t('Order')} :
+            <span className="text-2xl mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
+              {t('Task')} :
             </span>
             {order?.products[0]?.pivot?.selectedForm?(
-              <Badge
-              text={"Guest Posting"}
-              color={StatusColor(order?.order_status)}
-              className='text-2xl'
-            />
+              <><span className='text-2xl bg-null'>
+                <span className='text-2xl bg-null'>#</span>
+                {order?.id}
+
+              </span><Badge
+                  text={"Guest Posting"}
+                  // color={StatusColor(order?.order_status)}
+                  className='text-2xl bg-null text-accent' /></>
             ):(<Badge
               text={"Link Insertion"}
-              color={StatusColor(order?.order_status)}
+              // color={StatusColor(order?.order_status)}
               className='text-2xl'
             />)}
             {/* <Badge
@@ -56,7 +59,7 @@ export default function OrderViewHeader({
             /> */}
           </div>
           <div>
-            <span className="text-lg mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
+            <span className="text-lg max-md:text-sm mb-2 block lg:mb-0 lg:inline-block lg:ltr:mr-4 lg:rtl:ml-4">
               {t('Price')} :
             </span>
             <Badge

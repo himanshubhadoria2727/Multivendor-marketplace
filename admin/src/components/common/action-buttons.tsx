@@ -275,7 +275,11 @@ const ActionButtons = ({
               title={t('common:text-preview')}
               target="_blank"
             >
-              <EyeIcon width={18} />
+              <span className="text-sm text-white px-2 py-1 rounded-lg bg-accent hover:bg-accent-light hover:text-gray-900 transition-colors duration-200">
+                View
+              </span>
+
+              {/* <EyeIcon width={18} /> */}
             </Link>
           )}
         </>
@@ -287,7 +291,12 @@ const ActionButtons = ({
           title={t('common:text-view')}
           locale={customLocale}
         >
-          <Eye className="w-5 h-5" />
+          <span className="text-sm text-white px-2 py-1 rounded-lg bg-accent hover:bg-accent-light hover:text-gray-900 transition-transform transform hover:-translate-y-1 hover:shadow-lg duration-300">
+  View
+</span>
+
+
+          {/* <Eye className="w-5 h-5" /> */}
         </Link>
       )}
 

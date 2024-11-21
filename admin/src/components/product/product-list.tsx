@@ -80,6 +80,24 @@ const ProductList = ({
     //   render: (id: number) => `#${t('table:table-item-id')}: ${id}`,
     // },
     {
+      title: t('table:table-item-actions'),
+      dataIndex: 'slug',
+      key: 'actions',
+      align: 'center',
+      width: 130,
+      render: (slug: string, record: Product) => (
+        <LanguageSwitcher
+          slug={slug}
+          record={record}
+          // deleteModalView="DELETE_PRODUCT"
+          routes={Routes?.product}
+          enablePreviewMode={true}
+          // isShop={Boolean(shop)}
+          shopSlug={(shop as string) ?? ''}
+        />
+      ),
+    },
+    {
       title: (
         <TitleWithSort
           title={t('table:table-item-product')}
@@ -93,7 +111,7 @@ const ProductList = ({
       dataIndex: 'name',
       key: 'name',
       align: alignLeft,
-      width: 250,
+      width: 220,
       ellipsis: true,
       onHeaderCell: () => onHeaderClick('name'),
       render: (name: string, { image, type }: { image: any; type: any }) => (
@@ -355,24 +373,24 @@ const ProductList = ({
         </div>
       ),
     },
-    {
-      title: t('table:table-item-actions'),
-      dataIndex: 'slug',
-      key: 'actions',
-      align: 'right',
-      width: 120,
-      render: (slug: string, record: Product) => (
-        <LanguageSwitcher
-          slug={slug}
-          record={record}
-          deleteModalView="DELETE_PRODUCT"
-          routes={Routes?.product}
-          // enablePreviewMode={true}
-          isShop={Boolean(shop)}
-          shopSlug={(shop as string) ?? ''}
-        />
-      ),
-    },
+    // {
+    //   title: t('table:table-item-actions'),
+    //   dataIndex: 'slug',
+    //   key: 'actions',
+    //   align: 'center',
+    //   width: 100,
+    //   render: (slug: string, record: Product) => (
+    //     <LanguageSwitcher
+    //       slug={slug}
+    //       record={record}
+    //       deleteModalView="DELETE_PRODUCT"
+    //       routes={Routes?.product}
+    //       // enablePreviewMode={true}
+    //       isShop={Boolean(shop)}
+    //       shopSlug={(shop as string) ?? ''}
+    //     />
+    //   ),
+    // },
   ];
 
   if (router?.query?.shop) {
@@ -396,7 +414,7 @@ const ProductList = ({
           )}
           data={products}
           rowKey="id"
-          scroll={{ x: 900 }}
+          scroll={{ x: 800 }}
         />
       </div>
 

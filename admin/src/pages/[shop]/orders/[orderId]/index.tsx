@@ -43,6 +43,12 @@ import Label from '@/components/ui/label';
 import { ArrowDown } from '@/components/icons/arrow-down';
 import { url } from 'inspector';
 import TextArea from '@/components/ui/text-area';
+import Badge from '@/components/ui/badge/badge';
+import StatusColor from '@/components/order/status-color';
+import Link from '@/components/ui/link';
+import { Anchor } from 'antd';
+import { ThumbDownIcon } from '@heroicons/react/solid';
+import { FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
 
 type FormValues = {
   order_status: any;
@@ -213,19 +219,58 @@ export default function OrderDetailsPage() {
 
   return (
     <div>
-      <Card>
-        <div className="mb-6 -mt-5 -ml-5 -mr-5 md:-mr-8 md:-ml-8 md:-mt-8">
-          <OrderViewHeader order={order} wrapperClassName="px-8 py-4" />
+      {updating && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center backdrop-blur-sm">
+          <div className="p-4 rounded-lg">
+            <Loader /> {/* This could be your loading spinner or animation */}
+          </div>
         </div>
+      )}
+      <div className="px-3 mb-6 -mt-5 -ml-5 -mr-5 sm:-mr-8 sm:-ml-8 sm:-mt-8">
+        <OrderViewHeader order={order} wrapperClassName="px-8 py-4" />
+        <div className="flex flex-col sm:flex-row justify-center gap-24 max-md:gap-6 px-8 py-4">
+          <div className="flex justify-center items-center h-fit rounded-lg shadow-md">
+            <Badge
+              text={t(order?.order_status)}
+              className="text-lg px-12 border border-gray py-3"
+              color={StatusColor(order?.order_status)}
+            />
+          </div>
 
+          <div className="w-full sm:w-auto">
+            {order?.order_status === OrderStatus.WAITING && (
+              <div className="flex  flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                  <Button
+                    onClick={() => handleUpdateStatus('order-accepted')}
+                    className="mb-5 bg-blue-500 gap-2 text-white hover:bg-blue-600 w-full sm:w-auto sm:ml-0 sm:mr-0 ltr:ml-auto rtl:mr-auto transition duration-200"
+                  >
+                    <FaThumbsUp />
+                    {t('Approve')}
+                  </Button>
+                  <Button
+                    onClick={() => handleUpdateStatus('order-rejected')}
+                    className="mb-5 bg-red-500 px-7 gap-2 text-white hover:bg-red-600 w-full sm:w-auto sm:ml-0 sm:mr-0 ltr:ml-auto rtl:mr-auto transition duration-200"
+                  >
+                    <FaThumbsDown />
+                    {t('Reject')}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <Card>
         <div className="flex max-md:flex-col">
           <div className="flex w-full max-md:w-full">
             {/* Conditionally render input and button based on order_status */}
             {order?.order_status === 'order-accepted' ||
             order?.order_status === 'order-improvement' ? (
-              <div className="flex flex-col w-full mt-4">
+              <div className="flex flex-col px-4 w-full pb-3">
                 <span className="flex flex-row mt-4">
-                  <Label className="text-base text-green-700 underline">
+                  <Label className="text-lg">
                     Please submit the live link below
                   </Label>
                   <span className="ml-2 mt-1">
@@ -256,44 +301,43 @@ export default function OrderDetailsPage() {
             {order?.order_status === 'order-completed' ||
             order?.order_status === 'order-submitted' ||
             order?.order_status === 'order-submitted' ? (
-              <div className="flex flex-col w-full mt-4">
+              <div className="flex flex-col  px-4 w-full mt-">
                 <span className="flex flex-row mt-4">
-                  <Label className="text-base text-green-700 underline">
-                    Live link
-                  </Label>
+                  <Label className="text-lg">Submitted post link:</Label>
                   <span className="ml-2 mt-1">
                     <ArrowDown />
                   </span>
                 </span>
-                {/* <div className="flex w-[48%] content-baseline items-center gap-4"> */}
-                <Input
-                  name="url"
-                  className="w-full md:w-200%"
-                  value={order?.url}
-                  // onChange={(event) => setLiveLink(event.target.value)}
-                  // label="Provide the submission"
-                />
-                {/* <Button
-                    className="w-30 mt-2 bg-blue-500"
-                    onClick={() => handleSubmittedLink('order-submitted',liveLink)}
-                  >
-                    Submit
-                  </Button> */}
-                {/* </div> */}
+                <div className="flex w-full content-baseline items-center gap-4">
+                  <Input
+                    name="url"
+                    className="w-full"
+                    value={order?.url}
+                    // onChange={(event) => setLiveLink(event.target.value)}
+                    // label="Provide the submission"
+                  />
+
+                  <Button className="w-30 mt-2 bg-blue-500">
+                    <a
+                      href={
+                        order?.url?.startsWith('http')
+                          ? order.url
+                          : `https://${order?.url}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Post
+                    </a>
+                  </Button>
+                </div>
               </div>
             ) : (
               ''
             )}
           </div>
-          {order?.order_status === OrderStatus.WAITING && (
-            <Button
-              onClick={() => handleUpdateStatus('order-accepted')}
-              className="mb-5 bg-blue-500 ltr:ml-auto flex-start rtl:mr-auto"
-            >
-              {t('Approve')}
-            </Button>
-          )}
-          <div className="flex flex-col relative w-full mt-10 max-md:mt-5 mb-5">
+
+          {/* <div className="flex flex-col relative w-full mt-10 max-md:mt-5 mb-5">
             <Button
               onClick={(e) => {
                 e.preventDefault();
@@ -304,7 +348,7 @@ export default function OrderDetailsPage() {
               <DownloadIcon className="h-4 w-4 me-3" />
               {t('common:text-download')} {t('common:text-invoice')}
             </Button>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex flex-col items-center lg:flex-row">
@@ -324,15 +368,15 @@ export default function OrderDetailsPage() {
           /> */}
         </div>
 
-        <div className="my-5 flex items-center justify-center lg:my-10">
+        {/* <div className="my-5 flex items-center justify-center lg:my-10">
           <OrderStatusProgressBox
             orderStatus={order?.order_status as OrderStatus}
             paymentStatus={order?.payment_status as PaymentStatus}
           />
-        </div>
+        </div> */}
 
         <div className="mb-10">
-          <div className="flex flex-col space-y-2 border-t-4 border-double border-border-200 px-4 py-4">
+          <div className="flex flex-col space-y-2 border-double border-border-200 px-4 py-4">
             {/* <div className="flex items-center justify-between font-semibold text-black">
               <span>{t('Site name')}</span>
               <span>{order?.products[0]?.name}</span>
@@ -349,64 +393,63 @@ export default function OrderDetailsPage() {
               {/* Task Info Section */}
               <div className="mb-6">
                 <h3 className="text-lg font-medium mb-4">Task Info:</h3>
-                <div className="border rounded-md p-4 space-y-4">
-                  <div className="grid grid-cols-1 gap-4">
-                    <div>
-                      <Label>Site:</Label>
-                      <Input
-                        value={order?.products[0]?.name || ''}
-                        readOnly
-                        name={''}
-                      />
-                    </div>
-                    <div>
-                      <Label>Task Type:</Label>
-                      <Input
-                        value={
-                          order?.products[0]?.pivot?.selectedForm ===
-                          'guest_post'
-                            ? 'Guest Post'
-                            : 'Link Insertion'
-                        }
-                        readOnly
-                        name={''}
-                      />
-                    </div>
-                    <div>
-                      <Label>Title:</Label>
-                      <Input
-                        value={order?.products[0]?.pivot?.title || ''}
-                        readOnly
-                        name={''}
-                      />
-                    </div>
-                    <div>
-                      <Label>Anchor text:</Label>
-                      <Input
-                        value={order?.products[0]?.pivot?.ancor || ''}
-                        readOnly
-                        name={''}
-                      />
-                    </div>
-                    <div>
-                      <Label>Landing Page URL:</Label>
-                      <Input
-                        value={order?.products[0]?.pivot?.link_url || ''}
-                        readOnly
-                        name={''}
-                      />
-                    </div>
-                    <div>
-                      <Label>Existing Page URL:</Label>
-                      <Input
-                        value={order?.products[0]?.pivot?.postUrl || ''}
-                        readOnly
-                        name={''}
-                      />
-                    </div>
-                  </div>
+                <div className="border rounded-md p-4 space-y-4 overflow-x-auto">
+                  <ul className="space-y-2 min-w-max">
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Site:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.name || 'N/A'}
+                      </span>
+                    </li>
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Task Type:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.pivot?.selectedForm ===
+                        'guest_post'
+                          ? 'Guest Post'
+                          : 'Link Insertion'}
+                      </span>
+                    </li>
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Title:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.pivot?.title || 'N/A'}
+                      </span>
+                    </li>
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Anchor text:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.pivot?.ancor || 'N/A'}
+                      </span>
+                    </li>
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Landing Page URL:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.pivot?.link_url || 'N/A'}
+                      </span>
+                    </li>
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Existing Page URL:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.pivot?.postUrl || 'N/A'}
+                      </span>
+                    </li>
+                  </ul>
                 </div>
-              </div>{' '}
+              </div>
+
               {/* {order?.products[0]?.pivot?.selectedForm && (
                 <div>
                   <Label className="text-base text-accent-700">
@@ -420,32 +463,37 @@ export default function OrderDetailsPage() {
                 </div>
               )} */}
               {/* Article Attached Section */}
-              {order?.products[0]?.pivot?.file && (<div className="mb-6">
-                <h3 className="text-lg font-medium mb-4">Article Attached:</h3>
-                <div className="flex items-center gap-2 border rounded-md p-4">
-                  <span className="flex-1">
-                    {order?.products[0]?.pivot?.file?.split('/').pop()}
-                  </span>
-                  <Button
-                    variant="outline"
-                    onClick={() =>
-                      window.open(order?.products[0]?.pivot?.file, '_blank')
-                    }
-                  >
-                    Download
-                  </Button>
+              {order?.products[0]?.pivot?.file && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium mb-4">
+                    Article Attached:
+                  </h3>
+                  <div className="flex items-center gap-2 border rounded-md p-4">
+                    <span className="flex-1 text-base text-gray-500">
+                      {order?.products[0]?.pivot?.file?.split('/').pop()}
+                    </span>
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        window.open(order?.products[0]?.pivot?.file, '_blank')
+                      }
+                    >
+                      Download
+                    </Button>
+                  </div>
                 </div>
-              </div>)}
-              
+              )}
               {/* Special Instructions Section */}
               <div className="mb-6">
                 <h3 className="text-lg font-medium mb-4">
                   Special Instructions:
                 </h3>
                 <TextArea
-                  className="w-full"
+                  className="w-full text-base text-gray-500"
                   value={order?.products[0]?.pivot?.instructions || ''}
-                  readOnly name={''}                />
+                  readOnly
+                  name={''}
+                />
               </div>
               {/* Transaction Detail Section */}
               <div className="flex items-center justify-between border-t pt-4">

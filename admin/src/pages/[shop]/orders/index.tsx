@@ -2,7 +2,7 @@ import Card from '@/components/common/card';
 import Search from '@/components/common/search';
 import OrderList from '@/components/order/order-list';
 import { LIMIT } from '@/utils/constants';
-import { useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import ErrorMessage from '@/components/ui/error-message';
 import Loader from '@/components/ui/loader/loader';
 import { useTranslation } from 'next-i18next';
@@ -23,10 +23,14 @@ import { useMeQuery } from '@/data/user';
 import { Routes } from '@/config/routes';
 import PageHeading from '@/components/common/page-heading';
 
+// Assuming you have an API to fetch the order counts per status
+import { useOrderStatusCountQuery } from '@/data/order';
+
 const statusOptions = [
   { value: 'order-waiting-approval', label: 'Waiting for Approval' },
   { value: 'order-submitted', label: 'Submitted' },
   { value: 'order-accepted', label: 'Accepted' },
+  { value: 'order-rejected', label: 'Rejected' },
   { value: 'order-improvement', label: 'Improvement' },
   { value: 'order-completed', label: 'Completed' },
 ];
@@ -50,7 +54,9 @@ export default function Orders() {
   const [statusFilter, setStatusFilter] = useState(''); // Only one status filter
   const [page, setPage] = useState(1);
 
-  const { orders, loading, paginatorInfo, error } = useOrdersQuery(
+  // Fetch the order status counts from the API
+
+  const { orders, loading, paginatorInfo, error,orderCount } = useOrdersQuery(
     {
       language: locale,
       limit: LIMIT,
@@ -63,18 +69,42 @@ export default function Orders() {
     },
     {
       enabled: Boolean(shopId),
-    },
+    }
   );
+  const [initialOrderCount, setInitialOrderCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Set initialOrderCount only once when orders are fetched
+    if (orderCount && initialOrderCount === null) {
+      setInitialOrderCount(orderCount);
+    }
+  }, [orderCount, initialOrderCount]);
+
+  const { data:orderStatusCount } = useOrderStatusCountQuery(
+  );
+  console.log('orderStatusCount', orderStatusCount);
+
+  const statusCounts = useMemo(() => {
+    // Use the fetched counts for statuses or default to 0
+    if (orderStatusCount) {
+      return orderStatusCount;
+    }
+    return statusOptions.reduce((acc:any, option) => {
+      acc[option.value] = orders.filter(
+        (order) => order.order_status === option.value
+      ).length;
+      return acc;
+    }, {});
+  }, [orders, orderStatusCount]);
 
   const { refetch } = useExportOrderQuery(
     {
       ...(shopId && { shop_id: shopId }),
     },
-    { enabled: false },
+    { enabled: false }
   );
 
-  if (loading || fetchingShop)
-    return <Loader text={t('common:text-loading')} />;
+  if (loading || fetchingShop || loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error?.message} />;
 
   async function handleExportOrder() {
@@ -110,7 +140,18 @@ export default function Orders() {
 
   return (
     <>
-      <Card className="mb-4 flex flex-col items-center justify-between md:flex-row">
+    <div className="mb-8 flex justify-between items-center">
+        <div className="text-3xl font-bold tracking-tight text-gray-900">
+          My orders
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-lg text-gray-600 font-medium">
+            Total orders:
+          </span>
+          <span className="text-2xl font-semibold text-gray-900">{initialOrderCount}</span>
+        </div>
+      </div>
+      {/* <Card className="mb-4 flex flex-col items-center justify-between md:flex-row">
         <div className="mb-4 md:mb-0 md:w-1/4">
           <PageHeading title={t('form:input-label-orders')} />
         </div>
@@ -120,31 +161,36 @@ export default function Orders() {
             <Search
               onSearch={handleSearch}
               placeholderText={t(
-                'form:input-placeholder-search-tracking-number',
+                'form:input-placeholder-search-tracking-number'
               )}
               className="w-full md:w-1/2"
             />
           </div>
         </div>
-      </Card>
+      </Card> */}
       <div className="flex mt-2 w-full bg-gray-100 pb-4 overflow-x-auto">
-        <div className="flex w-full space-x-2">
-          {statusOptions.map((option) => (
+        <div className="flex w-full">
+          {statusOptions.map((option, index) => (
             <div
               key={option.value}
               onClick={() => handleStatusChange(option.value)}
-              className={`flex-1 min-w-[120px] cursor-pointer p-2 m-1 text-center content-center py-3 rounded-md transition-colors ${
+              className={`flex-1 min-w-[120px] cursor-pointer p-2 text-center content-center py-3 transition-colors border-[1.2px] ${
+                index === 0
+                  ? 'rounded-l-md'
+                  : index === statusOptions.length - 1
+                  ? 'rounded-r-md'
+                  : 'border-l-0'
+              } ${
                 statusFilter === option.value
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white text-gray-700 border'
-              }`}
+                  ? 'bg-[#228CDB] text-white border-[#228CDB]'
+                  : 'bg-white text-[#228CDB] border-[#228CDB]'
+              } hover:bg-[#228CDB] hover:text-white`}
             >
               {option.label}
             </div>
           ))}
         </div>
       </div>
-
       <OrderList
         orders={orders}
         paginatorInfo={paginatorInfo}

@@ -18,17 +18,24 @@ export const orderClient = {
       language,
     });
   },
-  paginated: ({ tracking_number,order_status, ...params }: Partial<OrderQueryOptions>) => {
+  orderStatusCount() {
+    return HttpClient.get<any>(API_ENDPOINTS.ORDERS_STATUS_COUNT);
+  },
+  paginated: ({
+    tracking_number,
+    order_status,
+    ...params
+  }: Partial<OrderQueryOptions>) => {
     return HttpClient.get<OrderPaginator>(API_ENDPOINTS.ORDERS, {
       searchJoin: 'and',
       ...params,
-      search: HttpClient.formatSearchParams({ tracking_number,order_status}),
+      search: HttpClient.formatSearchParams({ tracking_number, order_status }),
     });
   },
   downloadInvoice: (input: GenerateInvoiceDownloadUrlInput) => {
     return HttpClient.post<string>(
       `${API_ENDPOINTS.ORDER_INVOICE_DOWNLOAD}`,
-      input
+      input,
     );
   },
   orderSeen({ id }: { id: string }) {

@@ -347,6 +347,8 @@ Route::group(
             'only' => ['store', 'update', 'destroy'],
         ]);
         Route::get('analytics', [AnalyticsController::class, 'analytics']);
+        Route::get('orders/status-count', [OrderController::class, 'getOrderStatusCount']);
+
         Route::get('low-stock-products', [AnalyticsController::class, 'lowStockProducts']);
         Route::get('category-wise-product', [AnalyticsController::class, 'categoryWiseProduct']);
         Route::get('category-wise-product-sale', [AnalyticsController::class, 'categoryWiseProductSale']);
