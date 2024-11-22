@@ -20,6 +20,8 @@ import { useShopQuery } from '@/data/shop';
 import { useMeQuery } from '@/data/user';
 import Link from '@/components/ui/link';
 import Card from '@/components/common/card';
+import { EditFillIcon } from '@/components/icons/edit';
+import { formatSlug } from '@/utils/use-slug';
 
 export default function viewPage() {
   const { query, locale } = useRouter();
@@ -54,6 +56,7 @@ export default function viewPage() {
         {/* Site Name */}
         <div className="flex items-center px-3 py-2 rounded-lg gap-3">
         <span className="text-lg font-semibold">Site:</span> <span className="text-lg font-semibold text-blue-600">{product?.name}</span>
+        <EditFillIcon onClick={() => router.replace(Routes?.product?.editWithoutLang(formatSlug(product?.slug),shopId ))}/>
         </div>
 
         {/* Status Section */}
