@@ -69,9 +69,19 @@ export default function PayoutPage() {
       (total: any, withdraw: { amount: any }) => total + withdraw.amount,
       0,
     ) || 0;
+    const [initialTotalWithdraw, setInitialTotalWithdraw] = useState<number | null>(
+      null,
+    );
+  
+    useEffect(() => {
+      // Set initialOrderCount only once when orders are fetched
+      if (totalOnHoldAmount && initialTotalWithdraw === null) {
+        setInitialTotalWithdraw(totalOnHoldAmount);
+      }
+    }, [totalWithdrawAmount, initialTotalWithdraw]);
 
   const { price: totalWithdraw } = usePrice({
-    amount: totalWithdrawAmount!,
+    amount: initialTotalWithdraw!,
   });
 
   const {
@@ -105,8 +115,19 @@ export default function PayoutPage() {
     : 0; // Default to 0 if withdraws is not an array
 
   console.log('Total amount on hold:', totalOnHoldAmount);
+  const [initialOnHold, setInitialOnHold] = useState<number | null>(
+    null,
+  );
+
+  useEffect(() => {
+    // Set initialOrderCount only once when orders are fetched
+    if (totalOnHoldAmount && initialOnHold === null) {
+      setInitialOnHold(totalOnHoldAmount);
+    }
+  }, [totalOnHoldAmount, initialOnHold]);
+
   const { price: onHoldAmount } = usePrice({
-    amount: totalOnHoldAmount,
+    amount: initialOnHold,
   });
   // Transform withdraws
   const transformedWithdraws: Withdraw[] =

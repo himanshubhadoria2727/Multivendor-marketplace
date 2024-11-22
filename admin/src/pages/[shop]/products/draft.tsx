@@ -23,7 +23,7 @@ import cn from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 export default function DraftProductPage() {
   const { t } = useTranslation();
   const { locale } = useRouter();
@@ -60,6 +60,17 @@ export default function DraftProductPage() {
     language: locale,
   });
 
+  const [initialProductCount, setInitialProductCount] = useState<number | null>(
+    null,
+  );
+
+  useEffect(() => {
+    // Set initialOrderCount only once when orders are fetched
+    if (products.length && initialProductCount === null) {
+      setInitialProductCount(products.length);
+    }
+  }, [products.length, initialProductCount]);
+
   if (loading || fetchingShop)
     return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
@@ -83,13 +94,26 @@ export default function DraftProductPage() {
 
   return (
     <>
+      <div className="mb-8 flex justify-between items-center">
+        <div className="text-3xl font-bold tracking-tight text-gray-900">
+          My drafts
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-lg text-gray-600 font-medium">
+            Total drafts:
+          </span>
+          <span className="text-2xl font-semibold text-gray-900">
+            {initialProductCount}
+          </span>
+        </div>
+      </div>
       <Card className="mb-8 flex flex-col">
         <div className="flex w-full flex-col items-center md:flex-row">
-          <div className="mb-4 md:mb-0 md:w-1/4">
+          {/* <div className="mb-4 md:mb-0 md:w-1/4">
             <PageHeading title={t('form:input-label-products')} />
-          </div>
+          </div> */}
 
-          <div className="flex w-full flex-col items-center ms-auto md:w-2/4">
+          <div className="flex w-full flex-col items-center ms-auto md:w-2/2">
             <Search onSearch={handleSearch} />
           </div>
 
