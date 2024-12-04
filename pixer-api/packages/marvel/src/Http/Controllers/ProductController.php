@@ -748,7 +748,11 @@ class ProductController extends CoreController
 
         switch ($user) {
             case $user->hasPermissionTo(Permission::SUPER_ADMIN):
-                return $products_query->whereIn('shop_id', $user->shops->pluck('id'));
+                if (isset($request->shop_id)) {
+                    return $products_query->where('shop_id', '=', $request->shop_id);
+                } else {
+                    return $products_query->whereIn('shop_id', $user->shops->pluck('id'));
+                }
                 break;
 
             case $user->hasPermissionTo(Permission::STORE_OWNER):

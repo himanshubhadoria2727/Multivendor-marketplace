@@ -13,7 +13,7 @@ export const withdrawValidationSchema = yup.object().shape({
     .number()
     .typeError('Amount must be a number')
     .positive('Amount must be positive')
-    .min(50, 'Least withdrawal amount is 50')
+    .min(1, 'Least withdrawal amount is 50')
     .required('Amount is required'),
   payment_method: yup.object().required('Payment method is required'),
   paypal_id: yup.string().when('payment_method', {

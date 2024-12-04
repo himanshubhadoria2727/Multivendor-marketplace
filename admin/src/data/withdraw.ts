@@ -13,14 +13,16 @@ import {
 } from '@/types';
 import { mapPaginatorData } from '@/utils/data-mappers';
 import { withdrawClient } from './client/withdraw';
+import { t } from 'i18next';
 
 export const useCreateWithdrawMutation = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   return useMutation(withdrawClient.create, {
     onSuccess: () => {
-      toast.success(t('Withdrawl created successfully'));
-      router.push(`/${router.query.shop}/withdraws`);
+      console.log("withdraw successful")
+      toast.success('Withdrawl created successfully');
+      router.back();
     },
     // Always refetch after error or success:
     onSettled: () => {
@@ -78,7 +80,5 @@ export const useWithdrawsQuery = (
     loading: isLoading,
   };
 };
-function t(arg0: string): import("react-toastify").ToastContent<unknown> {
-  throw new Error('Function not implemented.');
-}
+
 

@@ -62,8 +62,11 @@ export const domain_rating = [
 
 export const niche = [
   {name:'Cryptocurrecy Links', slug:'is_crypto'},
-  {name:'Cbd Links', slug:'is_cbd'},
-  {name:'Casino/ Betting/ Gambling Links', slug:'is_gamble'}
+  {name:'Cbd/Marijuana Links', slug:'is_cbd'},
+  {name:'Casino Links', slug:'is_gamble'}
+  {name:'Betting Links', slug:'is_betting'}
+  {name:'Vaping Links', slug:'is_vaping'}
+  {name:'Rehabilitation Links', slug:'is_rehab'}
 ];
 
 export const isLinkInsertion=[

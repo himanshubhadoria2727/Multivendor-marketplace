@@ -56,7 +56,7 @@ export default function Orders() {
 
   // Fetch the order status counts from the API
 
-  const { orders, loading, paginatorInfo, error,orderCount } = useOrdersQuery(
+  const { orders, loading, paginatorInfo, error, orderCount } = useOrdersQuery(
     {
       language: locale,
       limit: LIMIT,
@@ -69,9 +69,11 @@ export default function Orders() {
     },
     {
       enabled: Boolean(shopId),
-    }
+    },
   );
-  const [initialOrderCount, setInitialOrderCount] = useState<number | null>(null);
+  const [initialOrderCount, setInitialOrderCount] = useState<number | null>(
+    null,
+  );
 
   useEffect(() => {
     // Set initialOrderCount only once when orders are fetched
@@ -80,8 +82,7 @@ export default function Orders() {
     }
   }, [orderCount, initialOrderCount]);
 
-  const { data:orderStatusCount } = useOrderStatusCountQuery(
-  );
+  const { data: orderStatusCount } = useOrderStatusCountQuery();
   console.log('orderStatusCount', orderStatusCount);
 
   const statusCounts = useMemo(() => {
@@ -89,9 +90,9 @@ export default function Orders() {
     if (orderStatusCount) {
       return orderStatusCount;
     }
-    return statusOptions.reduce((acc:any, option) => {
+    return statusOptions.reduce((acc: any, option) => {
       acc[option.value] = orders.filter(
-        (order) => order.order_status === option.value
+        (order) => order.order_status === option.value,
       ).length;
       return acc;
     }, {});
@@ -101,10 +102,11 @@ export default function Orders() {
     {
       ...(shopId && { shop_id: shopId }),
     },
-    { enabled: false }
+    { enabled: false },
   );
 
-  if (loading || fetchingShop || loading) return <Loader text={t('common:text-loading')} />;
+  if (loading || fetchingShop || loading)
+    return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error?.message} />;
 
   async function handleExportOrder() {
@@ -140,7 +142,7 @@ export default function Orders() {
 
   return (
     <>
-    <div className="mb-8 flex justify-between items-center">
+      <div className="mb-8 flex justify-between items-center">
         <div className="text-3xl font-bold tracking-tight text-gray-900">
           My orders
         </div>
@@ -148,7 +150,9 @@ export default function Orders() {
           <span className="text-lg text-gray-600 font-medium">
             Total orders:
           </span>
-          <span className="text-2xl font-semibold text-gray-900">{initialOrderCount}</span>
+          <span className="text-2xl font-semibold text-gray-900">
+            {initialOrderCount}
+          </span>
         </div>
       </div>
       {/* <Card className="mb-4 flex flex-col items-center justify-between md:flex-row">
@@ -170,27 +174,42 @@ export default function Orders() {
       </Card> */}
       <div className="flex mt-2 w-full bg-gray-100 pb-4 overflow-x-auto">
         <div className="flex w-full">
-          {statusOptions.map((option, index) => (
-            <div
-              key={option.value}
-              onClick={() => handleStatusChange(option.value)}
-              className={`flex-1 min-w-[120px] cursor-pointer p-2 text-center content-center py-3 transition-colors border-[1.2px] ${
-                index === 0
-                  ? 'rounded-l-md'
-                  : index === statusOptions.length - 1
-                  ? 'rounded-r-md'
-                  : 'border-l-0'
-              } ${
-                statusFilter === option.value
-                  ? 'bg-[#228CDB] text-white border-[#228CDB]'
-                  : 'bg-white text-[#228CDB] border-[#228CDB]'
-              } hover:bg-[#228CDB] hover:text-white`}
-            >
-              {option.label}
-            </div>
-          ))}
+          {statusOptions.map((option, index) => {
+            const count = statusCounts[option.value] || 0; // Get count or default to 0
+            const isSelected = statusFilter === option.value; // Check if the status is selected
+            return (
+              <div
+                key={option.value}
+                onClick={() => handleStatusChange(option.value)}
+                className={`flex-1 text-sm
+                   min-w-[120px] cursor-pointer p-2 text-center content-center py-3 transition-colors border-[1.2px] ${
+                  index === 0
+                    ? 'rounded-l-md'
+                    : index === statusOptions.length - 1
+                    ? 'rounded-r-md'
+                    : 'border-l-0'
+                } ${
+                  isSelected
+                    ? 'bg-[#228CDB] text-white border-[#228CDB]'
+                    : 'bg-white text-[#228CDB] border-[#228CDB]'
+                } hover:bg-[#228CDB] hover:text-white`}
+              >
+                <div>
+                  {option.label}
+                  <span
+                    className={`ml-2 text-sm font-medium transition-colors ${
+                      isSelected ? 'text-white' : 'text-accent hover:text-white'
+                    }`}
+                  >
+                    ({count})
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+
       <OrderList
         orders={orders}
         paginatorInfo={paginatorInfo}

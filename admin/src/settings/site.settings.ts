@@ -691,12 +691,12 @@ export const siteSettings = {
             icon: 'OrdersIcon',
             permissions: adminOwnerAndStaffOnly,
           },
-          {
-            href: (shop: string) => `/${shop}${Routes.transaction}`,
-            label: 'text-transactions',
-            icon: 'CalendarScheduleIcon',
-            permissions: adminAndOwnerOnly,
-          },
+          // {
+          //   href: (shop: string) => `/${shop}${Routes.transaction}`,
+          //   label: 'text-transactions',
+          //   icon: 'CalendarScheduleIcon',
+          //   permissions: adminAndOwnerOnly,
+          // },
           {
             href: (shop: string) => `/${shop}${Routes.payout.list}`,
             label: 'Payouts',
@@ -706,25 +706,25 @@ export const siteSettings = {
         ],
       },
 
-      financial: {
-        href: '',
-        // label: 'text-financial-management',
-        icon: 'WithdrawIcon',
-        childMenu: [
-          {
-            href: (shop: string) => `/${shop}${Routes.withdraw.list}`,
-            label: 'sidebar-nav-item-withdraws',
-            icon: 'AttributeIcon',
-            permissions: adminAndOwnerOnly,
-          },
-          // {
-          //   href: (shop: string) => `/${shop}${Routes.refund.list}`,
-          //   label: 'sidebar-nav-item-refunds',
-          //   icon: 'RefundsIcon',
-          //   permissions: adminOwnerAndStaffOnly,
-          // },
-        ],
-      },
+      // financial: {
+      //   href: '',
+      //   // label: 'text-financial-management',
+      //   icon: 'WithdrawIcon',
+      //   childMenu: [
+      //     {
+      //       href: (shop: string) => `/${shop}${Routes.withdraw.list}`,
+      //       label: 'sidebar-nav-item-withdraws',
+      //       icon: 'AttributeIcon',
+      //       permissions: adminAndOwnerOnly,
+      //     },
+      //     // {
+      //     //   href: (shop: string) => `/${shop}${Routes.refund.list}`,
+      //     //   label: 'sidebar-nav-item-refunds',
+      //     //   icon: 'RefundsIcon',
+      //     //   permissions: adminOwnerAndStaffOnly,
+      //     // },
+      //   ],
+      // },
 
       // feature: {
       //   href: '',

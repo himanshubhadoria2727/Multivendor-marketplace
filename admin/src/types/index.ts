@@ -749,6 +749,9 @@ export interface Product {
   is_niche:boolean;
   is_gamble:boolean;
   is_cbd:boolean;
+  is_betting:boolean;
+  is_rehab:boolean;
+  is_vaping:boolean;
   selectedForm:string;
   is_crypto:boolean;
   sale_price?: number;
@@ -827,6 +830,9 @@ export interface CreateProduct {
   is_gamble:boolean;
   is_cbd:boolean;
   is_crypto:boolean;
+  is_rehab:boolean;
+  is_betting:boolean;
+  is_vaping:boolean;
   manufacturer_id?: string;
   max_price?: number;
   min_price?: number;

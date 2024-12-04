@@ -28,6 +28,9 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
   const is_gamble = watch('is_gamble');
   const is_cbd = watch('is_cbd');
   const is_crypto = watch('is_crypto');
+  const is_vaping = watch('is_vaping');
+  const is_betting = watch('is_betting');
+  const is_rehab = watch('is_rehab');
 
   // Pre-select checkboxes based on initialValues prop
   useEffect(() => {
@@ -39,6 +42,9 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
       setValue('is_gamble', initialValues.is_gamble === '1' ? true : false);
       setValue('is_cbd', initialValues.is_cbd === '1' ? true : false);
       setValue('is_crypto', initialValues.is_crypto === '1' ? true : false);
+      setValue('is_betting', initialValues.is_betting === '1' ? true : false);
+      setValue('is_rehab', initialValues.is_rehab === '1' ? true : false);
+      setValue('is_vaping', initialValues.is_vaping === '1' ? true : false);
 
       // Set niche_price if it exists
       if (initialValues.niche_price) {
@@ -50,7 +56,7 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
       <Description
-        title={t('Select Grey Niche options')}
+        title={t('Add forbidden categories')}
         className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
       />
 
@@ -58,7 +64,7 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
         <Checkbox
           {...register('is_niche')}
           id="is_niche"
-          label={t('Grey Niche allowed?')}
+          label={t('Forbidden categories allowed?')}
           checked={is_niche} // Controlled by watch
           className="mb-5 font-semibold text-black-900 max-md:w-80 w-64"
         />
@@ -68,14 +74,14 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
             <Checkbox
               {...register('is_gamble')}
               id="is_gamble"
-              label={t('Casino/Betting/Gambling Link')}
+              label={t('Casino Link')}
               checked={is_gamble} // Controlled by watch
               className="mb-5 font-semibold max-md:w-80 w-64"
             />
             <Checkbox
               {...register('is_cbd')}
               id="is_cbd"
-              label={t('CBD Link')}
+              label={t('CBD/Marijuana Link')}
               checked={is_cbd} // Controlled by watch
               className="mb-5 font-semibold text-black-900 max-md:w-80 w-64"
             />
@@ -84,6 +90,27 @@ export default function ProductNicheOptions({ initialValues }: IProps) {
               id="is_crypto"
               label={t('Cryptocurrency Link')}
               checked={is_crypto} // Controlled by watch
+              className="mb-5 font-semibold max-md:w-80 w-64"
+            />
+            <Checkbox
+              {...register('is_betting')}
+              id="is_betting"
+              label={t('Betting Link')}
+              checked={is_betting} // Controlled by watch
+              className="mb-5 font-semibold max-md:w-80 w-64"
+            />
+            <Checkbox
+              {...register('is_rehab')}
+              id="is_rehab"
+              label={t('Rehabilitation Link')}
+              checked={is_rehab} // Controlled by watch
+              className="mb-5 font-semibold max-md:w-80 w-64"
+            />
+            <Checkbox
+              {...register('is_vaping')}
+              id="is_vaping"
+              label={t('Vaping Link')}
+              checked={is_vaping} // Controlled by watch
               className="mb-5 font-semibold max-md:w-80 w-64"
             />
             <Input

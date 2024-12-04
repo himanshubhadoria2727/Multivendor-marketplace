@@ -44,7 +44,7 @@ export default function PayoutPage() {
   const {
     query: { shop },
   } = router;
-
+  
   const [page, setPage] = useState(1);
   const [orderBy, setOrder] = useState('created_at');
   const [sortedBy, setColumn] = useState<SortOrder>(SortOrder.Desc);
@@ -76,7 +76,7 @@ export default function PayoutPage() {
     useEffect(() => {
       // Set initialOrderCount only once when orders are fetched
       if (totalOnHoldAmount && initialTotalWithdraw === null) {
-        setInitialTotalWithdraw(totalOnHoldAmount);
+        setInitialTotalWithdraw(totalWithdrawAmount);
       }
     }, [totalWithdrawAmount, initialTotalWithdraw]);
 

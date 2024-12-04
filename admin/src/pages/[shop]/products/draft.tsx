@@ -89,6 +89,7 @@ export default function DraftProductPage() {
     !me?.shops?.map((shop) => shop.id).includes(shopId) &&
     me?.managed_shop?.id != shopId
   ) {
+    console.log("if condition true")
     router.replace(Routes.dashboard);
   }
 

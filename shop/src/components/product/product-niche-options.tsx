@@ -22,12 +22,18 @@ const ProductNicheOptions: React.FC<ProductNicheOptionsProps> = ({ product, onCh
         is_gamble,
         is_cbd,
         is_crypto,
+        is_betting,
+        is_vaping,
+        is_rehab,
     } = product ?? {};
 
     const options = [
         { label: 'Casino/Betting/Gambling Link', value: 'gamble', show: is_gamble == '1' },
         { label: 'CBD Link', value: 'cbd', show: is_cbd == '1' },
         { label: 'Cryptocurrency Link', value: 'crypto', show: is_crypto == '1' },
+        { label: 'Betting Link', value: 'betting', show: is_betting == '1' },
+        { label: 'Vaping Link', value: 'vaping', show: is_vaping == '1' },
+        { label: 'Rehabituation Link', value: 'rehab', show: is_rehab == '1' },
     ];
 
     console.log('Options:', options);

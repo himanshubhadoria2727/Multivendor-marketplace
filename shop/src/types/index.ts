@@ -496,6 +496,9 @@ export interface Product {
   is_gamble:boolean;
   is_cbd:boolean;
   is_crypto:boolean;
+  is_betting:boolean;
+  is_rehab:boolean;
+  is_vaping:boolean;
   isLinkInsertion:string;
   sale_price: number;
   orders_count: number;

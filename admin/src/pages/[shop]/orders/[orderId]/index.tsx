@@ -446,6 +446,14 @@ export default function OrderDetailsPage() {
                         {order?.products[0]?.pivot?.postUrl || 'N/A'}
                       </span>
                     </li>
+                    <li className="flex">
+                      <span className="font-medium text-base w-44 text-gray-500">
+                        Selected Niche:
+                      </span>
+                      <span className="text-base text-gray-500 ml-4">
+                        {order?.products[0]?.pivot?.selectedNiche || 'N/A'}
+                      </span>
+                    </li>
                   </ul>
                 </div>
               </div>

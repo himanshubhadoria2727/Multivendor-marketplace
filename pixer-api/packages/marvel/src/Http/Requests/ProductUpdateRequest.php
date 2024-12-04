@@ -93,6 +93,9 @@ class ProductUpdateRequest extends FormRequest
             'is_gamble'                   => ['nullable', 'boolean'],
             'is_cbd'                   => ['nullable', 'boolean'],
             'is_crypto'                   => ['nullable', 'boolean'],
+            'is_vaping'                   => ['nullable', 'boolean'],
+            'is_rehab'                   => ['nullable', 'boolean'],
+            'is_betting'                   => ['nullable', 'boolean'],
             'is_external'                  => ['boolean'],
             'is_rental'                    => ['boolean'],
         ];
