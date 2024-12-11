@@ -619,7 +619,7 @@ export default function ProductView({ initialValues }: ProductFormProps) {
                 className="mb-5 w-1/2 max-md:w-full"
               />
               <Input
-                label="Ahref DR"
+                label="Site type"
                 name="type"
                 placeholder="From 1 to 100"
                 value={initialValues?.type?.name}

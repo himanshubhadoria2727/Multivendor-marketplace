@@ -47,9 +47,18 @@ export const userClient = {
   forgetPassword: (variables: ForgetPasswordInput) => {
     return HttpClient.post<any>(API_ENDPOINTS.FORGET_PASSWORD, variables);
   },
+  emailVerification: (variables: ForgetPasswordInput) => {
+    return HttpClient.post<any>(API_ENDPOINTS.VERIFY_EMAIL, variables);
+  },
   verifyForgetPasswordToken: (variables: VerifyForgetPasswordTokenInput) => {
     return HttpClient.post<any>(
       API_ENDPOINTS.VERIFY_FORGET_PASSWORD_TOKEN,
+      variables
+    );
+  },
+  verifyEmailToken: (variables: VerifyForgetPasswordTokenInput) => {
+    return HttpClient.post<any>(
+      API_ENDPOINTS. VERIFY_EMAIL_TOKEN,
       variables
     );
   },

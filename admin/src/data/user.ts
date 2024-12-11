@@ -136,6 +136,9 @@ export const useChangePasswordMutation = () => {
 export const useForgetPasswordMutation = () => {
   return useMutation(userClient.forgetPassword);
 };
+export const useVerifyEmailMutation = () => {
+  return useMutation(userClient.emailVerification);
+};
 export const useResendVerificationEmail = () => {
   const { t } = useTranslation('common');
   return useMutation(userClient.resendVerificationEmail, {
@@ -167,6 +170,9 @@ export const useLicenseKeyMutation = () => {
 
 export const useVerifyForgetPasswordTokenMutation = () => {
   return useMutation(userClient.verifyForgetPasswordToken);
+};
+export const useVerifyEmailVerificationMutation = () => {
+  return useMutation(userClient.verifyEmailToken);
 };
 
 export const useResetPasswordMutation = () => {

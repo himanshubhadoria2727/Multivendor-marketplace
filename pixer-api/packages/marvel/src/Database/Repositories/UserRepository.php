@@ -12,6 +12,7 @@ use Marvel\Enums\Permission as UserPermission;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Prettus\Repository\Exceptions\RepositoryException;
 use Marvel\Mail\ForgetPassword;
+use Marvel\Mail\EmailVerification;
 use Illuminate\Support\Facades\Mail;
 use Marvel\Database\Models\Address;
 use Marvel\Database\Models\Profile;
@@ -122,6 +123,24 @@ class UserRepository extends BaseRepository
             return false;
         }
     }
+    public function sendVerifyEmail($email, $token)
+{
+    // Log the email and token being used to send the verification
+    Log::info('Sending email verification for email: ' . $email . ' with token: ' . $token);
+
+    try {
+        Mail::to($email)->send(new EmailVerification($token, $email));
+        Log::info('Email verification sent successfully to: ' . $email);
+        return true;
+    } catch (\Exception $e) {
+        // Log the exception message in case of failure
+        Log::error('Failed to send email verification to: ' . $email, [
+            'error' => $e->getMessage(),
+            'exception' => $e
+        ]);
+        return false;
+    }
+}
     /**
      * Update user email and send verification link to the user.
      * @param  $request

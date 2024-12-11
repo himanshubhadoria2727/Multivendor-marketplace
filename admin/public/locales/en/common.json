@@ -1,4 +1,8 @@
 {
+  "email_verification": "Website Email Verification",
+  "enter_email": "Enter email",
+  "enter_token": "Enter token",
+  "email_verification_success": "Email verification successful",
   "text-guest": "Guest",
   "text-read-more": "Read more",
   "text-less": "Less",

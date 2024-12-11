@@ -65,6 +65,7 @@ import WebsiteVerification from './verifyWebsite';
 import { toast } from 'react-toastify';
 import ValidationError from '@/components/ui/form-validation-error';
 import { Dialog } from '@headlessui/react';
+import EmailVerification from '../auth/forget-password/email-verification';
 
 type ProductFormProps = {
   initialValues?: Product | null;
@@ -136,7 +137,7 @@ export default function CreateOrUpdateProductForm({
   const upload_max_filesize = options?.server_info?.upload_max_filesize / 1024;
 
   const { mutate: createProduct, isLoading: creating } =
-    useCreateProductMutation((res)=>{
+    useCreateProductMutation((res) => {
       console.log('Product created successfully.');
       window.scrollTo({ top: 0, behavior: 'auto' });
       if (currentStep < steps.length) {
@@ -157,7 +158,7 @@ export default function CreateOrUpdateProductForm({
     values.sponsored_marked = values.sponsored_marked?.label;
     try {
       if (initialValues?.status !== 'publish') {
-        if (verificationResult === true) {
+        if (verificationResult === true || emailVerificationStatus === true) {
           values.status = 'publish';
         } else {
           values.status = 'draft';
@@ -375,18 +376,33 @@ export default function CreateOrUpdateProductForm({
   const [verificationResult, setVerificationResult] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState('');
   const [isInputLocked, setIsInputLocked] = useState(false);
+  const [emailVerificationStatus, setEmailVerificationStatus] = useState(false);
+  const [websiteVerified, setWebsiteVerified] = useState(false);
+
+  console.log("emailVerificationStatus",emailVerificationStatus)
 
   const handleVerificationComplete = (isVerified: any, message: any) => {
     if (isVerified) {
       setVerificationResult(true);
       setIsInputLocked(true);
+      setWebsiteVerified(true);
     } else {
       setIsInputLocked(false);
     }
-
     // Use a callback to log the updated state
     setVerificationMessage(message);
     console.log('verification', isVerified ? true : verificationResult);
+  };
+
+  const handleVerificationSuccess = () => {
+    setEmailVerificationStatus(true)
+    setIsInputLocked(true);
+    setWebsiteVerified(true);
+  };
+
+  const handleVerificationFailure = (message: string) => {
+    setEmailVerificationStatus(false);
+    setIsInputLocked(false);
   };
 
   useEffect(() => {
@@ -436,7 +452,7 @@ export default function CreateOrUpdateProductForm({
     // Remove http:// or https:// from the beginning and any trailing slashes
     return url.replace(/^https?:\/\//, '').replace(/\/+$/, '');
   };
-  const handleBlur = (e:any) => {
+  const handleBlur = (e: any) => {
     const sanitizedUrl = sanitizeUrl(e.target.value);
     setValue('name', sanitizedUrl); // Update the value in React Hook Form
   };
@@ -453,7 +469,7 @@ export default function CreateOrUpdateProductForm({
             {...register('name')}
             placeholder="eg-google.com"
             error={errors.name?.message}
-            onChange={(e) => setValue('name', e.target.value)} // Let React Hook Form handle the input value
+            onChange={(e) => setProductUrl(e.target.value)} // Let React Hook Form handle the input value
             onBlur={handleBlur} // Sanitize URL on blur
             disabled={isInputLocked || !!initialValues}
             variant="outline"
@@ -762,27 +778,52 @@ export default function CreateOrUpdateProductForm({
         <Card>
           {initialValues?.status !== 'publish' ? (
             <>
-              {verificationResult === false ? (
+              {websiteVerified === false ? (
                 <Alert className="w-full mb-5" message={undefined}>
                   Your website will be in draft until it's verified
                 </Alert>
               ) : null}
-              {verificationResult === false ? (
-                <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
-                  <span className="flex sm:inline md:text-sm max-sm:text-xs">
-                    Add this meta tag in your website to get verified: &lt;meta
-                    name=&quot;goodblogger-verification&quot; content=&quot;
-                    {generateMetaContent('local')}&quot;/&gt;
-                  </span>
+    
+              {websiteVerified === false && (
+                <>
+                  <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
+                    <span className="flex sm:inline md:text-sm max-sm:text-xs">
+                      Add this meta tag in your website to get verified: &lt;meta
+                      name=&quot;goodblogger-verification&quot; content=&quot;
+                      {generateMetaContent('local')}&quot;/&gt;
+                    </span>
+                  </div>
+                  <WebsiteVerification
+                    websiteUrl={productUrl || initialValues?.name}
+                    metaName="goodblogger-verification"
+                    metaContent={generateMetaContent('local')} // Use 'session' for sessionStorage
+                    onVerificationComplete={handleVerificationComplete}
+                  />
+    
+                  {/* Partition with Section Title */}
+                  <div className="my-6">
+                    <div className="flex justify-center items-center space-x-4">
+                      <hr className="border-t border-gray-300 w-1/4" />
+                      <span className="text-sm text-gray-600">OR</span>
+                      <hr className="border-t border-gray-300 w-1/4" />
+                    </div>
+                  </div>
+                </>
+              )}
+    
+              {/* Email Verification */}
+              {websiteVerified === false && (
+                <div className="mt-6">
+                  <EmailVerification
+                    website={productUrl || initialValues?.name}
+                    onSuccess={handleVerificationSuccess}
+                    onFailure={handleVerificationFailure}
+                  />
                 </div>
-              ) : null}
-              <WebsiteVerification
-                websiteUrl={productUrl || initialValues?.name}
-                metaName="goodblogger-verification"
-                metaContent={generateMetaContent('local')} // Use 'session' for sessionStorage
-                onVerificationComplete={handleVerificationComplete}
-              />
-              {verificationResult === true && (
+              )}
+              
+              {/* Verification Success */}
+              {websiteVerified === true && (
                 <Alert className="mt-5 w-1/3" message={undefined}>
                   You are Verified, proceed to publish
                 </Alert>
@@ -793,11 +834,7 @@ export default function CreateOrUpdateProductForm({
               You have reached the last step, update your site
             </Alert>
           )}
-
-          {/* <button onClick={handleAddProduct} disabled={!verificationResult}>
-                Add Product
-              </button> */}
-          {/* <div>{verificationMessage}</div> */}
+    
           <StickyFooterPanel>
             <div className="flex items-center justify-between mt-5">
               {initialValues && (
@@ -832,7 +869,7 @@ export default function CreateOrUpdateProductForm({
           </StickyFooterPanel>
         </Card>
       ),
-    },
+    }    
   ];
 
   const handleNextStep = async () => {
@@ -947,9 +984,7 @@ export default function CreateOrUpdateProductForm({
               name: getValues('name'),
               product_type: 'simple',
             });
-            console.log('Product created successfully outside',rs);
-
-          
+            console.log('Product created successfully outside', rs);
           } catch (error) {
             console.error('Failed to create product:', error);
             // Optionally, display an error message to the user

@@ -422,6 +422,30 @@ class UserController extends CoreController
         }
     }
 
+    public function verifyWebsite(Request $request)
+{
+    // Delete any existing verification records for the email
+    DB::table('email_verifications')->where('email', $request->email)->delete();
+
+    // Generate a random token for verification
+    $token = Str::random(16);
+
+    // Insert the new token into the email_verifications table
+    DB::table('email_verifications')->insert([
+        'email' => $request->email,  // Insert the provided email
+        'token' => $token,           // Insert the generated token
+        'created_at' => Carbon::now() // Set the current timestamp
+    ]);
+
+    // Send the verification email with the generated token
+    if ($this->repository->sendVerifyEmail($request->email, $token)) {
+        return ['message' => CHECK_INBOX_FOR_EMAIL, 'success' => true];
+    } else {
+        return ['message' => SOMETHING_WENT_WRONG, 'success' => false];
+    }
+}
+
+
     public function forgetPassword(Request $request)
     {
         $user = $this->repository->findByField('email', $request->email);
@@ -457,6 +481,19 @@ class UserController extends CoreController
             return ['message' => NOT_FOUND, 'success' => false];
         }
         return ['message' => TOKEN_IS_VALID, 'success' => true];
+    }
+    public function verifyEmailVerificationToken(Request $request)
+    {
+            // Retrieve token data from the email_verifications table
+    $tokenData = DB::table('email_verifications')->where('token', $request->token)->first();
+    
+    if (!$tokenData) {
+        return ['message' => INVALID_TOKEN, 'success' => false];
+    }
+
+    // If the token is valid, you can either update the user's email status or do any further actions.
+    // For now, just return success.
+    return ['message' => TOKEN_IS_VALID, 'success' => true];
     }
     public function resetPassword(Request $request)
     {
