@@ -22,4 +22,22 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no root@93.127.195.116 'cd Multivendor-marketplace/admin  && git pull && npm run dev'
+          ssh -o StrictHostKeyChecking=no root@93.127.195.116 << 'EOF'
+            cd Multivendor-marketplace/admin
+
+            # Pull the latest code from Git
+            git pull
+
+            # Delete the pm2 process named "publisher" if it exists
+            pm2 delete publisher || echo "No process named 'publisher' to delete."
+
+            # Install dependencies and build the application
+            npm install
+            npm run build
+
+            # Start the application with pm2 under the name "publisher"
+            pm2 start npm --name "publisher" -- run start
+
+            # Save the pm2 process list
+            pm2 save
+          EOF
