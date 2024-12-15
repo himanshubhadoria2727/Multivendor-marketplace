@@ -290,13 +290,13 @@ export default function PayoutPage() {
               onClick={() => handleFilterChange('credit')}
               className="btn flex-1 bg-green-500 text-white text-center rounded-md px-2 py-2 hover:bg-green-600 transition-colors"
             >
-              Credits
+              Wallet
             </Button>
             <Button
               onClick={() => handleFilterChange('debit')}
               className="btn flex-1 bg-red-500 text-white text-center rounded-md px-2 py-2   hover:bg-red-600 transition-colors"
             >
-              Debits
+              Withdrawals
             </Button>
           </div>
         </div>

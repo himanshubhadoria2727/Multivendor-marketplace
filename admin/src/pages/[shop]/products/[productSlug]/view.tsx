@@ -18,10 +18,12 @@ import shop from '@/components/layouts/shop';
 import { Routes } from '@/config/routes';
 import { useShopQuery } from '@/data/shop';
 import { useMeQuery } from '@/data/user';
+
 import Link from '@/components/ui/link';
 import Card from '@/components/common/card';
 import { EditFillIcon } from '@/components/icons/edit';
 import { formatSlug } from '@/utils/use-slug';
+import { DoubleCheckIcon } from '@/components/icons/double-check-icon';
 
 export default function viewPage() {
   const { query, locale } = useRouter();
@@ -52,25 +54,53 @@ export default function viewPage() {
   }
   return (
     <>
-      <Card className="mb-5 rounded-lg flex justify-between items-center">
+      <Card className="mb-5 rounded-lg flex items-center justify-between px-3 py-2 gap-4">
         {/* Site Name */}
-        <div className="flex items-center px-3 py-2 rounded-lg gap-3">
-        <span className="text-lg font-semibold">Site:</span> <span className="text-lg font-semibold text-blue-600">{product?.name}</span>
-        <EditFillIcon onClick={() => router.replace(Routes?.product?.editWithoutLang(formatSlug(product?.slug),shopId ))}/>
+        <div className="flex items-center gap-3">
+          <span className="text-lg font-semibold">Site:</span>
+          <span className="text-lg font-semibold text-blue-600">
+            {product?.name}
+          </span>
+          <EditFillIcon
+            onClick={() =>
+              router.replace(
+                Routes?.product?.editWithoutLang(
+                  formatSlug(product?.slug),
+                  shopId,
+                ),
+              )
+            }
+            className="cursor-pointer"
+          />
         </div>
+
+        {/* Verify Section */}
+        {product?.status === 'draft' && (
+          <div onClick={() =>
+            router.replace(
+              `${Routes?.product?.editWithoutLang(formatSlug(product?.slug), shopId)}?verification=false`
+            )
+          } className="flex cursor-pointer items-center px-3 py-2 border bg-yellow-100 rounded-lg gap-3">
+            <span className="text-lg font-semibold text-yellow-600">
+              Verify
+            </span>
+            <DoubleCheckIcon  className="text-yellow-600" />
+          </div>
+        )}
 
         {/* Status Section */}
         <div className="flex items-center border px-3 py-2 bg-accent/20 rounded-lg gap-3">
-          <span className="text-base text-gray-500 ">Status:</span>
+          <span className="text-base text-gray-500">Status:</span>
           <span
             className={`text-base font-semibold ${
               product?.status === 'draft' ? 'text-red-500' : 'text-green-500'
             }`}
           >
             {product?.status === 'draft' ? 'Verification Pending' : 'Published'}
-
           </span>
         </div>
+
+        
       </Card>
 
       <ProductView initialValues={product} />

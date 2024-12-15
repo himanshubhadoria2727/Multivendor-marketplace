@@ -58,6 +58,7 @@ import RichTextEditor from '@/components/ui/wysiwyg-editor/editor';
 import TooltipLabel from '@/components/ui/tooltip-label';
 import Select from 'react-select';
 import SelectInput from '../ui/select-input';
+import CustomSelectInput from '../ui/select-input-custom';
 // import { ValidationError } from 'yup';
 import { useCountriesQuery } from '@/data/countries';
 import ProductNicheOptions from './product-niche-option';
@@ -150,12 +151,29 @@ export default function CreateOrUpdateProductForm({
     console.log('submittion started');
     // event.preventDefault();
     values.slug = slugAutoSuggest;
-    values.languages = values.languages?.label;
-    values.countries = values.countries?.value;
-    values.link_type = values.link_type?.label;
-    values.link_validity = values.link_validity?.label;
-    values.link_counts = values.link_counts?.value;
-    values.sponsored_marked = values.sponsored_marked?.label;
+    values.languages = values.languages
+      ? values.languages?.label || values.languages // If it's an object with a label, use label, else use value
+      : initialValues?.languages || values.languages; // Fall back to initialValues if values.languages is not defined
+    values.countries = values.countries
+      ? values.countries?.value || values.countries
+      : initialValues?.countries || values.countries;
+
+    values.link_type = values.link_type
+      ? values.link_type?.label || values.link_type
+      : initialValues?.link_type || values.link_type;
+
+    values.link_validity = values.link_validity
+      ? values.link_validity?.label || values.link_validity
+      : initialValues?.link_validity || values.link_validity;
+
+    values.link_counts = values.link_counts
+      ? values.link_counts?.value || values.link_counts
+      : initialValues?.link_counts || values.link_counts;
+
+    values.sponsored_marked = values.sponsored_marked
+      ? values.sponsored_marked?.label || values.sponsored_marked
+      : initialValues?.sponsored_marked || values.sponsored_marked;
+
     try {
       if (initialValues?.status !== 'publish') {
         if (verificationResult === true || emailVerificationStatus === true) {
@@ -379,7 +397,7 @@ export default function CreateOrUpdateProductForm({
   const [emailVerificationStatus, setEmailVerificationStatus] = useState(false);
   const [websiteVerified, setWebsiteVerified] = useState(false);
 
-  console.log("emailVerificationStatus",emailVerificationStatus)
+  console.log('emailVerificationStatus', emailVerificationStatus);
 
   const handleVerificationComplete = (isVerified: any, message: any) => {
     if (isVerified) {
@@ -395,7 +413,7 @@ export default function CreateOrUpdateProductForm({
   };
 
   const handleVerificationSuccess = () => {
-    setEmailVerificationStatus(true)
+    setEmailVerificationStatus(true);
     setIsInputLocked(true);
     setWebsiteVerified(true);
   };
@@ -553,9 +571,10 @@ export default function CreateOrUpdateProductForm({
             <div className="flex flex-wrap gap-3 justify-start md:justify-between">
               <div className="w-full md:w-[30%] mb-5">
                 <Label>{t('Language')}</Label>
-                <SelectInput
+                <CustomSelectInput
                   name="languages"
                   placeholder="Select Language"
+                  initialValues={initialValues.languages}
                   control={control}
                   options={[
                     { value: 'en', label: 'English' },
@@ -576,11 +595,12 @@ export default function CreateOrUpdateProductForm({
               </div>
 
               <div className="w-full md:w-[30%] mb-5">
-                <Label>{t('Select Country')}</Label>
-                <SelectInput
+                <Label>{t('Leading Country')}</Label>
+                <CustomSelectInput
                   name="countries"
                   placeholder="Select country"
                   control={control}
+                  initialValues={initialValues.countries}
                   options={allCountries?.map((country: any) => ({
                     label: country.name.common,
                     value: country.cca2,
@@ -603,8 +623,9 @@ export default function CreateOrUpdateProductForm({
             <div className="flex flex-wrap gap-3 justify-start md:justify-between">
               <div className="w-full md:w-[30%] mb-5">
                 <Label>{t('Link Type')}</Label>
-                <SelectInput
+                <CustomSelectInput
                   name="link_type"
+                  initialValues={initialValues.link_type}
                   placeholder="Select Link Type"
                   control={control}
                   options={[
@@ -617,8 +638,9 @@ export default function CreateOrUpdateProductForm({
 
               <div className="w-full md:w-[30%] mb-5">
                 <Label>{t('Link Validity')}</Label>
-                <SelectInput
+                <CustomSelectInput
                   name="link_validity"
+                  initialValues={initialValues.link_validity}
                   placeholder="Select Link Validity"
                   control={control}
                   options={[
@@ -632,8 +654,9 @@ export default function CreateOrUpdateProductForm({
 
               <div className="w-full md:w-[30%] mb-5">
                 <Label>{t('Link Counts')}</Label>
-                <SelectInput
+                <CustomSelectInput
                   name="link_counts"
+                  initialValues={initialValues.link_counts}
                   placeholder="Select Link Count"
                   control={control}
                   options={[
@@ -676,8 +699,9 @@ export default function CreateOrUpdateProductForm({
               {/* Sponsored Marked */}
               <div className="w-full md:w-[30%] mb-5">
                 <Label>{t('Sponsored Marked')}</Label>
-                <SelectInput
+                <CustomSelectInput
                   name="sponsored_marked"
+                  initialValues={initialValues.sponsored_marked}
                   placeholder="Yes/No"
                   control={control}
                   options={[
@@ -783,13 +807,14 @@ export default function CreateOrUpdateProductForm({
                   Your website will be in draft until it's verified
                 </Alert>
               ) : null}
-    
+
               {websiteVerified === false && (
                 <>
                   <div className="w-full mb-5 bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative">
                     <span className="flex sm:inline md:text-sm max-sm:text-xs">
-                      Add this meta tag in your website to get verified: &lt;meta
-                      name=&quot;goodblogger-verification&quot; content=&quot;
+                      Add this meta tag in your website to get verified:
+                      &lt;meta name=&quot;goodblogger-verification&quot;
+                      content=&quot;
                       {generateMetaContent('local')}&quot;/&gt;
                     </span>
                   </div>
@@ -799,7 +824,7 @@ export default function CreateOrUpdateProductForm({
                     metaContent={generateMetaContent('local')} // Use 'session' for sessionStorage
                     onVerificationComplete={handleVerificationComplete}
                   />
-    
+
                   {/* Partition with Section Title */}
                   <div className="my-6">
                     <div className="flex justify-center items-center space-x-4">
@@ -810,7 +835,7 @@ export default function CreateOrUpdateProductForm({
                   </div>
                 </>
               )}
-    
+
               {/* Email Verification */}
               {websiteVerified === false && (
                 <div className="mt-6">
@@ -821,7 +846,7 @@ export default function CreateOrUpdateProductForm({
                   />
                 </div>
               )}
-              
+
               {/* Verification Success */}
               {websiteVerified === true && (
                 <Alert className="mt-5 w-1/3" message={undefined}>
@@ -834,10 +859,10 @@ export default function CreateOrUpdateProductForm({
               You have reached the last step, update your site
             </Alert>
           )}
-    
+
           <StickyFooterPanel>
             <div className="flex items-center justify-between mt-5">
-              {initialValues && (
+              {/* {initialValues && (
                 <Button
                   variant="outline"
                   onClick={() => router.back()}
@@ -846,7 +871,7 @@ export default function CreateOrUpdateProductForm({
                 >
                   Back
                 </Button>
-              )}
+              )} */}
               <div className="ml-auto">
                 <Button
                   loading={updating || creating}
@@ -869,7 +894,7 @@ export default function CreateOrUpdateProductForm({
           </StickyFooterPanel>
         </Card>
       ),
-    }    
+    },
   ];
 
   const handleNextStep = async () => {
@@ -1018,6 +1043,19 @@ export default function CreateOrUpdateProductForm({
       setCurrentStep(currentStep - 1);
     }
   };
+  const { verification } = router.query;
+
+  useEffect(() => {
+    // Check if 'verification' is in the query and its value is false
+
+    if (verification === 'false' && initialValues) {
+      setCurrentStep(3); // Skip to Step 3 if verification is false and initialValues exist
+    } else if (initialValues) {
+      setCurrentStep(2); // Set to Step 2 if initialValues exist
+    } else {
+      setCurrentStep(1); // Default to Step 1 if no initialValues
+    }
+  }, [router.query, initialValues]);
 
   return (
     <>
@@ -1085,7 +1123,7 @@ export default function CreateOrUpdateProductForm({
 
             {/* Navigation Buttons */}
             <div className="flex justify-between relative top-5">
-              {currentStep > 1 && (
+              {currentStep > 1 && verification !== 'false' && (
                 <div
                   onClick={handlePreviousStep}
                   className="flex-shrink-0 px-4 cursor-pointer py-2 border border-[#24b47e] rounded-lg bg-transparent hover:bg-[#24b47e] hover:text-white text-[#24b47e] transition duration-300 ease-in-out"
