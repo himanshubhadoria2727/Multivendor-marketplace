@@ -151,28 +151,28 @@ export default function CreateOrUpdateProductForm({
     console.log('submittion started');
     // event.preventDefault();
     values.slug = slugAutoSuggest;
-    values.languages = values.languages
-      ? values.languages?.label || values.languages // If it's an object with a label, use label, else use value
-      : initialValues?.languages || values.languages; // Fall back to initialValues if values.languages is not defined
+    values.languages = values?.languages
+      ? values.languages?.label || values?.languages // If it's an object with a label, use label, else use value
+      : initialValues?.languages || values?.languages; // Fall back to initialValues if values.languages is not defined
     values.countries = values.countries
-      ? values.countries?.value || values.countries
-      : initialValues?.countries || values.countries;
+      ? values.countries?.value || values?.countries
+      : initialValues?.countries || values?.countries;
 
-    values.link_type = values.link_type
-      ? values.link_type?.label || values.link_type
-      : initialValues?.link_type || values.link_type;
+    values.link_type = values?.link_type
+      ? values.link_type?.label || values?.link_type
+      : initialValues?.link_type || values?.link_type;
 
-    values.link_validity = values.link_validity
-      ? values.link_validity?.label || values.link_validity
-      : initialValues?.link_validity || values.link_validity;
+    values.link_validity = values?.link_validity
+      ? values.link_validity?.label || values?.link_validity
+      : initialValues?.link_validity || values?.link_validity;
 
-    values.link_counts = values.link_counts
-      ? values.link_counts?.value || values.link_counts
-      : initialValues?.link_counts || values.link_counts;
+    values.link_counts = values?.link_counts
+      ? values.link_counts?.value || values?.link_counts
+      : initialValues?.link_counts || values?.link_counts;
 
     values.sponsored_marked = values.sponsored_marked
-      ? values.sponsored_marked?.label || values.sponsored_marked
-      : initialValues?.sponsored_marked || values.sponsored_marked;
+      ? values.sponsored_marked?.label || values?.sponsored_marked
+      : initialValues?.sponsored_marked || values?.sponsored_marked;
 
     try {
       if (initialValues?.status !== 'publish') {
@@ -574,7 +574,7 @@ export default function CreateOrUpdateProductForm({
                 <CustomSelectInput
                   name="languages"
                   placeholder="Select Language"
-                  initialValues={initialValues.languages}
+                  initialValues={initialValues?.languages}
                   control={control}
                   options={[
                     { value: 'en', label: 'English' },
@@ -600,7 +600,7 @@ export default function CreateOrUpdateProductForm({
                   name="countries"
                   placeholder="Select country"
                   control={control}
-                  initialValues={initialValues.countries}
+                  initialValues={initialValues?.countries}
                   options={allCountries?.map((country: any) => ({
                     label: country.name.common,
                     value: country.cca2,
@@ -625,7 +625,7 @@ export default function CreateOrUpdateProductForm({
                 <Label>{t('Link Type')}</Label>
                 <CustomSelectInput
                   name="link_type"
-                  initialValues={initialValues.link_type}
+                  initialValues={initialValues?.link_type}
                   placeholder="Select Link Type"
                   control={control}
                   options={[
@@ -640,7 +640,7 @@ export default function CreateOrUpdateProductForm({
                 <Label>{t('Link Validity')}</Label>
                 <CustomSelectInput
                   name="link_validity"
-                  initialValues={initialValues.link_validity}
+                  initialValues={initialValues?.link_validity}
                   placeholder="Select Link Validity"
                   control={control}
                   options={[
@@ -656,7 +656,7 @@ export default function CreateOrUpdateProductForm({
                 <Label>{t('Link Counts')}</Label>
                 <CustomSelectInput
                   name="link_counts"
-                  initialValues={initialValues.link_counts}
+                  initialValues={initialValues?.link_counts}
                   placeholder="Select Link Count"
                   control={control}
                   options={[
@@ -701,7 +701,7 @@ export default function CreateOrUpdateProductForm({
                 <Label>{t('Sponsored Marked')}</Label>
                 <CustomSelectInput
                   name="sponsored_marked"
-                  initialValues={initialValues.sponsored_marked}
+                  initialValues={initialValues?.sponsored_marked}
                   placeholder="Yes/No"
                   control={control}
                   options={[
