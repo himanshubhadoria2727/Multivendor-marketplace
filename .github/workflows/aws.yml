@@ -31,8 +31,6 @@ jobs:
             # Delete the pm2 process named "publisher" if it exists
             pm2 delete publisher || echo "No process named 'publisher' to delete."
 
-            # Install dependencies and build the application
-            npm install
             npm run build
 
             # Start the application with pm2 under the name "publisher"
