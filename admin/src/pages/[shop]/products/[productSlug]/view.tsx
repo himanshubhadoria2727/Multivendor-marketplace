@@ -54,9 +54,9 @@ export default function viewPage() {
   }
   return (
     <>
-      <Card className="mb-5 rounded-lg flex items-center justify-between px-3 py-2 gap-4">
+      <Card className="mb-5 rounded-lg flex max-md:flex-col items-center justify-between px-3 py-2 gap-4">
         {/* Site Name */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center  gap-3">
           <span className="text-lg font-semibold">Site:</span>
           <span className="text-lg font-semibold text-blue-600">
             {product?.name}

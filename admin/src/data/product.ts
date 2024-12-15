@@ -59,12 +59,12 @@ export const useUpdateProductMutation = () => {
   const router = useRouter();
   return useMutation(productClient.update, {
     onSuccess: async (data) => {
-      const generateRedirectUrl = router.query.shop
-        ? `/${router.query.shop}${Routes.product.list}`
-        : Routes.product.list;
-      await Router.push(generateRedirectUrl, undefined, {
-        locale: Config.defaultLanguage,
-      });
+      // const generateRedirectUrl = router.query.shop
+      //   ? `/${router.query.shop}${Routes.product.list}`
+      //   : Routes.product.list;
+      // await Router.push(generateRedirectUrl, undefined, {
+      //   locale: Config.defaultLanguage,
+      // });
       toast.success(t('common:successfully-updated'));
     },
     // Always refetch after error or success:

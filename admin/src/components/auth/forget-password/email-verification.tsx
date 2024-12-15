@@ -90,37 +90,37 @@ const EmailVerification = ({
         />
       )}
 
-      <h2 className="text-xl font-bold mb-4">
+      <h2 className="text-xl font-bold mb-4 text-center sm:text-left">
         {t('common:email_verification')}
       </h2>
 
-      {!verifiedEmail && (
-        <div className="mb-4 flex items-center gap-0">
-          <input
-            type="text"
-            id="email"
-            value={emailPrefix}
-            onChange={(e) => setEmailPrefix(e.target.value)}
-            placeholder="Enter email prefix"
-            required
-            className="border px-3 py-2 rounded-l w-30"
-          />
-          <span className="bg-gray-200 text-gray-600 px-3 py-2 rounded-r">
-            @{domain}
-          </span>
-          <button
-            onClick={handleEmailSubmit}
-            type="button"
-            disabled={isLoading}
-            className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
-          >
-            {isLoading ? 'Submitting...' : 'Submit'}
-          </button>
-        </div>
-      )}
+      {/* Show email field even after submission */}
+      <div className="mb-4 flex flex-col sm:flex-row items-center sm:items-stretch max-md:gap-3">
+        <input
+          type="text"
+          id="email"
+          value={emailPrefix}
+          onChange={(e) => setEmailPrefix(e.target.value)}
+          placeholder="Enter email prefix"
+          required
+          className="border px-3 py-2 rounded w-full sm:w-1/3"
+        />
+        <span className="bg-gray-200 text-gray-600 md:mr-5 px-3 py-2 rounded w-full sm:w-auto text-center">
+          @{domain}
+        </span>
+        <button
+          onClick={handleEmailSubmit}
+          type="button"
+          disabled={isLoading}
+          className="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto"
+        >
+          {isLoading ? 'Submitting...' : 'Submit'}
+        </button>
+      </div>
 
+      {/* Token field appears only after email verification */}
       {verifiedEmail && !verifiedToken && (
-        <div className="mb-4 flex items-center gap-2">
+        <div className="mb-4 flex flex-col sm:flex-row items-center gap-4">
           <input
             type="text"
             id="token"
@@ -128,27 +128,15 @@ const EmailVerification = ({
             onChange={(e) => setToken(e.target.value)}
             required
             placeholder="Enter token"
-            className="border p-2 rounded w-50"
+            className="border p-2 rounded w-full md:w-[15rem]" // Adjust the width here
           />
           <button
             onClick={handleTokenSubmit}
             type="button"
             disabled={verifying}
-            className="bg-blue-500 pl-4 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded w-full sm:w-auto"
           >
             {verifying ? 'Verifying...' : 'Verify'}
-          </button>
-        </div>
-      )}
-
-      {verifiedToken && (
-        <div>
-          <p>{t('common:email_verification_success')}</p>
-          <button
-            onClick={() => Router.push('/some-next-step')}
-            className="bg-green-500 text-white px-4 py-2 rounded mt-2"
-          >
-            Proceed to Next Step
           </button>
         </div>
       )}

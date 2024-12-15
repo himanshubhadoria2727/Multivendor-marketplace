@@ -395,65 +395,68 @@ export default function OrderDetailsPage() {
                 <h3 className="text-lg font-medium mb-4">Task Info:</h3>
                 <div className="border rounded-md p-4 space-y-4 overflow-x-auto">
                   <ul className="space-y-2 min-w-max">
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Site:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.name || 'N/A'}
-                      </span>
-                    </li>
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Task Type:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.pivot?.selectedForm ===
-                        'guest_post'
-                          ? 'Guest Post'
-                          : 'Link Insertion'}
-                      </span>
-                    </li>
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Title:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.pivot?.title || 'N/A'}
-                      </span>
-                    </li>
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Anchor text:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.pivot?.ancor || 'N/A'}
-                      </span>
-                    </li>
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Landing Page URL:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.pivot?.link_url || 'N/A'}
-                      </span>
-                    </li>
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Existing Page URL:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.pivot?.postUrl || 'N/A'}
-                      </span>
-                    </li>
-                    <li className="flex">
-                      <span className="font-medium text-base w-44 text-gray-500">
-                        Selected Niche:
-                      </span>
-                      <span className="text-base text-gray-500 ml-4">
-                        {order?.products[0]?.pivot?.selectedNiche || 'N/A'}
-                      </span>
-                    </li>
+                    {order?.products[0]?.name && (
+                      <li className="flex">
+                        <span className="font-medium text-base w-44 text-gray-500">
+                          Site:
+                        </span>
+                        <span className="text-base text-gray-500 ml-4">
+                          {order.products[0].name}
+                        </span>
+                      </li>
+                    )}
+                    {order?.products[0]?.pivot?.selectedForm && (
+                      <li className="flex">
+                        <span className="font-medium text-base w-44 text-gray-500">
+                          Task Type:
+                        </span>
+                        <span className="text-base text-gray-500 ml-4">
+                          {order.products[0].pivot.selectedForm === 'guest_post'
+                            ? 'Guest Post'
+                            : 'Link Insertion'}
+                        </span>
+                      </li>
+                    )}
+                    {order?.products[0]?.pivot?.title && (
+                      <li className="flex">
+                        <span className="font-medium text-base w-44 text-gray-500">
+                          Title:
+                        </span>
+                        <span className="text-base text-gray-500 ml-4">
+                          {order.products[0].pivot.title}
+                        </span>
+                      </li>
+                    )}
+                    {order?.products[0]?.pivot?.ancor && (
+                      <li className="flex">
+                        <span className="font-medium text-base w-44 text-gray-500">
+                          Anchor text:
+                        </span>
+                        <span className="text-base text-gray-500 ml-4">
+                          {order.products[0].pivot.ancor}
+                        </span>
+                      </li>
+                    )}
+                    {order?.products[0]?.pivot?.link_url && (
+                      <li className="flex">
+                        <span className="font-medium text-base w-44 text-gray-500">
+                          Landing Page URL:
+                        </span>
+                        <span className="text-base text-gray-500 ml-4">
+                          {order.products[0].pivot.link_url}
+                        </span>
+                      </li>
+                    )}
+                    {order?.products[0]?.pivot?.postUrl && (
+                      <li className="flex">
+                        <span className="font-medium text-base w-44 text-gray-500">
+                          Existing Page URL:
+                        </span>
+                        <span className="text-base text-gray-500 ml-4">
+                          {order.products[0].pivot.postUrl}
+                        </span>
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>

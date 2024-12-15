@@ -104,6 +104,7 @@ export default function PayoutPage() {
   const { price: shopBalance } = usePrice({
     amount: me?.shops[0]?.balance?.current_balance!,
   });
+  
   const totalOnHoldAmount = Array.isArray(withdraws)
     ? withdraws
         .filter(
@@ -273,13 +274,13 @@ export default function PayoutPage() {
         </Card>
       </div>
 
-      <Card className="flex w-full hover:shadow-lg transition-shadow gap-5 duration-200 p-4">
+      <Card className="flex w-full hover:shadow-lg transition-shadow max-md:flex-wrap gap-5 duration-200 p-4">
         <div className="flex w-full items-center justify-between mb-4">
           <Search onSearch={handleSearch} />
         </div>
 
         <div className="flex flex-col md:flex-row md:justify-between w-full">
-          <div className="flex justify-around space-x-0 md:space-x-4 w-full">
+          <div className="flex max-md:gap-2 justify-around space-x-0 md:space-x-4 w-full">
             <Button
               onClick={() => handleFilterChange('all')}
               className="btn flex-1 bg-blue-500 text-white text-center rounded-md px-2 py-2 hover:bg-blue-600 transition-colors"

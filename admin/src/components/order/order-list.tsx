@@ -246,6 +246,21 @@ const OrderList = ({
         );
       },
     },
+    {
+      title: t('TAT'),
+      dataIndex: 'tat',
+      key: 'tat',
+      align: 'center',
+      width: 150,
+      render: (products: any, item: any) => (
+        <span
+          className="block text-ellipsis overflow-hidden whitespace-nowrap"
+          style={{ maxWidth: '180px' }}
+        >
+          {item.products[0].tat} Days
+        </span>
+      ),
+    },
     // {
     //   title: t('table:table-item-delivery-fee'),
     //   dataIndex: 'delivery_fee',

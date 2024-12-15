@@ -8,10 +8,11 @@ import {
 } from 'react-hook-form';
 import Button from '@/components/ui/button';
 import Description from '@/components/ui/description';
+import { Routes } from '@/config/routes';
 import Card from '@/components/common/card';
 import Label from '@/components/ui/label';
 import Radio from '@/components/ui/radio/radio';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import FileInput from '@/components/ui/file-input';
 import { productValidationSchema } from './product-validation-schema';
@@ -109,6 +110,8 @@ export default function CreateOrUpdateProductForm({
     },
   );
   const shopId = shopData?.id!;
+  const { verification } = router.query;
+
   const isNewTranslation = router?.query?.action === 'translate';
   const showPreviewButton =
     router?.query?.action === 'edit' && Boolean(initialValues?.slug);
@@ -399,7 +402,7 @@ export default function CreateOrUpdateProductForm({
 
   console.log('emailVerificationStatus', emailVerificationStatus);
 
-  const handleVerificationComplete = (isVerified: any, message: any) => {
+  const handleVerificationComplete =async (isVerified: any, message: any) => {
     if (isVerified) {
       setVerificationResult(true);
       setIsInputLocked(true);
@@ -407,15 +410,148 @@ export default function CreateOrUpdateProductForm({
     } else {
       setIsInputLocked(false);
     }
+
     // Use a callback to log the updated state
     setVerificationMessage(message);
     console.log('verification', isVerified ? true : verificationResult);
+    const inputValues = {
+      language: router.locale,
+      ...getProductInputValues(values, initialValues, isNewTranslation),
+      languages: values?.languages
+        ? values.languages?.label || values?.languages
+        : initialValues?.languages || values?.languages,
+
+      countries: values?.countries
+        ? values.countries?.value || values?.countries
+        : initialValues?.countries || values?.countries,
+
+      link_type: values?.link_type
+        ? values.link_type?.label || values?.link_type
+        : initialValues?.link_type || values?.link_type,
+
+      link_validity: values?.link_validity
+        ? values.link_validity?.label || values?.link_validity
+        : initialValues?.link_validity || values?.link_validity,
+
+      link_counts: values?.link_counts
+        ? values.link_counts?.value || values?.link_counts
+        : initialValues?.link_counts || values?.link_counts,
+
+      sponsored_marked: values?.sponsored_marked
+        ? values.sponsored_marked?.label || values?.sponsored_marked
+        : initialValues?.sponsored_marked || values?.sponsored_marked, // Default string if not provided
+      image: [],
+      type_id: values.type_id || '1',
+      description: values.description || 'none',
+      // Additional fields can be added based on your needs
+    };
+    const x = localStorage.getItem('webId');
+    const y = localStorage.getItem('shopId');
+    try {
+
+      await updateProduct({
+        ...inputValues,
+        id: initialValues?.id || x,
+        status: 'publish',
+        shop_id: initialValues?.shop_id || y,
+        description: 'none',
+      });
+      console.log('Product updated successfully.');
+
+      const generateRedirectUrl = router.query.shop
+      ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
+      : Routes.product.list; // Default to the general product list
+
+    // Perform the redirect with locale setting
+    await Router.push(generateRedirectUrl, undefined, {
+      locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
+    });
+      if (currentStep < steps.length) {
+        console.log('Setting current step to:', currentStep + 1);
+        setCurrentStep((prevStep) => prevStep + 1);
+
+        console.log('Updated step value:', currentStep + 1);
+      } else {
+        console.log('Reached the last step.');
+      }
+    } catch (error) {
+      console.error('Failed to update product:', error);
+    }
+    // Determine the redirect URL based on router query parameters
+  
   };
 
-  const handleVerificationSuccess = () => {
+  const handleVerificationSuccess = async () => {
+    // Set verification statuses
     setEmailVerificationStatus(true);
     setIsInputLocked(true);
     setWebsiteVerified(true);
+    const values = getValues(); // Get all values from the form
+
+    const inputValues = {
+      language: router.locale,
+      ...getProductInputValues(values, initialValues, isNewTranslation),
+      languages: values?.languages
+        ? values.languages?.label || values?.languages
+        : initialValues?.languages || values?.languages,
+
+      countries: values?.countries
+        ? values.countries?.value || values?.countries
+        : initialValues?.countries || values?.countries,
+
+      link_type: values?.link_type
+        ? values.link_type?.label || values?.link_type
+        : initialValues?.link_type || values?.link_type,
+
+      link_validity: values?.link_validity
+        ? values.link_validity?.label || values?.link_validity
+        : initialValues?.link_validity || values?.link_validity,
+
+      link_counts: values?.link_counts
+        ? values.link_counts?.value || values?.link_counts
+        : initialValues?.link_counts || values?.link_counts,
+
+      sponsored_marked: values?.sponsored_marked
+        ? values.sponsored_marked?.label || values?.sponsored_marked
+        : initialValues?.sponsored_marked || values?.sponsored_marked, // Default string if not provided
+      image: [],
+      type_id: values.type_id || '1',
+      description: values.description || 'none',
+      // Additional fields can be added based on your needs
+    };
+    const x = localStorage.getItem('webId');
+    const y = localStorage.getItem('shopId');
+    try {
+      await updateProduct({
+        ...inputValues,
+        id: initialValues?.id || x,
+        status: 'publish',
+        shop_id: initialValues?.shop_id || y,
+        description: 'none',
+      });
+      console.log('Product updated successfully.');
+
+      const generateRedirectUrl = router.query.shop
+      ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
+      : Routes.product.list; // Default to the general product list
+
+    // Perform the redirect with locale setting
+    await Router.push(generateRedirectUrl, undefined, {
+      locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
+    });
+      if (currentStep < steps.length) {
+        console.log('Setting current step to:', currentStep + 1);
+        setCurrentStep((prevStep) => prevStep + 1);
+
+        console.log('Updated step value:', currentStep + 1);
+      } else {
+        console.log('Reached the last step.');
+      }
+    } catch (error) {
+      console.error('Failed to update product:', error);
+    }
+    // Determine the redirect URL based on router query parameters
+    
   };
 
   const handleVerificationFailure = (message: string) => {
@@ -510,21 +646,21 @@ export default function CreateOrUpdateProductForm({
             <h3 className="text-lg font-semibold mb-3">Metrics</h3>
             <div className="flex flex-wrap gap-3 justify-start md:justify-between">
               {/* <Input
-                label="Site slug"
-                {...register('slug')}
-                value={slugAutoSuggest}
-                variant="outline"
-                className="mb-5 w-[22%] max-md:w-full"
-                disabled
-              />
-              <Input
-                label="Site name"
-                {...register('domain_name')}
-                error={t(errors.domain_name?.message!)}
-                placeholder="e.g. google"
-                variant="outline"
-                className="mb-5 w-[22%] max-md:w-full"
-              /> */}
+      label="Site slug"
+      {...register('slug')}
+      value={slugAutoSuggest}
+      variant="outline"
+      className="mb-5 w-[22%] max-md:w-full"
+      disabled
+    />
+    <Input
+      label="Site name"
+      {...register('domain_name')}
+      error={t(errors.domain_name?.message!)}
+      placeholder="e.g. google"
+      variant="outline"
+      className="mb-5 w-[22%] max-md:w-full"
+    /> */}
               <Input
                 label="Moz DA"
                 type="number"
@@ -533,6 +669,7 @@ export default function CreateOrUpdateProductForm({
                 error={t(errors.domain_authority?.message!)}
                 variant="outline"
                 className="mb-5 w-[22%] max-md:w-full"
+                disabled={initialValues?.status === 'publish'} // Disable if status is 'publish'
               />
               <Input
                 label="Ahref DR"
@@ -542,6 +679,7 @@ export default function CreateOrUpdateProductForm({
                 error={t(errors.domain_rating?.message!)}
                 variant="outline"
                 className="mb-5 w-[22%] max-md:w-full"
+                disabled={initialValues?.status === 'publish'} // Disable if status is 'publish'
               />
               <Input
                 label="Ahref Traffic"
@@ -551,8 +689,8 @@ export default function CreateOrUpdateProductForm({
                 error={t(errors.organic_traffic?.message!)}
                 variant="outline"
                 className="mb-5 w-[22%] max-md:w-full"
+                disabled={initialValues?.status === 'publish'} // Disable if status is 'publish'
               />
-
               <Input
                 label={'Spam score'}
                 type="number"
@@ -561,6 +699,7 @@ export default function CreateOrUpdateProductForm({
                 error={t(errors.spam_score?.message!)}
                 variant="outline"
                 className="mb-5 w-[22%] max-md:w-full"
+                disabled={initialValues?.status === 'publish'} // Disable if status is 'publish'
               />
             </div>
           </div>
@@ -856,13 +995,13 @@ export default function CreateOrUpdateProductForm({
             </>
           ) : (
             <Alert className="mt-5 w-full" message={undefined}>
-              You have reached the last step, update your site
+              Your details has been updated
             </Alert>
           )}
 
           <StickyFooterPanel>
             <div className="flex items-center justify-between mt-5">
-              {/* {initialValues && (
+              {initialValues && (
                 <Button
                   variant="outline"
                   onClick={() => router.back()}
@@ -871,9 +1010,9 @@ export default function CreateOrUpdateProductForm({
                 >
                   Back
                 </Button>
-              )} */}
+              )}
               <div className="ml-auto">
-                <Button
+                {/* <Button
                   loading={updating || creating}
                   disabled={updating || creating}
                   size="medium"
@@ -888,7 +1027,7 @@ export default function CreateOrUpdateProductForm({
                   ) : (
                     'Add Site'
                   )}
-                </Button>
+                </Button> */}
               </div>
             </div>
           </StickyFooterPanel>
@@ -896,6 +1035,19 @@ export default function CreateOrUpdateProductForm({
       ),
     },
   ];
+
+  useEffect(() => {
+    // Only update the step if it's not already set by form logic
+    if (initialValues && currentStep === 3) return; // Prevent unnecessary state update when it's already 2
+
+    if (verification === 'false' && initialValues) {
+      setCurrentStep(3);
+    } else if (initialValues) {
+      setCurrentStep(2);
+    } else {
+      setCurrentStep(1);
+    }
+  }, [router.query, initialValues, verification, currentStep]);
 
   const handleNextStep = async () => {
     let isValid = true;
@@ -933,73 +1085,110 @@ export default function CreateOrUpdateProductForm({
       }
     }
 
-    const newInputValues = {
-      video: [],
-      other_guidelines: ' a',
-      organic_traffic: 0,
-      spam_score: 0,
-      tat: 0,
-      languages: 'English',
-      word_count: 0,
-      domain_rating: 0,
-      domain_authority: 0,
-      price: 0,
-      slug: '',
-      site_name: 'a ',
-      domain_name: ' a',
-      sale_price: 0, // Optional, can be omitted if not needed
-      quantity: 0, // Optional, can be omitted if not needed
-      countries: ' a',
-      link_type: 'a ',
-      niche_price: '0',
-      link_insertion_price: '0',
-      link_validity: 'a ',
-      link_counts: 'a',
-      sponsored_marked: 'a',
-      description: 'none',
-      categories: [],
-      variations: [],
-      in_stock: true, // Default value
-      is_taxable: false, // Default value
-      author_id: '', // Optional if not required
-      digital_file: {},
-      product_type: product_type,
-      external_product_button_text: '',
-      external_product_url: '',
-      is_external: false,
-      isLinkInsertion: false,
-      is_niche: false,
-      is_gamble: false,
-      is_cbd: false,
-      is_crypto: false,
-      is_betting: false,
-      is_vaping: false,
-      is_rehab: false,
-      manufacturer_id: '',
-      max_price: null,
-      min_price: null,
-      variation_options: {
-        upsert: [],
-      },
-      gallery: [],
-      image: undefined, // Set to undefined or an object of AttachmentInput if available
-      status: 'draft', // Assuming 'draft' is a valid ProductStatus
-      height: '',
-      length: '',
-      width: '',
-      in_flash_sale: false,
-    };
-
     if (isValid) {
+      // Pass the form values to handle creation or update
+      const values = getValues(); // Get all values from the form
+
+      const inputValues = {
+        language: router.locale,
+        ...getProductInputValues(values, initialValues, isNewTranslation),
+        languages: values?.languages
+          ? values.languages?.label || values?.languages
+          : initialValues?.languages || values?.languages,
+
+        countries: values?.countries
+          ? values.countries?.value || values?.countries
+          : initialValues?.countries || values?.countries,
+
+        link_type: values?.link_type
+          ? values.link_type?.label || values?.link_type
+          : initialValues?.link_type || values?.link_type,
+
+        link_validity: values?.link_validity
+          ? values.link_validity?.label || values?.link_validity
+          : initialValues?.link_validity || values?.link_validity,
+
+        link_counts: values?.link_counts
+          ? values.link_counts?.value || values?.link_counts
+          : initialValues?.link_counts || values?.link_counts,
+
+        sponsored_marked: values?.sponsored_marked
+          ? values.sponsored_marked?.label || values?.sponsored_marked
+          : initialValues?.sponsored_marked || values?.sponsored_marked, // Default string if not provided
+        image: [],
+        type_id: values.type_id || '1',
+        description: values.description || 'none',
+        // Additional fields can be added based on your needs
+      };
+
+      const newInputValues = {
+        video: [],
+        other_guidelines: ' a',
+        organic_traffic: 0,
+        spam_score: 0,
+        tat: 0,
+        languages: 'English',
+        word_count: 0,
+        domain_rating: 0,
+        domain_authority: 0,
+        price: 0,
+        slug: '',
+        site_name: 'a ',
+        domain_name: ' a',
+        sale_price: 0, // Optional, can be omitted if not needed
+        quantity: 0, // Optional, can be omitted if not needed
+        countries: ' a',
+        link_type: 'a ',
+        niche_price: '0',
+        link_insertion_price: '0',
+        link_validity: 'a ',
+        link_counts: 'a',
+        sponsored_marked: 'a',
+        description: 'none',
+        categories: [],
+        variations: [],
+        in_stock: true, // Default value
+        is_taxable: false, // Default value
+        author_id: '', // Optional if not required
+        digital_file: {},
+        product_type: product_type,
+        external_product_button_text: '',
+        external_product_url: '',
+        is_external: false,
+        isLinkInsertion: false,
+        is_niche: false,
+        is_gamble: false,
+        is_cbd: false,
+        is_crypto: false,
+        is_betting: false,
+        is_vaping: false,
+        is_rehab: false,
+        manufacturer_id: '',
+        max_price: null,
+        min_price: null,
+        variation_options: {
+          upsert: [],
+        },
+        gallery: [],
+        image: undefined, // Set to undefined or an object of AttachmentInput if available
+        status: 'draft', // Assuming 'draft' is a valid ProductStatus
+        height: '',
+        length: '',
+        width: '',
+        in_flash_sale: false,
+      };
+
       if (currentStep === 1) {
-        // Check if initialValues are available and translated_languages includes the current locale
+        // Log current step for debugging
+        console.log('Current step (1):', currentStep);
+
+        // Handle product creation logic for step 1
         if (
           !initialValues ||
           !initialValues.translated_languages.includes(router.locale!)
         ) {
-          // Create the product
           try {
-            var rs = await createProduct({
+            const rs = await createProduct({
               ...newInputValues,
               ...(initialValues?.slug && { slug: initialValues.slug }),
               shop_id: shopId || initialValues?.shop_id,
@@ -1012,8 +1201,6 @@ export default function CreateOrUpdateProductForm({
             console.log('Product created successfully outside', rs);
           } catch (error) {
             console.error('Failed to create product:', error);
-            // Optionally, display an error message to the user
-            // setErrorMessage('Failed to create product. Please try again.');
           }
         } else {
           console.log('Initial values are valid, proceeding to the next step.');
@@ -1021,6 +1208,41 @@ export default function CreateOrUpdateProductForm({
           if (currentStep < steps.length) {
             setCurrentStep(currentStep + 1);
           }
+        }
+      } else if (currentStep === 2) {
+        console.log('Current step (2):', currentStep);
+
+        const x = localStorage.getItem('webId');
+        const y = localStorage.getItem('shopId');
+        try {
+          const status =
+            websiteVerified || emailVerificationStatus
+              ? 'publish'
+              : initialValues?.status;
+          await updateProduct({
+            ...inputValues,
+            id: initialValues?.id || x,
+            status: status,
+            shop_id: initialValues?.shop_id || y,
+            description: 'none',
+          });
+          console.log('Product updated successfully.');
+
+          console.log(
+            'Successfully updated product, current step:',
+            currentStep,
+          );
+
+          if (currentStep < steps.length) {
+            console.log('Setting current step to:', currentStep + 1);
+            setCurrentStep((prevStep) => prevStep + 1);
+
+            console.log('Updated step value:', currentStep + 1);
+          } else {
+            console.log('Reached the last step.');
+          }
+        } catch (error) {
+          console.error('Failed to update product:', error);
         }
       } else {
         console.log('Form is valid, proceeding to the next step.');
@@ -1032,10 +1254,12 @@ export default function CreateOrUpdateProductForm({
     } else {
       console.log('Form is not valid, stopping progression.');
       console.log('Invalid fields:', invalidFields);
-      // Optionally, set an error message to display to the user
-      // setErrorMessage('Please complete the required fields before proceeding.');
     }
   };
+
+  useEffect(() => {
+    console.log('Current step updated to:', currentStep);
+  }, [currentStep]);
 
   const handlePreviousStep = () => {
     window.scrollTo({ top: 0, behavior: 'auto' }); // Add your existing logic to handle the previous step
@@ -1043,19 +1267,6 @@ export default function CreateOrUpdateProductForm({
       setCurrentStep(currentStep - 1);
     }
   };
-  const { verification } = router.query;
-
-  useEffect(() => {
-    // Check if 'verification' is in the query and its value is false
-
-    if (verification === 'false' && initialValues) {
-      setCurrentStep(3); // Skip to Step 3 if verification is false and initialValues exist
-    } else if (initialValues) {
-      setCurrentStep(2); // Set to Step 2 if initialValues exist
-    } else {
-      setCurrentStep(1); // Default to Step 1 if no initialValues
-    }
-  }, [router.query, initialValues]);
 
   return (
     <>
@@ -1073,7 +1284,7 @@ export default function CreateOrUpdateProductForm({
           <div className="flex flex-col justify-center p-4">
             {/* Step Titles with Arrows */}
             <div className="mb-6 flex justify-center">
-              <div className="w-[60%] max-w-lg bg-white pt-4 pb-4 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out dark:bg-dark-400 dark:text-white">
+              <div className="w-[60%] max-md:w-full max-w-lg bg-white pt-4 pb-4 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out dark:bg-dark-400 dark:text-white">
                 <div className="flex justify-between mb-2">
                   {steps.map((step, index) => (
                     <div
