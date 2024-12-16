@@ -44,14 +44,6 @@ export default function viewPage() {
   });
   if (loading) return <Loader text={t('common:text-loading')} />;
   if (error) return <ErrorMessage message={error.message} />;
-
-  if (
-    !hasAccess(adminOnly, permissions) &&
-    !me?.shops?.map((shop) => shop.id).includes(shopId) &&
-    me?.managed_shop?.id != shopId
-  ) {
-    router.replace(Routes.dashboard);
-  }
   return (
     <>
       <Card className="mb-5 rounded-lg flex max-md:flex-col items-center justify-between px-3 py-2 gap-4">
@@ -82,7 +74,7 @@ export default function viewPage() {
             )
           } className="flex cursor-pointer items-center px-3 py-2 border bg-yellow-100 rounded-lg gap-3">
             <span className="text-lg font-semibold text-yellow-600">
-              Verify
+              Verify Ownership
             </span>
             <DoubleCheckIcon  className="text-yellow-600" />
           </div>
