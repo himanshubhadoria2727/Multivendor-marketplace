@@ -391,6 +391,7 @@ export default function CreateOrUpdateProductForm({
       setVerificationResult(true);
       setIsInputLocked(true);
       setWebsiteVerified(true);
+      const values = getValues(); // Get all values from the form
       const inputValues = {
         language: router.locale,
         ...getProductInputValues(values, initialValues, isNewTranslation),
