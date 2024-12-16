@@ -1,0 +1,43 @@
+name: Deploy API to Hostinger VPS
+
+on:
+  push:
+    branches:
+      - main # Change this to your default branch
+    paths:
+      - 'pixer-api/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy API to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no root@93.127.195.116 << 'EOF'
+            # Navigate to the pixer-api folder
+            cd Multivendor-marketplace/pixer-api
+
+            # Pull the latest code from Git
+            git pull
+
+            # Install PHP dependencies
+            composer install --no-dev --optimize-autoloader
+
+            # Clear old PM2 process named "api" if it exists
+            pm2 delete api || echo "No process named 'api' to delete."
+
+            # Start the Laravel API server using PM2
+            pm2 start php --name "api" -- artisan serve --host=127.0.0.1 --port=8000
+
+            # Save the PM2 process list
+            pm2 save
+          EOF
