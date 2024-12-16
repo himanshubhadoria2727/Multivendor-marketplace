@@ -998,7 +998,7 @@ export default function CreateOrUpdateProductForm({
 
           <StickyFooterPanel>
             <div className="flex items-center justify-between mt-5">
-              {initialValues && (
+              {/* {initialValues && ( */}
                 <Button
                   variant="outline"
                   onClick={() => router.replace(`/${shopId}/products`)}
@@ -1007,7 +1007,7 @@ export default function CreateOrUpdateProductForm({
                 >
                   Back
                 </Button>
-              )}
+              {/* )} */}
               <div className="ml-auto">
                 {/* <Button
                   loading={updating || creating}
@@ -1039,10 +1039,10 @@ export default function CreateOrUpdateProductForm({
 
     if (verification === 'false' && initialValues) {
       setCurrentStep(3);
-    } else if (initialValues) {
+    } else if (initialValues ) {
       setCurrentStep(2);
     } else {
-      setCurrentStep(1);
+      console.log("current step",currentStep)
     }
   }, [router.query, initialValues, verification, currentStep]);
 
@@ -1196,6 +1196,7 @@ export default function CreateOrUpdateProductForm({
               product_type: 'simple',
             });
             console.log('Product created successfully outside', rs);
+
           } catch (error) {
             console.error('Failed to create product:', error);
           }

@@ -63,6 +63,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           placeholder='Enter price'
           type="number"
           error={t(errors.price?.message!)}
+          disabled={initialValues?.status === 'publish' }
           variant="outline"
           className="mb-5 w-80 max-md:w-80"
         />
@@ -83,6 +84,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             type="number"
             error={t(errors.link_insertion_price?.message!)}
             variant="outline"
+            disabled={initialValues?.status === 'publish'  && isLinkInsertion}
             className="mb-5 w-80 max-md:w-80"
           />
         )}

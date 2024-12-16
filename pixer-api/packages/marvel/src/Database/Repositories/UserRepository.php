@@ -131,6 +131,7 @@ class UserRepository extends BaseRepository
     try {
         Mail::to($email)->send(new EmailVerification($token, $email));
         Log::info('Email verification sent successfully to: ' . $email);
+        Log::info('Email verification sent successfully to: ' . $email);
         return true;
     } catch (\Exception $e) {
         // Log the exception message in case of failure
