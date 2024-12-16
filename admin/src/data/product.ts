@@ -72,7 +72,7 @@ export const useUpdateProductMutation = () => {
       queryClient.invalidateQueries(API_ENDPOINTS.PRODUCTS);
     },
     onError: (error: any) => {
-      toast.error(t(`common:${error?.response?.data.message}`));
+      toast.error(t(`${error?.response?.data.error}`));
     },
   });
 };

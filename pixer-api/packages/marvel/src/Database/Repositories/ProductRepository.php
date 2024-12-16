@@ -350,6 +350,17 @@ class ProductRepository extends BaseRepository
      * @param  $setting
      * @return void
      */
+
+    public function getPublishedProductByName(string $productName, int $excludeId = null)
+    {
+        return Product::where('name', $productName)
+            ->where('status', 'publish')
+            ->when($excludeId, function ($query) use ($excludeId) {
+                $query->where('id', '!=', $excludeId);
+            })
+            ->first();
+    }
+
     public function updateProduct($request, $id, $setting)
     {
         try {

@@ -80,7 +80,8 @@ class ProductController extends CoreController
      * @return object
      */
     public function fetchProducts(Request $request)
-    { Log::info('Entering fetchProducts method', ['request' => $request->all()]);
+    {
+        Log::info('Entering fetchProducts method', ['request' => $request->all()]);
 
         $unavailableProducts = [];
         $language = $request->language ? $request->language : DEFAULT_LANGUAGE;
@@ -223,15 +224,30 @@ class ProductController extends CoreController
      * @return void
      */
     public function updateProduct(Request $request)
-    {
-        $setting = $this->settings->first();
-        if ($this->repository->hasPermission($request->user(), $request->shop_id)) {
-            $id = $request->id;
-            return $this->repository->updateProduct($request, $id, $setting);
-        } else {
-            throw new AuthorizationException(NOT_AUTHORIZED);
+{
+    $setting = $this->settings->first();
+
+    // Check if the user has permission to update the product
+    if ($this->repository->hasPermission($request->user(), $request->shop_id)) {
+        $id = $request->id;
+        $productName = $request->input('name');
+        $newStatus = $request->input('status');
+
+        // Check if another product with the same name is already published
+        $existingPublishedProduct = $this->repository->getPublishedProductByName($productName, $id);
+
+        if ($newStatus === 'publish' && $existingPublishedProduct) {
+            // If a product with the same name is already published, return an error
+            return response()->json(['error' => 'Website already verified, kindly contact us to resolve this issue'], 400);
         }
+
+        // Proceed to update the product
+        return $this->repository->updateProduct($request, $id, $setting);
+    } else {
+        // If no permission, throw an authorization exception
+        throw new AuthorizationException(NOT_AUTHORIZED);
     }
+}
 
 
     /**
@@ -321,7 +337,7 @@ class ProductController extends CoreController
             $FH = fopen('php://output', 'w');
             foreach ($list as $key => $row) {
                 if ($key === 0) {
-                    $exclude = ['id', 'slug', 'deleted_at', 'created_at', 'updated_at', 'shipping_class_id', 'ratings', 'total_reviews', 'my_review', 'in_wishlist', 'rating_count', 'translated_languages', 'total_downloads','digital_file'];
+                    $exclude = ['id', 'slug', 'deleted_at', 'created_at', 'updated_at', 'shipping_class_id', 'ratings', 'total_reviews', 'my_review', 'in_wishlist', 'rating_count', 'translated_languages', 'total_downloads', 'digital_file'];
                     $row = array_diff($row, $exclude);
                 }
                 unset($row['id']);
@@ -473,16 +489,16 @@ class ProductController extends CoreController
                     $type = Type::findOrFail($product['type_id']);
                     $authorCacheKey = $product['author_id'] . '_author_id';
                     $manufacturerCacheKey = $product['manufacturer_id'] . '_manufacturer_id';
-                    $product['author_id'] = Cache::remember($authorCacheKey, 30, fn () => Author::find($product['author_id'])?->id);
-                    $product['manufacturer_id'] = Cache::remember($manufacturerCacheKey, 30, fn () => Manufacturer::find($product['manufacturer_id'])?->id);
+                    $product['author_id'] = Cache::remember($authorCacheKey, 30, fn() => Author::find($product['author_id'])?->id);
+                    $product['manufacturer_id'] = Cache::remember($manufacturerCacheKey, 30, fn() => Manufacturer::find($product['manufacturer_id'])?->id);
                     $dataArray = $this->repository->getProductDataArray();
                     $productArray = array_intersect_key($product, array_flip($dataArray));
                     if (isset($type->id)) {
                         $newProduct = Product::FirstOrCreate($productArray);
                         $categoryCacheKey = $product['categories'] . '_categories';
                         $tagCacheKey = $product['tags'] . '_tags';
-                        $categories = Cache::remember($categoryCacheKey, 30, fn () => Category::whereIn('id', $categoriesId)->get());
-                        $tags = Cache::remember($tagCacheKey, 30, fn () => Tag::whereIn('id', $tagsId)->get());
+                        $categories = Cache::remember($categoryCacheKey, 30, fn() => Category::whereIn('id', $categoriesId)->get());
+                        $tags = Cache::remember($tagCacheKey, 30, fn() => Tag::whereIn('id', $tagsId)->get());
                         if (!empty($categories)) {
                             $newProduct->categories()->attach($categories);
                         }

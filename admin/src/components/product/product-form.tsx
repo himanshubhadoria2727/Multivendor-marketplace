@@ -377,22 +377,6 @@ export default function CreateOrUpdateProductForm({
     ];
   }
 
-  // const featuredImageInformation = (
-  //   <span>
-  //     {t('form:featured-image-help-text')} <br />
-  //     {t('form:size-help-text')} &nbsp;
-  //     <span className="font-bold">{upload_max_filesize} MB </span>
-  //   </span>
-  // );
-
-  // const galleryImageInformation = (
-  //   <span>
-  //     {t('form:gallery-help-text')} <br />
-  //     {t('form:size-help-text')} &nbsp;
-  //     <span className="font-bold">{upload_max_filesize} MB </span>
-  //   </span>
-  // );
-
   const [productUrl, setProductUrl] = useState('');
   const [verificationResult, setVerificationResult] = useState(false);
   const [verificationMessage, setVerificationMessage] = useState('');
