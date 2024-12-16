@@ -391,6 +391,68 @@ export default function CreateOrUpdateProductForm({
       setVerificationResult(true);
       setIsInputLocked(true);
       setWebsiteVerified(true);
+      const inputValues = {
+        language: router.locale,
+        ...getProductInputValues(values, initialValues, isNewTranslation),
+        languages: values?.languages
+          ? values.languages?.label || values?.languages
+          : initialValues?.languages || values?.languages,
+  
+        countries: values?.countries
+          ? values.countries?.value || values?.countries
+          : initialValues?.countries || values?.countries,
+  
+        link_type: values?.link_type
+          ? values.link_type?.label || values?.link_type
+          : initialValues?.link_type || values?.link_type,
+  
+        link_validity: values?.link_validity
+          ? values.link_validity?.label || values?.link_validity
+          : initialValues?.link_validity || values?.link_validity,
+  
+        link_counts: values?.link_counts
+          ? values.link_counts?.value || values?.link_counts
+          : initialValues?.link_counts || values?.link_counts,
+  
+        sponsored_marked: values?.sponsored_marked
+          ? values.sponsored_marked?.label || values?.sponsored_marked
+          : initialValues?.sponsored_marked || values?.sponsored_marked, // Default string if not provided
+        image: [],
+        type_id: values.type_id || '1',
+        description: values.description || 'none',
+        // Additional fields can be added based on your needs
+      };
+      const x = localStorage.getItem('webId');
+      const y = localStorage.getItem('shopId');
+      try {
+        await updateProduct({
+          ...inputValues,
+          id: initialValues?.id || x,
+          status: 'publish',
+          shop_id: initialValues?.shop_id || y,
+          description: 'none',
+        });
+        console.log('Product updated successfully.');
+  
+        const generateRedirectUrl = router.query.shop
+          ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
+          : Routes.product.list; // Default to the general product list
+  
+        // Perform the redirect with locale setting
+        await Router.push(generateRedirectUrl, undefined, {
+          locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
+        });
+        if (currentStep < steps.length) {
+          console.log('Setting current step to:', currentStep + 1);
+          setCurrentStep((prevStep) => prevStep + 1);
+  
+          console.log('Updated step value:', currentStep + 1);
+        } else {
+          console.log('Reached the last step.');
+        }
+      } catch (error) {
+        console.error('Failed to update product:', error);
+      }
     } else {
       setIsInputLocked(false);
     }
@@ -398,68 +460,7 @@ export default function CreateOrUpdateProductForm({
     // Use a callback to log the updated state
     setVerificationMessage(message);
     console.log('verification', isVerified ? true : verificationResult);
-    const inputValues = {
-      language: router.locale,
-      ...getProductInputValues(values, initialValues, isNewTranslation),
-      languages: values?.languages
-        ? values.languages?.label || values?.languages
-        : initialValues?.languages || values?.languages,
-
-      countries: values?.countries
-        ? values.countries?.value || values?.countries
-        : initialValues?.countries || values?.countries,
-
-      link_type: values?.link_type
-        ? values.link_type?.label || values?.link_type
-        : initialValues?.link_type || values?.link_type,
-
-      link_validity: values?.link_validity
-        ? values.link_validity?.label || values?.link_validity
-        : initialValues?.link_validity || values?.link_validity,
-
-      link_counts: values?.link_counts
-        ? values.link_counts?.value || values?.link_counts
-        : initialValues?.link_counts || values?.link_counts,
-
-      sponsored_marked: values?.sponsored_marked
-        ? values.sponsored_marked?.label || values?.sponsored_marked
-        : initialValues?.sponsored_marked || values?.sponsored_marked, // Default string if not provided
-      image: [],
-      type_id: values.type_id || '1',
-      description: values.description || 'none',
-      // Additional fields can be added based on your needs
-    };
-    const x = localStorage.getItem('webId');
-    const y = localStorage.getItem('shopId');
-    try {
-      await updateProduct({
-        ...inputValues,
-        id: initialValues?.id || x,
-        status: 'publish',
-        shop_id: initialValues?.shop_id || y,
-        description: 'none',
-      });
-      console.log('Product updated successfully.');
-
-      const generateRedirectUrl = router.query.shop
-        ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
-        : Routes.product.list; // Default to the general product list
-
-      // Perform the redirect with locale setting
-      await Router.push(generateRedirectUrl, undefined, {
-        locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
-      });
-      if (currentStep < steps.length) {
-        console.log('Setting current step to:', currentStep + 1);
-        setCurrentStep((prevStep) => prevStep + 1);
-
-        console.log('Updated step value:', currentStep + 1);
-      } else {
-        console.log('Reached the last step.');
-      }
-    } catch (error) {
-      console.error('Failed to update product:', error);
-    }
+   
     // Determine the redirect URL based on router query parameters
   };
 
