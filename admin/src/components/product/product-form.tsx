@@ -402,7 +402,7 @@ export default function CreateOrUpdateProductForm({
 
   console.log('emailVerificationStatus', emailVerificationStatus);
 
-  const handleVerificationComplete =async (isVerified: any, message: any) => {
+  const handleVerificationComplete = async (isVerified: any, message: any) => {
     if (isVerified) {
       setVerificationResult(true);
       setIsInputLocked(true);
@@ -448,7 +448,6 @@ export default function CreateOrUpdateProductForm({
     const x = localStorage.getItem('webId');
     const y = localStorage.getItem('shopId');
     try {
-
       await updateProduct({
         ...inputValues,
         id: initialValues?.id || x,
@@ -459,13 +458,13 @@ export default function CreateOrUpdateProductForm({
       console.log('Product updated successfully.');
 
       const generateRedirectUrl = router.query.shop
-      ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
-      : Routes.product.list; // Default to the general product list
+        ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
+        : Routes.product.list; // Default to the general product list
 
-    // Perform the redirect with locale setting
-    await Router.push(generateRedirectUrl, undefined, {
-      locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
-    });
+      // Perform the redirect with locale setting
+      await Router.push(generateRedirectUrl, undefined, {
+        locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
+      });
       if (currentStep < steps.length) {
         console.log('Setting current step to:', currentStep + 1);
         setCurrentStep((prevStep) => prevStep + 1);
@@ -478,7 +477,6 @@ export default function CreateOrUpdateProductForm({
       console.error('Failed to update product:', error);
     }
     // Determine the redirect URL based on router query parameters
-  
   };
 
   const handleVerificationSuccess = async () => {
@@ -532,13 +530,13 @@ export default function CreateOrUpdateProductForm({
       console.log('Product updated successfully.');
 
       const generateRedirectUrl = router.query.shop
-      ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
-      : Routes.product.list; // Default to the general product list
+        ? `/${router.query.shop}${Routes.product.list}` // Redirect to the specific shop's product list
+        : Routes.product.list; // Default to the general product list
 
-    // Perform the redirect with locale setting
-    await Router.push(generateRedirectUrl, undefined, {
-      locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
-    });
+      // Perform the redirect with locale setting
+      await Router.push(generateRedirectUrl, undefined, {
+        locale: Config.defaultLanguage, // Assuming you want to redirect in the default language
+      });
       if (currentStep < steps.length) {
         console.log('Setting current step to:', currentStep + 1);
         setCurrentStep((prevStep) => prevStep + 1);
@@ -551,7 +549,6 @@ export default function CreateOrUpdateProductForm({
       console.error('Failed to update product:', error);
     }
     // Determine the redirect URL based on router query parameters
-    
   };
 
   const handleVerificationFailure = (message: string) => {
@@ -1004,7 +1001,7 @@ export default function CreateOrUpdateProductForm({
               {initialValues && (
                 <Button
                   variant="outline"
-                  onClick={() => router.back()}
+                  onClick={() => router.replace(`/${shopId}/products`)}
                   className="me-4"
                   type="button"
                 >

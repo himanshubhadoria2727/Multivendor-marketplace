@@ -30,6 +30,10 @@ class ContactAdmin extends Mailable
      */
     public function build()
     {
-        return $this->from($this->details['email'])->markdown('emails.contact-admin');
+        return $this->from(config('mail.from.address'), config('mail.from.name')) // Use MAIL_FROM_ADDRESS
+        ->replyTo($this->details['email']) // Set user's email as reply-to
+        ->subject($this->details['subject']) // Email subject
+        ->markdown('emails.contact-admin') // View file
+        ->with('details', $this->details); // Pass data to the view     
     }
 }

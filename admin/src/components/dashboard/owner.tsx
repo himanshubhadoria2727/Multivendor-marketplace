@@ -301,7 +301,7 @@ const OwnerShopLayout = () => {
       {hasAccess(adminAndOwnerOnly, permissions) && (
         <div className="mb-8 flex w-full flex-wrap md:flex-nowrap">
           <ColumnChart
-            widgetTitle={t('common:sale-history')}
+            widgetTitle={t('Completed orders')}
             colors={['#6073D4']}
             series={salesByYear}
             categories={[
@@ -322,7 +322,7 @@ const OwnerShopLayout = () => {
         </div>
       )}
 
-      <div className="grid gap-8 xl:grid-cols-12">
+      {/* <div className="grid gap-8 xl:grid-cols-12">
         <TopRatedProducts
           products={topRatedProducts}
           title={'text-most-rated-products'}
@@ -333,7 +333,7 @@ const OwnerShopLayout = () => {
           title={'text-most-category-products'}
           className="xl:col-span-7 2xl:ltr:-ml-20 2xl:rtl:-mr-20"
         />
-      </div>
+      </div> */}
     </>
   );
 };

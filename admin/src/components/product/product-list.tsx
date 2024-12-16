@@ -373,24 +373,24 @@ const ProductList = ({
         </div>
       ),
     },
-    // {
-    //   title: t('table:table-item-actions'),
-    //   dataIndex: 'slug',
-    //   key: 'actions',
-    //   align: 'center',
-    //   width: 100,
-    //   render: (slug: string, record: Product) => (
-    //     <LanguageSwitcher
-    //       slug={slug}
-    //       record={record}
-    //       deleteModalView="DELETE_PRODUCT"
-    //       routes={Routes?.product}
-    //       // enablePreviewMode={true}
-    //       isShop={Boolean(shop)}
-    //       shopSlug={(shop as string) ?? ''}
-    //     />
-    //   ),
-    // },
+      // {
+      //   title: t('table:table-item-actions'),
+      //   dataIndex: 'slug',
+      //   key: 'actions',
+      //   align: 'center',
+      //   width: 100,
+      //   render: (slug: string, record: Product) => (
+      //     <LanguageSwitcher
+      //       slug={slug}
+      //       record={record}
+      //       deleteModalView="DELETE_PRODUCT"
+      //       routes={Routes?.product}
+      //       // enablePreviewMode={true}
+      //       isShop={Boolean(shop)}
+      //       shopSlug={(shop as string) ?? ''}
+      //     />
+      //   ),
+      // },
   ];
 
   if (router?.query?.shop) {

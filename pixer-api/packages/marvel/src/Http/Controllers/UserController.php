@@ -536,20 +536,40 @@ class UserController extends CoreController
         try {
             $listedAdmin = [];
             $admins = $this->getAdminUsers();
+    
             if (isset($admins)) {
-                foreach ($admins as $key => $admin) {
+                foreach ($admins as $admin) {
                     array_push($listedAdmin, $admin->email);
                 }
             }
+    
             $details = $request->only('subject', 'name', 'email', 'description');
-            // config('shop.admin_email')
-            $emailTo = isset($request['emailTo']) ? $request['emailTo'] : $listedAdmin;
+    
+            // Use the email from the request or fallback to default admin email
+            $emailTo = $request->input('emailTo', $listedAdmin ?: config('mail.from.address'));
+    
+            // Log details for debugging
+            Log::info('Sending email', [
+                'emailTo' => $emailTo,
+                'from' => config('mail.from.address'),
+                'details' => $details
+            ]);
+    
             Mail::to($emailTo)->send(new ContactAdmin($details));
+    
             return ['message' => EMAIL_SENT_SUCCESSFUL, 'success' => true];
         } catch (\Exception $e) {
+            // Log the error details
+            Log::error('Error in contactAdmin', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString()
+            ]);
+    
             throw new MarvelException(SOMETHING_WENT_WRONG);
         }
     }
+    
+
 
     public function fetchStaff(Request $request)
     {
