@@ -26,25 +26,25 @@ const menuItems = [
     label: 'text-auth-profile',
     path: routes.profile,
   },
-  {
-    id: 2,
-    icon: <PurchaseIcon className="h-[15px] w-[15px] sm:h-4 sm:w-4" />,
-    label: 'text-auth-purchase',
-    path: routes.purchases,
-  },
-  {
-    id: 3,
-    icon: <CreditCardIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />,
-    label: 'text-auth-cards',
-    path: routes.cards,
-  },
-  {
-    id: 4,
-    icon: <HeartFillIcon className="h-[15px] w-[15px] sm:h-4 sm:w-4" />,
-    label: 'text-auth-wishlist',
-    path: routes.wishlists,
-  },
-  {
+  // {
+  //   id: 2,
+  //   icon: <PurchaseIcon className="h-[15px] w-[15px] sm:h-4 sm:w-4" />,
+  //   label: 'text-auth-purchase',
+  //   path: routes.purchases,
+  // },
+  // {
+  //   id: 3,
+  //   icon: <CreditCardIcon className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />,
+  //   label: 'text-auth-cards',
+  //   path: routes.cards,
+  // },
+  // {
+  //   id: 4,
+  //   icon: <HeartFillIcon className="h-[15px] w-[15px] sm:h-4 sm:w-4" />,
+  //   label: 'text-auth-wishlist',
+  //   path: routes.wishlists,
+  // },
+   {
     id: 5,
     icon: <ReportIcon className="h-[15px] w-[15px] sm:h-4 sm:w-4" />,
     label: 'text-my-reports-title',
@@ -56,12 +56,12 @@ const menuItems = [
     label: 'text-my-question-title',
     path: routes.questions,
   },
-  {
-    id: 7,
-    icon: <UserFollowingIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />,
-    label: 'text-followed-authors',
-    path: routes.followedShop,
-  },
+  // {
+  //   id: 7,
+  //   icon: <UserFollowingIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />,
+  //   label: 'text-followed-authors',
+  //   path: routes.followedShop,
+  // },
   {
     id: 8,
     icon: <LockIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />,

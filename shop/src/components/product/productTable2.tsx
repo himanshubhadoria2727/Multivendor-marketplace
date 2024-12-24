@@ -81,7 +81,7 @@ export default function ProductTable() {
     isLinkInsertion: isLinkInsertion,
     link_type: link_Type,
     countries: countries,
-    status: status,
+    status: 'publish',
   });
   console.log(loading);
   console.log("shop side products", products)
