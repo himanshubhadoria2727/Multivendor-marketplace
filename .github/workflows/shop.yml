@@ -31,10 +31,8 @@ jobs:
             # Delete the pm2 process named "publisher" if it exists
             pm2 delete advertiser || echo "No process named 'advertiser' to delete."
 
-            npm run build
-
             # Start the application with pm2 under the name "advertiser"
-            pm2 start npm --name "advertiser" -- run start
+            pm2 start npm --name "advertiser" -- run dev
 
             # Save the pm2 process list
             pm2 save
