@@ -64,7 +64,8 @@ const CheckoutPage: NextPageWithLayout = () => {
     <>
       <Seo
         title="Checkout"
-        description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
+        description="
+GoodBlogger is a backlink providing website that helps boost SEO by acquiring quality inbound links, enhancing search engine rankings, and improving website indexing for better visibility."
         url={routes?.checkout}
       />
       <div className="mx-auto flex h-full w-full max-w-screen-lg flex-col p-4 pt-6 sm:p-5 sm:pt-8 md:pt-10 3xl:pt-12">

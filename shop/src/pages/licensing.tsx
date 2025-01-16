@@ -15,7 +15,8 @@ const LicensingPage: NextPageWithLayout = () => {
     <>
       <Seo
         title="Product Licensing"
-        description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
+        description="
+GoodBlogger is a backlink providing website that helps boost SEO by acquiring quality inbound links, enhancing search engine rankings, and improving website indexing for better visibility."
         url={routes.licensing}
       />
       <div className="mx-auto flex h-full w-full max-w-screen-xl flex-col p-4 sm:p-5">

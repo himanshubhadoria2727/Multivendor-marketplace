@@ -69,7 +69,7 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
               <ModalProvider>
                 <CampaignProvider> 
                   <AnimatePresence initial={false} onExitComplete={() => window.scrollTo(0, 0)}>
-                    <>
+                    <><PrivateRoute>
                       <DefaultSeo />
                       <Maintenance>
                         {authenticationRequired ? (
@@ -82,6 +82,7 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
                       <ModalsContainer />
                       <DrawersContainer />
                       <Toaster containerClassName="!top-16 sm:!top-3.5 !bottom-16 sm:!bottom-3.5" />
+                      </PrivateRoute>
                     </>
                   </AnimatePresence>
                 </CampaignProvider>

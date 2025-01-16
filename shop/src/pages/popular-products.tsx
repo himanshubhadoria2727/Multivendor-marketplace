@@ -58,7 +58,8 @@ const PopularProductsPage: NextPageWithLayout = () => {
     <>
       <Seo
         title="Top Products"
-        description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
+        description="
+GoodBlogger is a backlink providing website that helps boost SEO by acquiring quality inbound links, enhancing search engine rankings, and improving website indexing for better visibility."
         url={routes.popularProducts}
       />
       <Products />

@@ -15,7 +15,8 @@ const ErrorPage: NextPageWithLayout = () => {
     <>
       <Seo
         title="404 Error"
-        description="Fastest digital download template built with React, NextJS, TypeScript, React-Query and Tailwind CSS."
+        description="
+GoodBlogger is a backlink providing website that helps boost SEO by acquiring quality inbound links, enhancing search engine rankings, and improving website indexing for better visibility."
         url="/404"
       />
       <div className="flex h-full items-center justify-center p-4 md:p-6 xl:p-8">
