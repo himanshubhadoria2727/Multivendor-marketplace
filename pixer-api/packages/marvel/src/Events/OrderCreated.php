@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Marvel\Events;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,6 +10,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log; // Add Log facade
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Marvel\Database\Models\NotifyLogs;
@@ -26,52 +26,41 @@ class OrderCreated implements ShouldQueue, ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels, UsersTrait;
 
-    /**
-     * @var Order
-     */
     public Order $order;
-
     public array $invoiceData;
-
-    /**
-     * user
-     *
-     * @var User
-     */
     public $user;
 
-    /**
-     * Create a new event instance.
-     *
-     * @param Order $order
-     */
     public function __construct(Order $order, array $invoiceData, ?User $user)
     {
         $this->order = $order;
         $this->invoiceData = $invoiceData;
         $this->user = $user;
+
+        // Log constructor data
+        Log::info('OrderCreated Event Initialized', [
+            'order_id' => $order->id,
+            'user_id' => $user?->id,
+            'invoice_data' => $invoiceData,
+        ]);
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
     public function broadcastOn(): array
     {
         $event_channels = $shop_ids = $vendor_ids = [];
 
-        // Notify in admin-end
+        Log::info('Generating broadcast channels for OrderCreated', [
+            'order_id' => $this->order->id,
+        ]);
+
         $admins = $this->getAdminUsers();
         if (isset($admins)) {
             foreach ($admins as $key => $user) {
                 $channel_name = new PrivateChannel('order.created.' . $user->id);
                 array_push($event_channels, $channel_name);
+                Log::info('Admin notified', ['admin_id' => $user->id]);
             }
         }
 
-
-        // Notify in vendor-end
         if (isset($this->order->products)) {
             foreach ($this->order->products as $key => $product) {
                 if (!in_array($product->shop_id, $shop_ids)) {
@@ -88,37 +77,29 @@ class OrderCreated implements ShouldQueue, ShouldBroadcast
             foreach ($vendor_ids as $key => $vendor_id) {
                 $channel_name = new PrivateChannel('order.created.' . $vendor_id);
                 array_push($event_channels, $channel_name);
+                Log::info('Vendor notified', ['vendor_id' => $vendor_id]);
             }
         }
 
         return $event_channels;
     }
 
-
-    /**
-     * Get the data to broadcast.
-     *
-     * @return array<string, mixed>
-     */
     public function broadcastWith(): array
     {
+        Log::info('Broadcasting with data', [
+            'message' => 'One new order created.',
+        ]);
+
         return [
-            'message' => 'One new order created.'
+            'message' => 'One new order created.',
         ];
     }
 
-    /**
-     * The event's broadcast name.
-     */
     public function broadcastAs(): string
     {
-        // event's name will be written here.
         return 'order.create.event';
     }
 
-    /**
-     * Determine if this event should broadcast.
-     */
     public function broadcastWhen(): bool
     {
         try {
@@ -126,6 +107,7 @@ class OrderCreated implements ShouldQueue, ShouldBroadcast
             $enableBroadCast = false;
 
             if (config('shop.pusher.enabled') === null) {
+                Log::warning('Pusher configuration is not enabled');
                 return false;
             }
 
@@ -134,8 +116,15 @@ class OrderCreated implements ShouldQueue, ShouldBroadcast
                     $enableBroadCast = true;
                 }
             }
+
+            Log::info('Broadcast enabled status', ['status' => $enableBroadCast]);
+
             return $enableBroadCast;
         } catch (MarvelException $th) {
+            Log::error('Error in broadcasting', [
+                'exception' => $th->getMessage(),
+            ]);
+
             throw new MarvelException(SOMETHING_WENT_WRONG, $th->getMessage());
         }
     }

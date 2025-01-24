@@ -11,7 +11,7 @@ return [
                 'subject' => 'Your order has been cancelled',
             ],
             'storeOwner' => [
-                'message' => 'Dear shop owner,Order has been cancelled  with order tracking number :ORDER_TRACKING_NUMBER',
+                'message' => 'Dear publisher,Order has been cancelled  with order tracking number :ORDER_TRACKING_NUMBER',
                 'subject' => 'Order has been cancelled',
             ],
         ],
@@ -25,7 +25,7 @@ return [
                 'subject' => 'Your order has been placed successfully',
             ],
             'storeOwner' => [
-                'message' => 'Dear shop owner,New order has been placed by :customer_name with order tracking number :ORDER_TRACKING_NUMBER',
+                'message' => 'Dear publisher,New order has been placed by :customer_name with order tracking number :ORDER_TRACKING_NUMBER',
                 'subject' => 'New order has been placed',
             ],
         ],
@@ -39,7 +39,7 @@ return [
                 'subject' => 'Your order has been delivered successfully',
             ],
             'storeOwner' => [
-                'message' => 'Dear shop owner,Order has been delivered successfully with order tracking number :ORDER_TRACKING_NUMBER',
+                'message' => 'Dear publisher,Order has been delivered successfully with order tracking number :ORDER_TRACKING_NUMBER',
                 'subject' => 'Order has been delivered',
             ],
 
@@ -54,7 +54,7 @@ return [
                 'subject' => 'Your order status has been changed',
             ],
             'storeOwner' => [
-                'message' => 'Dear shop owner,Order status has been changed to :order_status with order tracking number :ORDER_TRACKING_NUMBER',
+                'message' => 'Dear publisher,Order status has been changed to :order_status with order tracking number :ORDER_TRACKING_NUMBER',
                 'subject' => 'Order status has been changed',
             ],
         ],
@@ -68,7 +68,7 @@ return [
                 'subject' => 'Your order payment has been successful',
             ],
             'storeOwner' => [
-                'message' => 'Dear shop owner,Order payment has been successful with order tracking number :ORDER_TRACKING_NUMBER',
+                'message' => 'Dear publisher,Order payment has been successful with order tracking number :ORDER_TRACKING_NUMBER',
                 'subject' => 'Order payment has been successful',
             ],
         ],
@@ -82,7 +82,7 @@ return [
                 'subject' => 'Your order payment has been failed',
             ],
             'storeOwner' => [
-                'message' => 'Dear shop owner,Order payment has been failed with order tracking number :ORDER_TRACKING_NUMBER',
+                'message' => 'Dear publisher,Order payment has been failed with order tracking number :ORDER_TRACKING_NUMBER',
                 'subject' => 'Order payment has been failed',
             ],
         ],

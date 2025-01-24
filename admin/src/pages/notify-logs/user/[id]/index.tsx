@@ -2,6 +2,7 @@ import Avatar from '@/components/common/avatar';
 import Card from '@/components/common/card';
 import PageHeading from '@/components/common/page-heading';
 import OwnerLayout from '@/components/layouts/owner';
+import ShopLayout from '@/components/layouts/shop';
 import ErrorMessage from '@/components/ui/error-message';
 import Loader from '@/components/ui/loader/loader';
 import NotFound from '@/components/ui/not-found';

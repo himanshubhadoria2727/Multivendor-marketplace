@@ -42,7 +42,11 @@ export default function PrivateRoute({
   }
 
   return (
-    <div className="relative grid h-screen w-full place-content-center bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 dark:from-gray-800 dark:via-gray-900 dark:to-black">
+    <div className="grid min-h-full w-full place-content-center">
+      {/* <div className="flex items-center gap-3 text-lg">
+        <SpinnerIcon className="h-auto w-6 animate-spin" />{' '}
+        {t('text-loader-title')}
+      </div> */}
       <PageLoader />
     </div>
   );

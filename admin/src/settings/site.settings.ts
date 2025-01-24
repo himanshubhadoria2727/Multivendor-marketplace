@@ -1137,12 +1137,12 @@ export const siteSettings = {
         icon: 'DashboardIcon',
         permissions: ownerAndStaffOnly,
       },
-      {
-        href: Routes?.ownerDashboardMyShop,
-        label: 'common:sidebar-nav-item-my-shops',
-        icon: 'MyShopOwnerIcon',
-        permissions: ownerAndStaffOnly,
-      },
+      // {
+      //   href: Routes?.ownerDashboardMyShop,
+      //   label: 'common:sidebar-nav-item-my-shops',
+      //   icon: 'MyShopOwnerIcon',
+      //   permissions: ownerAndStaffOnly,
+      // },
       // {
       //   href: Routes?.ownerDashboardMessage,
       //   label: 'common:sidebar-nav-item-message',

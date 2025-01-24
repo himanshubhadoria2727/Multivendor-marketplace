@@ -10,11 +10,11 @@ return [
             'subject' => 'Your order has been cancelled',
         ],
         'storeOwner'         => [
-            'message' => 'Dear shop owner,Order has been cancelled  with order tracking number :tracking_number',
+            'message' => 'Dear publisher,Order has been cancelled  with order tracking number :tracking_number',
             'subject' => 'Order has been cancelled',
         ],
         'childOrderCustomer' => [
-            'message' => 'Dear shop owner,Order has been cancelled  with order tracking number :tracking_number',
+            'message' => 'Dear publisher,Order has been cancelled  with order tracking number :tracking_number',
             'subject' => 'Order has been cancelled',
         ],
     ],
@@ -28,11 +28,11 @@ return [
             'subject' => 'Your order has been placed successfully',
         ],
         'storeOwner'         => [
-            'message' => 'Dear shop owner,New order has been placed by :customer_name with order tracking number :tracking_number',
+            'message' => 'Dear publisher,New order has been placed by :customer_name with order tracking number :tracking_number',
             'subject' => 'New order has been placed',
         ],
         'childOrderCustomer' => [
-            'message' => 'Dear shop owner,New order has been placed by :customer_name with order tracking number :tracking_number',
+            'message' => 'Dear publisher,New order has been placed by :customer_name with order tracking number :tracking_number',
             'subject' => 'New order has been placed',
         ],
     ],
@@ -46,11 +46,11 @@ return [
             'subject' => 'Your order has been delivered successfully',
         ],
         'storeOwner'         => [
-            'message' => 'Dear shop owner,Order has been delivered by :customer_name with order tracking number :tracking_number',
+            'message' => 'Dear publisher,Order has been delivered by :customer_name with order tracking number :tracking_number',
             'subject' => 'Order has been delivered',
         ],
         'childOrderCustomer' => [
-            'message' => 'Dear shop owner,Order has been delivered by :customer_name with order tracking number :tracking_number',
+            'message' => 'Dear publisher,Order has been delivered by :customer_name with order tracking number :tracking_number',
             'subject' => 'Order has been delivered',
         ],
     ],
@@ -64,11 +64,11 @@ return [
             'subject' => 'Your order status has been changed successfully',
         ],
         'storeOwner'         => [
-            'message' => 'Dear shop owner,Order status has been changed by :customer_name with order tracking number :tracking_number',
+            'message' => 'Dear publisher,Order status has been changed by :customer_name with order tracking number :tracking_number',
             'subject' => 'Order status has been changed',
         ],
         'childOrderCustomer' => [
-            'message' => 'Dear shop owner,Order status has been changed by :customer_name with order tracking number :tracking_number',
+            'message' => 'Dear publisher,Order status has been changed by :customer_name with order tracking number :tracking_number',
             'subject' => 'Order status has been changed',
         ],
     ],

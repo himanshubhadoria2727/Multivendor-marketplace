@@ -54,19 +54,14 @@ class ProductController extends CoreController
      */
     public function index(Request $request)
     {
-        Log::info('Entering index method', ['request' => $request->all()]);
 
         $limit = $request->limit ? $request->limit : 15;
-        Log::info('Pagination limit set', ['limit' => $limit]);
 
         $products = $this->fetchProducts($request)->paginate($limit)->withQueryString();
-        Log::info('Products fetched and paginated', ['products' => $products]);
 
         $data = ProductResource::collection($products)->response()->getData(true);
-        Log::info('Products transformed to resource collection', ['data' => $data]);
 
         $formattedData = formatAPIResourcePaginate($data);
-        Log::info('Formatted API resource pagination data', ['formattedData' => $formattedData]);
 
         return $formattedData;
     }
