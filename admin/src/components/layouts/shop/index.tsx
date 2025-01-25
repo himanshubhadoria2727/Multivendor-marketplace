@@ -19,6 +19,9 @@ import {
 } from '@/utils/constants';
 import { adminOnly } from '@/utils/auth-utils';
 import Link from '@/components/ui/link';
+import ContactAdminForm from './ContactAdminForm';
+import { useState } from 'react';
+import { MailIcon } from '@heroicons/react/solid';
 
 interface MenuItemsProps {
   [key: string]: {
@@ -181,6 +184,7 @@ const ShopLayout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { width } = useWindowSize();
   const [underMaintenance] = useAtom(checkIsMaintenanceModeComing);
   const [underMaintenanceStart] = useAtom(checkIsMaintenanceModeStart);
+  const [isContactFormOpen, setContactFormOpen] = useState(false);
 
   return (
     <div
@@ -232,6 +236,21 @@ const ShopLayout: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
           <Footer />
         </main>
       </div>
+
+      {/* Button to open the contact form */}
+      {!isContactFormOpen && (
+        <button 
+          onClick={() => setContactFormOpen(true)} 
+          className="flex items-center justify-center gap-2 z-50 fixed bottom-6 right-6 bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-4 rounded-full shadow-2xl hover:shadow-xl transition-all duration-300 ease-in-out transform hover:scale-110 active:scale-95 group backdrop-blur-md"
+        >
+          Contact us
+          <MailIcon className="w-6 h-6 transition-transform group-hover:rotate-12" />
+          <span className="sr-only">Contact Admin</span>
+        </button>
+      )}
+
+      {/* Contact Admin Form */}
+      <ContactAdminForm isOpen={isContactFormOpen} onClose={() => setContactFormOpen(false)} />
     </div>
   );
 };

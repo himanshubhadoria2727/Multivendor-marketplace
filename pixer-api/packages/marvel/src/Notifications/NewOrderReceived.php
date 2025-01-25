@@ -58,7 +58,7 @@ class NewOrderReceived extends Notification implements ShouldQueue
             $url  =  config('shop.dashboard_url') . '/orders/' . $this->order->id;
         } else {
             $subject = __('sms.order.orderCreated.storeOwner.subject');
-            $url =  config('shop.dashboard_url') . $this->order->shop->slug . '/orders/' . $this->order->id;
+            $url =  config('shop.dashboard_url') . '/' . $this->order->shop->slug . '/orders/' . $this->order->id;
         }
         return (new MailMessage)
             ->subject($subject)

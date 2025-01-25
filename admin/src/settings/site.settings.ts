@@ -851,12 +851,12 @@ export const siteSettings = {
             icon: 'SettingsIcon',
             permissions: adminOwnerAndStaffOnly,
           },
-          {
-            href: (shop: string) => `/`,
-            label: "Help",
-            icon: 'HelpIcon',
-            permissions: adminOwnerAndStaffOnly,
-          },
+          // {
+          //   href: (shop: string) => `/`,
+          //   label: "Help",
+          //   icon: 'HelpIcon',
+          //   permissions: adminOwnerAndStaffOnly,
+          // },
         ]
       }
     },
