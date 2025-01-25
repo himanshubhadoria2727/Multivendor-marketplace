@@ -698,7 +698,7 @@ export const siteSettings = {
           //   permissions: adminAndOwnerOnly,
           // },
           {
-            href: (shop: string) => `/${shop}${Routes.payout.list}`,
+            href: (shop: string) => `/${shop}${Routes.payouts}`,
             label: 'Payouts',
             icon: 'WithdrawIcon',
             permissions: adminAndOwnerOnly,

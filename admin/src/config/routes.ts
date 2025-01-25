@@ -24,6 +24,7 @@ export const Routes = {
   checkout: '/orders/checkout',
   verifyEmail: '/verify-email',
   verifyLicense: '/verify-license',
+  payouts:'/payouts',
   user: {
     ...routesFactory('/users'),
   },
@@ -83,9 +84,6 @@ export const Routes = {
   },
   withdraw: {
     ...routesFactory('/withdraws'),
-  },
-  payout: {
-    ...routesFactory('/payouts'),
   },
   staff: {
     ...routesFactory('/staffs'),

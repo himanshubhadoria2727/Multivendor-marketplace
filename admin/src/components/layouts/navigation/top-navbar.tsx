@@ -205,16 +205,18 @@ const { price: onHoldAmount } = usePrice({
                 <div className="px-6 py-5 max-sm:hidden 2xl:block">
                   {/* <VisitStore /> */}
                   <div
-                    className="inline-flex h-9 mr-4 flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none text-accent outline-none transition duration-300 ease-in-out hover:border-transparent hover:bg-accent-hover hover:text-white focus:shadow focus:outline-none"
+                    className="inline-flex h-9 cursor-pointer mr-4 flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none outline-none transition duration-300 ease-in-out focus:shadow focus:outline-none"
                     rel="noreferrer"
+                    onClick={() => router.push(`/${shop}${Routes.payouts}`)}
                   >
-                   On hold: {onHoldAmount}
+                   On hold: <span className='text-orange-500 font-semibold'>{onHoldAmount}</span>
                   </div>
                   <div
-                    className="inline-flex h-9 flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none text-accent outline-none transition duration-300 ease-in-out hover:border-transparent hover:bg-accent-hover hover:text-white focus:shadow focus:outline-none"
+                    className="inline-flex h-9 cursor-pointer flex-shrink-0 items-center justify-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-0 text-sm font-medium leading-none outline-none transition duration-300 ease-in-out focus:shadow focus:outline-none"
+                    onClick={() => router.push(`/${shop}${Routes.payouts}`)}
                     rel="noreferrer"
                   >
-                   Balance: {shopBalance}
+                    Balance: <span className='text-green-600 font-semibold'>{shopBalance}</span>
                   </div>
                 </div>
 
